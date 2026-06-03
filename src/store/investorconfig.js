@@ -3,6 +3,7 @@
 // Default 0 → owner WAJIB isi saat go-live (bukan angka dummy). Dummy/localStorage;
 // TAHAP 4 → backend.
 import { BRANCHES } from '../data/menu.js'
+import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_investor_cfg_v1'
 const subscribers = new Set()
@@ -18,6 +19,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { map = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./investor.remote.js').then(({ initInvestorSync }) => initInvestorSync(commit, () => map)).catch(() => {})
+}
+
 export function getInvestorConfig() { return map }
 export function subscribeInvestorConfig(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 export function investorCfgOf(branchId) { return map[branchId] || blank() }
@@ -25,5 +30,7 @@ export function investorCfgOf(branchId) { return map[branchId] || blank() }
 export function setInvestorField(branchId, key, val) {
   const cur = map[branchId] || blank()
   const v = Math.max(0, Number(String(val).replace(/\D/g, '')) || 0)
-  commit({ ...map, [branchId]: { ...cur, [key]: key === 'pct' ? Math.min(100, v) : v } })
+  const next = { ...cur, [key]: key === 'pct' ? Math.min(100, v) : v }
+  commit({ ...map, [branchId]: next })
+  if (isSupabase()) import('./investor.remote.js').then((w) => w.pushInvestor(branchId, next)).catch(() => {})
 }

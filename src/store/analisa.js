@@ -19,6 +19,8 @@ export const MATERIALS = [
   { id: 'saus_mayo', name: 'Mayonaise', kind: 'sauce', sauce: 'mayo', shop: 'mayonaise', unitLabel: 'botol', def: 25, icon: 'water_drop', hd: 'bg-sky-100', ic: 'text-sky-700', bd: 'border-sky-300' },
 ]
 
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_analisa'
 const subscribers = new Set()
 function seed() { const o = {}; MATERIALS.forEach((m) => { o[m.id] = m.def }); return o }
@@ -26,10 +28,18 @@ function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); return 
 let map = load()
 function commit(next) { map = next; localStorage.setItem(KEY, JSON.stringify(next)); subscribers.forEach((fn) => fn()) }
 
+if (isSupabase()) {
+  import('./analisa.remote.js').then(({ initAnalisaSync }) => initAnalisaSync(commit, () => map)).catch(() => {})
+}
+
 export function getAnalisa() { return map }
 export function subscribeAnalisa(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 export function batasOf(id) { return map[id] ?? (MATERIALS.find((m) => m.id === id)?.def || 0) }
-export function setBatas(id, n) { commit({ ...map, [id]: Math.max(0, Number(n) || 0) }) }
+export function setBatas(id, n) {
+  const v = Math.max(0, Number(n) || 0)
+  commit({ ...map, [id]: v })
+  if (isSupabase()) import('./analisa.remote.js').then((w) => w.pushAnalisa(id, v)).catch(() => {})
+}
 
 // porsi terpakai dari baris penjualan (Master Laporan).
 export function terpakaiOf(material, rows) {

@@ -4,6 +4,8 @@
 //
 // Item: { id, name }
 
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_shopping_items'
 const subscribers = new Set()
 
@@ -29,6 +31,10 @@ function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); return 
 let list = load()
 function commit(next) { list = next; localStorage.setItem(KEY, JSON.stringify(next)); subscribers.forEach((fn) => fn()) }
 
+if (isSupabase()) {
+  import('./shopping.remote.js').then(({ initShoppingSync }) => initShoppingSync(commit)).catch(() => {})
+}
+
 export function getShoppingItems() { return list }
 export function subscribeShoppingItems(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -36,6 +42,11 @@ export function subscribeShoppingItems(fn) { subscribers.add(fn); return () => s
 export function addShoppingItem(name) {
   const nm = (name || '').trim()
   if (!nm) return
-  commit([...list, { id: 'itm-' + Date.now(), name: nm }])
+  const item = { id: 'itm-' + Date.now(), name: nm }
+  commit([...list, item])
+  if (isSupabase()) import('./shopping.remote.js').then((w) => w.pushShoppingItem(item)).catch(() => {})
 }
-export function removeShoppingItem(id) { commit(list.filter((i) => i.id !== id)) }
+export function removeShoppingItem(id) {
+  commit(list.filter((i) => i.id !== id))
+  if (isSupabase()) import('./shopping.remote.js').then((w) => w.removeShoppingItemRemote(id)).catch(() => {})
+}
