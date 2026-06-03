@@ -179,6 +179,7 @@ export function addParent({ name, threshold, active = true }) {
   while (state.parents.some((p) => p.id === id)) id = `${base}-${n++}`
   const parent = { id, name: name.trim(), active, threshold: Math.max(0, Number(threshold) || 0) }
   commit({ ...state, parents: [...state.parents, parent] })
+  remoteWrite((w) => w.pushParent(parent))
   return parent
 }
 
@@ -197,6 +198,7 @@ export function updateParent(id, { name, threshold }) {
   })
   if (!found) return null
   commit({ ...state, parents })
+  remoteWrite((w) => w.pushParent(found))
   return found
 }
 
@@ -211,6 +213,7 @@ export function toggleParentActive(id) {
   })
   if (!found) return null
   commit({ ...state, parents })
+  remoteWrite((w) => w.pushParent(found))
   return found
 }
 
@@ -348,6 +351,7 @@ export function addBranch(data) {
   // username: pakai isian Owner; kalau kosong, default corney-<id>.
   const branch = { ...b, id, username: b.username || `corney-${id}` }
   commit({ ...state, branches: [...state.branches, branch] })
+  remoteWrite((w) => w.pushBranch(branch))
   return branch
 }
 
@@ -366,6 +370,7 @@ export function updateBranch(id, data) {
   })
   if (!found) return null
   commit({ ...state, branches })
+  remoteWrite((w) => w.pushBranch(found))
   return found
 }
 
@@ -380,6 +385,7 @@ export function toggleBranchActive(id) {
   })
   if (!found) return null
   commit({ ...state, branches })
+  remoteWrite((w) => w.pushBranch(found))
   return found
 }
 
@@ -395,6 +401,7 @@ export function setBranchOverride(branchId, menuId, patch) {
   if ((cur.price == null) && !cur.off) delete branch[menuId]
   else branch[menuId] = cur
   commit({ ...state, branchOverrides: { ...all, [branchId]: branch } })
+  remoteWrite((w) => w.pushOverride(branchId, menuId, branch[menuId]))
 }
 
 // Resolve a menu's effective price & visibility for a given branch.
@@ -434,6 +441,7 @@ export function addPromo(d) {
   while (state.promos.some((x) => x.id === id)) id = `${id}-${n++}`
   const promo = { id, ...p }
   commit({ ...state, promos: [promo, ...state.promos] })
+  remoteWrite((w) => w.pushPromo(promo))
   return promo
 }
 
@@ -447,6 +455,7 @@ export function updatePromo(id, d) {
   })
   if (!found) return null
   commit({ ...state, promos })
+  remoteWrite((w) => w.pushPromo(found))
   return found
 }
 
@@ -461,6 +470,7 @@ export function togglePromoActive(id) {
   })
   if (!found) return null
   commit({ ...state, promos })
+  remoteWrite((w) => w.pushPromo(found))
   return found
 }
 
@@ -479,6 +489,7 @@ export function addBanner({ title, img, active = true }) {
   while (state.banners.some((x) => x.id === id)) id = `${id}-${n++}`
   const banner = { id, title: t, img: (img || '').trim(), active }
   commit({ ...state, banners: [...state.banners, banner] })
+  remoteWrite((w) => w.pushBanners(state.banners))
   return banner
 }
 
@@ -492,6 +503,7 @@ export function updateBanner(id, { title, img }) {
   })
   if (!found) return null
   commit({ ...state, banners })
+  remoteWrite((w) => w.pushBanners(state.banners))
   return found
 }
 
@@ -505,6 +517,7 @@ export function toggleBannerActive(id) {
   })
   if (!found) return null
   commit({ ...state, banners })
+  remoteWrite((w) => w.pushBanners(state.banners))
   return found
 }
 
@@ -512,6 +525,7 @@ export function toggleBannerActive(id) {
 export function deleteBanner(id) {
   if (!state) return null
   commit({ ...state, banners: state.banners.filter((x) => x.id !== id) })
+  remoteWrite((w) => w.removeBanner(id))
 }
 
 // Reorder (display order) — move one slot up/down (drag-free).
@@ -523,4 +537,5 @@ export function moveBanner(id, dir) {
   if (i < 0 || j < 0 || j >= arr.length) return null
   ;[arr[i], arr[j]] = [arr[j], arr[i]]
   commit({ ...state, banners: arr })
+  remoteWrite((w) => w.pushBanners(arr))
 }
