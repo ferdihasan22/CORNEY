@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getSupplierSession, setSupplierSession } from './session.js'
 import { credOf, lockInfo, recordFail, clearLock } from '../auth/roleAuth.js'
+import { isSupabase } from '../lib/backend.js'
+import { signInSupplier } from '../auth/supabaseAuth.js'
 
 // 3.1 — SUP-01 Login Portal Supplier. Username+password diatur Owner (Manajemen User).
 // "Ingat Login" → sesi permanen (localStorage). Kunci 3x salah → tunggu 10 menit.
@@ -31,9 +33,15 @@ export default function SupplierLogin() {
     return () => clearInterval(t)
   }, [lock.locked])
 
-  const masuk = () => {
+  const masuk = async () => {
     const li = lockInfo('supplier')
     if (li.locked) { setLock(li); return }
+    if (isSupabase()) {
+      const res = await signInSupplier(pw)
+      if (res.ok) { clearLock('supplier'); setSupplierSession(id.trim() || 'supplier', remember); navigate('/supplier/request') }
+      else { const after = recordFail('supplier'); setLock(after); setPw(''); setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : (res.error || 'Username atau password salah.')) }
+      return
+    }
     const c = credOf('supplier')
     if (id.trim().toLowerCase() === (c.username || '').toLowerCase() && pw === c.password) {
       clearLock('supplier'); setSupplierSession(id.trim(), remember); navigate('/supplier/request')

@@ -1,6 +1,8 @@
 // CORNEY — Sesi login Supplier. "Ingat Login" = simpan di localStorage (tetap
 // masuk walau browser ditutup). Tidak diingat = sessionStorage (hilang saat
 // tab/browser ditutup → harus login lagi).
+import { signOutSupabase } from '../auth/supabaseAuth.js'
+
 const KEY = 'corney_supplier_session'
 
 export function getSupplierSession() {
@@ -11,5 +13,5 @@ export function setSupplierSession(id, remember) {
   else { sessionStorage.setItem(KEY, id); localStorage.removeItem(KEY) }
 }
 export function clearSupplierSession() {
-  localStorage.removeItem(KEY); sessionStorage.removeItem(KEY)
+  localStorage.removeItem(KEY); sessionStorage.removeItem(KEY); signOutSupabase()
 }

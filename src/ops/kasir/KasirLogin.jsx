@@ -5,6 +5,8 @@ import { useMaster } from '../../store/useMaster.js'
 import { startDay } from '../../store/day.js'
 import { setKasirBranch } from './kasirSession.js'
 import { lockInfo, recordFail, clearLock } from '../../auth/roleAuth.js'
+import { isSupabase } from '../../lib/backend.js'
+import { signInKasir } from '../../auth/supabaseAuth.js'
 
 const mmss = (ms) => { const s = Math.ceil(ms / 1000); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` }
 
@@ -32,14 +34,12 @@ export default function KasirLogin() {
     return () => clearInterval(t)
   }, [lock.locked, lock.key, lockKey])
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     const li = lockInfo(lockKey)
     if (li.locked) { setLock({ ...li, key: lockKey }); return }
     const branch = branches.find((b) => b.username === username.trim().toLowerCase())
-    // Password per cabang (diatur Owner); cabang tanpa password → pakai default global.
-    const expected = branch?.password || DEMO_PASSWORD
-    if (!branch || password !== expected) {
+    if (!branch) {
       const after = recordFail(lockKey); setLock({ ...after, key: lockKey })
       setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : 'Username cabang atau password salah.')
       setPassword('')
@@ -48,6 +48,25 @@ export default function KasirLogin() {
     if (branch.active === false) {
       setError('Cabang ini sedang dinonaktifkan oleh Owner.')
       return
+    }
+    // Cek kredensial: mode Supabase → Auth nyata (email kasir.<branch>@corney.app);
+    // mode local → password per cabang (atau default global).
+    if (isSupabase()) {
+      const res = await signInKasir(branch.id, password)
+      if (!res.ok) {
+        const after = recordFail(lockKey); setLock({ ...after, key: lockKey })
+        setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : (res.error || 'Username cabang atau password salah.'))
+        setPassword('')
+        return
+      }
+    } else {
+      const expected = branch.password || DEMO_PASSWORD
+      if (password !== expected) {
+        const after = recordFail(lockKey); setLock({ ...after, key: lockKey })
+        setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : 'Username cabang atau password salah.')
+        setPassword('')
+        return
+      }
     }
     clearLock(lockKey)
     setKasirBranch(branch.id, remember)

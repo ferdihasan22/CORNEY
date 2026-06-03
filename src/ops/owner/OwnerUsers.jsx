@@ -5,6 +5,8 @@ import { useUsers } from '../../store/useUsers.js'
 import { addUser, updateUser, toggleUserActive } from '../../store/users.js'
 import { useRoleCreds } from '../../auth/useRoleCreds.js'
 import { ROLE_META, setRoleCred } from '../../auth/roleAuth.js'
+import { isSupabase } from '../../lib/backend.js'
+import { adminResetPasswordRole, MIN_PASSWORD } from '../../auth/adminUsers.js'
 
 const CRED_ROLES = ['owner', 'operasional', 'produksi', 'auditor', 'supplier']
 
@@ -31,6 +33,16 @@ export default function OwnerUsers() {
   const [showPwd, setShowPwd] = useState({})
   const [editing, setEditing] = useState(null) // null | {} new | user edit
   const [form, setForm] = useState(EMPTY)
+  const [pwStatus, setPwStatus] = useState({}) // {role: 'saving'|'ok'|<pesan error>}
+
+  // Mode Supabase: dorong password role saat ini ke Supabase Auth via Edge admin-users.
+  const pushPwd = async (role) => {
+    const pw = creds[role]?.password || ''
+    if (pw.length < MIN_PASSWORD) { setPwStatus((s) => ({ ...s, [role]: `Password minimal ${MIN_PASSWORD} karakter.` })); return }
+    setPwStatus((s) => ({ ...s, [role]: 'saving' }))
+    const res = await adminResetPasswordRole(role, pw)
+    setPwStatus((s) => ({ ...s, [role]: res.ok ? 'ok' : (res.error || 'Gagal menyimpan.') }))
+  }
 
   const openNew = () => { setForm(EMPTY); setEditing({}) }
   const openEdit = (u) => { setForm({ name: u.name, role: u.role, branchId: u.branchId || '' }); setEditing(u) }
@@ -78,6 +90,14 @@ export default function OwnerUsers() {
                       </div>
                     </div>
                   </div>
+                  {isSupabase() && (
+                    <div className="mt-3 flex items-center gap-2 flex-wrap">
+                      <button type="button" onClick={() => pushPwd(role)} disabled={pwStatus[role] === 'saving'} className="px-3 py-2 rounded-xl bg-primary text-on-primary text-[12px] font-bold active:scale-95 disabled:opacity-50 flex items-center gap-1.5"><Icon name="cloud_upload" className="!text-[16px]" /> Set password di server</button>
+                      {pwStatus[role] === 'saving' && <span className="text-[12px] text-on-surface-variant">menyimpan…</span>}
+                      {pwStatus[role] === 'ok' && <span className="text-[12px] text-green-600 font-bold flex items-center gap-1"><Icon name="check_circle" className="!text-[15px]" /> Tersimpan di server</span>}
+                      {pwStatus[role] && pwStatus[role] !== 'saving' && pwStatus[role] !== 'ok' && <span className="text-[12px] text-error">{pwStatus[role]}</span>}
+                    </div>
+                  )}
                 </div>
               )
             })}

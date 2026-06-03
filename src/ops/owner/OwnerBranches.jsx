@@ -5,6 +5,8 @@ import { useMaster } from '../../store/useMaster.js'
 import { addBranch, updateBranch, toggleBranchActive } from '../../store/master.js'
 import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
+import { isSupabase } from '../../lib/backend.js'
+import { adminResetPasswordKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 
 // 2.3 — §3 Multi-cabang · Kelola Cabang. Ported from Stitch
 // "manage_branches_desktop", made responsive (card grid + drawer). The left
@@ -26,21 +28,35 @@ export default function OwnerBranches() {
   const [editing, setEditing] = useState(null) // null | {} new | {id,...} edit
   const [form, setForm] = useState(EMPTY)
   const [showPwd, setShowPwd] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [saveErr, setSaveErr] = useState('')
 
   const openNew = () => { setForm({ ...EMPTY, par: {} }); setEditing({}) }
   const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
-  const close = () => setEditing(null)
+  const close = () => { setEditing(null); setSaveErr(''); setBusy(false) }
   const setParField = (pid, v) => setForm((f) => ({ ...f, par: { ...f.par, [pid]: Math.max(0, Number(String(v).replace(/\D/g, '')) || 0) } }))
   const applyPar = (id) => PARENT_FILLINGS.forEach((p) => setPar(id, p.id, form.par?.[p.id] || 0))
-  const save = (e) => {
+  const save = async (e) => {
     e.preventDefault()
     if (!form.name.trim()) return
+    setSaveErr('')
     if (editing?.id) {
       const data = { ...form }
       if (!data.password) delete data.password // kosong saat edit → password lama tetap
       if (!data.username) delete data.username // kosong → username lama tetap
       updateBranch(editing.id, data); applyPar(editing.id)
-    } else { const b = addBranch(form); if (b) applyPar(b.id) }
+      // Mode Supabase: reset password kasir cabang ini di Supabase Auth.
+      if (isSupabase() && form.password) {
+        if (form.password.length < MIN_PASSWORD) { setSaveErr(`Password kasir minimal ${MIN_PASSWORD} karakter.`); return }
+        setBusy(true)
+        const res = await adminResetPasswordKasir(editing.id, form.password)
+        setBusy(false)
+        if (!res.ok) { setSaveErr('Tersimpan lokal, tapi gagal set password di server: ' + res.error); return }
+      }
+    } else {
+      const b = addBranch(form); if (b) applyPar(b.id)
+      // Catatan: di mode Supabase, akun kasir cabang BARU dibuat saat write-wiring config (belum).
+    }
     close()
   }
 
@@ -188,9 +204,12 @@ export default function OwnerBranches() {
               </div>
             </form>
 
-            <div className="p-5 bg-surface-container-lowest border-t border-outline-variant grid grid-cols-2 gap-4 sticky bottom-0">
-              <button type="button" onClick={close} className="h-[52px] border border-outline text-on-surface-variant rounded-[14px] font-label-lg hover:bg-surface-variant transition-colors">Batal</button>
-              <button onClick={save} className="h-[52px] bg-primary text-on-primary rounded-[14px] font-label-lg shadow-lg hover:brightness-110 active:scale-95 transition-all">Simpan</button>
+            <div className="p-5 bg-surface-container-lowest border-t border-outline-variant sticky bottom-0 space-y-3">
+              {saveErr && <p className="text-[12px] text-error flex items-start gap-1.5"><Icon name="error" className="!text-[16px] mt-0.5 shrink-0" /> {saveErr}</p>}
+              <div className="grid grid-cols-2 gap-4">
+                <button type="button" onClick={close} disabled={busy} className="h-[52px] border border-outline text-on-surface-variant rounded-[14px] font-label-lg hover:bg-surface-variant transition-colors disabled:opacity-50">Batal</button>
+                <button onClick={save} disabled={busy} className="h-[52px] bg-primary text-on-primary rounded-[14px] font-label-lg shadow-lg hover:brightness-110 active:scale-95 transition-all disabled:opacity-50">{busy ? 'Menyimpan…' : 'Simpan'}</button>
+              </div>
             </div>
           </div>
         </div>

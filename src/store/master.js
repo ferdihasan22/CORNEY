@@ -7,7 +7,8 @@
 // so historical transactions keep referring to a valid record. Every mutation
 // assigns a NEW state object (immutable) for useSyncExternalStore.
 
-import { PARENT_FILLINGS, MENUS, LOW_STOCK_THRESHOLD, INGREDIENTS, defaultRecipe, BRANCHES } from '../data/menu.js'
+import { PARENT_FILLINGS, MENUS, SAUCES, LOW_STOCK_THRESHOLD, INGREDIENTS, defaultRecipe, BRANCHES } from '../data/menu.js'
+import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_master'
 
@@ -22,8 +23,30 @@ function syncBranchesConst() {
   BRANCHES.length = 0
   state.branches.forEach((b) => BRANCHES.push(b))
 }
+// Sama seperti BRANCHES: SAUCES adalah const yang dipakai ~11 file (customer,
+// kasir, owner) sebagai tabel lookup. Sinkron in-place dari master.sauces supaya
+// data saus dari Supabase otomatis berlaku tanpa mengubah importer-nya.
+function syncSaucesConst() {
+  if (!Array.isArray(state?.sauces)) return
+  SAUCES.length = 0
+  state.sauces.forEach((s) => SAUCES.push(s))
+}
 let state = load()
 syncBranchesConst()
+syncSaucesConst()
+
+// ── Hidrasi Supabase (TAHAP 4, FASE 1 "pindah baca") ────────────────────────
+// localStorage di atas = cache sinkron (BRANCHES langsung terisi untuk ~47 file).
+// Bila VITE_BACKEND=supabase, ambil config dari DB lalu timpa cache + notify.
+// recipes BELUM dimigrasi → dipertahankan dari cache lokal. Gagal/offline →
+// diam-diam tetap pakai cache (offline-first). CATATAN: ini baru jalur BACA;
+// tulis (addMenu dll) masih ke localStorage sampai fase berikutnya.
+if (isSupabase()) {
+  import('./master.remote.js')
+    .then(({ fetchMasterFromSupabase }) => fetchMasterFromSupabase())
+    .then((remote) => { commit({ ...state, ...remote, recipes: state.recipes }) })
+    .catch((e) => console.warn('[master] hidrasi Supabase gagal, pakai cache lokal:', e?.message || e))
+}
 
 function seed() {
   return {
@@ -50,6 +73,8 @@ function seed() {
     // Recipes / BOM (OWN-02) — menuId → [{ingredientId, qty}]. Seeded from the
     // dummy default builder; editable per menu in the Resep/BOM screen.
     recipes: Object.fromEntries(MENUS.map((m) => [m.id, defaultRecipe(m)])),
+    // Sauces (savory) — di-seed dari data statik; owner-editable menyusul.
+    sauces: SAUCES.map((s) => ({ id: s.id, name: s.name, price: s.price })),
     // Branches / outlets (§3 multi-cabang). Owner-managed; account = branch.
     // stopOnline = stop accepting online orders; closeBooth = booth closes.
     branches: BRANCHES.map((b) => ({
@@ -103,6 +128,7 @@ function load() {
     if (!Array.isArray(s.promos)) s.promos = fresh.promos
     if (!Array.isArray(s.banners)) s.banners = fresh.banners
     if (!s.branchOverrides || typeof s.branchOverrides !== 'object') s.branchOverrides = fresh.branchOverrides
+    if (!Array.isArray(s.sauces)) s.sauces = fresh.sauces
     return s
   } catch {
     return seed()
@@ -113,12 +139,13 @@ function commit(next) {
   state = next
   localStorage.setItem(KEY, JSON.stringify(state))
   syncBranchesConst() // jaga BRANCHES tetap = daftar cabang terbaru
+  syncSaucesConst()   // jaga SAUCES tetap = daftar saus terbaru
   subscribers.forEach((fn) => fn())
 }
 
 // Sinkron antar-tab: reload saat tab lain menulis (cegah clobber + realtime).
 if (typeof window !== 'undefined') {
-  window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); syncBranchesConst(); subscribers.forEach((fn) => fn()) } })
+  window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); syncBranchesConst(); syncSaucesConst(); subscribers.forEach((fn) => fn()) } })
 }
 
 export function getMaster() {

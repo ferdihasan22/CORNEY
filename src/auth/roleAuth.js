@@ -3,6 +3,8 @@
 // kunci anti brute-force: 3x salah → tunggu 10 menit. Kasir TIDAK di sini (per
 // cabang, diatur di Kelola Cabang). Keamanan penuh (server, hash) di TAHAP 4.
 
+import { signOutSupabase } from './supabaseAuth.js'
+
 export const ROLE_META = {
   owner: { label: 'Owner', home: '/ops/owner', loginPath: '/ops/owner/login', icon: 'shield_person' },
   operasional: { label: 'Operasional', home: '/ops/operasional', loginPath: '/ops/operasional/login', icon: 'local_shipping' },
@@ -50,7 +52,7 @@ export function setRoleSession(role, remember) {
   else { sessionStorage.setItem(k, '1'); localStorage.removeItem(k) }
 }
 export function hasRoleSession(role) { const k = sessKey(role); return !!(localStorage.getItem(k) || sessionStorage.getItem(k)) }
-export function clearRoleSession(role) { const k = sessKey(role); localStorage.removeItem(k); sessionStorage.removeItem(k) }
+export function clearRoleSession(role) { const k = sessKey(role); localStorage.removeItem(k); sessionStorage.removeItem(k); signOutSupabase() }
 
 // ── Kunci login: 3x gagal → kunci 10 menit (per "key", mis. nama role) ──
 export const MAX_FAIL = 3

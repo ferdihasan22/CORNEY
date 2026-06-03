@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROLE_META, credOf, setRoleSession, lockInfo, recordFail, clearLock } from './roleAuth.js'
+import { isSupabase } from '../lib/backend.js'
+import { signInRole } from './supabaseAuth.js'
 
 // CORNEY — Layar login bersama untuk role tetap (Owner/Operasional/Produksi/Auditor).
 // Username + password (dari Manajemen User), "Ingat Login", dan kunci 3x→10 menit.
@@ -24,10 +26,21 @@ export default function RoleLogin({ role }) {
     return () => clearInterval(t)
   }, [lock.locked, role])
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     const li = lockInfo(role)
     if (li.locked) { setLock(li); return }
+    if (isSupabase()) {
+      // Mode Supabase: email sintetis per-role; field username diabaikan.
+      const res = await signInRole(role, password)
+      if (res.ok) { clearLock(role); setRoleSession(role, remember); navigate(meta.home, { replace: true }) }
+      else {
+        const after = recordFail(role); setLock(after)
+        setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : (res.error || 'Username atau password salah.'))
+        setPassword('')
+      }
+      return
+    }
     const c = credOf(role)
     if (username.trim().toLowerCase() === (c.username || '').toLowerCase() && password === c.password) {
       clearLock(role); setRoleSession(role, remember); navigate(meta.home, { replace: true })
