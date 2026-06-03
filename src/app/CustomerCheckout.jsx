@@ -57,6 +57,7 @@ export default function CustomerCheckout() {
   const [address, setAddress] = useState(() => loadContact().address || '')
   const [remember, setRemember] = useState(() => !!loadContact().name)
   const [confirm, setConfirm] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [err, setErr] = useState('')
 
   if (!cart || cart.lines.length === 0) return <Navigate to="/app/cabang" replace />
@@ -94,20 +95,30 @@ export default function CustomerCheckout() {
     setConfirm(true)
   }
 
-  const confirmPay = () => {
+  const confirmPay = async () => {
+    if (submitting) return
     const cleanWa = wa.replace(/\D/g, '')
     if (remember) saveContact({ name: name.trim(), wa: cleanWa, address: address.trim() })
     else saveContact({})
-    const order = createOrder({
-      branchId: cart.branchId,
-      lines: cart.lines.map((l) => ({ ...l })),
-      subtotal, discount, total,
-      method, schedule: method === 'maxim' ? '' : schedule, name: name.trim(), wa: cleanWa,
-      address: method === 'maxim' ? address.trim() : '',
-      promoCode: cart.promoCode || '',
-    })
-    clearCart()
-    navigate(`/app/qris/${order.id}`)
+    setSubmitting(true)
+    try {
+      // Mode supabase: createOrder INSERT ke DB (await) → baru ke QRIS. Kalau gagal,
+      // jangan lanjut ke pembayaran (cegah bayar tanpa order tercatat).
+      const order = await createOrder({
+        branchId: cart.branchId,
+        lines: cart.lines.map((l) => ({ ...l })),
+        subtotal, discount, total,
+        method, schedule: method === 'maxim' ? '' : schedule, name: name.trim(), wa: cleanWa,
+        address: method === 'maxim' ? address.trim() : '',
+        promoCode: cart.promoCode || '',
+      })
+      clearCart()
+      navigate(`/app/qris/${order.id}`)
+    } catch (e) {
+      setSubmitting(false)
+      setConfirm(false)
+      setErr('Gagal membuat pesanan: ' + (e?.message || 'periksa koneksi & coba lagi.'))
+    }
   }
 
   const Field = ({ label, children }) => (
@@ -241,8 +252,8 @@ export default function CustomerCheckout() {
               <p className="text-[13px] text-on-surface-variant leading-snug">Kasir akan menghubungi nomor ini lewat WhatsApp kalau ada kendala stok atau saat pesanan sudah siap. Kalau nomor salah, pesananmu bisa terlewat.</p>
             </div>
             <div className="flex flex-col gap-2.5">
-              <button onClick={confirmPay} className="w-full h-[52px] bg-primary text-white rounded-xl font-headline-md shadow-lg active:scale-[0.98]">Ya, sudah benar · Bayar</button>
-              <button onClick={() => setConfirm(false)} className="w-full h-[52px] text-on-surface-variant rounded-xl font-label-lg active:bg-surface-container">Ubah nomor</button>
+              <button onClick={confirmPay} disabled={submitting} className="w-full h-[52px] bg-primary text-white rounded-xl font-headline-md shadow-lg active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2">{submitting ? 'Memproses…' : 'Ya, sudah benar · Bayar'}</button>
+              <button onClick={() => setConfirm(false)} disabled={submitting} className="w-full h-[52px] text-on-surface-variant rounded-xl font-label-lg active:bg-surface-container disabled:opacity-40">Ubah nomor</button>
             </div>
           </div>
         </div>

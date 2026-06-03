@@ -1,8 +1,10 @@
+import { useEffect } from 'react'
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { BRANCHES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useOrders } from '../store/useOrders.js'
-import { getOrder, advanceOrder, ORDER_FLOW } from '../store/orders.js'
+import { getOrder, advanceOrder, refreshMyOrder, ORDER_FLOW } from '../store/orders.js'
+import { isSupabase } from '../lib/backend.js'
 
 // 2.1 — CUS Lacak Pesanan. Ported from Stitch "lacak_pesanan_status_diproses".
 // Status comes from the orders store; in Fase 1 the kasir's live updates are
@@ -24,6 +26,15 @@ export default function CustomerTrack() {
   const master = useMaster()
   useOrders() // re-render on status change
   const order = getOrder(orderId)
+  // Mode supabase: poll status live via RPC ber-pin (customer TAK buka realtime).
+  const orderPin = order?.pin
+  useEffect(() => {
+    if (!isSupabase() || !orderPin) return
+    const tick = () => refreshMyOrder(orderId, orderPin)
+    tick()
+    const t = setInterval(tick, 4000)
+    return () => clearInterval(t)
+  }, [orderId, orderPin])
   if (!order) return <Navigate to="/app/cabang" replace />
   const branch = BRANCHES.find((b) => b.id === order.branchId)
   const menuName = (id) => (master?.menus || []).find((m) => m.id === id)?.name || id
@@ -91,7 +102,7 @@ export default function CustomerTrack() {
           <Icon name="chat" /> Hubungi Kasir via WhatsApp
         </a>
 
-        {import.meta.env.DEV && order.status !== 'selesai' && (
+        {import.meta.env.DEV && !isSupabase() && order.status !== 'selesai' && (
           <button onClick={() => advanceOrder(order.id)} className="w-full py-3 rounded-xl border border-dashed border-outline text-on-surface-variant text-sm flex items-center justify-center gap-2 active:scale-95">
             <Icon name="bolt" className="!text-[18px]" /> Simulasi: majukan status (demo)
           </button>
