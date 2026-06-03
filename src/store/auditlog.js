@@ -6,6 +6,9 @@
 // Entry: { id, hash, type ('Stok'|'Refund'|'Void'|'Settlement'), who, branchId,
 //   oldVal, newVal, note, at }
 
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_auditlog'
 const subscribers = new Set()
 
@@ -21,6 +24,10 @@ function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); return 
 let list = load()
 function commit(next) { list = next; localStorage.setItem(KEY, JSON.stringify(next)); subscribers.forEach((fn) => fn()) }
 
+if (isSupabase()) {
+  import('./auditlog.remote.js').then(({ initAuditLogSync }) => initAuditLogSync(commit)).catch(() => {})
+}
+
 export function getAuditLog() { return list }
 export function subscribeAuditLog(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -30,7 +37,8 @@ function genHash() {
   return `#${h.slice(0, 4)}...${h.slice(4)}`
 }
 export function logAudit({ type, who, branchId, oldVal, newVal, note }) {
-  const entry = { id: 'AL-' + Date.now() + '-' + Math.floor(Math.random() * 1000), hash: genHash(), type: type || 'Stok', who: who || '—', branchId: branchId || '', oldVal: String(oldVal ?? ''), newVal: String(newVal ?? ''), note: (note || '').trim(), at: new Date().toISOString() }
+  const entry = { id: isSupabase() ? genUuid() : 'AL-' + Date.now() + '-' + Math.floor(Math.random() * 1000), hash: genHash(), type: type || 'Stok', who: who || '—', branchId: branchId || '', oldVal: String(oldVal ?? ''), newVal: String(newVal ?? ''), note: (note || '').trim(), at: new Date().toISOString() }
   commit([entry, ...list])
+  if (isSupabase()) import('./auditlog.remote.js').then((w) => w.pushAuditLog(entry)).catch(() => {})
   return entry
 }

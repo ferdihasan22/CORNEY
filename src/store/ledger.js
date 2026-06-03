@@ -4,6 +4,8 @@
 //
 // Row: { id, item, unit, latestPrice, prevPrice, ordered, received, lastDate }
 
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_ledger'
 const subscribers = new Set()
 
@@ -21,10 +23,16 @@ function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); return 
 let list = load()
 function commit(next) { list = next; localStorage.setItem(KEY, JSON.stringify(next)); subscribers.forEach((fn) => fn()) }
 
+if (isSupabase()) {
+  import('./ledger.remote.js').then(({ initLedgerSync }) => initLedgerSync(commit)).catch(() => {})
+}
+
 export function getLedger() { return list }
 export function subscribeLedger(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
 // Operasional confirms goods arrival → received catches up to ordered.
 export function markReceived(id) {
-  commit(list.map((r) => (r.id === id ? { ...r, received: r.ordered } : r)))
+  let found = null
+  commit(list.map((r) => { if (r.id !== id) return r; found = { ...r, received: r.ordered }; return found }))
+  if (found && isSupabase()) import('./ledger.remote.js').then((w) => w.pushLedgerRow(found)).catch(() => {})
 }

@@ -6,6 +6,7 @@
 //  Dipakai sekali saat onboarding. Setelah tulis, halaman di-reload agar semua
 //  store re-init dari keadaan bersih.
 import { INGREDIENTS } from '../data/menu.js'
+import { isSupabase } from '../lib/backend.js'
 
 // Store transaksi/laporan (array) → dikosongkan jadi [].
 const EMPTY_ARRAY_KEYS = [
@@ -20,7 +21,7 @@ const EMPTY_OBJECT_KEYS = [
 // Store sesi → dihapus (tidak ada hari/keranjang aktif saat mulai).
 const REMOVE_KEYS = ['corney_day', 'corney_cart']
 
-export function resetGoLive() {
+export async function resetGoLive() {
   if (typeof window === 'undefined') return
   EMPTY_ARRAY_KEYS.forEach((k) => localStorage.setItem(k, '[]'))
   EMPTY_OBJECT_KEYS.forEach((k) => localStorage.setItem(k, '{}'))
@@ -31,5 +32,12 @@ export function resetGoLive() {
   localStorage.setItem('corney_materials', JSON.stringify(mat))
   REMOVE_KEYS.forEach((k) => localStorage.removeItem(k))
   try { sessionStorage.clear() } catch { /* abaikan */ }
+  // Mode supabase: truncate tabel transaksi di DB (owner-only RPC) sebelum reload.
+  if (isSupabase()) {
+    try {
+      const { supabase } = await import('../lib/supabase.js')
+      if (supabase) await supabase.rpc('owner_reset_transaksi')
+    } catch (e) { console.warn('[reset] owner_reset_transaksi gagal:', e?.message || e) }
+  }
   window.location.reload()
 }
