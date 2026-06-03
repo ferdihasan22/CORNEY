@@ -6,6 +6,9 @@
 //
 // Order (per cabang): { id, createdAt, status:'baru'|'diproses'|'selesai',
 //   branchId, branchName, tgl, items:[{ uid, id, name, reqQty, qty, src:'kasir'|'ops', ready }] }
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_supplier_req_v2'
 const subscribers = new Set()
 
@@ -24,6 +27,11 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./supplierReq.remote.js').then(({ initSupplierReqSync }) => initSupplierReqSync(commit)).catch(() => {})
+}
+const pushReqById = (orderId) => { if (isSupabase()) { const o = list.find((x) => x.id === orderId); if (o) import('./supplierReq.remote.js').then((w) => w.pushSupplierReq(o)).catch(() => {}) } }
+
 export function getSupplierReq() { return list }
 export function subscribeSupplierReq(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -35,10 +43,11 @@ export function createSupplierRequest({ branches }) {
   ;(branches || []).forEach((b, i) => {
     const items = (b.items || []).map((it) => ({ uid: `${it.src || 'k'}_${it.id}`, id: it.id, name: it.name, reqQty: it.qty, qty: it.qty, src: it.src || 'kasir', ready: true }))
     if (items.length === 0) return
-    orders.push({ id: `REQ-${stamp}-${i}`, createdAt: new Date().toISOString(), status: 'baru', branchId: b.branchId, branchName: b.branchName, tgl: b.tgl || '', items })
+    orders.push({ id: isSupabase() ? genUuid() : `REQ-${stamp}-${i}`, createdAt: new Date().toISOString(), status: 'baru', branchId: b.branchId, branchName: b.branchName, tgl: b.tgl || '', items })
   })
   if (orders.length === 0) return null
   commit([...orders, ...list])
+  if (isSupabase()) orders.forEach((o) => import('./supplierReq.remote.js').then((w) => w.pushSupplierReq(o)).catch(() => {}))
   return orders
 }
 
@@ -49,6 +58,7 @@ export function toggleReqItem(orderId, uid) {
     status: o.status === 'baru' ? 'diproses' : o.status,
     items: o.items.map((it) => (it.uid !== uid ? it : { ...it, ready: !it.ready })),
   }))
+  pushReqById(orderId)
 }
 
 // Supplier sesuaikan jumlah yang bisa dikirim (stok tak cukup). Min 1.
@@ -59,13 +69,16 @@ export function setReqItemQty(orderId, uid, qty) {
     status: o.status === 'baru' ? 'diproses' : o.status,
     items: o.items.map((it) => (it.uid !== uid ? it : { ...it, qty: n })),
   }))
+  pushReqById(orderId)
 }
 
 export function setReqStatus(orderId, status) {
   commit(list.map((o) => (o.id === orderId ? { ...o, status } : o)))
+  pushReqById(orderId)
 }
 export function removeRequest(orderId) {
   commit(list.filter((o) => o.id !== orderId))
+  if (isSupabase()) import('./supplierReq.remote.js').then((w) => w.removeSupplierReqRemote(orderId)).catch(() => {})
 }
 export function clearSupplierReq() { commit([]) }
 

@@ -5,6 +5,9 @@
 //
 // Entry: { id, at, tgl, branchId, branchName,
 //   items:[{ id, name, src, reqQty, qty, ready, price }] }
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_supplier_fulfilled_v1'
 const subscribers = new Set()
 
@@ -23,11 +26,18 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./supplierFulfilled.remote.js').then(({ initSupplierFulfilledSync }) => initSupplierFulfilledSync(commit)).catch(() => {})
+}
+
 export function getSupplierFulfilled() { return list }
 export function subscribeSupplierFulfilled(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
 export function addFulfilled(entry) {
-  commit([entry, ...list])
+  const e = isSupabase() ? { ...entry, id: genUuid() } : entry
+  commit([e, ...list])
+  if (isSupabase()) import('./supplierFulfilled.remote.js').then((w) => w.pushFulfilled(e)).catch(() => {})
+  return e
 }
 
 // Tandai item kosong "dibeli di luar" supplier (atau hapus tanda dgn data=null).
@@ -38,6 +48,7 @@ export function setOutside(entryId, uid, data) {
     ...e,
     items: e.items.map((it) => (it.uid !== uid ? it : { ...it, luar })),
   }))
+  if (isSupabase()) { const e = list.find((x) => x.id === entryId); if (e) import('./supplierFulfilled.remote.js').then((w) => w.pushFulfilled(e)).catch(() => {}) }
 }
 
 export function clearFulfilled() { commit([]) }

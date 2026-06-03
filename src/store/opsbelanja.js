@@ -3,6 +3,8 @@
 // MENAMBAH belanjaan untuk cabang tertentu: pilih cabang → centang item + isi
 // jumlah. Tersimpan lokal sbg draft rekap berjalan. Fase 1 dummy/localStorage.
 // Shape: { [branchId]: { [itemId]: { name, qty } } }
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_opsbelanja_v2'
 const subscribers = new Set()
 
@@ -46,6 +48,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./opsbelanja.remote.js').then(({ initOpsBelanjaSync }) => initOpsBelanjaSync(commit)).catch(() => {})
+}
+
 export function getOpsBelanja() {
   return state
 }
@@ -59,6 +65,7 @@ function setBranch(bid, next) {
   const merged = { ...state, [bid]: next }
   if (Object.keys(next).length === 0) delete merged[bid]
   commit(merged)
+  if (isSupabase()) import('./opsbelanja.remote.js').then((w) => w.pushOpsBranch(bid, next)).catch(() => {})
 }
 
 // Centang/hapus item bawaan untuk satu cabang (qty mulai 1).

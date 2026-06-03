@@ -2,6 +2,8 @@
 // "Update Harga" untuk menyimpan. Tiap update menyimpan harga sebelumnya (prev)
 // + tanggal → dipakai indikator NAIK/TURUN di dashboard Owner. Fase 1 lokal.
 // Shape: { [itemId]: { price, prev, at } }
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_supplier_prices_v2'
 const subscribers = new Set()
 
@@ -28,6 +30,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { map = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./supplierPrices.remote.js').then(({ initSupplierPricesSync }) => initSupplierPricesSync(commit)).catch(() => {})
+}
+
 export function getSupplierPrices() { return map }
 export function subscribeSupplierPrices(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -36,7 +42,9 @@ export function updateItemPrice(id, newPrice) {
   const p = Math.max(0, Math.round(Number(newPrice) || 0))
   const cur = map[id]
   if (cur && cur.price === p) return false
-  commit({ ...map, [id]: { price: p, prev: cur ? cur.price : null, at: new Date().toISOString().slice(0, 10) } })
+  const entry = { price: p, prev: cur ? cur.price : null, at: new Date().toISOString().slice(0, 10) }
+  commit({ ...map, [id]: entry })
+  if (isSupabase()) import('./supplierPrices.remote.js').then((w) => w.pushSupplierPrice(id, entry)).catch(() => {})
   return true
 }
 export function priceOfSup(id) { return map[id]?.price || 0 }
