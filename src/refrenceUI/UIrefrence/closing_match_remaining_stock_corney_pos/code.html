@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tutup Toko — Cocokkan Sisa Stok</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#fcf9f8",
+                    "on-error": "#ffffff",
+                    "primary-container": "#da291c",
+                    "surface-variant": "#e5e2e1",
+                    "on-primary-fixed": "#410000",
+                    "inverse-surface": "#313030",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "tertiary-container": "#707171",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1c1b1b",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "tertiary": "#575959",
+                    "surface-tint": "#be0f09",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "surface-container-high": "#eae7e7",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#dcd9d9",
+                    "primary": "#b50303",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#e5e2e1",
+                    "inverse-on-surface": "#f3f0ef",
+                    "secondary-container": "#ffc72c",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-background": "#1c1b1b",
+                    "surface-container": "#f0eded",
+                    "on-primary-fixed-variant": "#930001",
+                    "outline": "#916f6a",
+                    "secondary-fixed": "#ffdf99",
+                    "surface-container-low": "#f6f3f2",
+                    "secondary": "#775a00",
+                    "on-tertiary-container": "#f6f7f7",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "tertiary-fixed": "#e2e2e2",
+                    "outline-variant": "#e6bdb7",
+                    "on-primary-container": "#fff5f3",
+                    "on-secondary-container": "#6f5400",
+                    "on-error-container": "#93000a",
+                    "surface": "#fcf9f8",
+                    "primary-fixed": "#ffdad4",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "background": "#fcf9f8",
+                    "on-secondary-fixed": "#251a00",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#5c403b",
+                    "inverse-primary": "#ffb4a8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "padding-card": "20px",
+                    "gutter-grid": "24px",
+                    "base": "8px",
+                    "margin-page": "32px",
+                    "stack-gap": "16px",
+                    "min-tap-target": "52px"
+            },
+            "fontFamily": {
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { background-color: white; color: #b50303; }
+        .step-inactive { background-color: rgba(255,255,255,0.3); color: white; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary shadow-md flex flex-col justify-center px-gutter-grid py-4">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-on-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md text-on-primary">Tutup Toko — Cocokkan Sisa Stok</h1>
+<p class="font-label-md text-label-md text-on-primary/80">CORNEY Sepinggan · Langkah 1/3</p>
+</div>
+</div>
+</header>
+<main class="mt-28 mb-64 px-margin-page space-y-stack-gap">
+<!-- Card 1: Keju Mozza -->
+<section class="bg-surface-container-lowest rounded-xl p-padding-card shadow-[0px_4px_16px_rgba(26,26,26,0.08)] flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<h2 class="font-headline-md text-headline-md">Keju Mozza</h2>
+<span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-label-md text-label-md">Cocok</span>
+</div>
+<p class="font-label-md text-on-surface-variant">Awal 60 - Jual 45 = Sisa 15</p>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant">Sisa fisik di kulkas</label>
+<input class="w-full h-min-tap-target border border-outline-variant rounded-xl px-4 text-display-md font-display-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0" type="number" value="15"/>
+</div>
+<p class="font-label-lg text-label-lg mt-2">Susut hari ini: <span class="font-bold">0</span></p>
+</section>
+<!-- Card 2: Sosis Reguler -->
+<section class="bg-surface-container-lowest rounded-xl p-padding-card shadow-[0px_4px_16px_rgba(26,26,26,0.08)] flex flex-col gap-3 border-l-4 border-secondary-container">
+<div class="flex justify-between items-start">
+<h2 class="font-headline-md text-headline-md">Sosis Reguler</h2>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Wajar</span>
+</div>
+<p class="font-label-md text-on-surface-variant">Awal 80 - Jual 70 = Sisa 10</p>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant">Sisa fisik di kulkas</label>
+<input class="w-full h-min-tap-target border border-outline-variant rounded-xl px-4 text-display-md font-display-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0" type="number" value="9"/>
+</div>
+<p class="font-label-lg text-label-lg mt-2">Susut hari ini: <span class="font-bold">1</span></p>
+</section>
+<!-- Card 3: Sosis Jumbo -->
+<section class="bg-surface-container-lowest rounded-xl p-padding-card shadow-[0px_4px_16px_rgba(26,26,26,0.08)] flex flex-col gap-3 border-l-4 border-error">
+<div class="flex justify-between items-start">
+<h2 class="font-headline-md text-headline-md">Sosis Jumbo</h2>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full font-label-md text-label-md">Selisih Besar</span>
+</div>
+<p class="font-label-md text-on-surface-variant">Awal 40 - Jual 25 = Sisa 15</p>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant">Sisa fisik di kulkas</label>
+<input class="w-full h-min-tap-target border border-outline rounded-xl px-4 text-display-md font-display-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0" type="number" value="10"/>
+</div>
+<p class="font-label-lg text-label-lg mt-2">Susut hari ini: <span class="font-bold">5</span></p>
+</section>
+<!-- Card 4: Mix -->
+<section class="bg-surface-container-low rounded-xl p-padding-card shadow-sm flex flex-col gap-3 opacity-90">
+<div class="flex justify-between items-start">
+<h2 class="font-headline-md text-headline-md">Mix</h2>
+</div>
+<p class="font-label-md text-on-surface-variant">Awal 30 - Jual 12 = Sisa 18</p>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant">Sisa fisik di kulkas</label>
+<input class="w-full h-min-tap-target border border-outline-variant rounded-xl px-4 text-display-md font-display-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Input sisa..." type="number"/>
+</div>
+<p class="font-label-lg text-label-lg mt-2 text-on-surface-variant">Belum diisi</p>
+</section>
+</main>
+<!-- Footer Summary & Action -->
+<footer class="fixed bottom-0 left-0 w-full z-50 bg-surface shadow-[0px_-4px_16px_rgba(0,0,0,0.05)] p-margin-page space-y-4">
+<div class="bg-surface-container p-4 rounded-xl space-y-1">
+<div class="flex justify-between items-center">
+<p class="font-label-lg text-label-lg">Total susut hari ini:</p>
+<p class="font-headline-md text-headline-md text-primary">6 porsi</p>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">info</span>
+                Sisa fisik otomatis jadi "sisa kemarin" untuk Opening besok.
+            </p>
+</div>
+<button class="w-full h-min-tap-target bg-primary text-on-primary font-headline-md text-headline-md rounded-xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+            Lanjut: Patah &amp; Selisih Hilang
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</footer>
+<!-- Atmosphere/Micro-interaction Script -->
+<script>
+        // Simple scale effect on all inputs when focused
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('ring-2', 'ring-primary-container/20');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('ring-2', 'ring-primary-container/20');
+            });
+        });
+    </script>
+</body></html>

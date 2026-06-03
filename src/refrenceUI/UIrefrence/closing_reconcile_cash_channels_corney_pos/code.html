@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tutup Toko — Corney POS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#fff5f3",
+                    "surface-variant": "#e5e2e1",
+                    "primary": "#b50303",
+                    "on-primary-fixed-variant": "#930001",
+                    "on-primary-fixed": "#410000",
+                    "primary-fixed": "#ffdad4",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#ffc72c",
+                    "inverse-primary": "#ffb4a8",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#6f5400",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "outline": "#916f6a",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#fcf9f8",
+                    "secondary": "#775a00",
+                    "surface-container-high": "#eae7e7",
+                    "on-secondary-fixed": "#251a00",
+                    "surface-dim": "#dcd9d9",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#e6bdb7",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#5c403b",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface": "#fcf9f8",
+                    "on-background": "#1c1b1b",
+                    "surface-container": "#f0eded",
+                    "primary-container": "#da291c",
+                    "tertiary-fixed": "#e2e2e2",
+                    "tertiary-container": "#707171",
+                    "surface-tint": "#be0f09",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "secondary-fixed": "#ffdf99",
+                    "background": "#fcf9f8",
+                    "on-surface": "#1c1b1b",
+                    "inverse-surface": "#313030",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "tertiary": "#575959",
+                    "on-tertiary-container": "#f6f7f7",
+                    "surface-container-highest": "#e5e2e1",
+                    "surface-container-low": "#f6f3f2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "padding-card": "20px",
+                    "gutter-grid": "24px",
+                    "stack-gap": "16px",
+                    "min-tap-target": "52px",
+                    "margin-page": "32px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #dcd9d9; border-radius: 10px; }
+        .bento-scroll { height: calc(100vh - 128px); overflow-y: auto; scroll-behavior: smooth; }
+        .card-shadow { box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary text-on-primary shadow-md flex items-center justify-between px-margin-page h-[64px]">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-primary-container transition-transform active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-headline-md font-headline-md font-bold">Tutup Toko — Cocokkan Tunai &amp; Channel</h1>
+</div>
+<div class="text-label-md font-label-md uppercase tracking-wider opacity-90">Langkah 3/4</div>
+</header>
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface flex flex-col py-base shadow-sm border-r border-outline-variant z-40 pt-[64px]">
+<div class="px-6 py-8 flex flex-col items-start gap-2">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center mb-2 overflow-hidden">
+<img alt="Kasir" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYoa0GiSa5meKTZDFDk2pK530lpytTgpep90UBP7tcgSQ2BW9AmcHyE0RX5yC8JxbUPjTMJQXtEJLDRafO4b1LmJvZ49SN4md7BGi8b_Xza2DofKaV1W0UhdX3k_Cc_d4RAjZvcfJW4AHRgY9jiFev_6yTsVrXsMZ75P1g2d8D9Rt_NdId4N6dNYsL1DGZkTikk5k9nwd72iiAv5hzPcHV9-mraTM9eRNhRjeHok0gRV1jgzQLaRE2CHPYBajB566M8kiBJ7GNUZg"/>
+</div>
+<p class="text-label-lg font-label-lg text-primary">Kasir Utama</p>
+<p class="text-label-md font-label-md text-on-surface-variant">Toko Cabang Jakarta</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 mx-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-lg font-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 mx-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-label-lg font-label-lg">Riwayat Orde</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 mx-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="text-label-lg font-label-lg">Menu &amp; Stok</span>
+</a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 mx-2 transition-opacity" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-label-lg font-label-lg">Laporan Kasir</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high px-4 py-3 mx-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-lg font-label-lg">Pengaturan</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] pt-[64px] pb-[80px] px-margin-page h-screen bento-scroll">
+<div class="max-w-4xl mx-auto py-8">
+<div class="grid grid-cols-1 gap-6">
+<!-- Tunai Card (Prominent) -->
+<section class="bg-surface-container-lowest p-6 rounded-[14px] card-shadow border-l-8 border-primary relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[32px]">payments</span>
+<h2 class="text-headline-md font-headline-md">Tunai</h2>
+</div>
+<div class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Cocok
+                        </div>
+</div>
+<div class="bg-surface-container p-4 rounded-xl mb-6 text-on-surface-variant text-body-md border border-outline-variant">
+                        Kas seharusnya = <span class="font-bold">modal awal + penjualan tunai − uang urgent − refund</span> = <span class="text-on-surface font-bold">Rp 856.000</span>
+</div>
+<div class="flex flex-col md:flex-row items-end gap-6">
+<div class="flex-1 w-full">
+<label class="block text-label-md font-label-md text-on-surface-variant mb-2">Uang fisik di laci</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-headline-md font-bold text-on-surface">Rp</span>
+<input class="w-full h-[64px] pl-16 pr-4 rounded-[14px] border-2 border-primary focus:ring-4 focus:ring-primary/10 text-headline-md font-bold text-on-surface" placeholder="0" type="number" value="856000"/>
+</div>
+</div>
+<div class="pb-3">
+<p class="text-label-lg font-label-lg text-green-600">Selisih kas: Rp 0</p>
+</div>
+</div>
+</section>
+<!-- Channels Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- QRIS GoPay -->
+<div class="bg-yellow-50 p-6 rounded-[14px] card-shadow border border-yellow-200">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-yellow-600">qr_code_2</span>
+<h3 class="text-headline-md font-headline-md text-yellow-900">QRIS GoPay</h3>
+</div>
+<p class="text-body-md text-yellow-800 mb-6">Total terklaim <span class="font-bold">Rp 120.000</span></p>
+<label class="flex items-center gap-3 cursor-pointer p-3 bg-white/50 rounded-lg hover:bg-white transition-colors">
+<input checked="" class="w-6 h-6 rounded border-yellow-400 text-yellow-600 focus:ring-yellow-500" type="checkbox"/>
+<span class="text-label-lg font-label-lg text-yellow-900">Sudah cek mutasi &amp; cocok</span>
+</label>
+</div>
+<!-- QRIS Midtrans -->
+<div class="bg-green-50 p-6 rounded-[14px] card-shadow border border-green-200">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+<h3 class="text-headline-md font-headline-md text-green-900">QRIS Midtrans</h3>
+</div>
+<p class="text-body-md text-green-800">
+<span class="font-bold">Terverifikasi otomatis Rp 240.000</span><br/>
+<span class="text-label-md opacity-75">tidak perlu hitung manual</span>
+</p>
+<div class="mt-4 flex items-center text-green-600">
+<span class="material-symbols-outlined text-sm mr-1">bolt</span>
+<span class="text-label-md">Real-time settlement</span>
+</div>
+</div>
+<!-- GoFood -->
+<div class="bg-surface-container-high p-6 rounded-[14px] card-shadow border border-outline-variant">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant">delivery_dining</span>
+<h3 class="text-headline-md font-headline-md text-on-surface">GoFood</h3>
+</div>
+<p class="text-body-md text-on-surface-variant">Dicocokkan dengan catatan otomatis</p>
+<p class="text-label-md mt-4 text-on-surface-variant/60">Estimasi pencairan: 24 jam</p>
+</div>
+<!-- GrabFood -->
+<div class="bg-surface-container-high p-6 rounded-[14px] card-shadow border border-outline-variant">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant">moped</span>
+<h3 class="text-headline-md font-headline-md text-on-surface">GrabFood</h3>
+</div>
+<p class="text-body-md text-on-surface-variant">Dicocokkan dengan catatan otomatis</p>
+<p class="text-label-md mt-4 text-on-surface-variant/60">Estimasi pencairan: 24 jam</p>
+</div>
+</div>
+<!-- Collapsed Card -->
+<button class="w-full flex items-center justify-between p-4 bg-surface-container rounded-[14px] text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="text-label-lg font-label-lg">Dilewati (0 transaksi)</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar & Footer -->
+<footer class="fixed bottom-0 right-0 w-[calc(100%-240px)] bg-white border-t border-outline-variant px-margin-page py-4 z-50 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-start gap-3 max-w-xl">
+<span class="material-symbols-outlined text-secondary pt-1">info</span>
+<p class="text-label-md font-label-md text-on-surface-variant">
+                Selisih kecil (pembulatan) lewat tanpa drama. <span class="text-primary font-bold">Selisih di atas ambang wajib diberi alasan + notif Owner.</span>
+</p>
+</div>
+<div class="flex gap-4">
+<button class="h-[52px] px-8 bg-primary text-on-primary rounded-[14px] font-bold text-label-lg shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center gap-2">
+                Lanjut: Uang Urgent &amp; Refund
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</footer>
+<script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                const expected = 856000;
+                const diffLabel = e.target.closest('section').querySelector('.text-green-600');
+                const chip = e.target.closest('section').querySelector('.bg-green-100');
+                
+                const diff = value - expected;
+                
+                if (diff === 0) {
+                    diffLabel.textContent = 'Selisih kas: Rp 0';
+                    diffLabel.className = 'text-label-lg font-label-lg text-green-600';
+                    chip.style.display = 'flex';
+                } else {
+                    diffLabel.textContent = `Selisih kas: Rp ${diff.toLocaleString('id-ID')}`;
+                    diffLabel.className = 'text-label-lg font-label-lg text-red-600 font-bold';
+                    chip.style.display = 'none';
+                }
+            });
+        });
+
+        // Add visual feedback on checkbox change
+        document.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+            const card = e.target.closest('div');
+            if (e.target.checked) {
+                card.classList.add('opacity-80');
+            } else {
+                card.classList.remove('opacity-80');
+            }
+        });
+    </script>
+</body></html>

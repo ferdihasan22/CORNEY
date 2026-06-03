@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#ffc72c",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "surface-container-low": "#f6f3f2",
+                      "on-secondary-fixed-variant": "#5a4300",
+                      "on-background": "#1c1b1b",
+                      "on-surface": "#1c1b1b",
+                      "secondary-fixed": "#ffdf99",
+                      "surface-container-highest": "#e5e2e1",
+                      "outline": "#916f6a",
+                      "on-tertiary-container": "#f6f7f7",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#ffb4a8",
+                      "surface-dim": "#dcd9d9",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#930001",
+                      "tertiary-container": "#707171",
+                      "error": "#ba1a1a",
+                      "primary-container": "#da291c",
+                      "background": "#fcf9f8",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "primary-fixed": "#ffdad4",
+                      "primary": "#b50303",
+                      "on-secondary-container": "#6f5400",
+                      "on-primary-fixed": "#410000",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#fff5f3",
+                      "on-secondary-fixed": "#251a00",
+                      "tertiary-fixed": "#e2e2e2",
+                      "inverse-surface": "#313030",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#5c403b",
+                      "inverse-on-surface": "#f3f0ef",
+                      "surface-container-high": "#eae7e7",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container": "#f0eded",
+                      "surface": "#fcf9f8",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "tertiary": "#575959",
+                      "secondary-fixed-dim": "#f6bf22",
+                      "outline-variant": "#e6bdb7",
+                      "secondary": "#775a00",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "surface-variant": "#e5e2e1",
+                      "surface-bright": "#fcf9f8",
+                      "surface-tint": "#be0f09",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "stack-gap": "16px",
+                      "padding-card": "20px",
+                      "min-tap-target": "52px",
+                      "margin-page": "32px",
+                      "gutter-grid": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface-container-low border-b border-outline-variant dark:border-outline shadow-sm docked full-width top-0 sticky z-50 flex items-center justify-between px-margin-page h-min-tap-target w-full">
+<div class="flex items-center gap-4">
+<button class="active:opacity-80 transition-opacity p-2 -ml-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed">Riwayat Harga</h1>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full">
+<span class="font-label-md text-label-md text-on-secondary-container">Supplier</span>
+</div>
+</header>
+<main class="px-4 py-6 max-w-md mx-auto space-y-6">
+<!-- Info Banner Bridge -->
+<section class="bg-surface-container-high rounded-xl p-4 flex gap-4 items-start shadow-sm">
+<div class="bg-primary-container/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary-container" data-icon="info">info</span>
+</div>
+<div class="space-y-1">
+<p class="font-body-md text-body-md text-on-surface-variant leading-tight">
+                    Setiap perubahan harga otomatis memberi tahu <span class="font-bold text-on-surface">Owner CORNEY</span> (satu arah). Anda tidak bisa melihat data internal CORNEY.
+                </p>
+</div>
+</section>
+<!-- Search / Filter (Contextual Addition for UI Quality) -->
+<div class="relative">
+<input class="w-full h-min-tap-target pl-12 pr-4 bg-surface border-outline-variant border rounded-xl font-body-md focus:border-primary-container focus:ring-0 outline-none transition-all" placeholder="Cari item..." type="text">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+</div>
+<!-- Price History List -->
+<section class="space-y-8">
+<!-- Group 1: Glaze Coklat -->
+<div class="space-y-4">
+<div class="flex justify-between items-center px-1">
+<h2 class="font-headline-md text-headline-md text-on-surface">Glaze Coklat</h2>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded font-label-md text-label-md">SKU: GC-01</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden divide-y divide-outline-variant">
+<!-- Current State -->
+<div class="p-4 flex justify-between items-center bg-secondary-container/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl" data-icon="trending_up">trending_up</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant">Harga Terbaru</p>
+<p class="font-headline-md text-headline-md text-primary">Rp 62.000</p>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">20 Mei</p>
+</div>
+<!-- Past Entries -->
+<div class="p-4 flex justify-between items-center opacity-80">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md">Rp 60.000</span>
+<span class="material-symbols-outlined text-sm text-primary" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold text-body-md">Rp 62.000</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">20 Mei</p>
+</div>
+</div>
+</div>
+<!-- Group 2: Tepung Panir -->
+<div class="space-y-4">
+<h2 class="font-headline-md text-headline-md text-on-surface px-1">Tepung Panir</h2>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden divide-y divide-outline-variant">
+<!-- Current State (Down) -->
+<div class="p-4 flex justify-between items-center bg-green-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl" data-icon="trending_down">trending_down</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant">Harga Terbaru</p>
+<p class="font-headline-md text-headline-md text-green-700">Rp 42.000</p>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">15 Mei</p>
+</div>
+<!-- Past Entries -->
+<div class="p-4 flex justify-between items-center opacity-80">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span>
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md text-on-surface-variant">Rp 45.000</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold text-body-md">Rp 42.000</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">15 Mei</p>
+</div>
+<div class="p-4 flex justify-between items-center opacity-60">
+<div class="flex items-center gap-3 pl-8">
+<div class="flex items-center gap-2">
+<span class="font-body-md text-body-md">Rp 40.000</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-body-md">Rp 45.000</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">02 Mei</p>
+</div>
+</div>
+</div>
+<!-- Group 3: Saus Tomat -->
+<div class="space-y-4">
+<h2 class="font-headline-md text-headline-md text-on-surface px-1">Saus Tomat</h2>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden p-4">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary" data-icon="update">update</span>
+<p class="font-body-md text-body-md font-bold">Rp 12.500 <span class="font-normal text-on-surface-variant">(Tetap)</span></p>
+</div>
+<p class="text-xs text-on-surface-variant italic">Terakhir diperbarui 3 bulan yang lalu.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Toast Notification (Simulated State) -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-[60] transform scale-0 transition-transform duration-300" id="toast">
+<div class="bg-inverse-surface text-inverse-on-surface p-4 rounded-xl shadow-2xl flex items-center justify-between gap-3 border border-white/10">
+<div class="flex items-center gap-3">
+<div class="bg-green-500 rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="check_circle" data-weight="fill">check_circle</span>
+</div>
+<div class="flex flex-col">
+<p class="font-label-lg text-label-lg leading-tight">Harga diperbarui</p>
+<p class="text-xs opacity-80">Owner diberi tahu otomatis</p>
+</div>
+</div>
+<button class="p-1 hover:bg-white/10 rounded-full transition-colors" onclick="hideToast()">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 bg-surface px-4 pb-2 shadow-lg z-50 rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-label-md text-label-md">Menu</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-label-md text-label-md">Riwayat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-label-md text-label-md">Pesan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Profil</span>
+</div>
+</nav>
+<script>
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('scale-0');
+            toast.classList.add('scale-100', 'animate-slide-up');
+            
+            setTimeout(() => {
+                hideToast();
+            }, 5000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('scale-100', 'animate-slide-up');
+            toast.classList.add('scale-0');
+        }
+
+        // Trigger toast on load for demonstration
+        window.onload = () => {
+            setTimeout(showToast, 1200);
+        };
+    </script>
+</body></html>

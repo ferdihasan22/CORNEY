@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Request Belanja Besok - CORNEY POS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #da291c;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-secondary-fixed": "#251a00",
+                        "secondary": "#775a00",
+                        "tertiary-container": "#707171",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "outline-variant": "#e6bdb7",
+                        "tertiary": "#575959",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container": "#f0eded",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "outline": "#916f6a",
+                        "surface-variant": "#e5e2e1",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#ffdad4",
+                        "on-tertiary-container": "#f6f7f7",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#fff5f3",
+                        "surface-tint": "#be0f09",
+                        "primary": "#b50303",
+                        "background": "#fcf9f8",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#ffdf99",
+                        "primary-container": "#da291c",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary-container": "#6f5400",
+                        "inverse-primary": "#ffb4a8",
+                        "surface-bright": "#fcf9f8",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "surface-container-high": "#eae7e7",
+                        "on-surface-variant": "#5c403b",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-background": "#1c1b1b",
+                        "secondary-container": "#ffc72c",
+                        "inverse-surface": "#313030",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-primary-fixed-variant": "#930001",
+                        "surface": "#fcf9f8",
+                        "on-primary-fixed": "#410000",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "brand-success": "#16A34A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "14px": "14px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "padding-card": "20px",
+                        "stack-gap": "16px",
+                        "min-tap-target": "52px",
+                        "margin-page": "32px",
+                        "gutter-grid": "24px"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary-container text-on-primary-container shadow-md flex justify-between items-center px-4 h-min-tap-target">
+<div class="flex items-center gap-3">
+<button class="p-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-md text-[18px] font-bold leading-tight">Request Belanja Besok</h1>
+<span class="text-[12px] opacity-90">Branch: Jakarta Central</span>
+</div>
+</div>
+<div class="bg-secondary-container text-on-secondary-fixed px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+            Opsional · boleh dilewati
+        </div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-20 pb-32 px-4 max-w-md mx-auto w-full space-y-6">
+<!-- Section 1: Daftar Belanja (Checklist) -->
+<section class="bg-surface-container-lowest rounded-14px p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-headline-md font-bold text-on-surface">Daftar Belanja</h2>
+<span class="text-primary text-[12px] font-bold">Pilih item</span>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Checkbox Item -->
+<script>
+                    const shoppingItems = ["Kentang", "Glaze Coklat", "Glaze Tiramisu", "Glaze Greentea", "Saus Tomat", "Saus Keju", "Saus Sambal", "Tepung Panir", "Tisu", "Sarung Tangan", "Plastik 15", "Plastik 24", "Minyak", "Mayonaise"];
+                    
+                    document.write(shoppingItems.map(item => `
+                        <label class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-outline-variant/30 active:bg-secondary-container/20 transition-colors cursor-pointer">
+                            <span class="font-label-lg text-on-surface-variant">${item}</span>
+                            <div class="relative flex items-center">
+                                <input type="checkbox" class="w-6 h-6 rounded-md border-2 border-outline text-primary focus:ring-primary cursor-pointer transition-all">
+                            </div>
+                        </label>
+                    `).join(''));
+                </script>
+</div>
+</section>
+<!-- Section 2: Kotak (Numeric Input) -->
+<section class="bg-surface-container-lowest rounded-14px p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
+<div class="flex items-center gap-2 mb-3">
+<h2 class="text-headline-md font-bold text-on-surface">Kotak</h2>
+<div class="bg-secondary-container/20 text-secondary border border-secondary/30 px-2 py-0.5 rounded-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span class="text-[11px] font-bold">saatnya restok (sisa ≤ 50)</span>
+</div>
+</div>
+<div class="relative">
+<input class="w-full h-min-tap-target bg-surface-container-low border border-outline-variant rounded-14px px-4 font-display-md text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0" type="number" value="150"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">pcs</span>
+</div>
+</section>
+<!-- Section 3: Catatan Bebas -->
+<section class="bg-surface-container-lowest rounded-14px p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
+<h2 class="text-headline-md font-bold text-on-surface mb-3">Catatan Bebas</h2>
+<textarea class="w-full min-h-[100px] bg-surface-container-low border border-outline-variant rounded-14px p-4 text-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none transition-all" placeholder="Tulis catatan tambahan di sini...">minyak hampir habis</textarea>
+</section>
+<!-- Section 4: Teks Siap-Salin -->
+<section class="bg-surface-container-lowest rounded-14px p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)] space-y-4">
+<h2 class="text-headline-md font-bold text-on-surface">Teks Siap-Salin</h2>
+<div class="bg-surface-container rounded-lg p-4 font-mono text-[13px] leading-relaxed text-on-surface-variant border-l-4 border-secondary-container">
+<p>REQUEST BELANJA — CORNEY Sepinggan (besok)</p>
+<p>• Kentang ✓</p>
+<p>• Glaze Coklat ✓</p>
+<p>• Kotak: 150</p>
+<p>Catatan: minyak hampir habis</p>
+</div>
+<button class="w-full h-min-tap-target bg-brand-success text-white rounded-14px flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">content_copy</span>
+<div class="text-left">
+<div class="font-bold text-[16px] leading-none">Salin Teks</div>
+<div class="text-[10px] opacity-80 font-medium">tempel sendiri ke grup WA CORNEY</div>
+</div>
+</button>
+</section>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 w-full bg-white px-4 py-4 space-y-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] border-t border-surface-container-high">
+<button class="w-full h-min-tap-target bg-primary-container text-white font-bold text-[18px] rounded-14px shadow-[0_4px_10px_rgba(218,41,28,0.3)] active:scale-95 transition-all">
+            Simpan &amp; Lanjut Closing
+        </button>
+<button class="w-full h-min-tap-target text-tertiary font-bold text-[16px] active:opacity-60 transition-all">
+            Lewati
+        </button>
+</footer>
+<!-- Atmosphere Effects (Confetti-like subtle sparkles on copy - logic only) -->
+<script>
+        document.querySelector('button.bg-brand-success').addEventListener('click', function() {
+            const btn = this;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = `
+                <span class="material-symbols-outlined">check_circle</span>
+                <div class="text-left">
+                    <div class="font-bold text-[16px] leading-none">Berhasil Disalin!</div>
+                    <div class="text-[10px] opacity-80 font-medium">Siap ditempel ke WhatsApp</div>
+                </div>
+            `;
+            btn.classList.replace('bg-brand-success', 'bg-secondary');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.classList.replace('bg-secondary', 'bg-brand-success');
+            }, 2000);
+        });
+    </script>
+</body></html>

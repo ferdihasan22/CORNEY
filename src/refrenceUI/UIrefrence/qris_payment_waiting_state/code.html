@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY - Pembayaran QRIS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-fixed": "#251a00",
+                "secondary-fixed-dim": "#f6bf22",
+                "on-primary": "#ffffff",
+                "surface": "#fcf9f8",
+                "secondary-container": "#ffc72c",
+                "primary-container": "#da291c",
+                "outline": "#916f6a",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-error": "#ffffff",
+                "on-background": "#1c1b1b",
+                "error": "#ba1a1a",
+                "on-tertiary": "#ffffff",
+                "surface-bright": "#fcf9f8",
+                "primary": "#b50303",
+                "on-error-container": "#93000a",
+                "inverse-on-surface": "#f3f0ef",
+                "secondary": "#775a00",
+                "surface-variant": "#e5e2e1",
+                "inverse-surface": "#313030",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed": "#1a1c1c",
+                "primary-fixed-dim": "#ffb4a8",
+                "tertiary-container": "#707171",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "on-tertiary-container": "#f6f7f7",
+                "outline-variant": "#e6bdb7",
+                "on-primary-container": "#fff5f3",
+                "background": "#fcf9f8",
+                "tertiary": "#575959",
+                "surface-dim": "#dcd9d9",
+                "surface-tint": "#be0f09",
+                "error-container": "#ffdad6",
+                "primary-fixed": "#ffdad4",
+                "tertiary-fixed": "#e2e2e2",
+                "on-surface": "#1c1b1b",
+                "surface-container-highest": "#e5e2e1",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-container": "#6f5400",
+                "on-primary-fixed": "#410000",
+                "secondary-fixed": "#ffdf99",
+                "on-secondary-fixed-variant": "#5a4300",
+                "surface-container": "#f0eded",
+                "on-surface-variant": "#5c403b",
+                "surface-container-high": "#eae7e7",
+                "inverse-primary": "#ffb4a8",
+                "surface-container-low": "#f6f3f2",
+                "on-primary-fixed-variant": "#930001"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-gap": "16px",
+                "padding-card": "20px",
+                "margin-page": "32px",
+                "gutter-grid": "24px",
+                "base": "8px",
+                "min-tap-target": "52px"
+            },
+            "fontFamily": {
+                "headline-md": ["Plus Jakarta Sans"],
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "label-md": ["Plus Jakarta Sans"],
+                "display-md": ["Plus Jakarta Sans"],
+                "label-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .qr-gradient { background: radial-gradient(circle at top right, #da291c10, transparent 40%), radial-gradient(circle at bottom left, #ffc72c10, transparent 40%); }
+        .drip-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23b50303' fill-opacity='0.05' d='M0,192L48,202.7C96,213,192,235,288,224C384,213,480,171,576,144C672,117,768,107,864,128C960,149,1056,203,1152,208C1248,213,1344,171,1392,149.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-slow-spin { animation: spin 2s linear infinite; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-margin-page">
+<!-- Top Bar Component -->
+<header class="w-full top-0 sticky bg-surface dark:bg-surface-dim flex items-center px-margin-page h-min-tap-target z-50">
+<button class="mr-4 text-primary dark:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-inverse-primary">Pembayaran QRIS</h1>
+</header>
+<main class="px-margin-page drip-bg">
+<!-- Hero Amount Section -->
+<section class="flex flex-col items-center justify-center py-10 text-center">
+<p class="font-label-md text-on-surface-variant mb-1">Total Pembayaran</p>
+<h2 class="font-display-lg text-display-lg text-primary tracking-tight">Rp 38.000</h2>
+<div class="mt-2 px-4 py-1.5 bg-surface-container-low rounded-full">
+<p class="text-on-surface-variant font-label-md">Harga produk · ongkir Maxim dibayar terpisah</p>
+</div>
+</section>
+<!-- QRIS Card Component -->
+<div class="max-w-md mx-auto mb-stack-gap">
+<div class="bg-surface-container-lowest rounded-[16px] p-6 shadow-[0_4px_16px_rgba(26,26,26,0.08)] qr-gradient relative overflow-hidden flex flex-col items-center">
+<!-- Branding Elements (Subtle Swirl/Drip accents via CSS) -->
+<div class="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
+<svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M44.7,-76.4C58.1,-69.2,69.5,-57.4,77.3,-43.8C85.1,-30.3,89.3,-15.1,87.6,-0.9C86,13.2,78.5,26.4,69.5,37.8C60.4,49.2,49.8,58.8,37.6,66.1C25.3,73.4,11.3,78.4,-3.2,84C-17.7,89.6,-32.6,95.8,-46.3,92.1C-60,88.4,-72.5,74.7,-80.6,59.3C-88.7,43.9,-92.3,26.8,-90.4,10.9C-88.5,-5.1,-81.1,-19.9,-71.8,-32.8C-62.5,-45.8,-51.3,-56.9,-38.7,-64.5C-26.1,-72.1,-12.1,-76.2,2.3,-80.2C16.6,-84.2,31.3,-83.5,44.7,-76.4Z" fill="#b50303" transform="translate(100 100)"></path></svg>
+</div>
+<!-- Main QR Code Image -->
+<div class="w-full aspect-square bg-white p-4 rounded-xl border border-surface-variant mb-6 shadow-sm">
+<img alt="QR Code Pembayaran" class="w-full h-full object-contain" data-alt="A professional, clean QR code for digital payment displayed clearly in a high-resolution scan-ready format. The QR code is perfectly centered on a crisp white background with sharp black pixels. The overall aesthetic is minimalist, modern, and high-tech, fitting a premium Indonesian fast-food ordering app. Soft ambient studio lighting highlights the edges of the card it is printed on, using the CORNEY brand palette of red and yellow in subtle background accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTgSvHtuw7ADexufEiR_wnyIDKy5m0nXJkHcT0aTlNC9W-RnfztrrNBeazRboPI9ufDPIgg-6niLy918zt-Gvoy1i8YF6L2ZSXRYEwZuUZfyXPkGCMC1ukcv4t4VdCKTOo9ykzO89RqrpZMdhMUi6A0siHWgGtnu83dVrYdSYcBMSEJ03omUzAjNg9vQZcLlZxvr5ynuKAY1hKkxeJTVoiqcFxzktSLKGBfdVh-Ldod0udiBOX9Rw3EIAz9hZC_kMz5UDszwmGkR8"/>
+</div>
+<!-- Logos & Actions -->
+<div class="w-full flex flex-col items-center gap-4">
+<div class="flex items-center gap-6 opacity-80">
+<img alt="QRIS Logo" class="h-6 w-auto grayscale contrast-125 brightness-75" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaNAV8rkssnHZoGIb1PC5BDjvid2fTaV5TYkz9UcP8bnGTAVA0lo8vaxScV2cCr3hbjcYhIN9pv5qiGAggjKnvZrbvNavNJm2MAaz_43lY1LbgOE77FpB38l278qTyLvkGD6KX4wr9LV_5Qqt7hZrVFlfvPH42AoVoSuOOl2N_A3mm8zwvBEJY3ZVIdT8TBb-RrhR5T3-epoUpZAFks6Zb_N_wIo3lciizdIXNDbSFI9_FUjpnYLK_nUi8WFbSKXbhwR-e9R55lEM"/>
+<img alt="Midtrans Logo" class="h-5 w-auto opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2nSbVyBmxXiIXU7WaM2fp7h-Ds_vyoHrR6OSJA7upRZX-MLZn--RMcMuPuznxbxDL6_tv1QXTK_rrLZYJyTNNWZfK4_jRvcUHZAtgV-tgWEw1LtUqMAjRkQrXuSRZD0TwCZ8ogVw2PqA6PSJwJsVZk8xnVi60dzmL0HII-VcBeFi-k7qicJ58neiMMfEGqwbJRnqWwvm15c0sD12ji8rvyrh3hKCcBqG_4GhqiX_2nJSYHyye7s42My33fPy9CjCua56TA7_mvsY"/>
+</div>
+<div class="w-full h-[1px] bg-surface-variant my-2"></div>
+<div class="flex justify-center gap-8 w-full">
+<button class="flex items-center gap-2 text-primary font-label-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">save</span>
+<span>Simpan QR</span>
+</button>
+<button class="flex items-center gap-2 text-primary font-label-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">share</span>
+<span>Bagikan</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Status Row Component -->
+<div class="max-w-md mx-auto mb-stack-gap">
+<div class="bg-[#FFFBEB] border border-[#FDE68A] rounded-full px-5 py-3 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-5 h-5 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-slow-spin"></div>
+<span class="text-[#92400E] font-label-md">Menunggu pembayaran...</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#F59E0B] text-[18px]">timer</span>
+<span class="text-[#F59E0B] font-headline-md text-[16px] tabular-nums" id="timer">04:32</span>
+</div>
+</div>
+</div>
+<!-- Instruction List -->
+<div class="max-w-md mx-auto mb-stack-gap">
+<div class="bg-surface-container-low rounded-xl p-5 border border-surface-variant/50">
+<h3 class="font-label-lg text-on-surface mb-3">Cara Pembayaran</h3>
+<ol class="space-y-3">
+<li class="flex gap-3 items-start">
+<span class="bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold mt-0.5 flex-shrink-0">1</span>
+<p class="text-on-surface-variant font-body-md">Buka e-wallet (Gojek, OVO, Dana) atau m-banking favorit kamu.</p>
+</li>
+<li class="flex gap-3 items-start">
+<span class="bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold mt-0.5 flex-shrink-0">2</span>
+<p class="text-on-surface-variant font-body-md">Scan QR code di atas menggunakan fitur scan/pay.</p>
+</li>
+<li class="flex gap-3 items-start">
+<span class="bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold mt-0.5 flex-shrink-0">3</span>
+<p class="text-on-surface-variant font-body-md">Selesaikan pembayaran sebesar <span class="font-bold text-on-surface">Rp 38.000</span>.</p>
+</li>
+</ol>
+</div>
+</div>
+<!-- Footer Security -->
+<div class="max-w-md mx-auto text-center px-4 mb-stack-gap">
+<div class="flex items-center justify-center gap-2 mb-2">
+<span class="material-symbols-outlined text-tertiary-container text-[18px]">verified_user</span>
+<p class="text-[12px] text-tertiary font-body-md leading-tight">
+                    Pembayaran diproses aman oleh <span class="font-bold">Midtrans</span>. CORNEY tidak menyimpan data kartu atau e-wallet kamu.
+                </p>
+</div>
+</div>
+<!-- Buttons Section -->
+<div class="max-w-md mx-auto flex flex-col gap-3">
+<button class="w-full h-min-tap-target bg-primary-container text-on-primary font-headline-md rounded-xl shadow-[0_4px_12px_rgba(181,3,3,0.2)] active:scale-[0.98] transition-all hover:brightness-110">
+                Sudah bayar? Cek status
+            </button>
+<button class="w-full h-min-tap-target bg-surface-container text-on-surface-variant font-label-lg rounded-xl active:scale-[0.98] transition-all">
+                Batalkan Pesanan
+            </button>
+</div>
+</main>
+<script>
+        // Simple countdown timer logic
+        let time = 4 * 60 + 32;
+        const timerElement = document.getElementById('timer');
+        
+        setInterval(() => {
+            if (time > 0) {
+                time--;
+                const mins = Math.floor(time / 60);
+                const secs = time % 60;
+                timerElement.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+
+        // Feedback on click for demo
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.add('opacity-80');
+                setTimeout(() => this.classList.remove('opacity-80'), 100);
+            });
+        });
+    </script>
+</body></html>

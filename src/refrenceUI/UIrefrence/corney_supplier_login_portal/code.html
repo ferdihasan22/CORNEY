@@ -1,0 +1,209 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CORNEY Supplier Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#da291c",
+                    "tertiary-container": "#707171",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "inverse-on-surface": "#f3f0ef",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "surface-dim": "#dcd9d9",
+                    "on-surface-variant": "#5c403b",
+                    "inverse-surface": "#313030",
+                    "outline-variant": "#e6bdb7",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#b50303",
+                    "tertiary-fixed": "#e2e2e2",
+                    "tertiary": "#575959",
+                    "surface-container-high": "#eae7e7",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "surface-variant": "#e5e2e1",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#be0f09",
+                    "surface": "#fcf9f8",
+                    "surface-container": "#f0eded",
+                    "on-background": "#1c1b1b",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-tertiary-container": "#f6f7f7",
+                    "primary-fixed": "#ffdad4",
+                    "on-primary-container": "#fff5f3",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1c1b1b",
+                    "on-secondary-container": "#6f5400",
+                    "secondary-fixed": "#ffdf99",
+                    "outline": "#916f6a",
+                    "on-secondary-fixed": "#251a00",
+                    "inverse-primary": "#ffb4a8",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "background": "#fcf9f8",
+                    "on-primary-fixed": "#410000",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#fcf9f8",
+                    "on-primary-fixed-variant": "#930001",
+                    "surface-container-highest": "#e5e2e1",
+                    "surface-container-low": "#f6f3f2",
+                    "secondary": "#775a00",
+                    "secondary-container": "#ffc72c",
+                    "tertiary-fixed-dim": "#c6c6c7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-grid": "24px",
+                    "base": "8px",
+                    "min-tap-target": "52px",
+                    "margin-page": "32px",
+                    "stack-gap": "16px",
+                    "padding-card": "20px"
+            },
+            "fontFamily": {
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+        .login-card-shadow {
+            box-shadow: 0 4px 16px 0 rgba(26, 26, 26, 0.08);
+        }
+        input:focus {
+            outline: none;
+            border-color: #da291c;
+            border-width: 2px;
+        }
+        /* Mobile-first PWA adjustments */
+        @media (max-width: 640px) {
+            .pwa-container {
+                height: 100dvh;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased flex flex-col min-h-screen">
+<main class="flex-grow flex flex-col items-center justify-center px-6 py-12 pwa-container">
+<!-- Logo & Brand Area -->
+<div class="text-center mb-10 w-full">
+<div class="flex items-center justify-center gap-2 mb-1">
+<span class="font-display-md text-display-md text-primary-container tracking-tight">CORNEY</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-0.5 rounded-full font-label-md text-label-md uppercase tracking-wider">Supplier</span>
+</div>
+<p class="font-body-md text-body-md text-tertiary">Portal mitra supplier</p>
+</div>
+<!-- Center Login Card -->
+<div class="w-full max-w-md bg-surface-container-lowest rounded-[14px] login-card-shadow p-8 border border-surface-variant/30">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-8">Masuk Supplier</h1>
+<form class="space-y-6" onsubmit="return false;">
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block ml-1" for="username">Username</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant">person</span>
+<input class="w-full h-min-tap-target pl-12 pr-4 bg-surface-container-low border border-outline-variant rounded-[14px] font-body-md text-on-surface transition-all placeholder:text-outline" id="username" name="username" placeholder="ID Supplier Anda" type="text">
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block ml-1" for="password">Password</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant">lock</span>
+<input class="w-full h-min-tap-target pl-12 pr-12 bg-surface-container-low border border-outline-variant rounded-[14px] font-body-md text-on-surface transition-all placeholder:text-outline" id="password" name="password" placeholder="Masukkan password" type="password">
+<button class="absolute right-4 flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" id="password-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="pt-4">
+<button class="w-full h-min-tap-target bg-primary-container text-on-primary font-label-lg text-label-lg rounded-[14px] shadow-lg active:scale-[0.98] hover:brightness-110 transition-all flex items-center justify-center gap-2" type="submit">
+                        Masuk
+                        <span class="material-symbols-outlined">login</span>
+</button>
+</div>
+<!-- Helper Text -->
+<div class="text-center pt-2">
+<p class="font-label-md text-label-md text-tertiary">
+                        Hubungi <span class="text-primary font-bold">CORNEY</span> jika butuh akses.
+                    </p>
+</div>
+</form>
+</div>
+<!-- Footer Notice -->
+<footer class="mt-12 w-full max-w-sm text-center px-4">
+<p class="font-label-md text-label-md text-tertiary leading-relaxed">
+                Akun ini hanya mengelola katalog &amp; harga Anda sendiri. Pastikan data tetap akurat untuk kelancaran operasional.
+            </p>
+</footer>
+</main>
+<!-- Decorative Bottom Gradient for PWA feel -->
+<div class="fixed bottom-0 left-0 w-full h-1 bg-primary-container opacity-50"></div>
+<script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('password-toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // Ripple/Feedback effect on inputs
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('ring-2', 'ring-primary-container/10');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('ring-2', 'ring-primary-container/10');
+            });
+        });
+    </script>
+</body></html>

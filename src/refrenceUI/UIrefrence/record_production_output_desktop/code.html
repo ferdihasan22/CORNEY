@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#930001",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-highest": "#e5e2e1",
+                        "primary": "#b50303",
+                        "tertiary-container": "#707171",
+                        "secondary-fixed": "#ffdf99",
+                        "inverse-primary": "#ffb4a8",
+                        "on-primary-container": "#fff5f3",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-secondary-fixed": "#251a00",
+                        "primary-container": "#da291c",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fcf9f8",
+                        "on-surface-variant": "#5c403b",
+                        "surface-dim": "#dcd9d9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface": "#fcf9f8",
+                        "surface-container": "#f0eded",
+                        "background": "#fcf9f8",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary": "#575959",
+                        "surface-variant": "#e5e2e1",
+                        "inverse-surface": "#313030",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-background": "#1c1b1b",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-high": "#eae7e7",
+                        "secondary": "#775a00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "primary-fixed": "#ffdad4",
+                        "on-secondary-container": "#6f5400",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "outline": "#916f6a",
+                        "surface-tint": "#be0f09",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary-container": "#f6f7f7",
+                        "secondary-container": "#ffc72c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "14px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "16px",
+                        "min-tap-target": "52px",
+                        "gutter-grid": "24px",
+                        "base": "8px",
+                        "padding-card": "20px",
+                        "margin-page": "32px"
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- NavigationDrawer (JSON Authority Mapping) -->
+<aside class="bg-surface-container-lowest dark:bg-surface-dim shadow-sm w-[240px] h-full fixed left-0 top-0 flex flex-col py-base px-gutter-grid gap-stack-gap">
+<div class="mb-6">
+<span class="font-display-md text-display-md text-primary dark:text-primary-fixed">CORNEY</span>
+<div class="mt-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">account_circle</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg leading-tight">Staff Operations</p>
+<p class="text-xs text-on-surface-variant">Shift A - Kitchen Unit</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<!-- Active Tab: Production Dashboard (Closest match to Production role task) -->
+<a class="bg-secondary-container text-on-secondary-container rounded-lg font-bold flex items-center gap-3 p-3 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">factory</span>
+<span class="font-label-lg text-label-lg">Production Dashboard</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low hover:bg-secondary-fixed-dim/20 transition-colors flex items-center gap-3 p-3 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory Status</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low hover:bg-secondary-fixed-dim/20 transition-colors flex items-center gap-3 p-3 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-lg text-label-lg">Yield Reports</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low hover:bg-secondary-fixed-dim/20 transition-colors flex items-center gap-3 p-3 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-lg text-label-lg">Quality Check</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low hover:bg-secondary-fixed-dim/20 transition-colors flex items-center gap-3 p-3 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-lg text-label-lg">Shift Handover</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant">
+<p class="text-[10px] text-on-surface-variant opacity-50">V1.2.4</p>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar (JSON Authority Mapping) -->
+<header class="w-full sticky top-0 z-40 bg-surface dark:bg-background border-b border-outline-variant flex items-center justify-between px-margin-page h-[64px]">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary cursor-pointer active:opacity-80">menu</button>
+<h1 class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed">Record Production Output</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-primary text-on-primary px-3 py-1 rounded-full text-xs font-bold tracking-wider">PRODUKSI</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Staff Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling kitchen production supervisor wearing a clean white chef uniform and a red apron. The background is a brightly lit, modern industrial kitchen with stainless steel surfaces. The lighting is crisp and natural, highlighting a friendly yet disciplined professional aesthetic suitable for a fast-food brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJQeKl8gmmMi8AB7Xk8ZmvjpB5ep_zmUzUdAGGYEzLJI87Ehz8fBn6t2q3RyEjrZkx1Skbr8e9iESWQk_-do-satXrrVuf9Nq31OrCbQ-Bh9w3L-0wJCdJ1iGlWFzPFu5veK53GE_135ZXADpblKKSRFOK1mLOtJ6v4LovIR1iPWJ2xTp4UHW58aiIIlc0h2BIL57pOtbUfGvwxI2Ddt9jHsWl6sGdpB5vtbdNoqVkPeoC2zOnrwNNeEH0x1jAQPgHhUhZ_Rc1Mf8"/>
+</div>
+</div>
+</header>
+<!-- Form Container -->
+<div class="max-w-[640px] w-full mx-auto p-margin-page flex flex-col gap-stack-gap">
+<!-- Main Form Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_16px_0_rgba(26,26,26,0.08)] p-padding-card border border-surface-container-high">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-background">Sesi Produksi Baru</h2>
+<p class="text-on-surface-variant font-body-md text-body-md" id="current-timestamp">Senin, 24 Mei 2024 • 09:15</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold">Produksi</span>
+</div>
+<div class="space-y-6">
+<!-- Dropdown Filling -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface">Pilih Varian Isian</label>
+<div class="relative">
+<select class="w-full h-[52px] px-4 rounded-xl border border-outline bg-surface focus:border-primary-container focus:ring-2 focus:ring-primary-container outline-none appearance-none font-body-md text-body-md transition-all">
+<option>Keju Mozza</option>
+<option>Sosis Reguler</option>
+<option>Sosis Jumbo</option>
+<option>Mix (Keju &amp; Sosis)</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Output Input -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface">Jumlah jadi (porsi beku)</label>
+<div class="relative">
+<input class="w-full h-[80px] text-center text-[40px] font-extrabold rounded-xl border-2 border-outline focus:border-primary-container focus:ring-4 focus:ring-primary-container/10 transition-all text-primary" placeholder="0" type="number" value="80"/>
+<span class="absolute right-4 bottom-4 text-on-surface-variant font-label-md text-label-md">Porsi</span>
+</div>
+<p class="text-xs text-on-surface-variant italic">Masukkan total porsi yang berhasil dibekukan dan siap masuk ke freezer.</p>
+</div>
+<!-- Shrinkage Section -->
+<div class="pt-4 border-t border-surface-container-highest space-y-4">
+<h3 class="font-label-lg text-label-lg text-error flex items-center gap-2">
+<span class="material-symbols-outlined">warning</span>
+                            Susut Produksi
+                        </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Jumlah gagal/rusak</label>
+<input class="w-full h-[52px] px-4 rounded-xl border border-outline bg-surface-container-low focus:border-error focus:ring-2 focus:ring-error/20 outline-none font-body-md text-body-md" type="number" value="4"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface">Alasan susut <span class="text-error">*</span></label>
+<input class="w-full h-[52px] px-4 rounded-xl border border-outline bg-surface focus:border-primary-container focus:ring-2 focus:ring-primary-container outline-none font-body-md text-body-md" placeholder="Contoh: Kulit pecah" type="text"/>
+</div>
+</div>
+</div>
+<!-- Live Recap -->
+<div class="bg-secondary-container/30 p-4 rounded-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">info</span>
+<p class="font-label-lg text-label-lg text-on-secondary-container">
+                            Rekap: Stok beku bertambah <span class="font-extrabold text-primary">+80</span> · Susut: <span class="font-extrabold">4</span>
+</p>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-[64px] bg-primary-container hover:bg-primary text-on-primary rounded-xl font-bold text-headline-md shadow-[0_8px_16px_rgba(218,41,28,0.3)] hover:shadow-[0_4px_8px_rgba(218,41,28,0.2)] transition-all active:scale-95 flex items-center justify-center gap-3 group">
+                        Simpan Hasil Produksi
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>
+</button>
+</div>
+</section>
+<!-- History List -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-background">Riwayat Produksi Hari Ini</h2>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                        Lihat Semua <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<!-- History Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between border border-surface-container shadow-sm hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">fastfood</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg">Keju Mozza</p>
+<p class="text-xs text-on-surface-variant">08:45 WIB</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">+120 <span class="text-xs font-normal text-on-surface-variant">pcs</span></p>
+<p class="text-xs text-error font-label-md">Susut: 2</p>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between border border-surface-container shadow-sm hover:border-primary/30 transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">inventory</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg">Sosis Reguler</p>
+<p class="text-xs text-on-surface-variant">07:20 WIB</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">+200 <span class="text-xs font-normal text-on-surface-variant">pcs</span></p>
+<p class="text-xs text-error font-label-md">Susut: 5</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Update live time
+        function updateTime() {
+            const now = new Date();
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const dayName = days[now.getDay()];
+            const dayNum = now.getDate();
+            const monthName = months[now.getMonth()];
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const timeString = `${dayName}, ${dayNum} ${monthName} ${year} • ${hours}:${minutes}`;
+            document.getElementById('current-timestamp').innerText = timeString;
+        }
+        setInterval(updateTime, 10000);
+        updateTime();
+
+        // Simple tactile micro-interactions for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>

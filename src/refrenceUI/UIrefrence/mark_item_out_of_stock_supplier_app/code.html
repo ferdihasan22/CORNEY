@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CORNEY Supplier - Status Ketersediaan Item</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 16px 0 rgba(26, 26, 26, 0.08);
+        }
+        .active-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #10b981; /* Green-500 equivalent */
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#be0f09",
+                        "surface": "#fcf9f8",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "secondary-container": "#ffc72c",
+                        "outline-variant": "#e6bdb7",
+                        "on-secondary-fixed": "#251a00",
+                        "primary-fixed": "#ffdad4",
+                        "surface-bright": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#916f6a",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container": "#f0eded",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#575959",
+                        "on-error-container": "#93000a",
+                        "secondary": "#775a00",
+                        "inverse-primary": "#ffb4a8",
+                        "error": "#ba1a1a",
+                        "on-surface": "#1c1b1b",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary-container": "#707171",
+                        "surface-dim": "#dcd9d9",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#f6f7f7",
+                        "background": "#fcf9f8",
+                        "on-primary-fixed-variant": "#930001",
+                        "surface-container-high": "#eae7e7",
+                        "secondary-fixed": "#ffdf99",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-surface-variant": "#5c403b",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-primary-fixed": "#410000",
+                        "surface-container-highest": "#e5e2e1",
+                        "primary-container": "#da291c",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "on-secondary-container": "#6f5400",
+                        "primary": "#b50303",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-primary-container": "#fff5f3",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#454747"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "14px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "16px",
+                        "min-tap-target": "52px",
+                        "padding-card": "20px",
+                        "margin-page": "24px",
+                        "base": "8px",
+                        "gutter-grid": "24px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="bg-primary-container text-on-primary sticky top-0 z-50 flex items-center justify-between px-6 h-16 shadow-md">
+<div class="flex items-center gap-4">
+<button class="active:opacity-80 transition-opacity flex items-center justify-center h-10 w-10">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-white">Status Ketersediaan Item</h1>
+</div>
+<div class="bg-white/20 px-3 py-1 rounded-full border border-white/30">
+<span class="font-label-md text-label-md text-white">Supplier</span>
+</div>
+</header>
+<!-- Filter Bar -->
+<div class="px-6 py-4 bg-surface-container-low flex gap-2 sticky top-16 z-40 overflow-x-auto no-scrollbar">
+<button class="active-pill bg-secondary-container text-on-secondary-container px-5 py-2 rounded-full font-label-md text-label-md whitespace-nowrap shadow-sm" id="filter-all" onclick="filterItems('all')">
+            Semua
+        </button>
+<button class="active-pill bg-white border border-outline-variant text-on-surface-variant px-5 py-2 rounded-full font-label-md text-label-md whitespace-nowrap" id="filter-tersedia" onclick="filterItems('tersedia')">
+            Tersedia
+        </button>
+<button class="active-pill bg-white border border-outline-variant text-on-surface-variant px-5 py-2 rounded-full font-label-md text-label-md whitespace-nowrap" id="filter-kosong" onclick="filterItems('kosong')">
+            Kosong
+        </button>
+</div>
+<!-- Main List Container -->
+<main class="px-6 pt-2 space-y-4">
+<!-- Category Group 1 -->
+<div class="pt-2">
+<p class="font-label-lg text-label-lg text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="w-1 h-5 bg-primary rounded-full"></span>
+                Daily Needs (K1)
+            </p>
+<div class="space-y-3" id="k1-list">
+<!-- Item Card 1 -->
+<div class="item-card bg-white p-4 rounded-xl custom-shadow transition-all duration-300 flex items-center justify-between group" data-status="tersedia">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional studio product shot of a premium jar of dark chocolate glaze. The lighting is high-contrast and dramatic, highlighting the smooth, glossy texture of the chocolate. Set against a clean, off-white background consistent with a modern corporate fast-food aesthetic, using rich brown and vibrant red tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtwrsuqa4Y1KTe9dir-x2cbpEEdPa00lqR2GQm7bJ9rflmKVVOVMIxC1Wd-5K4ESqoCxs3C7fwGUds6gKOILtxSjUUE0BHgSWm-9h29Iqi7HuPj12c7qTwClk5sYQE-APju5T2STQFhRsUsSCRitPyKZlVzRzLOB8-wo3OCRYs2_ZJoX-Yxeb-UHx823a4tZvZnkHDBpM8BlH3UTk-7s_-fdH7atE321IZoOUYEixpaOK8bQYtDaYiGNpQiBkkEnEWX1av6YHtY2E">
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Glaze Coklat</h3>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-1.5 py-0.5 rounded font-bold">K1</span>
+</div>
+<p class="font-label-lg text-primary">Rp 62.000</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" onchange="toggleAvailability(this)" type="checkbox">
+<div class="toggle-label w-14 h-7 bg-gray-300 rounded-full transition-colors duration-200">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-transform duration-200 shadow-sm flex items-center justify-center"></div>
+</div>
+</label>
+<span class="status-label font-label-md text-[12px] text-emerald-600 font-bold uppercase tracking-wider">Tersedia</span>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="item-card bg-white p-4 rounded-xl custom-shadow transition-all duration-300 flex items-center justify-between group" data-status="tersedia">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close-up commercial photography of high-quality tomato sauce in a modern kitchen setting. The vibrant red sauce is captured with depth of field, looking fresh and appetizing. The lighting is bright and clean, typical of a professional fast-food brand's visual identity, emphasizing freshness and quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr0X1mSX9YnaLP_2wgFfOYpDwGw3mO0J9tbn8hCeZ2mlgpFNN9OfnCLgjd22jSlS7lI7bnRxklv-vMSlyJKusVJHPx0LtOQ6T6wEVzJbWPm-Asil0R5ZoE5m-KxHrPiqU1s5NiYSP6oNpqSepdxSMpByQxVcyxrckkWae56aFCWMo0MZkjHMnnpfXoaO_ZhmAY39HpVfUVrtOnmk-xjHBQ861NqnkylSi0zrrBZMxgUkI8snJGAW_3JRGcDJCMHOY2sl7GIM9kOrQ">
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Saus Tomat</h3>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-1.5 py-0.5 rounded font-bold">K1</span>
+</div>
+<p class="font-label-lg text-primary">Rp 15.500</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" onchange="toggleAvailability(this)" type="checkbox">
+<div class="toggle-label w-14 h-7 bg-gray-300 rounded-full transition-colors duration-200">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+<span class="status-label font-label-md text-[12px] text-emerald-600 font-bold uppercase tracking-wider">Tersedia</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Group 2 -->
+<div class="pt-6">
+<p class="font-label-lg text-label-lg text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="w-1 h-5 bg-secondary-container rounded-full"></span>
+                Dough Ingredients (K2)
+            </p>
+<div class="space-y-3" id="k2-list">
+<!-- Item Card 3 -->
+<div class="item-card bg-white p-4 rounded-xl custom-shadow transition-all duration-300 flex items-center justify-between group opacity-50 grayscale-[0.5]" data-status="kosong">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A macro shot of premium breadcrumbs or Panko flour with a crisp, golden-yellow texture. The lighting is warm and directional, casting soft shadows that define the shape of individual flakes. The overall style is clean and high-energy, showcasing the essential ingredients for high-quality Indonesian street food." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOAgMsR6HuKZZ7d_c9mDFwoVrzWKdHCY-WhBiSpwGLqUC77dqKdiQJF8zrE2DqvRNeH_bDEtkfte0_cumEyLrI5xxSG1TZU8as8q-WN6x_mq34cSEF5WlPNu0ASJxoghNOBu0KPy0mCmDten06CprPITyKMZZArqnTb9KFwbyb2LUCjL_jltxwulTbCJ_6X2ujBo6jNhiTuEIgPAp3JJVeGvjtDFx_axeuW2lxUIKwVjh3iCPAUenb3Ronj05F8hCwZ14K_wCiqhY">
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Tepung Panir</h3>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-1.5 py-0.5 rounded font-bold">K2</span>
+</div>
+<p class="font-label-lg text-primary">Rp 48.000</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<div class="absolute inset-0 z-10 hidden items-center justify-center bg-white/10" id="kosong-overlay">
+<span class="bg-surface-dim text-on-surface-variant px-3 py-1 rounded font-bold text-xs">HABIS</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only toggle-checkbox" onchange="toggleAvailability(this)" type="checkbox">
+<div class="toggle-label w-14 h-7 bg-gray-300 rounded-full transition-colors duration-200">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-transform duration-200 shadow-sm"></div>
+</div>
+</label>
+<span class="status-label font-label-md text-[12px] text-on-surface-variant font-bold uppercase tracking-wider">Kosong</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="pt-8 pb-4 text-center">
+<p class="font-body-md text-[12px] text-on-surface-variant px-6 leading-relaxed italic opacity-75">
+                Cabang akan me-request ulang sendiri bila masih dibutuhkan (lewat peringatan stok cabang).
+            </p>
+</footer>
+</main>
+<!-- Confirmation Toast (Hidden by default) -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-[90%] bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-xl shadow-2xl flex items-start gap-3 transform translate-y-32 transition-transform duration-500 ease-out z-[100]" id="toast">
+<span class="material-symbols-outlined text-secondary-fixed-dim shrink-0">notifications_active</span>
+<p class="font-label-md text-label-md leading-snug">
+            Owner &amp; Operasional diberi tahu. Item kosong tidak otomatis masuk pesanan berikutnya.
+        </p>
+</div>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 bg-surface px-4 pb-2 z-50 shadow-[0_-4px_16px_0_rgba(26,26,26,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-label-md text-label-md">Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-md text-label-md">Riwayat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-md text-label-md">Pesan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profil</span>
+</a>
+</nav>
+<script>
+        function filterItems(type) {
+            const items = document.querySelectorAll('.item-card');
+            const buttons = ['all', 'tersedia', 'kosong'];
+            
+            buttons.forEach(btn => {
+                const el = document.getElementById(`filter-${btn}`);
+                if (btn === type) {
+                    el.classList.add('bg-secondary-container', 'text-on-secondary-container', 'shadow-sm');
+                    el.classList.remove('bg-white', 'border', 'border-outline-variant', 'text-on-surface-variant');
+                } else {
+                    el.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'shadow-sm');
+                    el.classList.add('bg-white', 'border', 'border-outline-variant', 'text-on-surface-variant');
+                }
+            });
+
+            items.forEach(item => {
+                if (type === 'all' || item.getAttribute('data-status') === type) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleAvailability(checkbox) {
+            const card = checkbox.closest('.item-card');
+            const label = card.querySelector('.status-label');
+            const isTersedia = checkbox.checked;
+
+            if (isTersedia) {
+                card.classList.remove('opacity-50', 'grayscale-[0.5]');
+                card.setAttribute('data-status', 'tersedia');
+                label.textContent = 'Tersedia';
+                label.classList.remove('text-on-surface-variant');
+                label.classList.add('text-emerald-600');
+            } else {
+                card.classList.add('opacity-50', 'grayscale-[0.5]');
+                card.setAttribute('data-status', 'kosong');
+                label.textContent = 'Kosong';
+                label.classList.remove('text-emerald-600');
+                label.classList.add('text-on-surface-variant');
+                showToast();
+            }
+        }
+
+        let toastTimeout;
+        function showToast() {
+            const toast = document.getElementById('toast');
+            clearTimeout(toastTimeout);
+            
+            toast.classList.remove('translate-y-32');
+            toast.classList.add('-translate-y-4');
+            
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-32');
+                toast.classList.remove('-translate-y-4');
+            }, 5000);
+        }
+
+        // Initialize view
+        window.onload = () => {
+            filterItems('all');
+        };
+    </script>
+</body></html>

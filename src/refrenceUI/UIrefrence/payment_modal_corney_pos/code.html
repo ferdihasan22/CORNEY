@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+            margin: 0;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-blur-overlay {
+            backdrop-filter: blur(8px);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .payment-card-selected {
+            border: 2px solid #da291c;
+            background-color: #fff5f3;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#fff5f3",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-surface": "#1c1b1b",
+                        "on-secondary-fixed": "#251a00",
+                        "tertiary-container": "#707171",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface": "#fcf9f8",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#da291c",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#6f5400",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "primary": "#b50303",
+                        "tertiary": "#575959",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#5c403b",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "inverse-primary": "#ffb4a8",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-container": "#ffc72c",
+                        "surface-container": "#f0eded",
+                        "on-primary-fixed": "#410000",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary": "#775a00",
+                        "secondary-fixed": "#ffdf99",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed": "#e2e2e2",
+                        "outline-variant": "#e6bdb7",
+                        "on-primary-fixed-variant": "#930001",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#f6f7f7",
+                        "primary-fixed": "#ffdad4",
+                        "surface-variant": "#e5e2e1",
+                        "surface-dim": "#dcd9d9",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "surface-tint": "#be0f09",
+                        "inverse-surface": "#313030",
+                        "outline": "#916f6a",
+                        "background": "#fcf9f8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "14px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "margin-page": "32px",
+                        "gutter-grid": "24px",
+                        "base": "8px",
+                        "padding-card": "20px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Background: Dimmed Walk-in Sale Screen Simulation -->
+<div class="fixed inset-0 flex overflow-hidden">
+<!-- Sidebar Navigation (Mockup) -->
+<aside class="w-[240px] h-screen bg-surface-container-high border-r border-outline-variant flex flex-col py-margin-page">
+<div class="px-6 mb-8">
+<h1 class="text-primary font-display-md text-display-md tracking-tighter">SAMBAL KICK</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<div class="flex items-center gap-stack-gap bg-secondary-container text-on-secondary-container rounded-xl p-4 mx-2 shadow-sm">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span class="font-label-lg text-label-lg">Dine In</span>
+</div>
+<div class="flex items-center gap-stack-gap text-on-surface-variant p-4 mx-2">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-label-lg text-label-lg">Take Away</span>
+</div>
+<div class="flex items-center gap-stack-gap text-on-surface-variant p-4 mx-2">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-lg text-label-lg">Order History</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content (Mockup - Blurred) -->
+<main class="flex-1 p-margin-page bg-surface-container-low blur-sm">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline-lg text-headline-lg">Walk-in Sale</h2>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest"></div>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-gutter-grid">
+<div class="bg-white p-4 rounded-xl shadow-sm h-64"></div>
+<div class="bg-white p-4 rounded-xl shadow-sm h-64"></div>
+<div class="bg-white p-4 rounded-xl shadow-sm h-64"></div>
+<div class="bg-white p-4 rounded-xl shadow-sm h-64"></div>
+<div class="bg-white p-4 rounded-xl shadow-sm h-64"></div>
+<div class="bg-white p-4 rounded-xl shadow-sm h-64"></div>
+</div>
+</main>
+<!-- Cart Sidebar (Mockup - Blurred) -->
+<div class="w-[380px] h-screen bg-white border-l border-outline-variant p-6 blur-sm">
+<h3 class="font-headline-md text-headline-md mb-4">Cart</h3>
+<div class="space-y-4">
+<div class="flex justify-between border-b pb-2"><span class="font-label-lg">Ayam Penyet</span><span>1x</span></div>
+<div class="flex justify-between border-b pb-2"><span class="font-label-lg">Es Teh Manis</span><span>2x</span></div>
+</div>
+</div>
+</div>
+<!-- Payment Modal Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-blur-overlay p-4">
+<!-- Modal Card -->
+<div class="w-full max-w-[560px] bg-white rounded-xl shadow-[0_16px_32px_rgba(26,26,26,0.12)] overflow-hidden transition-transform duration-300 scale-100">
+<!-- Header -->
+<div class="p-margin-page pb-4 border-b border-surface-container-highest">
+<h2 class="font-body-md text-on-surface-variant mb-1">Pembayaran</h2>
+<div class="flex justify-between items-end">
+<h3 class="font-display-md text-display-md text-primary-container">Total Rp 54.000</h3>
+<span class="font-label-md text-on-surface-variant opacity-60">Pilih metode pembayaran</span>
+</div>
+</div>
+<div class="p-margin-page space-y-8">
+<!-- Payment Channels Grid -->
+<div class="grid grid-cols-3 gap-4">
+<!-- Tunai (Selected) -->
+<button class="payment-card-selected p-4 rounded-xl flex flex-col items-center justify-center gap-2 min-h-[96px] transition-all hover:bg-on-primary-container">
+<span class="material-symbols-outlined text-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-primary">Tunai</span>
+</button>
+<!-- QRIS Midtrans -->
+<button class="bg-surface-container-low border border-outline-variant p-4 rounded-xl flex flex-col items-center justify-center gap-1 min-h-[96px] transition-all hover:bg-surface-container-high relative overflow-hidden">
+<span class="absolute top-1 right-1 px-1.5 py-0.5 bg-green-600 text-[10px] text-white rounded font-bold uppercase tracking-wider">Utama</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="qr_code_2">qr_code_2</span>
+<span class="font-label-md">QRIS Midtrans</span>
+<span class="text-[10px] text-on-surface-variant/60 font-medium">Auto-verified</span>
+</button>
+<!-- QRIS GoPay -->
+<button class="bg-surface-container-low border border-outline-variant p-4 rounded-xl flex flex-col items-center justify-center gap-1 min-h-[96px] transition-all hover:bg-surface-container-high relative">
+<span class="absolute top-1 right-1 px-1.5 py-0.5 bg-amber-500 text-[10px] text-white rounded font-bold uppercase tracking-wider">Cadangan</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span class="font-label-md">QRIS GoPay</span>
+<span class="text-[10px] text-on-surface-variant/60 font-medium">Manual</span>
+</button>
+<!-- GoFood -->
+<button class="bg-surface-container-low border border-outline-variant p-4 rounded-xl flex flex-col items-center justify-center gap-1 min-h-[96px] transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="delivery_dining">delivery_dining</span>
+<span class="font-label-md">GoFood</span>
+<span class="text-[10px] text-on-surface-variant/60 font-medium">Dicatat saja</span>
+</button>
+<!-- GrabFood -->
+<button class="bg-surface-container-low border border-outline-variant p-4 rounded-xl flex flex-col items-center justify-center gap-1 min-h-[96px] transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="moped">moped</span>
+<span class="font-label-md">GrabFood</span>
+<span class="text-[10px] text-on-surface-variant/60 font-medium">Dicatat saja</span>
+</button>
+</div>
+<!-- Context Area: Tunai -->
+<div class="space-y-4" id="cash-input-section">
+<div class="flex flex-col gap-2">
+<label class="font-label-lg text-on-surface">Uang Diterima (Rp)</label>
+<div class="relative">
+<input class="w-full h-min-tap-target bg-surface-container-lowest border border-outline rounded-xl px-6 text-2xl font-bold focus:ring-2 focus:ring-primary focus:border-primary transition-all text-on-surface" placeholder="Masukkan jumlah uang..." type="text" value="60.000"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="backspace">backspace</span>
+</div>
+</div>
+<!-- Quick Amount Chips -->
+<div class="flex gap-3">
+<button class="flex-1 h-12 rounded-full border border-outline-variant font-label-lg hover:bg-secondary-container hover:border-secondary-container transition-all active:scale-95">50rb</button>
+<button class="flex-1 h-12 rounded-full border border-outline-variant font-label-lg hover:bg-secondary-container hover:border-secondary-container transition-all active:scale-95">100rb</button>
+<button class="flex-1 h-12 rounded-full border border-secondary font-label-lg text-secondary bg-secondary-container/20 hover:bg-secondary-container transition-all active:scale-95">Uang Pas</button>
+</div>
+<!-- Change Display -->
+<div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+<span class="font-body-md text-green-800">Kembalian:</span>
+<span class="font-headline-md text-green-700">Rp 6.000</span>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="p-margin-page pt-0 flex flex-col gap-3">
+<button class="w-full h-min-tap-target bg-primary-container text-white font-headline-md rounded-xl shadow-[0_8px_16px_rgba(218,41,28,0.25)] hover:bg-primary transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Selesaikan Pembayaran
+                </button>
+<button class="w-full py-3 text-on-surface-variant font-label-lg hover:text-on-surface transition-colors">
+                    Batal
+                </button>
+</div>
+</div>
+</div>
+<script>
+        // Simple micro-interaction for quick-amount chips
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+</body></html>

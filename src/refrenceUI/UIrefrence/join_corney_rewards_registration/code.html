@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#f6f7f7",
+                    "on-primary-fixed-variant": "#930001",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dcd9d9",
+                    "inverse-primary": "#ffb4a8",
+                    "surface-container-low": "#f6f3f2",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "secondary-container": "#ffc72c",
+                    "surface-container-highest": "#e5e2e1",
+                    "outline": "#916f6a",
+                    "secondary-fixed": "#ffdf99",
+                    "on-surface": "#1c1b1b",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "on-background": "#1c1b1b",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "on-primary-container": "#fff5f3",
+                    "on-secondary-container": "#6f5400",
+                    "on-primary-fixed": "#410000",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#ffdad4",
+                    "primary": "#b50303",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#707171",
+                    "primary-container": "#da291c",
+                    "background": "#fcf9f8",
+                    "surface-container": "#f0eded",
+                    "surface": "#fcf9f8",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#eae7e7",
+                    "inverse-on-surface": "#f3f0ef",
+                    "tertiary": "#575959",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-secondary-fixed": "#251a00",
+                    "on-surface-variant": "#5c403b",
+                    "inverse-surface": "#313030",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#be0f09",
+                    "surface-variant": "#e5e2e1",
+                    "surface-bright": "#fcf9f8",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#e6bdb7",
+                    "secondary": "#775a00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "32px",
+                    "min-tap-target": "52px",
+                    "gutter-grid": "24px",
+                    "base": "8px",
+                    "stack-gap": "16px",
+                    "padding-card": "20px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pattern-bg {
+            background-image: radial-gradient(circle at 2px 2px, #ffdf99 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .disabled-btn {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md text-on-background min-h-screen pb-[100px]">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface shadow-sm flex justify-between items-center px-margin-page h-min-tap-target">
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-100">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-md text-display-md text-primary">CORNEY Rewards</h1>
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-100">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</header>
+<main class="pt-[72px] pattern-bg min-h-screen">
+<!-- Hero Section -->
+<section class="px-margin-page pt-stack-gap">
+<div class="relative overflow-hidden rounded-xl bg-primary-container p-padding-card shadow-lg mb-stack-gap border-2 border-secondary-container">
+<div class="relative z-10">
+<h2 class="font-headline-lg text-headline-lg text-on-primary-container mb-2">Kumpulkan poin tiap beli, dapat hadiah!</h2>
+<p class="font-body-md text-on-primary-container opacity-90 mb-stack-gap">Gabung jadi member Sobat Corney sekarang.</p>
+<ul class="space-y-base">
+<li class="flex items-center gap-base text-on-primary-container font-label-lg">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+                            Free Corndogs
+                        </li>
+<li class="flex items-center gap-base text-on-primary-container font-label-lg">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">local_offer</span>
+                            Member Promos
+                        </li>
+<li class="flex items-center gap-base text-on-primary-container font-label-lg">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">cake</span>
+                            Birthday Treats
+                        </li>
+</ul>
+</div>
+<!-- Abstract Food Graphic Placeholder -->
+<div class="absolute -right-4 -bottom-4 w-32 h-32 opacity-20">
+<span class="material-symbols-outlined text-[120px] text-on-primary-container">bakery_dining</span>
+</div>
+</div>
+<!-- Registration Card -->
+<div class="bg-surface-container-lowest rounded-xl p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)] mb-stack-gap">
+<div class="mb-stack-gap">
+<label class="block font-label-md text-on-surface-variant mb-2" for="phone">Nomor WhatsApp</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant">
+<span class="font-label-lg">+62</span>
+</div>
+<input class="w-full h-min-tap-target pl-14 pr-4 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary font-body-lg transition-all outline-none" id="phone" placeholder="812 3456 7890" type="tel"/>
+</div>
+</div>
+<div class="flex items-start gap-3 mb-stack-gap">
+<div class="pt-1">
+<input class="w-6 h-6 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer" id="consent" type="checkbox"/>
+</div>
+<label class="font-body-md text-on-surface select-none" for="consent">
+                        Saya setuju data saya dipakai untuk program loyalty. Lihat <a class="text-primary font-bold underline" href="#">Kebijakan Privasi</a>.
+                    </label>
+</div>
+<button class="disabled-btn w-full h-min-tap-target bg-primary text-on-primary rounded-xl font-headline-md shadow-lg flex items-center justify-center gap-base active:scale-95 transition-all" id="submitBtn">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+                    Daftar dengan WhatsApp
+                </button>
+<p class="mt-stack-gap text-center font-label-md text-on-surface-variant">
+                    Sudah punya akun? <a class="text-primary font-bold" href="#">Masuk</a>
+</p>
+</div>
+<!-- Visual Asset: Appetizing Food Image -->
+<div class="rounded-xl overflow-hidden shadow-sm h-48 w-full relative mb-stack-gap">
+<img class="w-full h-full object-cover" data-alt="A close-up, appetizing shot of several golden-brown Korean-style corndogs drizzled with bright yellow mustard and vibrant red ketchup, presented on a rustic wooden tray. The lighting is high-key and warm, emphasizing the crunchy texture of the breading. The background is a clean, modern cafe setting with a cheerful atmosphere. The color palette centers on intense reds and golden yellows, matching the vibrant energy of the CORNEY brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzm5AuthlP6HC88OmqnEximDRQAx2dX9V2cYJSAJ1ydWzf66y7WzVHMFudiRTBpHjgcOWWBFxHNbxHspg6vKgLNHlAOcGFoCJOi28bZaFEp_y0_2B0_ZiSYClT2IoFKm0hRcZPL1f0tj_UiTmMjbAPLCPdZqf8BAVIpFo4hhk_kb6KhEVD4cgfX_lqRKqeNLrIkieHng9zYKDMD3D5zDxYG-RWnFHX_Nc9DV133VV2qrcHT1CXqksRDduQvClGSi0qaOi0XjdPC8M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-padding-card">
+<span class="text-white font-headline-md">Level Up Jajananmu!</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface shadow-[0_-4px_16px_rgba(26,26,26,0.08)] flex justify-around items-center h-[80px] px-2">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-md">Rewards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:text-primary transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:text-primary transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-md">Promo</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:text-primary transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        const consentCheckbox = document.getElementById('consent');
+        const submitBtn = document.getElementById('submitBtn');
+        const phoneInput = document.getElementById('phone');
+
+        function validateForm() {
+            if (consentCheckbox.checked && phoneInput.value.trim().length > 5) {
+                submitBtn.classList.remove('disabled-btn');
+            } else {
+                submitBtn.classList.add('disabled-btn');
+            }
+        }
+
+        consentCheckbox.addEventListener('change', validateForm);
+        phoneInput.addEventListener('input', validateForm);
+
+        // Add a tactile click effect to the cards
+        document.querySelectorAll('.rounded-xl').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.99)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

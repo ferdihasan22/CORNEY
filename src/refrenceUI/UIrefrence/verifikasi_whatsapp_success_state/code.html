@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#410000",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#575959",
+                        "inverse-surface": "#313030",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-secondary-fixed": "#251a00",
+                        "primary-container": "#da291c",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary-container": "#ffc72c",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "secondary": "#775a00",
+                        "outline": "#916f6a",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed-variant": "#930001",
+                        "on-tertiary-container": "#f6f7f7",
+                        "on-primary-container": "#fff5f3",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "background": "#fcf9f8",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#be0f09",
+                        "on-primary": "#ffffff",
+                        "primary": "#b50303",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "inverse-primary": "#ffb4a8",
+                        "on-secondary-container": "#6f5400",
+                        "primary-fixed": "#ffdad4",
+                        "inverse-on-surface": "#f3f0ef",
+                        "outline-variant": "#e6bdb7",
+                        "on-background": "#1c1b1b",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1c1b1b",
+                        "tertiary-container": "#707171",
+                        "error": "#ba1a1a",
+                        "surface": "#fcf9f8",
+                        "on-surface-variant": "#5c403b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "padding-card": "20px",
+                        "min-tap-target": "52px",
+                        "margin-page": "32px",
+                        "base": "8px",
+                        "stack-gap": "16px",
+                        "gutter-grid": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .otp-input:focus {
+            border-color: #b50303;
+            box-shadow: 0 0 0 2px rgba(181, 3, 3, 0.1);
+            outline: none;
+        }
+        .swirl-accent {
+            background-image: radial-gradient(circle at 100% 0%, rgba(147, 0, 1, 0.05) 0%, transparent 50%);
+        }
+        .drip-accent::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 20%;
+            width: 40px; height: 60px;
+            background: #ffffff;
+            border-radius: 0 0 20px 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.02));
+            z-index: -1;
+        }
+        @keyframes success-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .success-animation {
+            animation: success-pop 0.4s ease-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col overflow-x-hidden swirl-accent">
+<!-- Top AppBar -->
+<header class="flex items-center px-4 h-[64px] w-full top-0 sticky bg-surface dark:bg-surface z-50">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim p-2 active:scale-95 transition-transform" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim ml-2">Verifikasi WhatsApp</h1>
+</header>
+<main class="flex-1 flex flex-col items-center px-8 pt-12 relative">
+<!-- Brand Elements -->
+<div class="absolute top-0 right-0 -z-10 w-32 h-32 opacity-10 pointer-events-none">
+<svg class="fill-primary" viewbox="0 0 100 100">
+<path d="M100 0 C 80 20 60 0 40 20 S 20 40 0 20 V 0 H 100"></path>
+</svg>
+</div>
+<!-- WhatsApp Illustration Container -->
+<div class="relative w-32 h-32 mb-8 flex items-center justify-center bg-secondary-container rounded-full shadow-sm overflow-hidden">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+<img alt="WhatsApp Icon" class="w-16 h-16 relative z-10 drop-shadow-lg" data-alt="A stylized, high-energy 3D WhatsApp icon floating in a vibrant yellow space. The icon is rendered with soft, glossy surfaces and vivid greens. It is surrounded by playful, abstract geometric shapes in Corney's signature red and yellow palette. The lighting is bright and appetizing, creating a professional yet approachable fast-food brand atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4n_qLl-AEquHTn_CEuTgjM452BvFZYACiCH72J8ws-gBGQ_qLkWzET7aYqNi_Sp74tcGcbMT5ACrbi6FY5ehm7EaDbB9KP5fZu1IX5cQot1O88aM_2Xcs2uG0QqOWA7S8EmhFwoCVSD0nfs8AuBqrUX9htW7VraPlwdxEycbsE5Vxiuckrh-nCID6vnX_wQOjBcX3Iz2QBj0GS3KMB_OBHljfkSjpRaSzcqp1ALE8x70KTzCYRfi8JQXmT2zIBxzfROjTXlTPxvo"/>
+<!-- Decorative Drip -->
+<div class="absolute -bottom-2 right-4 w-6 h-10 bg-surface rounded-full"></div>
+</div>
+<!-- Verification Text -->
+<div class="text-center mb-10 space-y-2">
+<p class="font-body-lg text-body-lg text-on-surface-variant">Kami kirim kode ke WhatsApp kamu</p>
+<div class="flex items-center justify-center gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">0812-xxxx-3456</span>
+<button class="text-primary font-label-lg text-label-lg underline underline-offset-4 active:opacity-70 transition-opacity">Ubah nomor</button>
+</div>
+</div>
+<!-- OTP Inputs -->
+<div class="flex gap-4 mb-8" id="otp-container">
+<input autofocus="" class="otp-input w-16 h-16 text-center text-display-md font-display-md bg-surface-container rounded-xl border-2 border-transparent transition-all" maxlength="1" type="text"/>
+<input class="otp-input w-16 h-16 text-center text-display-md font-display-md bg-surface-container rounded-xl border-2 border-transparent transition-all" maxlength="1" type="text"/>
+<input class="otp-input w-16 h-16 text-center text-display-md font-display-md bg-surface-container rounded-xl border-2 border-transparent transition-all" maxlength="1" type="text"/>
+<input class="otp-input w-16 h-16 text-center text-display-md font-display-md bg-surface-container rounded-xl border-2 border-transparent transition-all" maxlength="1" type="text"/>
+</div>
+<!-- Success Message (Hidden by default) -->
+<div class="hidden items-center gap-2 text-[#2E7D32] mb-8 bg-[#E8F5E9] px-4 py-2 rounded-full border border-[#2E7D32]/20" id="success-feedback">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-lg text-label-lg">Terverifikasi</span>
+</div>
+<!-- Resend Countdown -->
+<div class="flex items-center gap-2 text-on-surface-variant font-label-lg text-label-lg" id="timer-container">
+<span class="material-symbols-outlined text-[20px]" data-icon="schedule">schedule</span>
+<span>Kirim ulang kode dalam <span class="font-bold text-primary" id="countdown">00:45</span></span>
+</div>
+</main>
+<!-- Sticky Bottom Button -->
+<footer class="p-6 bg-surface shadow-[0_-8px_24px_rgba(0,0,0,0.04)]">
+<button class="w-full h-min-tap-target bg-primary text-on-primary font-headline-md text-headline-md rounded-xl shadow-[0_4px_12px_rgba(218,41,28,0.3)] active:scale-95 active:shadow-none transition-all flex items-center justify-center" id="verify-btn">
+            Verifikasi
+        </button>
+</footer>
+<script>
+        // OTP Focus Logic
+        const inputs = document.querySelectorAll('.otp-input');
+        const verifyBtn = document.getElementById('verify-btn');
+        const otpContainer = document.getElementById('otp-container');
+        const successFeedback = document.getElementById('success-feedback');
+        const timerContainer = document.getElementById('timer-container');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Countdown Timer Logic
+        let timeLeft = 45;
+        const countdownEl = document.getElementById('countdown');
+        const timer = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) clearInterval(timer);
+        }, 1000);
+
+        // Success State Trigger Simulation
+        verifyBtn.addEventListener('click', () => {
+            // Fill inputs for demo purposes
+            inputs.forEach(input => {
+                if(!input.value) input.value = Math.floor(Math.random() * 10);
+            });
+
+            // Transition to Success State
+            setTimeout(() => {
+                inputs.forEach(input => {
+                    input.classList.remove('bg-surface-container');
+                    input.classList.add('bg-[#E8F5E9]', 'border-[#2E7D32]', 'text-[#2E7D32]', 'success-animation');
+                    input.disabled = true;
+                });
+
+                successFeedback.classList.remove('hidden');
+                successFeedback.classList.add('flex', 'success-animation');
+                timerContainer.classList.add('opacity-0');
+                verifyBtn.innerHTML = '<span class="material-symbols-outlined mr-2">check</span>Berhasil';
+                verifyBtn.classList.remove('bg-primary');
+                verifyBtn.classList.add('bg-[#2E7D32]');
+
+                // Final Success Interaction
+                setTimeout(() => {
+                    verifyBtn.innerHTML = 'Melanjutkan...';
+                }, 1500);
+            }, 600);
+        });
+    </script>
+</body></html>

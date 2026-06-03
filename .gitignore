@@ -1,0 +1,7 @@
+node_modules
+.refs/
+dist
+# Secrets — never commit (Midtrans keys, etc.)
+.env
+.env.local
+.env.*.local

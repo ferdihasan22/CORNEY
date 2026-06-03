@@ -1,0 +1,362 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-surface-variant": "#5c403b",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-highest": "#e5e2e1",
+                        "inverse-surface": "#313030",
+                        "primary": "#b50303",
+                        "secondary-fixed": "#ffdf99",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#ffb4a8",
+                        "surface-container-low": "#f6f3f2",
+                        "surface": "#fcf9f8",
+                        "tertiary": "#575959",
+                        "on-primary-container": "#fff5f3",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-container-high": "#eae7e7",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#410000",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-container": "#f6f7f7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-background": "#1c1b1b",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "tertiary-container": "#707171",
+                        "outline": "#916f6a",
+                        "background": "#fcf9f8",
+                        "primary-container": "#da291c",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#be0f09",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e5e2e1",
+                        "secondary": "#775a00",
+                        "primary-fixed": "#ffdad4",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-container": "#ffc72c",
+                        "on-primary-fixed-variant": "#930001",
+                        "on-secondary-container": "#6f5400",
+                        "on-secondary-fixed": "#251a00",
+                        "on-surface": "#1c1b1b",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "14px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "32px",
+                        "base": "8px",
+                        "gutter-grid": "24px",
+                        "stack-gap": "16px",
+                        "min-tap-target": "52px",
+                        "padding-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- Sidebar Navigation -->
+<nav class="h-full w-[240px] fixed left-0 top-0 bg-surface-container-low flex flex-col gap-base p-4 shadow-sm z-50">
+<div class="mb-8 px-2">
+<span class="text-headline-lg font-headline-lg text-primary">CORNEY</span>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg text-label-md font-label-md">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</button>
+<button class="flex items-center gap-4 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold text-label-md font-label-md transition-all scale-[0.98]">
+<span class="material-symbols-outlined">edit_square</span>
+<span>Opname</span>
+</button>
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg text-label-md font-label-md">
+<span class="material-symbols-outlined">history</span>
+<span>Riwayat</span>
+</button>
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg text-label-md font-label-md">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</button>
+</div>
+<div class="mt-auto bg-surface-container rounded-xl p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="overflow-hidden">
+<p class="text-label-md font-bold truncate">Tim Produksi</p>
+<p class="text-[12px] opacity-70">Shift Pagi</p>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-[240px] flex-grow flex flex-col min-h-screen">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-margin-page h-min-tap-target bg-primary sticky top-0 z-40 shadow-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-primary">inventory_2</span>
+<h1 class="text-headline-md font-headline-md font-extrabold text-on-primary">Opname Freezer</h1>
+</div>
+<div class="flex items-center gap-4">
+<!-- Mode Toggle -->
+<div class="bg-primary-container/30 p-1 rounded-full flex gap-1">
+<button class="px-4 py-1.5 rounded-full text-label-lg font-label-lg bg-on-primary text-primary shadow-sm transition-all">Setiap Isi Stok</button>
+<button class="px-4 py-1.5 rounded-full text-label-lg font-label-lg text-on-primary hover:bg-white/10 transition-all">Mingguan</button>
+</div>
+<button class="text-on-primary font-bold text-label-lg px-4 py-2 hover:bg-primary-container/20 rounded-lg transition-colors">Produksi</button>
+</div>
+</header>
+<!-- Status Strip -->
+<div class="px-margin-page py-4">
+<div class="bg-error-container text-on-error-container p-4 rounded-xl flex items-center gap-3 shadow-sm border border-error/20">
+<span class="material-symbols-outlined text-[32px]">warning</span>
+<div>
+<p class="font-bold text-label-lg">JADWAL TERLAMBAT</p>
+<p class="text-body-md italic">TELAT 2 hari (terlihat Owner di Dashboard Pusat)</p>
+</div>
+</div>
+</div>
+<div class="px-margin-page pb-margin-page flex flex-col gap-gutter-grid">
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-12 gap-gutter-grid items-start">
+<!-- Stock Take Form -->
+<section class="col-span-12 lg:col-span-8 flex flex-col gap-stack-gap">
+<div class="bg-white rounded-xl shadow-md p-padding-card">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-headline-md font-headline-md text-primary">CORNEY Sepinggan</h2>
+<span class="bg-surface-container px-3 py-1 rounded-full text-label-md font-label-md">ID: SPG-001</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Header Row -->
+<div class="grid grid-cols-12 gap-4 px-4 text-label-md text-on-surface-variant/60 uppercase tracking-wider">
+<div class="col-span-4">Item Filling</div>
+<div class="col-span-2 text-center">Sistem</div>
+<div class="col-span-3 text-center">Fisik (Input)</div>
+<div class="col-span-3 text-right">Status</div>
+</div>
+<!-- Item 1: Keju Mozza -->
+<div class="grid grid-cols-12 gap-4 items-center bg-surface-container-low p-4 rounded-xl border border-transparent hover:border-primary/20 transition-all group">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Close up of high quality premium mozzarella cheese cubes prepared for cooking. Professional food photography, warm overhead lighting, vibrant textures, centered composition with a minimalist light background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFmrrSTLe3-0WUjJQ2sYLUQw1UND_X3fJ2Xkb-e5cXUnEVBf5SKX0lDaH7TzfgpBAXZ9ckbq25SbvY0ENVpLEtIPR5aADNs-Me-y3Pz1pulYsZbcJbr9P3CZf3HCv0uEmp1L8RNd1sR6OYf3Ir-9zYX6I1eMpH4gM_5U54JMyj1oFrsvlRzmYtGHPALAIa50pvdfRdf4npjWnsUuJvAEzx56prg9YqRrXli973qWkbJTBrUDT5HFhfFOwJMrQIcDVpedrZU4M9LAw">
+</div>
+<span class="font-bold text-body-lg">Keju Mozza</span>
+</div>
+<div class="col-span-2 text-center text-display-md font-extrabold opacity-40">42</div>
+<div class="col-span-3">
+<input class="w-full h-min-tap-target text-center text-headline-md font-bold rounded-xl border-outline-variant focus:border-primary focus:ring-primary bg-white transition-all shadow-inner" placeholder="42" type="number">
+</div>
+<div class="col-span-3 text-right">
+<span class="inline-flex items-center gap-1 text-[#2d6a4f] bg-[#d8f3dc] px-3 py-1.5 rounded-full text-label-md font-bold">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                        Cocok
+                                    </span>
+</div>
+</div>
+<!-- Item 2: Sosis Reguler (Selisih) -->
+<div class="grid grid-cols-12 gap-4 items-center bg-error-container/10 p-4 rounded-xl border border-error/10 hover:border-error transition-all">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Artisanal red meat sausages arranged neatly on a clean white surface. High-contrast studio lighting, commercial food style, appetizing textures, vibrant red tones, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH_EFYIavVqyheRWpb8DXiN7pjKMK_MxheLCqfNpvAtQTJRxrW742m_EXCv67RrHHdym6VCtopI6MObFqa6hKWzmU1EIy3jzs2FXTWtUhP0mzi1ywDX6hMp1P6KhZQzMV64Zjs5rT2yDgr9NXMz79OVqc7aReW8vGMuEu-L9K9yg1ghShn9sTFGp_2DcBcbaL0C-nWTCiiyt89kgPbsjBm8Oiie0neaQ2tjAQ2FOK_SuMjOhS_ks-sXzuj38k5SVhU8sCkGCJZ2Is">
+</div>
+<span class="font-bold text-body-lg">Sosis Reguler</span>
+</div>
+<div class="col-span-2 text-center text-display-md font-extrabold opacity-40">28</div>
+<div class="col-span-3">
+<input class="w-full h-min-tap-target text-center text-headline-md font-bold rounded-xl border-error text-error focus:ring-error bg-white transition-all shadow-inner" placeholder="22" type="number">
+</div>
+<div class="col-span-3 text-right flex flex-col items-end">
+<span class="inline-flex items-center gap-1 text-error bg-error-container px-3 py-1.5 rounded-full text-label-md font-bold">
+                                        Selisih -6
+                                    </span>
+<span class="text-[11px] text-error italic mt-1 leading-tight">Pengambilan tak tercatat?</span>
+</div>
+</div>
+<!-- Item 3: Sosis Jumbo -->
+<div class="grid grid-cols-12 gap-4 items-center bg-surface-container-low p-4 rounded-xl border border-transparent hover:border-primary/20 transition-all">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Gourmet thick jumbo sausages in a modern kitchen setting. Professional bright lighting, high appetite appeal, clear details, energetic colors, clean white background for a corporate food brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAugUQfHV-JZ3u6ehcOAVs6hS5jGf6Nfr4GW-YT81uhV73pBQKRqWOS6ZDOzUDcJT5cxtWD2L6tMptC38FW84GUIB5_oKQEHPzGNCqwZNk57buM3qSUWImVUZAW7yGgVft06yaOoIhpevBSqsibh51jNXHI45TjyH6l2_h-UMKXKJlHyiGYeobVwte4VSnBHw6crxfITTfKuni2aHt04rb7bg1z4sE1BGGBlEtiJi-BRs7XvAn5yueF8En0gYQeE7nbmjSi4Ah3FIo">
+</div>
+<span class="font-bold text-body-lg">Sosis Jumbo</span>
+</div>
+<div class="col-span-2 text-center text-display-md font-extrabold opacity-40">12</div>
+<div class="col-span-3">
+<input class="w-full h-min-tap-target text-center text-headline-md font-bold rounded-xl border-outline-variant focus:border-primary focus:ring-primary bg-white transition-all shadow-inner" placeholder="12" type="number">
+</div>
+<div class="col-span-3 text-right">
+<span class="inline-flex items-center gap-1 text-[#2d6a4f] bg-[#d8f3dc] px-3 py-1.5 rounded-full text-label-md font-bold">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                        Cocok
+                                    </span>
+</div>
+</div>
+<!-- Item 4: Mix -->
+<div class="grid grid-cols-12 gap-4 items-center bg-surface-container-low p-4 rounded-xl border border-transparent hover:border-primary/20 transition-all">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A mix of premium appetizer ingredients including sausage slices and cheese chunks. Vibrant studio lighting, high appetite appeal, commercial food photography style, colorful and energetic arrangement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNGaBtP59eP3TRbb9hXAzSwjRB3op7BmKN0kRYEzYk3lArGyPg7G-sZaZenutSmv4KGIxwo0E-DFCJMd2mKRqNLyQ-pncwp0tEMDB7tgdm7Yhv3q_s7OAc1930sh4L7mg4mZYuxy0AooGYpl54jqyZoGTB8f_-YiQJ3qxdkgVWMuOBtGW6ypxZanbpILdcTc6Z3k1dRsM_RmnvC3Kp-mKdd-fymWTz8RjIt_1fS2ZjrJ6Xasmj6R4xyVNcjf1GWBQBAGJb90kLoL0">
+</div>
+<span class="font-bold text-body-lg">Mix</span>
+</div>
+<div class="col-span-2 text-center text-display-md font-extrabold opacity-40">55</div>
+<div class="col-span-3">
+<input class="w-full h-min-tap-target text-center text-headline-md font-bold rounded-xl border-outline-variant focus:border-primary focus:ring-primary bg-white transition-all shadow-inner" placeholder="55" type="number">
+</div>
+<div class="col-span-3 text-right">
+<span class="inline-flex items-center gap-1 text-[#2d6a4f] bg-[#d8f3dc] px-3 py-1.5 rounded-full text-label-md font-bold">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                        Cocok
+                                    </span>
+</div>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="mt-8">
+<button class="w-full h-min-tap-target bg-primary text-on-primary rounded-xl font-bold text-headline-md shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 hover:bg-primary/90">
+<span class="material-symbols-outlined">save</span>
+                                Simpan Opname
+                            </button>
+<p class="text-center text-on-surface-variant/60 text-label-md mt-4 px-6">
+                                "Makin jarang opname, makin lebar jendela kebocoran bisa lolos. Mode 'setiap isi stok' lebih rapat. Pilihan sesuai ritme kerja Produksi."
+                            </p>
+</div>
+</div>
+</section>
+<!-- Sidebar History & Info -->
+<aside class="col-span-12 lg:col-span-4 flex flex-col gap-stack-gap">
+<!-- History Section -->
+<div class="bg-white rounded-xl shadow-md p-padding-card">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">history</span>
+<h3 class="text-headline-md font-headline-md">Riwayat Opname</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="p-4 rounded-xl border border-surface-container-highest flex justify-between items-center hover:bg-surface-container-low transition-all">
+<div>
+<p class="font-bold text-body-lg">24 Oct 2023</p>
+<p class="text-label-md text-on-surface-variant">Mode: Setiap Stok</p>
+</div>
+<div class="text-right">
+<span class="text-[#2d6a4f] font-extrabold text-headline-md">0</span>
+<p class="text-[12px] font-bold text-[#2d6a4f]">SELISIH</p>
+</div>
+</div>
+<div class="p-4 rounded-xl border border-error/20 bg-error-container/5 flex justify-between items-center hover:bg-error-container/10 transition-all">
+<div>
+<p class="font-bold text-body-lg">18 Oct 2023</p>
+<p class="text-label-md text-on-surface-variant">Mode: Mingguan</p>
+</div>
+<div class="text-right">
+<span class="text-error font-extrabold text-headline-md">-2</span>
+<p class="text-[12px] font-bold text-error">SELISIH</p>
+</div>
+</div>
+<div class="p-4 rounded-xl border border-surface-container-highest flex justify-between items-center hover:bg-surface-container-low transition-all">
+<div>
+<p class="font-bold text-body-lg">11 Oct 2023</p>
+<p class="text-label-md text-on-surface-variant">Mode: Setiap Stok</p>
+</div>
+<div class="text-right">
+<span class="text-[#2d6a4f] font-extrabold text-headline-md">0</span>
+<p class="text-[12px] font-bold text-[#2d6a4f]">SELISIH</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-3 text-primary font-bold text-label-md border-2 border-primary/20 rounded-xl hover:bg-primary/5 transition-all">
+                            Lihat Semua Riwayat
+                        </button>
+</div>
+<!-- Performance Card -->
+<div class="bg-secondary-container text-on-secondary-container rounded-xl p-padding-card shadow-md overflow-hidden relative group">
+<div class="relative z-10">
+<h4 class="text-headline-md font-headline-md mb-1">Akurasi Stok</h4>
+<p class="text-body-md opacity-80 mb-4">Produksi Sepinggan - 30 Hari Terakhir</p>
+<div class="flex items-baseline gap-2">
+<span class="text-[48px] font-extrabold">98.2%</span>
+<span class="material-symbols-outlined text-on-secondary-container/60">trending_up</span>
+</div>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[120px] opacity-10 group-hover:scale-110 transition-transform">analytics</span>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- Interactive Layer for Input States -->
+<script>
+        // Simple micro-interaction for numeric inputs
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.parentElement.classList.add('ring-2', 'ring-primary/20');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.parentElement.classList.remove('ring-2', 'ring-primary/20');
+            });
+        });
+
+        // Toggle logic for mode
+        const modeButtons = document.querySelectorAll('.bg-primary-container\\/30 button');
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeButtons.forEach(b => {
+                    b.classList.remove('bg-on-primary', 'text-primary', 'shadow-sm');
+                    b.classList.add('text-on-primary', 'hover:bg-white/10');
+                });
+                btn.classList.add('bg-on-primary', 'text-primary', 'shadow-sm');
+                btn.classList.remove('text-on-primary', 'hover:bg-white/10');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Keranjang - CORNEY App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .swirl-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(181, 3, 3, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1c1b1b",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#be0f09",
+                        "on-secondary-fixed": "#251a00",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-container": "#6f5400",
+                        "surface-variant": "#e5e2e1",
+                        "on-background": "#1c1b1b",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-tertiary-container": "#f6f7f7",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#fff5f3",
+                        "background": "#fcf9f8",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#575959",
+                        "tertiary-fixed": "#e2e2e2",
+                        "inverse-primary": "#ffb4a8",
+                        "primary-fixed": "#ffdad4",
+                        "secondary": "#775a00",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#5c403b",
+                        "secondary-container": "#ffc72c",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "primary": "#b50303",
+                        "surface-container-low": "#f6f3f2",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface": "#fcf9f8",
+                        "outline-variant": "#e6bdb7",
+                        "tertiary-container": "#707171",
+                        "primary-container": "#da291c",
+                        "outline": "#916f6a",
+                        "on-primary-fixed-variant": "#930001",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "secondary-fixed": "#ffdf99",
+                        "surface-bright": "#fcf9f8",
+                        "primary-fixed-dim": "#ffb4a8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "2xl": "18px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter-grid": "24px",
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "padding-card": "20px",
+                        "margin-page": "24px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen swirl-pattern pb-32">
+<!-- Top AppBar (JSON Component Mapping) -->
+<header class="bg-surface dark:bg-surface-dim shadow-sm w-full top-0 sticky z-50 flex items-center justify-between px-margin-page h-min-tap-target">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-150 hover:bg-primary-container/10 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">Keranjang</h1>
+</div>
+<div class="flex items-center bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-[18px] mr-1.5" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="text-label-md font-label-md">CORNEY Sepinggan</span>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-margin-page mt-4 space-y-6">
+<!-- Validation Note -->
+<div class="bg-[#FEF3C7] border border-amber-200 text-amber-900 px-4 py-3 rounded-xl flex items-start gap-3 shadow-sm animate-pulse-subtle">
+<span class="material-symbols-outlined text-amber-600 mt-0.5" data-icon="info">info</span>
+<p class="text-label-md leading-tight">Harga &amp; stok diperbarui untuk cabang ini.</p>
+</div>
+<!-- Cart Items List -->
+<section class="space-y-4">
+<div class="flex justify-between items-end mb-2">
+<h2 class="text-label-lg font-headline-lg text-primary">Pesanan Kamu</h2>
+<button class="text-primary font-label-md hover:underline decoration-2 transition-all">Tambah item lagi</button>
+</div>
+<!-- Cart Card 1 -->
+<div class="bg-white rounded-2xl p-4 flex gap-4 shadow-[0_4px_16px_rgba(26,26,26,0.08)] relative overflow-hidden group">
+<div class="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container">
+<img alt="Mozza Ori" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" data-alt="A crispy Indonesian-style Korean Mozzarella Corndog called Mozza Ori, golden brown with panko breadcrumbs, resting on a clean white surface. The lighting is bright and appetizing, highlighting the crunchy texture. The background features subtle splashes of Corney brand red and white drips, creating a modern street-food vibe. Professional food photography style for a high-end fast-food menu." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb8PAKQzISdcbwD3R62TZw2EA6fHzDM3qRTRNtj6Dn8yQmo4U-fE_XMbzpZgw5OxvR5BfxBOTObxOB4t6P7TpMdg8a8LbVVnDpIb2GEcqdH8_QZh-gjFrpPpntmRjI-xfjIQGbN8G1Ok2AClwPKXsNVkfqvsBKdO40qHSPxRwXAaU527fnmyBtWzeBdeeNsgNA8J8ekBosDOGsvtpHx0-I7QOEBEO5tX8y9ejyXc_plSWuQ7Knmnu08G3SZnted17HMhhBNT867P0"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Mozza Ori</h3>
+<p class="text-sm text-on-surface-variant leading-tight mt-0.5">Saus Tomat, Saus Sambal (+Rp 2.000)</p>
+</div>
+<button class="text-on-surface-variant/40 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex justify-between items-center mt-3">
+<span class="font-bold text-primary text-lg">Rp 38.000</span>
+<div class="flex items-center bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="remove">remove</span>
+</button>
+<span class="px-4 font-bold text-on-surface">2</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-primary-container text-white shadow-sm active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Cart Card 2 (Empty state placeholder if user removes items) -->
+<div class="bg-white/40 border-2 border-dashed border-outline-variant rounded-2xl h-24 flex items-center justify-center text-on-surface-variant/50">
+<span class="text-label-md">Mau nambah Corndog lagi?</span>
+</div>
+</section>
+<!-- Promo Section -->
+<section class="bg-white rounded-2xl p-4 shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
+<div class="flex items-center gap-3">
+<div class="flex-grow relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="local_offer">local_offer</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container border-none rounded-xl focus:ring-2 focus:ring-primary text-label-md placeholder:text-on-surface-variant/50" placeholder="Punya kode promo?" type="text"/>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-xl font-bold active:scale-95 transition-transform shadow-sm">
+                    Pakai
+                </button>
+</div>
+</section>
+<!-- Order Summary Card -->
+<section class="bg-white rounded-2xl p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)] space-y-4 border-t-4 border-primary">
+<h3 class="font-headline-md text-headline-md border-b border-surface-variant pb-2">Ringkasan Pesanan</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-body-md text-on-surface-variant">
+<span>Subtotal</span>
+<span>Rp 40.000</span>
+</div>
+<div class="flex justify-between items-center text-body-md text-[#16A34A]">
+<span>Diskon Promo</span>
+<span>- Rp 2.000</span>
+</div>
+<div class="flex justify-between items-center text-body-md text-on-surface-variant">
+<span>Biaya Layanan</span>
+<span>Rp 0</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-surface-variant mt-2">
+<span class="text-headline-md font-bold text-on-surface">Total</span>
+<span class="text-display-md font-extrabold text-primary tracking-tight">Rp 38.000</span>
+</div>
+</section>
+</main>
+<!-- Navigation Drawer (Shell from JSON logic) -->
+<!-- Navigation Sidebar for wide screens (Hidden on mobile per Platform & Layout rules) -->
+<aside class="hidden md:flex flex-col gap-base py-margin-page fixed left-0 top-0 h-full w-[240px] bg-surface-container dark:bg-surface-container-highest shadow-lg z-[60]">
+<div class="px-6 mb-8">
+<h2 class="font-headline-lg text-headline-lg text-primary">Corndog Mania</h2>
+</div>
+<nav class="flex flex-col">
+<a class="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 hover:bg-primary-container/20 transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span class="font-label-lg text-label-lg">Menu</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 hover:bg-primary-container/20 transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="local_offer">local_offer</span>
+<span class="font-label-lg text-label-lg">Promo</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container rounded-xl mx-2 px-4 py-3 flex items-center gap-3 shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-lg text-label-lg">Pesanan</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 hover:bg-primary-container/20 transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg">Profil</span>
+</a>
+</nav>
+</aside>
+<!-- Sticky Bottom Checkout -->
+<div class="fixed bottom-0 left-0 right-0 p-margin-page bg-surface-bright/80 backdrop-blur-md z-40 border-none shadow-[0_-8px_24px_rgba(26,26,26,0.05)]">
+<div class="max-w-2xl mx-auto flex items-center gap-4">
+<div class="hidden sm:block">
+<p class="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Total Bayar</p>
+<p class="text-xl font-extrabold text-primary">Rp 38.000</p>
+</div>
+<button class="flex-grow bg-primary-container text-white py-4 px-8 rounded-2xl font-bold text-lg shadow-[0_8px_20px_rgba(181,3,3,0.3)] active:scale-95 active:shadow-inner transition-all flex items-center justify-center gap-2">
+<span>Lanjut ke Checkout</span>
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Floating Action Effect (Subtle) -->
+<div class="fixed bottom-24 right-6 pointer-events-none opacity-20">
+<div class="w-32 h-32 bg-primary rounded-full blur-[60px] animate-pulse"></div>
+</div>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.classList.add('scale-95');
+            });
+            btn.addEventListener('touchend', function() {
+                this.classList.remove('scale-95');
+            });
+        });
+
+        // Simple stepper logic demonstration
+        let count = 2;
+        const countDisplay = document.querySelector('span.px-4.font-bold');
+        if(countDisplay) {
+            document.querySelectorAll('.material-symbols-outlined[data-icon="add"]').forEach(el => {
+                el.closest('button').addEventListener('click', () => {
+                    count++;
+                    countDisplay.innerText = count;
+                });
+            });
+             document.querySelectorAll('.material-symbols-outlined[data-icon="remove"]').forEach(el => {
+                el.closest('button').addEventListener('click', () => {
+                    if(count > 1) {
+                        count--;
+                        countDisplay.innerText = count;
+                    }
+                });
+            });
+        }
+    </script>
+</body></html>

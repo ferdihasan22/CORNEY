@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchase Ledger - CORNEY Owner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#f6f7f7",
+                    "on-secondary-container": "#6f5400",
+                    "error-container": "#ffdad6",
+                    "primary": "#b50303",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#930001",
+                    "primary-container": "#da291c",
+                    "tertiary-fixed": "#e2e2e2",
+                    "surface-dim": "#dcd9d9",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface-bright": "#fcf9f8",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#ffb4a8",
+                    "primary-fixed": "#ffdad4",
+                    "on-surface-variant": "#5c403b",
+                    "outline": "#916f6a",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "secondary-fixed": "#ffdf99",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-secondary-fixed": "#251a00",
+                    "secondary-container": "#ffc72c",
+                    "on-surface": "#1c1b1b",
+                    "surface-variant": "#e5e2e1",
+                    "outline-variant": "#e6bdb7",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "surface-tint": "#be0f09",
+                    "on-primary-fixed": "#410000",
+                    "surface-container-low": "#f6f3f2",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "tertiary-container": "#707171",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1c1b1b",
+                    "on-primary-container": "#fff5f3",
+                    "secondary": "#775a00",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "surface": "#fcf9f8",
+                    "inverse-surface": "#313030",
+                    "surface-container-highest": "#e5e2e1",
+                    "tertiary": "#575959",
+                    "on-error": "#ffffff",
+                    "surface-container": "#f0eded",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "error": "#ba1a1a",
+                    "background": "#fcf9f8",
+                    "surface-container-high": "#eae7e7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "12px",
+                    "2xl": "16px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "16px",
+                    "gutter-grid": "16px",
+                    "stack-gap": "12px",
+                    "padding-card": "16px",
+                    "min-tap-target": "52px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "display-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-md-mobile": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-md-mobile": ["20px", {"lineHeight": "26px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab {
+            border-bottom: 3px solid #DA291C;
+            color: #b50303;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-[100px]">
+<!-- TopAppBar -->
+<header class="bg-primary-container text-on-primary-container docked full-width top-0 shadow-md flex items-center justify-between px-margin-page h-[64px] w-full sticky z-50">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md-mobile text-headline-md-mobile text-on-primary">Purchase Ledger</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="active:scale-95 transition-transform p-2 hover:bg-primary-fixed-dim/10 rounded-full">
+<span class="material-symbols-outlined text-on-primary">account_balance_wallet</span>
+</button>
+</div>
+</header>
+<!-- Tab Bar (Segmented Control) -->
+<nav class="bg-surface sticky top-[64px] z-40 flex items-center justify-between px-4 border-b border-outline-variant/20 overflow-x-auto hide-scrollbar">
+<button class="flex-1 py-4 text-center font-label-md text-primary active-tab whitespace-nowrap px-4 transition-colors" id="btn-daftar" onclick="switchTab('tab-daftar')">
+            Daftar Item
+        </button>
+<button class="flex-1 py-4 text-center font-label-md text-on-surface-variant whitespace-nowrap px-4 transition-colors" id="btn-tren" onclick="switchTab('tab-tren')">
+            Tren Harga
+        </button>
+<button class="flex-1 py-4 text-center font-label-md text-on-surface-variant whitespace-nowrap px-4 transition-colors" id="btn-analisa" onclick="switchTab('tab-analisa')">
+            Analisa Bahan
+        </button>
+</nav>
+<main class="px-margin-page pt-stack-gap space-y-stack-gap" id="content-area">
+<!-- Tab 1: Daftar Item -->
+<section class="space-y-4" id="tab-daftar">
+<!-- Rekap Periode Summary Tile -->
+<div class="bg-primary-container text-on-primary-container rounded-2xl p-padding-card custom-shadow relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[100px]">receipt_long</span>
+</div>
+<p class="font-label-md opacity-90">Total Pembelian Periode Ini</p>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-display-md-mobile text-display-md-mobile">Rp 4.250.000</span>
+</div>
+<div class="mt-3 flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'wght' 700">trending_up</span>
+<span class="font-label-md text-sm">+12.5% dari bulan lalu</span>
+</div>
+</div>
+<!-- List Header -->
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md-mobile text-on-surface">Item Dibeli</h2>
+<button class="text-primary font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Filter
+                </button>
+</div>
+<!-- Lean Item List (Mobile Cards) -->
+<div class="space-y-3">
+<!-- Item Card 1 -->
+<div class="bg-surface border border-outline-variant/30 rounded-2xl p-4 custom-shadow active:scale-[0.98] transition-all">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-label-lg text-on-surface">Keju Mozza</h3>
+<div class="flex items-center gap-1.5 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-[12px]">60rb → <span class="font-bold text-primary">62rb</span></span>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-primary text-lg">Rp 62.000</p>
+<p class="text-[11px] text-on-surface-variant">Per Satuan</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant/10 pt-3">
+<div class="flex gap-4">
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Dipesan</p>
+<p class="font-label-lg">5</p>
+</div>
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Diterima</p>
+<p class="font-label-lg text-secondary font-bold">4</p>
+</div>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-xs">
+                            Selisih: -1
+                        </div>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-surface border border-outline-variant/30 rounded-2xl p-4 custom-shadow active:scale-[0.98] transition-all">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-label-lg text-on-surface">Sosis Jumbo</h3>
+<div class="flex items-center gap-1.5 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-[12px]">28rb → <span class="font-bold text-on-surface">28rb</span></span>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-primary text-lg">Rp 28.000</p>
+<p class="text-[11px] text-on-surface-variant">Per Satuan</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant/10 pt-3">
+<div class="flex gap-4">
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Dipesan</p>
+<p class="font-label-lg">12</p>
+</div>
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Diterima</p>
+<p class="font-label-lg text-secondary font-bold">12</p>
+</div>
+</div>
+<div class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full font-label-md text-xs">
+                            Sesuai
+                        </div>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="bg-surface border border-outline-variant/30 rounded-2xl p-4 custom-shadow active:scale-[0.98] transition-all">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-label-lg text-on-surface">Glaze Coklat</h3>
+<div class="flex items-center gap-1.5 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-[12px]">45rb → <span class="font-bold text-primary">48.5rb</span></span>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-primary text-lg">Rp 48.500</p>
+<p class="text-[11px] text-on-surface-variant">Per Satuan</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-outline-variant/10 pt-3">
+<div class="flex gap-4">
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Dipesan</p>
+<p class="font-label-lg">10</p>
+</div>
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Diterima</p>
+<p class="font-label-lg text-secondary font-bold">8</p>
+</div>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-xs">
+                            Selisih: -2
+                        </div>
+</div>
+</div>
+</div>
+<!-- Security/Info Note -->
+<div class="bg-surface-container-low p-4 rounded-xl flex gap-3 items-start border-l-4 border-primary mt-6">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="font-body-md text-sm text-on-surface-variant leading-relaxed">
+                    Angka <span class="font-bold text-on-surface">DITERIMA</span> paling akurat. Diisi dari aliran satu arah Supplier → Owner.
+                </p>
+</div>
+</section>
+<!-- Tab 2: Tren Harga (Hidden by default) -->
+<section class="hidden space-y-6" id="tab-tren">
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant">Pilih Item untuk Dianalisa</label>
+<div class="relative">
+<select class="w-full h-min-tap-target bg-surface border border-outline-variant rounded-2xl px-4 appearance-none focus:border-primary focus:ring-0">
+<option>Keju Mozza</option>
+<option>Glaze Coklat</option>
+<option>Sosis Jumbo</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-6 custom-shadow border border-outline-variant/20">
+<h3 class="font-headline-md-mobile mb-4">Grafik Tren Harga (30 Hari)</h3>
+<div class="w-full aspect-video bg-surface-container-low rounded-xl flex items-center justify-center overflow-hidden border border-dashed border-outline-variant">
+<!-- Visualization of a Chart -->
+<div class="relative w-full h-full p-4 flex flex-col justify-end">
+<div class="flex items-end justify-between h-3/4 gap-2">
+<div class="w-full bg-primary/10 rounded-t-sm h-[40%] relative"></div>
+<div class="w-full bg-primary/15 rounded-t-sm h-[45%] relative"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[50%] relative"></div>
+<div class="w-full bg-primary/30 rounded-t-sm h-[60%] relative"></div>
+<div class="w-full bg-primary/40 rounded-t-sm h-[55%] relative"></div>
+<div class="w-full bg-primary/60 rounded-t-sm h-[80%] relative"></div>
+<div class="w-full bg-primary rounded-t-sm h-[90%] relative"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-on-surface-variant font-bold">
+<span>Mgg 1</span><span>Mgg 2</span><span>Mgg 3</span><span>Mgg 4</span>
+</div>
+</div>
+</div>
+<p class="mt-4 text-sm text-on-surface-variant italic">Kenaikan signifikan terdeteksi pada minggu ke-4 (Inflasi Bahan Baku).</p>
+</div>
+</section>
+<!-- Tab 3: Analisa Bahan (Hidden by default) -->
+<section class="hidden space-y-4" id="tab-analisa">
+<h3 class="font-headline-md-mobile text-on-surface mb-2">Performa Pemakaian vs Pembelian</h3>
+<!-- Paired Cards -->
+<div class="space-y-3">
+<div class="bg-surface border border-outline-variant/30 rounded-2xl p-4 custom-shadow">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">fastfood</span>
+</div>
+<div>
+<h4 class="font-label-lg">Glaze ↔ Varian Sweet</h4>
+<p class="text-xs text-on-surface-variant">Stok keluar vs Transaksi kasir</p>
+</div>
+</div>
+<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Wajar</span>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 rounded-2xl p-4 custom-shadow">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">lunch_dining</span>
+</div>
+<div>
+<h4 class="font-label-lg">Keju ↔ Menu Savory</h4>
+<p class="text-xs text-on-surface-variant">Potensi kebocoran stok (+15%)</p>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Boros?</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 h-[80px] bg-surface dark:bg-inverse-surface shadow-lg rounded-t-xl">
+<!-- Cockpit -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Cockpit</span>
+</button>
+<!-- Ledger (Active) -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 active:scale-90 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">receipt_long</span>
+<span class="font-label-md text-label-md">Ledger</span>
+</button>
+<!-- Inventory -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</button>
+<!-- Settings -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</button>
+</nav>
+<script>
+        function switchTab(tabId) {
+            // Hide all sections
+            document.getElementById('tab-daftar').classList.add('hidden');
+            document.getElementById('tab-tren').classList.add('hidden');
+            document.getElementById('tab-analisa').classList.add('hidden');
+
+            // Show selected section
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Reset tab button styles
+            const buttons = ['btn-daftar', 'btn-tren', 'btn-analisa'];
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                btn.classList.remove('active-tab', 'text-primary');
+                btn.classList.add('text-on-surface-variant');
+            });
+
+            // Set active button style
+            const activeBtnId = 'btn-' + tabId.split('-')[1];
+            const activeBtn = document.getElementById(activeBtnId);
+            activeBtn.classList.add('active-tab', 'text-primary');
+            activeBtn.classList.remove('text-on-surface-variant');
+        }
+    </script>
+</body></html>

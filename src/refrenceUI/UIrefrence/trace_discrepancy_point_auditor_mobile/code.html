@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Trace Discrepancy Point - CORNEY Auditor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline-variant": "#e6bdb7",
+                      "on-secondary-container": "#6f5400",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-background": "#1c1b1b",
+                      "surface-tint": "#be0f09",
+                      "tertiary": "#575959",
+                      "on-primary-fixed-variant": "#930001",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#1c1b1b",
+                      "inverse-primary": "#ffb4a8",
+                      "inverse-on-surface": "#f3f0ef",
+                      "surface-container": "#f0eded",
+                      "on-secondary-fixed": "#251a00",
+                      "surface-variant": "#e5e2e1",
+                      "secondary-container": "#ffc72c",
+                      "primary": "#b50303",
+                      "on-secondary-fixed-variant": "#5a4300",
+                      "secondary-fixed": "#ffdf99",
+                      "on-surface-variant": "#5c403b",
+                      "surface-container-low": "#f6f3f2",
+                      "primary-container": "#da291c",
+                      "secondary": "#775a00",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-secondary": "#ffffff",
+                      "surface-bright": "#fcf9f8",
+                      "on-primary-fixed": "#410000",
+                      "outline": "#916f6a",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "primary-fixed": "#ffdad4",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "tertiary-fixed": "#e2e2e2",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "background": "#fcf9f8",
+                      "tertiary-container": "#707171",
+                      "on-tertiary-container": "#f6f7f7",
+                      "on-primary-container": "#fff5f3",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed-dim": "#f6bf22",
+                      "surface": "#fcf9f8",
+                      "surface-dim": "#dcd9d9",
+                      "surface-container-high": "#eae7e7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "16px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap": "16px",
+                      "padding-card": "20px",
+                      "min-tap-target": "52px",
+                      "margin-page": "32px",
+                      "base": "8px",
+                      "gutter-grid": "24px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                      "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fcf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 27px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #E5E2E1;
+            z-index: 0;
+        }
+        .last-node .timeline-line {
+            display: none;
+        }
+        .pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(181, 3, 3, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(181, 3, 3, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(181, 3, 3, 0); }
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background">
+<!-- Top App Bar (Mobile View) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-primary shadow-md h-[120px] px-6 py-4 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-primary cursor-pointer active:opacity-50 transition-opacity">arrow_back</span>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-primary">Telusur Titik Selisih</h1>
+<p class="font-label-md text-label-md text-on-primary/80 uppercase tracking-wider">Role: Auditor</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-primary">more_vert</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-on-primary/20">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-primary/70">store</span>
+<span class="font-label-md text-label-md text-on-primary">Cabang Sudirman</span>
+</div>
+<div class="flex items-center gap-2 text-on-primary/70">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="font-label-md text-label-md">24 Okt 2023</span>
+</div>
+</div>
+</header>
+<main class="mt-[136px] px-6 pb-24 space-y-6">
+<!-- Summary Card -->
+<section class="bg-primary-container text-on-primary-container p-5 rounded-xl shadow-[0px_4px_16px_rgba(26,26,26,0.08)]">
+<div class="flex items-start gap-4">
+<div class="bg-on-primary-container text-primary-container p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md mb-1">Selisih −Rp 15.000</h2>
+<p class="font-body-md text-body-md opacity-90">muncul di titik <span class="font-bold underline">Operasional → Auditor</span></p>
+</div>
+</div>
+</section>
+<!-- Vertical Timeline (Money Trail) -->
+<section class="relative space-y-8 pl-4">
+<!-- Node 1 -->
+<div class="relative flex gap-6 items-start">
+<div class="timeline-line"></div>
+<div class="z-10 w-14 h-14 rounded-full bg-green-100 flex items-center justify-center shrink-0 border-2 border-green-600">
+<span class="material-symbols-outlined text-green-700" data-icon="receipt_long">receipt_long</span>
+</div>
+<div class="pt-1 flex-1">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-tight">Kasir → Laporan Closing</p>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-md text-headline-md text-green-700">Rp 856.000</span>
+</div>
+</div>
+</div>
+<!-- Node 2 -->
+<div class="relative flex gap-6 items-start">
+<div class="timeline-line"></div>
+<div class="z-10 w-14 h-14 rounded-full bg-green-100 flex items-center justify-center shrink-0 border-2 border-green-600">
+<span class="material-symbols-outlined text-green-700" data-icon="local_shipping">local_shipping</span>
+</div>
+<div class="pt-1 flex-1">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-tight">Operasional Menerima</p>
+<div class="flex flex-wrap items-center gap-3 mt-1">
+<span class="font-headline-md text-headline-md text-green-700">Rp 856.000</span>
+<span class="bg-green-600 text-white text-[12px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                            Cocok dengan Kasir
+                        </span>
+</div>
+</div>
+</div>
+<!-- Node 3 (The Culprit Point) -->
+<div class="relative flex gap-6 items-start">
+<div class="timeline-line"></div>
+<div class="z-10 w-14 h-14 rounded-full bg-primary flex items-center justify-center shrink-0 border-4 border-primary-fixed pulse-red shadow-lg">
+<span class="material-symbols-outlined text-white" data-icon="fact_check">fact_check</span>
+</div>
+<div class="pt-0 flex-1">
+<div class="bg-white p-4 rounded-xl shadow-[0px_8px_24px_rgba(181,3,3,0.12)] border border-primary/20">
+<p class="font-label-md text-label-md text-primary font-bold uppercase tracking-tight mb-2">Auditor Hitung Ulang Fisik</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-md text-headline-lg text-primary">Rp 841.000</span>
+</div>
+<div class="mt-3 bg-error-container text-on-error-container p-3 rounded-lg border-l-4 border-primary">
+<p class="font-label-lg text-label-lg font-extrabold">Selisih −Rp 15.000 muncul DI SINI</p>
+<p class="font-label-md text-label-md mt-1 italic opacity-80">Marker: Selisih pertama terdeteksi di titik ini</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Node 4 -->
+<div class="relative flex gap-6 items-start last-node">
+<div class="timeline-line"></div>
+<div class="z-10 w-14 h-14 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0 border-2 border-outline-variant">
+<span class="material-symbols-outlined text-outline" data-icon="stars">stars</span>
+</div>
+<div class="pt-1 flex-1">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-tight">Owner Review</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-headline-md text-headline-md text-outline">Pending</span>
+<span class="material-symbols-outlined text-outline text-[20px]">schedule</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Neutral Note -->
+<section class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/30 mt-8">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="font-label-md text-label-md text-on-surface-variant leading-relaxed">
+                    Sistem hanya menunjukkan di titik mana selisih muncul, bukan menuduh penyebabnya. Bisa salah hitung jujur, kelalaian, atau lainnya.
+                </p>
+</div>
+</section>
+</main>
+<!-- Bottom Action Button -->
+<footer class="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md border-t border-surface-variant z-50">
+<button class="w-full bg-primary hover:bg-primary-container text-white h-[56px] rounded-xl font-headline-md flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-lg">
+<span class="material-symbols-outlined">send</span>
+            Lapor Temuan ke Owner
+        </button>
+</footer>
+<!-- Invisible background decorative elements -->
+<div class="fixed top-0 right-0 -z-10 opacity-5">
+<span class="material-symbols-outlined text-[300px] text-primary rotate-12">fact_check</span>
+</div>
+<script>
+        // Micro-interaction for the report button
+        document.querySelector('button').addEventListener('click', function() {
+            const originalContent = this.innerHTML;
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Mengirim Laporan...';
+            this.disabled = true;
+            this.style.opacity = '0.7';
+            
+            setTimeout(() => {
+                this.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Laporan Terkirim';
+                this.classList.remove('bg-primary');
+                this.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    this.innerHTML = originalContent;
+                    this.classList.remove('bg-green-600');
+                    this.classList.add('bg-primary');
+                    this.disabled = false;
+                    this.style.opacity = '1';
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body></html>

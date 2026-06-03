@@ -1,0 +1,221 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Collect Cash Deposit - Operasional</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#DA291C",
+                      "secondary": "#FFC72C",
+                      "dark": "#1A1A1A",
+                      "surface": "#FFFFFF",
+                      "surface-container": "#F6F3F2",
+                      "surface-container-low": "#F0EDED",
+                      "on-primary": "#FFFFFF",
+                      "on-secondary": "#1A1A1A",
+                      "on-surface": "#1A1A1A",
+                      "on-surface-variant": "#575959",
+                      "outline-variant": "#E5E2E1",
+                      "error": "#BA1A1A",
+                      "error-container": "#FFDAD6",
+                      "on-error-container": "#93000A",
+                      "success": "#2E7D32",
+                      "success-container": "#E8F5E9"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "14px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "min-tap-target": "52px",
+                      "margin-page": "20px",
+                      "base": "8px",
+                      "padding-card": "16px",
+                      "gutter-grid": "16px",
+                      "stack-gap": "16px"
+              },
+              "fontFamily": {
+                      "body": ["Plus Jakarta Sans", "sans-serif"],
+                      "headline": ["Plus Jakarta Sans", "sans-serif"],
+                      "display": ["Plus Jakarta Sans", "sans-serif"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "display-sm": ["30px", {"lineHeight": "36px", "fontWeight": "800"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "fontWeight": "800"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface-container font-body text-dark antialiased">
+<!-- Mobile Navigation Chrome (Simplified for Mobile View) -->
+<header class="bg-primary text-on-primary px-margin-page py-6 sticky top-0 z-50 shadow-md">
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h1 class="text-display-sm leading-tight uppercase">Ambil Setoran Tunai</h1>
+<p class="text-label-md opacity-80 tracking-widest mt-1">OPERASIONAL</p>
+</div>
+<button class="bg-white/10 p-2 rounded-xl">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<!-- Branch Selector -->
+<button class="w-full bg-white/20 hover:bg-white/30 px-4 py-3 rounded-xl flex items-center justify-between transition-all border border-white/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+<span class="font-label-lg">Cabang Sudirman</span>
+</div>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</header>
+<main class="p-margin-page pb-32 max-w-md mx-auto space-y-6">
+<!-- Deposit Handover Card -->
+<section class="bg-white rounded-xl custom-shadow overflow-hidden border border-outline-variant">
+<!-- Summary Header -->
+<div class="bg-surface-container-low px-padding-card py-4 border-b border-outline-variant flex justify-between items-center">
+<span class="text-label-md text-on-surface-variant">Laporan closing kasir:</span>
+<span class="text-headline-md font-bold text-primary">Rp 856.000</span>
+</div>
+<!-- Two-Sided Confirmation Block -->
+<div class="p-padding-card space-y-6">
+<!-- Left/Top: Declared Amount -->
+<div class="space-y-2">
+<label class="text-[12px] uppercase font-bold tracking-wider text-on-surface-variant">Kasir menyatakan menyerahkan:</label>
+<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/50">
+<p class="text-display-sm font-bold">Rp 856.000</p>
+<div class="flex items-center gap-1.5 mt-2 text-success">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[12px] font-bold">TERVERIFIKASI POS</span>
+</div>
+</div>
+</div>
+<!-- Right/Bottom: Active Input -->
+<div class="space-y-2">
+<label class="text-[12px] uppercase font-bold tracking-wider text-on-surface-variant">Operasional menerima:</label>
+<div class="relative group">
+<span class="absolute left-5 top-1/2 -translate-y-1/2 text-headline-md font-bold text-dark/40 group-focus-within:text-dark">Rp</span>
+<input class="w-full bg-white text-display-sm font-bold pl-14 pr-5 py-5 rounded-xl border-2 border-dark focus:border-primary focus:ring-0 transition-all placeholder:text-dark/10" id="received-amount" oninput="updateMatchStatus(this.value)" placeholder="0" type="number">
+</div>
+</div>
+<!-- Auto-Match Indicator (Chip) -->
+<div class="flex justify-center transition-all duration-300 opacity-0 scale-95" id="match-status">
+<!-- Dynamic Content -->
+<div class="flex items-center gap-2 px-4 py-2 rounded-full font-bold uppercase text-[12px]">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>STATUS</span>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-white py-5 rounded-xl text-headline-md font-bold shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">handshake</span>
+                    Konfirmasi Terima Setoran
+                </button>
+</div>
+</section>
+<!-- Footer Note -->
+<div class="bg-secondary/10 p-4 rounded-xl flex gap-3 items-start border border-secondary/20">
+<span class="material-symbols-outlined text-dark" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="text-[13px] leading-snug font-medium text-dark/80">
+                Serah-terima tidak bisa sepihak. Tiap titik perpindahan uang punya konfirmasi 2 sisi agar selisih bisa ditelusuri.
+            </p>
+</div>
+<!-- History Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-1">
+<h3 class="text-label-lg uppercase tracking-wider font-bold">Setoran Terkumpul</h3>
+<span class="text-label-md text-on-surface-variant">Hari Ini</span>
+</div>
+<div class="space-y-3">
+<!-- History Item 1 -->
+<div class="bg-white p-4 rounded-xl border border-outline-variant flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-bold text-dark">Cabang Kemang</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[12px] font-bold text-success uppercase">Cocok</span>
+<span class="text-[12px] text-on-surface-variant">• 18:45</span>
+</div>
+</div>
+<span class="text-label-lg font-bold">Rp 1.250.000</span>
+</div>
+<!-- History Item 2 -->
+<div class="bg-white p-4 rounded-xl border border-outline-variant flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-bold text-dark">Cabang Batakan</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[12px] font-bold text-error uppercase">Selisih +Rp 2.000</span>
+<span class="text-[12px] text-on-surface-variant">• 17:30</span>
+</div>
+</div>
+<span class="text-label-lg font-bold">Rp 940.000</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Global Floating Action Button -->
+<div class="fixed bottom-0 left-0 right-0 p-margin-page bg-gradient-to-t from-surface-container via-surface-container to-transparent pt-8">
+<button class="w-full bg-dark text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 shadow-2xl hover:bg-black active:scale-[0.99] transition-all max-w-md mx-auto">
+<span class="material-symbols-outlined">send_and_archive</span>
+            Teruskan ke Auditor / Owner
+        </button>
+</div>
+<script>
+        function updateMatchStatus(val) {
+            const statusDiv = document.getElementById('match-status');
+            const target = 856000;
+            const current = parseInt(val) || 0;
+            const diff = current - target;
+
+            if (!val || val === "0") {
+                statusDiv.classList.add('opacity-0', 'scale-95');
+                return;
+            }
+
+            statusDiv.classList.remove('opacity-0', 'scale-95');
+            
+            if (diff === 0) {
+                statusDiv.innerHTML = `
+                    <div class="flex items-center gap-2 px-6 py-2 rounded-full bg-success-container text-success font-bold uppercase text-[13px] border border-success/20">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Cocok
+                    </div>
+                `;
+            } else {
+                const prefix = diff > 0 ? "+" : "";
+                const formattedDiff = new Intl.NumberFormat('id-ID').format(diff);
+                statusDiv.innerHTML = `
+                    <div class="flex items-center gap-2 px-6 py-2 rounded-full bg-error-container text-error font-bold uppercase text-[13px] border border-error/20">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+                        Selisih ${prefix}Rp ${formattedDiff}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body></html>

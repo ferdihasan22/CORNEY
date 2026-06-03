@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY POS - Buka Kas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .tonal-elevation-1 {
+            box-shadow: 0 4px 16px 0 rgba(26, 26, 26, 0.08);
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#e2e2e2",
+                        "outline": "#916f6a",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "on-primary-fixed-variant": "#930001",
+                        "on-secondary-fixed": "#251a00",
+                        "inverse-primary": "#ffb4a8",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-container": "#f0eded",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#be0f09",
+                        "outline-variant": "#e6bdb7",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "secondary": "#775a00",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "surface-dim": "#dcd9d9",
+                        "tertiary": "#575959",
+                        "on-background": "#1c1b1b",
+                        "primary-fixed": "#ffdad4",
+                        "secondary-fixed": "#ffdf99",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-secondary-container": "#6f5400",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "tertiary-container": "#707171",
+                        "on-primary-container": "#fff5f3",
+                        "error-container": "#ffdad6",
+                        "background": "#fcf9f8",
+                        "primary-container": "#da291c",
+                        "primary": "#b50303",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#f6f7f7",
+                        "secondary-container": "#ffc72c",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "surface": "#fcf9f8",
+                        "on-surface-variant": "#5c403b",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "min-tap-target": "52px",
+                        "margin-page": "32px",
+                        "padding-card": "20px",
+                        "gutter-grid": "24px",
+                        "base": "8px",
+                        "stack-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- Top Bar -->
+<header class="fixed top-0 left-0 right-0 h-[80px] bg-primary-container text-on-primary-container flex justify-between items-center px-margin-page z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[32px]">store</span>
+<span class="font-headline-md text-headline-md">Cabang: CORNEY Sepinggan</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-lg text-label-lg bg-white/20 px-4 py-2 rounded-full">Buka Toko · Langkah 2 dari 2</span>
+<button class="material-symbols-outlined p-2 hover:bg-white/10 rounded-full transition-colors">close</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-[80px] pb-[140px] flex flex-col items-center px-margin-page">
+<!-- Header Text -->
+<div class="w-full max-w-[480px] mt-12 mb-8 text-center">
+<h1 class="font-display-md text-display-md text-on-surface mb-2">Buka Kas</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Masukkan modal laci awal sebagai titik mula perhitungan kas.</p>
+</div>
+<!-- Central Entry Card -->
+<div class="w-full max-w-[480px] bg-white rounded-xl tonal-elevation-1 p-8 border border-surface-container">
+<div class="flex flex-col gap-6">
+<!-- Large Currency Input -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Modal Laci Awal (Rp)</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+<span class="font-display-md text-display-md text-outline">Rp</span>
+</div>
+<input class="w-full h-[88px] pl-20 pr-6 rounded-xl border-2 border-outline-variant bg-surface-container-low font-display-md text-display-md text-on-surface focus:border-primary focus:ring-0 transition-all text-right" id="cashInput" placeholder="0" type="number" value="100000"/>
+</div>
+</div>
+<!-- Chips Grid -->
+<div class="grid grid-cols-2 gap-3">
+<button class="h-min-tap-target border-2 border-secondary-container hover:bg-secondary-fixed text-on-secondary-container font-label-lg text-label-lg rounded-xl transition-all active:scale-95" onclick="updateValue(50000)">50.000</button>
+<button class="h-min-tap-target border-2 border-secondary-container bg-secondary-container text-on-secondary-container font-label-lg text-label-lg rounded-xl transition-all active:scale-95" onclick="updateValue(100000)">100.000</button>
+<button class="h-min-tap-target border-2 border-secondary-container hover:bg-secondary-fixed text-on-secondary-container font-label-lg text-label-lg rounded-xl transition-all active:scale-95" onclick="updateValue(200000)">200.000</button>
+<button class="h-min-tap-target border-2 border-secondary-container hover:bg-secondary-fixed text-on-secondary-container font-label-lg text-label-lg rounded-xl transition-all active:scale-95" onclick="updateValue(500000)">500.000</button>
+</div>
+<!-- Helper Text -->
+<div class="flex items-start gap-3 bg-surface-container-low p-4 rounded-lg">
+<span class="material-symbols-outlined text-secondary">info</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Uang kembalian tunai yang ada di laci saat mulai jualan.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Recap Sticky Bar -->
+<footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant p-6 z-50">
+<div class="max-w-[1024px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+<!-- Summary Info -->
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-600" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-lg text-label-lg text-on-surface">Stok isian: <span class="text-green-600 font-bold">✓ Dikonfirmasi</span></span>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant hidden md:block"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<span class="font-label-lg text-label-lg text-on-surface">Modal laci: <span class="font-bold text-primary" id="summaryValue">Rp 100.000</span></span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+<button class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline px-4 py-2 transition-colors">
+                    Kembali ke Konfirmasi Stok
+                </button>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-headline-md text-headline-md h-[64px] px-12 rounded-xl shadow-lg hover:shadow-xl active:scale-95 transition-all w-full md:w-auto flex items-center justify-center gap-2">
+<span>Mulai Jualan</span>
+<span class="material-symbols-outlined">rocket_launch</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- Decorative Branding Element -->
+<div class="fixed -bottom-20 -left-20 w-80 h-80 opacity-5 pointer-events-none">
+<img class="w-full h-full object-cover rounded-full" data-alt="A stylized, close-up abstract photography of a sizzling fast-food grill with vibrant sparks and deep red hues. The lighting is dramatic and warm, emphasizing high-energy and appetite appeal. Bold modern corporate aesthetics with a focus on energetic colors and clean sharp edges suitable for a premium dining brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCujC-Xdx-BQacF8Rv3lgu2E7E9i_v3TUbR3RbiiycIqRUXd0W2ENYuUOc_ZQUZLMdM4EF2p4bKARYp6hQMzheX8fYGH5fMm4Cmq22SqCKKfu8YkvSKP8sdUztEo_pybM8-vp6g6m6kZqJaA02HHsJVHf_IppN8q55rhkWsXxLIKM0aUohisU1rAPhMSqtL3iAcYk05YcPjXIs6YKgedIF-46BKAUcf3PteEwBInUjv9lhLQYiueV-ED4goHTugshoa_B0RDGAmURI"/>
+</div>
+<script>
+        function updateValue(amount) {
+            const input = document.getElementById('cashInput');
+            const summary = document.getElementById('summaryValue');
+            input.value = amount;
+            
+            // Update summary with formatting
+            const formatted = new Intl.NumberFormat('id-ID').format(amount);
+            summary.innerText = 'Rp ' + formatted;
+
+            // Visual feedback on chips
+            const buttons = document.querySelectorAll('button[onclick^="updateValue"]');
+            buttons.forEach(btn => {
+                if(btn.innerText.replace(/\./g, '') == amount) {
+                    btn.classList.add('bg-secondary-container');
+                    btn.classList.remove('hover:bg-secondary-fixed');
+                } else {
+                    btn.classList.remove('bg-secondary-container');
+                    btn.classList.add('hover:bg-secondary-fixed');
+                }
+            });
+        }
+
+        document.getElementById('cashInput').addEventListener('input', (e) => {
+            const val = e.target.value;
+            const summary = document.getElementById('summaryValue');
+            const formatted = new Intl.NumberFormat('id-ID').format(val || 0);
+            summary.innerText = 'Rp ' + formatted;
+
+            // Reset chip highlights if manual entry
+            const buttons = document.querySelectorAll('button[onclick^="updateValue"]');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-secondary-container');
+                btn.classList.add('hover:bg-secondary-fixed');
+            });
+        });
+    </script>
+</body></html>

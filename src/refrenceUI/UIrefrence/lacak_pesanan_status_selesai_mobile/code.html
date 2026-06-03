@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#707171",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-container": "#6f5400",
+                        "secondary-container": "#ffc72c",
+                        "on-secondary-fixed": "#251a00",
+                        "on-tertiary-container": "#f6f7f7",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "tertiary": "#575959",
+                        "on-primary-fixed-variant": "#930001",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-container-high": "#eae7e7",
+                        "on-primary-container": "#fff5f3",
+                        "surface-variant": "#e5e2e1",
+                        "background": "#fcf9f8",
+                        "inverse-primary": "#ffb4a8",
+                        "surface": "#fcf9f8",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "inverse-surface": "#313030",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-container": "#f0eded",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "primary-fixed": "#ffdad4",
+                        "on-primary-fixed": "#410000",
+                        "surface-dim": "#dcd9d9",
+                        "secondary-fixed": "#ffdf99",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-surface-variant": "#5c403b",
+                        "surface-bright": "#fcf9f8",
+                        "primary": "#b50303",
+                        "on-surface": "#1c1b1b",
+                        "primary-container": "#da291c",
+                        "surface-tint": "#be0f09",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary": "#775a00",
+                        "on-error": "#ffffff",
+                        "outline": "#916f6a",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "success-main": "#16A34A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "32px",
+                        "gutter-grid": "24px",
+                        "padding-card": "20px",
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- Confetti Overlay -->
+<canvas class="confetti-canvas" id="confetti"></canvas>
+<!-- TopAppBar -->
+<header class="flex items-center px-4 h-[64px] w-full top-0 sticky bg-surface z-50">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-high transition-colors active:scale-95 transition-transform" data-icon="arrow_back">arrow_back</button>
+<h1 class="ml-4 font-headline-md text-headline-md text-primary">Track Order</h1>
+</header>
+<main class="px-4 space-y-6 max-w-md mx-auto">
+<!-- Order Header Card -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_16px_rgba(26,26,26,0.08)] animate-fade-in">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-md text-on-surface-variant mb-1">Order #CRN-99281</p>
+<h2 class="font-headline-md text-on-surface">Pakuwon Mall Branch</h2>
+</div>
+<span class="bg-success-main/10 text-success-main font-label-md px-3 py-1 rounded-full">Selesai</span>
+</div>
+<div class="flex items-center text-on-surface-variant font-body-md">
+<span class="material-symbols-outlined mr-2 text-primary" data-icon="schedule">schedule</span>
+                Diterima pada 17:45
+            </div>
+</div>
+<!-- Celebratory Success Section -->
+<div class="relative overflow-hidden bg-success-main rounded-xl p-8 text-center text-white shadow-xl transform transition-all hover:scale-[1.02]">
+<div class="absolute -top-4 -right-4 opacity-20 transform rotate-12">
+<span class="material-symbols-outlined text-[120px]" data-icon="celebration" data-weight="fill">celebration</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="bg-white/20 p-4 rounded-full mb-4">
+<span class="material-symbols-outlined text-[48px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-display-md text-display-md mb-2">Pesanan Selesai!</h3>
+<p class="font-body-lg text-white/90 leading-relaxed max-w-[280px]">
+                    Selamat menikmati corndog kamu. <br/>
+<span class="font-bold">#CeritanyaBersamaCorney</span>
+</p>
+</div>
+</div>
+<!-- Hero Status Stepper -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
+<h4 class="font-label-lg text-on-surface mb-6">Status Perjalanan</h4>
+<div class="relative space-y-8 pl-8 border-l-2 border-success-main">
+<!-- Step 1 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 bg-success-main text-white rounded-full w-6 h-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-label-md text-on-surface">Baru</p>
+<p class="font-body-md text-on-surface-variant">17:10</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 bg-success-main text-white rounded-full w-6 h-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-label-md text-on-surface">Diproses</p>
+<p class="font-body-md text-on-surface-variant">17:15</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 bg-success-main text-white rounded-full w-6 h-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-label-md text-on-surface">Siap</p>
+<p class="font-body-md text-on-surface-variant">17:35</p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 bg-success-main text-white rounded-full w-6 h-6 flex items-center justify-center ring-4 ring-success-main/20">
+<span class="material-symbols-outlined text-[16px]" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="font-headline-md text-success-main">Selesai</p>
+<p class="font-label-md text-success-main">17:45</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-[#25D366] text-white rounded-xl h-[52px] flex items-center justify-center font-label-lg shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined mr-2" data-icon="chat">chat</span>
+            WhatsApp Support
+        </button>
+<!-- Items Summary (Receipt Style) -->
+<div class="relative bg-white rounded-xl p-6 shadow-md overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-label-lg text-on-surface">Ringkasan Pesanan</h4>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="receipt_long">receipt_long</span>
+</div>
+<div class="space-y-4 mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 bg-surface rounded-lg mr-4 overflow-hidden flex-shrink-0">
+<img alt="Mozzarella Corndog" class="w-full h-full object-cover" data-alt="A close-up high-quality shot of a crispy, golden-brown mozzarella corndog with a slight dusting of sugar and thin zig-zag drizzles of mustard and ketchup. The background is a vibrant, modern fast-food environment with brand colors of red and yellow. The lighting is bright and appetizing, highlighting the crunchy texture of the batter." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3dwZ8Y28VS3vS7sRFy8ivWG6Ph78UdHKCUKiIVc9GrwbfDQDcWiL_L9VQYU5S9cGadLNOEh7XM3ZvyQjEeUiwkdKZP-AXDPvLlkcN8f-rIyleHJJf1TksebtHf5_A1OneHIXdXZkhO8NGdn27Ep04WvDxbRKnFuz-dxC4i8npcMHzT2If_kxKEINypenwMyhN_TGM9phvbQMC6zwVLrykJ9adfL9V-t6SgHAE0Kia_ZKE0psA_GHGBlx1RcuRSBowGhtVGhtq2dc"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between">
+<span class="font-label-md text-on-surface">2x Mozzarella Original</span>
+<span class="font-label-md text-on-surface">Rp 44.000</span>
+</div>
+<p class="text-on-surface-variant text-label-md">Saus: Mayo, Sambal</p>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-12 h-12 bg-surface rounded-lg mr-4 overflow-hidden flex-shrink-0">
+<img alt="Chocolate Corndog" class="w-full h-full object-cover" data-alt="A delicious chocolate-dipped corndog served on a stick, featuring a smooth, dark chocolate coating with crushed peanut toppings. The photo is styled for a professional food brand, using warm lighting and a high-energy yellow and red color palette in the background to evoke a fast-food cafe vibe. The focus is sharp on the texture of the chocolate and peanuts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIxuZbl8zIZxPdk-essEy-fF4KpUoX1XVgsa_wn4NwMtUNbIdidgMFXIUJulHy4vusfAPEsfzNWq8tYctX9LHcbHtm8isb86zoc2W0apBd7fs0M0H8XfothAsQFVHrZ7j0RBCwDiZANu0b2MRrbQp57poakZBdMgZb0MMUhk-ndoe_WE_DuA3qgcKqwe0KSwp9zMtTFlC5_K6WjKgYt4R3kiDb6dTM_zSrA9zoc8ybAHxO22LQpoPmfyPjQUqRQiCpxZuOS9YULK8"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between">
+<span class="font-label-md text-on-surface">1x Choco Nutty</span>
+<span class="font-label-md text-on-surface">Rp 25.000</span>
+</div>
+<p class="text-on-surface-variant text-label-md">Topping: Kacang</p>
+</div>
+</div>
+</div>
+<div class="border-t border-dashed border-outline-variant pt-4 space-y-2">
+<div class="flex justify-between text-body-md text-on-surface-variant">
+<span>Subtotal</span>
+<span>Rp 69.000</span>
+</div>
+<div class="flex justify-between text-body-md text-on-surface-variant">
+<span>Pajak (10%)</span>
+<span>Rp 6.900</span>
+</div>
+<div class="flex justify-between font-headline-md text-primary mt-2">
+<span>Total</span>
+<span>Rp 75.900</span>
+</div>
+</div>
+<!-- Zigzag bottom border effect -->
+<div class="absolute bottom-0 left-0 w-full flex overflow-hidden h-2 opacity-10">
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 -ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+<div class="flex-shrink-0 w-4 h-4 bg-on-surface rotate-45 -mb-2 ml-2"></div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_16px_rgba(26,26,26,0.08)] border-t border-outline-variant z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-label-md text-label-md">Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 hover:opacity-80 transition-opacity active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span class="font-label-md text-label-md">Rewards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple confetti effect
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const pieces = [];
+        const numberOfPieces = 100;
+        const colors = ['#16A34A', '#ffc72c', '#b50303', '#ffffff'];
+
+        function updatePieces() {
+            for (let i = 0; i < pieces.length; i++) {
+                let p = pieces[i];
+                p.y += p.gravity;
+                p.x += p.drift;
+                p.rotation += p.rotationSpeed;
+                if (p.y > canvas.height) pieces[i] = createPiece();
+            }
+        }
+
+        function drawPieces() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pieces.forEach(p => {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+            });
+        }
+
+        function createPiece() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * -canvas.height,
+                size: Math.random() * 10 + 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                gravity: Math.random() * 2 + 1,
+                drift: Math.random() * 2 - 1,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: Math.random() * 0.2 - 0.1
+            };
+        }
+
+        for (let i = 0; i < numberOfPieces; i++) {
+            pieces.push(createPiece());
+        }
+
+        function animate() {
+            updatePieces();
+            drawPieces();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body></html>

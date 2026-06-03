@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CORNEY - Mozza Ori Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#775a00",
+                        "surface-dim": "#dcd9d9",
+                        "primary-fixed": "#ffdad4",
+                        "inverse-primary": "#ffb4a8",
+                        "primary": "#b50303",
+                        "primary-container": "#da291c",
+                        "on-secondary-fixed": "#251a00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#930001",
+                        "inverse-surface": "#313030",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container-low": "#f6f3f2",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-surface": "#1c1b1b",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "inverse-on-surface": "#f3f0ef",
+                        "outline-variant": "#e6bdb7",
+                        "surface-container": "#f0eded",
+                        "surface-bright": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "background": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#6f5400",
+                        "on-primary-container": "#fff5f3",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "outline": "#916f6a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#ffc72c",
+                        "tertiary": "#575959",
+                        "on-tertiary-container": "#f6f7f7",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#410000",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-high": "#eae7e7",
+                        "tertiary-container": "#707171",
+                        "surface": "#fcf9f8",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#5c403b",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-tint": "#be0f09"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "18px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "padding-card": "20px",
+                        "stack-gap": "16px",
+                        "margin-page": "24px",
+                        "gutter-grid": "24px",
+                        "min-tap-target": "52px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .drip-effect {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: #fcf9f8;
+            clip-path: polygon(0 0, 5% 40%, 10% 10%, 15% 60%, 20% 20%, 25% 80%, 30% 30%, 35% 90%, 40% 40%, 45% 70%, 50% 20%, 55% 85%, 60% 35%, 65% 95%, 70% 45%, 75% 75%, 80% 25%, 85% 65%, 90% 15%, 95% 55%, 100% 0);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen pb-32">
+<!-- Hero Header -->
+<header class="relative w-full aspect-[4/5] overflow-hidden">
+
+<!-- Navigation Overlays -->
+<div class="absolute top-0 left-0 w-full p-4 flex justify-between items-start z-10">
+<button class="w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<div class="bg-[#1b5e20] text-white px-3 py-1.5 rounded-full font-label-md text-label-md flex items-center gap-1.5 shadow-lg">
+<span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                sisa 12
+            </div>
+</div>
+<!-- Visual Drip Transition -->
+<div class="drip-effect"></div>
+</header>
+<!-- Main Content -->
+<main class="px-margin-page relative z-20 mt-6">
+<section class="flex flex-col gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="font-display-md text-display-md text-primary tracking-tight">Mozza Ori</h1>
+<p class="font-headline-lg text-headline-lg text-primary">Rp 17.000</p>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded-full font-label-md text-label-md text-[#1b5e20]">Savory</span>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-label-md text-[#1b5e20]">Best Seller</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Sosis premium dengan balutan keju mozzarella yang melimpah dan lumer, dibalut adonan krispi yang sempurna.
+            </p>
+</section>
+<!-- Sauce Selection Section -->
+<section class="mt-8 mb-12">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Pilih Saus</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">Gratis maks 2, selebihnya +Rp 2.000</p>
+</div>
+<span class="bg-surface-container-high px-3 py-1 rounded-lg font-label-md text-label-md text-primary text-[#1b5e20]">Saus gratis 1/2</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Sauce Item 1 -->
+<label class="flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border active:border-primary-container transition-all cursor-pointer border-surface-container-high">
+<div class="flex items-center gap-4">
+<input checked="" class="w-6 h-6 rounded-md text-primary border-outline focus:ring-primary" type="checkbox">
+<span class="font-label-lg text-label-lg">Saus Tomat</span>
+</div>
+<span class="font-label-md text-label-md text-[#1b5e20]">Gratis</span>
+</label>
+<!-- Sauce Item 2 -->
+<label class="flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border active:border-primary-container transition-all cursor-pointer border-surface-container-high">
+<div class="flex items-center gap-4">
+<input class="w-6 h-6 rounded-md text-primary border-outline focus:ring-primary" type="checkbox">
+<span class="font-label-lg text-label-lg">Saus Keju</span>
+</div>
+<span class="font-label-md text-label-md text-[#1b5e20]">Gratis</span>
+</label>
+<!-- Sauce Item 3 -->
+<label class="flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border active:border-primary-container transition-all cursor-pointer border-surface-container-high">
+<div class="flex items-center gap-4">
+<input class="w-6 h-6 rounded-md text-primary border-outline focus:ring-primary" type="checkbox">
+<span class="font-label-lg text-label-lg">Saus Sambal</span>
+</div>
+<span class="font-label-md text-label-md text-[#B45309] text-[#1b5e20]">+Rp 2.000</span>
+</label>
+<!-- Sauce Item 4 -->
+<label class="flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border active:border-primary-container transition-all cursor-pointer border-surface-container-high">
+<div class="flex items-center gap-4">
+<input class="w-6 h-6 rounded-md text-primary border-outline focus:ring-primary" type="checkbox">
+<span class="font-label-lg text-label-lg">Mayonaise</span>
+</div>
+<span class="font-label-md text-label-md text-[#B45309] text-[#1b5e20]">+Rp 2.000</span>
+</label>
+</div>
+</section>
+</main>
+<!-- Sticky Footer Container -->
+<footer class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-2xl border-t border-outline-variant p-4 z-50 shadow-[0_-12px_32px_rgba(0,0,0,0.12)]">
+<div class="flex items-center gap-4 max-w-lg mx-auto">
+<!-- Stepper -->
+<div class="flex items-center bg-surface-container rounded-xl h-[52px] p-1">
+<button class="w-10 h-10 flex items-center justify-center text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="w-8 text-center font-headline-md text-headline-md">1</span>
+<button class="w-10 h-10 flex items-center justify-center text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Add to Cart Button -->
+<button class="flex-1 h-[52px] bg-primary text-white rounded-xl px-4 flex items-center justify-between shadow-[0_4px_12px_rgba(181,3,3,0.3)] active:scale-[0.98] transition-all">
+<div class="flex flex-col items-start leading-none">
+<span class="text-[10px] uppercase font-bold tracking-widest opacity-80">Total</span>
+<span class="font-label-lg text-label-lg">Rp 17.000</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg">Tambah ke Keranjang</span>
+<span class="material-symbols-outlined text-[20px]">shopping_basket</span>
+</div>
+</button>
+</div>
+</footer>
+<script>
+        // Simple Interaction: Toggle quantity
+        const minusBtn = document.querySelector('button .material-symbols-outlined[innerText="remove"]')?.parentElement;
+        const plusBtn = document.querySelector('button .material-symbols-outlined[innerText="add"]')?.parentElement;
+        const countDisplay = document.querySelector('.w-8.text-center');
+        const priceDisplay = document.querySelector('.flex-1 .text-label-lg');
+        let count = 1;
+        const basePrice = 17000;
+
+        // Note: The above selectors are a bit fragile due to innerText logic in a template, 
+        // using index based for stability in this demo environment.
+        const btns = document.querySelectorAll('.bg-surface-container button');
+        const countSpan = document.querySelector('.bg-surface-container span');
+        const footerTotal = document.querySelector('.flex-1 span.text-label-lg');
+
+        if(btns.length >= 2) {
+            btns[0].onclick = () => {
+                if(count > 1) {
+                    count--;
+                    updateUI();
+                }
+            };
+            btns[1].onclick = () => {
+                count++;
+                updateUI();
+            };
+        }
+
+        function updateUI() {
+            countSpan.textContent = count;
+            footerTotal.textContent = `Rp ${(count * basePrice).toLocaleString('id-ID')}.000`;
+        }
+
+        // Sauce checkbox logic - simplistic visual update
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.onchange = (e) => {
+                const parent = e.target.closest('label');
+                if(e.target.checked) {
+                    parent.classList.add('ring-2', 'ring-primary', 'bg-primary-container/5');
+                } else {
+                    parent.classList.remove('ring-2', 'ring-primary', 'bg-primary-container/5');
+                }
+            }
+        });
+    </script>
+
+
+</body></html>

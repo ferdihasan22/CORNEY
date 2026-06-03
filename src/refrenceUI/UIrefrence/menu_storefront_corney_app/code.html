@@ -1,0 +1,296 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CORNEY Sepinggan - Menu Storefront</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .product-card-shadow {
+            box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#454747",
+                      "primary": "#b50303",
+                      "surface-container-low": "#f6f3f2",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#5c403b",
+                      "tertiary-container": "#707171",
+                      "surface-variant": "#e5e2e1",
+                      "on-background": "#1c1b1b",
+                      "inverse-on-surface": "#f3f0ef",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "surface-tint": "#be0f09",
+                      "on-primary-container": "#fff5f3",
+                      "surface-container-high": "#eae7e7",
+                      "on-tertiary-container": "#f6f7f7",
+                      "surface-bright": "#fcf9f8",
+                      "on-secondary-fixed-variant": "#5a4300",
+                      "inverse-primary": "#ffb4a8",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#6f5400",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-primary-fixed-variant": "#930001",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "background": "#fcf9f8",
+                      "secondary-fixed-dim": "#f6bf22",
+                      "on-error": "#ffffff",
+                      "surface-container": "#f0eded",
+                      "surface-dim": "#dcd9d9",
+                      "secondary": "#775a00",
+                      "inverse-surface": "#313030",
+                      "primary-container": "#da291c",
+                      "surface": "#fcf9f8",
+                      "on-secondary-fixed": "#251a00",
+                      "secondary-fixed": "#ffdf99",
+                      "on-surface": "#1c1b1b",
+                      "tertiary": "#575959",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#ffdad4",
+                      "on-primary-fixed": "#410000",
+                      "outline": "#916f6a",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#e6bdb7",
+                      "secondary-container": "#ffc72c",
+                      "tertiary-fixed": "#e2e2e2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "padding-card": "20px",
+                      "stack-gap": "16px",
+                      "margin-page": "32px",
+                      "min-tap-target": "52px",
+                      "gutter-grid": "24px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased">
+<!-- Top AppBar (Mobile/Tablet Hybrid) -->
+<header class="fixed top-0 w-full z-50 bg-surface shadow-md h-min-tap-target flex items-center px-4 justify-between">
+<div class="flex items-center gap-2">
+<h1 class="text-headline-md font-black text-primary uppercase tracking-tighter">CORNEY</h1>
+</div>
+<div class="flex flex-col items-center">
+<button class="flex items-center gap-1 text-label-md font-bold text-on-surface">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+                CORNEY Sepinggan
+                <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<a class="hidden md:block text-label-md text-primary font-bold" href="#">Lacak Pesanan</a>
+<div class="relative active:scale-95 transition-transform duration-100 p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-primary">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-surface">2</span>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-24 md:max-w-4xl mx-auto px-4">
+<!-- Promo Carousel -->
+<section class="relative mb-6">
+<div class="w-full h-48 md:h-64 rounded-[18px] overflow-hidden relative group">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="Main Promo Banner" class="w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb_8LKjpq5KsUfSwd3sWGgiL1H10Du2yNmFEEkaS7UWIg00LX9K7wXnAH4gAKwbagVs_Me5KF8xN-8JH7PV_2ma9EYYebtXwf8uMvr4dL61l86dFoToDq-qEtp-pzWL0jSZH6A4MNS7PX4autScxwilLWXi-1IeuSFihPc0Z-_P7DrFwi9df9dhXBDMPPuAZlKtDJfsccSKbSSo8py-P1Jb1tPU2FiQV3IIwDEI2H7vTEARse5aBu6eUryh6L8XevNI6YgFkmwKmc">
+<div class="absolute bottom-4 left-6 z-20">
+<h2 class="text-white font-headline-lg text-headline-lg leading-tight">Keju Meleleh!<br>Hanya Rp 17k</h2>
+</div>
+<div class="absolute bottom-4 right-6 z-20 flex gap-1.5">
+<div class="w-2 h-2 rounded-full bg-white"></div>
+<div class="w-2 h-2 rounded-full bg-white/40"></div>
+<div class="w-2 h-2 rounded-full bg-white/40"></div>
+</div>
+</div>
+</section>
+<!-- Filters (NavigationDrawer Data) -->
+<section class="mb-8 -mx-4 px-4">
+<div class="flex gap-3 overflow-x-auto hide-scrollbar py-2">
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-secondary-container text-on-secondary-container font-label-lg transition-all shadow-sm">
+                    Semua
+                </button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container transition-colors">
+                    Sweet
+                </button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container transition-colors">
+                    Savory
+                </button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container transition-colors">
+                    Best Seller
+                </button>
+</div>
+</section>
+<!-- Product Grid -->
+<section class="grid grid-cols-2 gap-4 md:gap-6 mb-12">
+<!-- Card 1: Mozza Ori -->
+<div class="bg-surface rounded-[18px] product-card-shadow flex flex-col overflow-hidden group">
+<div class="relative h-40 md:h-56 overflow-hidden">
+<span class="absolute top-2 left-2 z-10 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded-md">Best Seller</span>
+<img alt="Mozza Ori" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb_8LKjpq5KsUfSwd3sWGgiL1H10Du2yNmFEEkaS7UWIg00LX9K7wXnAH4gAKwbagVs_Me5KF8xN-8JH7PV_2ma9EYYebtXwf8uMvr4dL61l86dFoToDq-qEtp-pzWL0jSZH6A4MNS7PX4autScxwilLWXi-1IeuSFihPc0Z-_P7DrFwi9df9dhXBDMPPuAZlKtDJfsccSKbSSo8py-P1Jb1tPU2FiQV3IIwDEI2H7vTEARse5aBu6eUryh6L8XevNI6YgFkmwKmc">
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="mb-1">
+<span class="text-green-600 font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> sisa 12
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-[18px] mb-1 line-clamp-1">Mozza Ori</h3>
+<p class="text-primary font-bold text-lg mb-4">Rp 17.000</p>
+<button class="mt-auto w-full h-[52px] bg-primary text-white rounded-[14px] font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Tambah
+                    </button>
+</div>
+</div>
+<!-- Card 2: Choco Glaze -->
+<div class="bg-surface rounded-[18px] product-card-shadow flex flex-col overflow-hidden group">
+<div class="relative h-40 md:h-56 overflow-hidden">
+<img alt="Choco Glaze" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd0UTEJsRFzTtm8lmKEAIxBPysxZRSxKSu_qR7guJq93M6XvYlX687ATSGisTPpsLss-3-33cHaXNO820-psbeounyQLLP7JBsm4Ig30DMzaRSws5Vt4vulBW8v_Rln42ApVSVPDiacpamLm-2-JDduYJQKSLOZgrP2zyG5ZLc1iBfUQil1-pXIPpgt7JclAOJFJtf_i5TofqPY8f3EgvTvytJa_G2cliqG-F8GvmlwwZ5e1zm3lM8MSNRSskFZkOep9990sN6rFI">
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="mb-1">
+<span class="text-amber-600 font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> sisa 3
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-[18px] mb-1 line-clamp-1">Choco Glaze</h3>
+<p class="text-primary font-bold text-lg mb-4">Rp 19.000</p>
+<button class="mt-auto w-full h-[52px] bg-primary text-white rounded-[14px] font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Tambah
+                    </button>
+</div>
+</div>
+<!-- Card 3: Potato K-Dog (Out of Stock) -->
+<div class="bg-surface rounded-[18px] product-card-shadow flex flex-col overflow-hidden relative group">
+<div class="absolute inset-0 bg-white/40 z-10 pointer-events-none"></div>
+<div class="relative h-40 md:h-56 overflow-hidden grayscale-[0.5]">
+<span class="absolute top-2 left-2 z-20 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-md">Pedas</span>
+<img alt="Potato K-Dog" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLTtImXNMP4x086leKDuuw4XDvsarvkcPiRfpVOKs6xeTlM7tT8_OKYBEziJyF0sNcIMf1xC2OrOHr_DCZlPnkw4M8atNUv5Qu7gTTLCLVDCQ_T0yiNQsdNZbZ_TUzG1W2AnjHi7wlpivu6gC9PyTDeNdyW_FMieR-nDGDr6Ts7UKrFwH-5Boi0TurzDhYEUj5vZgnW6baBDM3GuhmJmhssDifMqC7pkxYk-hwklj0WWJUHx5z-iZFGIALtwx4LEeVEYcEUXHPL7k">
+</div>
+<div class="p-4 flex flex-col flex-1 opacity-60">
+<div class="mb-1">
+<span class="text-error font-label-md text-[12px] flex items-center gap-1 uppercase font-black">
+                            HABIS
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-[18px] mb-1 line-clamp-1">Potato K-Dog</h3>
+<p class="text-primary font-bold text-lg mb-4">Rp 21.000</p>
+<button class="mt-auto w-full h-[52px] bg-surface-container-highest text-on-surface-variant rounded-[14px] font-label-lg cursor-not-allowed" disabled="">
+                        Stok Habis
+                    </button>
+</div>
+</div>
+<!-- Card 4: Original K-Dog -->
+<div class="bg-surface rounded-[18px] product-card-shadow flex flex-col overflow-hidden group">
+<div class="relative h-40 md:h-56 overflow-hidden">
+<img alt="Original K-Dog" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/AP1WRLsqehsTkS6Iquoa7n9RkXwJr3Yihv3bDN1BnI7w4d2xFAwKqK7PPMXwEVnTtsBiVl07LVwZJX-PaHGVdR891_lxWayc0EibMWaaqF-Cx2a1XJLVx16lqer8pBxUM8tbKHFjp1O00sfQYN1PYPIekc6PNdmIEK4nb-PeZu7PST9OSmdYQRVkDVtRYUWX4uWr4r2WssoE7IlToaT4Jqsv5CI6pXE36y0YTIQMbCtO2_VCpYKWyg-gCCgx8nM">
+</div>
+<div class="p-4 flex flex-col flex-1">
+<div class="mb-1">
+<span class="text-green-600 font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> sisa 24
+                        </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-[18px] mb-1 line-clamp-1">Original K-Dog</h3>
+<p class="text-primary font-bold text-lg mb-4">Rp 15.000</p>
+<button class="mt-auto w-full h-[52px] bg-primary text-white rounded-[14px] font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Tambah
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Cart Action Bar -->
+<footer class="fixed bottom-0 w-full z-50 bg-surface shadow-[0_-4px_16px_rgba(26,26,26,0.08)] px-4 py-3 border-t border-outline-variant">
+<div class="md:max-w-4xl mx-auto">
+<button class="w-full h-[56px] bg-primary text-white rounded-[14px] px-6 flex items-center justify-between group active:scale-[0.98] transition-transform">
+<div class="flex flex-col items-start">
+<span class="text-[12px] opacity-90 font-medium">2 item · Rp 38.000</span>
+<span class="text-label-lg font-bold">Lihat Keranjang</span>
+</div>
+<div class="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg group-hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-[20px]">shopping_basket</span>
+</div>
+</button>
+</div>
+</footer>
+<!-- Bottom Tab Navigation (Only visible on small mobile if needed, but per prompt we use the Cart Bar) -->
+<!-- The Bottom Cart Bar serves as the primary CTA for this transactional page -->
+<script>
+        // Micro-interaction for filter chips
+        document.querySelectorAll('button.rounded-full').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.innerText !== 'Semua' && this.innerText !== 'Sweet' && this.innerText !== 'Savory' && this.innerText !== 'Best Seller') return;
+                
+                document.querySelectorAll('button.rounded-full').forEach(b => {
+                    b.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+                    b.classList.add('border', 'border-outline-variant', 'text-on-surface-variant');
+                });
+                this.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                this.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant');
+            });
+        });
+
+        // Add to cart simple simulation
+        document.querySelectorAll('button').forEach(btn => {
+            if(btn.innerText.includes('Tambah')) {
+                btn.addEventListener('click', (e) => {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'absolute inset-0 bg-white/20 rounded-[14px] animate-ping';
+                    btn.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 400);
+                });
+            }
+        });
+    </script>
+</body></html>

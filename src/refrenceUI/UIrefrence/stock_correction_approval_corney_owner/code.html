@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .audit-trail-ledger {
+            background-image: radial-gradient(#dcd9d9 0.5px, transparent 0.5px);
+            background-size: 12px 12px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#f6f7f7",
+                        "on-primary-container": "#fff5f3",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed-variant": "#930001",
+                        "outline": "#916f6a",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "secondary": "#775a00",
+                        "surface-container-highest": "#e5e2e1",
+                        "secondary-container": "#ffc72c",
+                        "primary-container": "#da291c",
+                        "on-error": "#ffffff",
+                        "tertiary": "#575959",
+                        "inverse-surface": "#313030",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-secondary-fixed": "#251a00",
+                        "on-primary-fixed": "#410000",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "on-surface-variant": "#5c403b",
+                        "tertiary-container": "#707171",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdad4",
+                        "inverse-on-surface": "#f3f0ef",
+                        "outline-variant": "#e6bdb7",
+                        "on-background": "#1c1b1b",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1c1b1b",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "inverse-primary": "#ffb4a8",
+                        "on-secondary-container": "#6f5400",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#be0f09",
+                        "on-primary": "#ffffff",
+                        "primary": "#b50303",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "background": "#fcf9f8",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed-variant": "#5a4300"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-grid": "24px",
+                        "stack-gap": "16px",
+                        "min-tap-target": "52px",
+                        "margin-page": "32px",
+                        "base": "8px",
+                        "padding-card": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary shadow-md flex items-center justify-between px-margin-page h-[64px]">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-primary transition-all duration-200 active:scale-95" data-icon="menu">menu</button>
+<div class="flex items-center gap-3">
+<h1 class="font-headline-md text-headline-md text-on-primary">Persetujuan Stok</h1>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-0.5 rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="pending_actions">pending_actions</span>
+                    2 menunggu
+                </div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-primary" data-icon="notifications">notifications</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-on-primary/20">
+<img alt="Owner Corney" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmGkkP2OEQ9nQ4oRrisRIL1VgIWQBIkiC2SnEOPs7CdqwfNM6lwFZNSLvMSV-EM1XJwHiNkuCAyLLIVwuQFlXkjJHGV67K-fJ0orXIcOEKCOJ-CHrwa4-12LrDz3H-xpxU59_qD1J7m7sz4d_0XpZUPKu7B4tRHwoDNVi3OL3vHSHUXerY8fJ8hulCvkI7B6OJSfkvob8xn5lcBwQd6Vkx6KyGwBRijjWHgK8c6Tr9EY70ATNUvwTaQ0wur3R9GBPGs5Y6LhmDnxQ"/>
+</div>
+</div>
+</header>
+<!-- Navigation Drawer (Sidebar) -->
+<aside class="fixed left-0 h-full w-[240px] z-40 bg-surface shadow-lg flex flex-col pt-24 gap-2 hidden md:flex">
+<div class="px-6 mb-6">
+<h2 class="font-display-sm text-display-sm text-primary font-extrabold tracking-tight">CORNEY</h2>
+<p class="text-on-surface-variant text-label-md opacity-70">Administrator Panel</p>
+</div>
+<nav class="flex flex-col">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-lg text-label-lg">Menu Utama</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-lg text-label-lg">Stok Opname</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-lg text-label-lg">Riwayat Koreksi</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-xl mx-2 my-1 px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-lg text-label-lg">Laporan</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-[240px] pt-24 pb-24 px-margin-page max-w-7xl mx-auto">
+<!-- Warning Note -->
+<section class="mb-stack-gap">
+<div class="bg-secondary-fixed text-on-secondary-fixed p-padding-card rounded-2xl flex gap-4 items-start shadow-sm border border-secondary-container/50">
+<span class="material-symbols-outlined text-secondary text-display-sm" data-icon="security" style="font-variation-settings: 'FILL' 1;">security</span>
+<div class="space-y-1">
+<p class="font-headline-sm text-label-lg font-bold">Catatan Keamanan Penting</p>
+<p class="text-body-md leading-relaxed">Eksekusi koreksi ada di tangan Owner, bukan kasir — agar yang memegang barang tidak bisa menutupi jejaknya sendiri.</p>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-grid">
+<!-- Left Column: Pending Requests -->
+<div class="lg:col-span-8 space-y-stack-gap">
+<!-- Pattern Watch Callout -->
+<div class="bg-primary-fixed text-on-primary-fixed p-4 rounded-xl flex items-center justify-between border-l-4 border-primary shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="monitoring">monitoring</span>
+<p class="font-label-lg text-label-lg">CORNEY Batakan: <span class="font-bold">4 koreksi minggu ini</span> (pantau pola)</p>
+</div>
+<span class="material-symbols-outlined text-[20px] opacity-60" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface-variant mb-4">Permintaan Menunggu</h3>
+<!-- Card 1 -->
+<div class="bg-white rounded-2xl p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant hover:translate-y-[-2px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden">
+<img alt="Mozzarella" class="w-full h-full object-cover" data-alt="A close-up high-definition photograph of melted premium mozzarella cheese strings stretching across a vibrant red fast food background. The lighting is warm and cinematic, highlighting the creamy texture and golden-brown highlights of the cheese. The overall aesthetic is energetic and appetizing, typical of a modern Indonesian urban street food brand focused on premium ingredients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0BD8ZihMhJTvSJJUuNohcIJkbBbOwhCerhhjU9VmwwbnlpMfJTmo-VZmMRTZxcP6_rPKEaSRE_5f4UC2Vnm53GqXXhMaGz7mRiBfpzhv87rBnp-8CImsLLjOaQzCEDRLlG5soiKIZS41lo3IFUofZYjU9w1uNfgb32N57gc015byFggMFqZoj2S6bwFz88OLomqDcgsDnsFYb84qB_UTLVyXr0bY0gtgqkPzVa5npCRD8NK5inMgAiymMlnUgpTc59Z3H-WUusjQ"/>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-primary">Keju Mozza</h4>
+<p class="text-on-surface-variant font-label-md">Outlet: CORNEY Sepinggan</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-display-md text-display-md text-on-surface leading-none">8 <span class="text-primary-container">→</span> 11</span>
+<span class="text-primary font-bold text-headline-sm">(+3)</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg mb-6 border border-outline-variant/30">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="notes">notes</span>
+<p class="font-label-md text-on-surface-variant">Alasan Koreksi</p>
+</div>
+<p class="italic text-body-md">"salah hitung saat opening"</p>
+<div class="mt-2 text-label-md opacity-60 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="person">person</span>
+                            Diajukan kasir · 21:14
+                        </div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 min-h-[52px] bg-primary text-on-primary rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Setujui &amp; Eksekusi
+                        </button>
+<button class="flex-1 min-h-[52px] border-2 border-primary text-primary rounded-2xl font-bold hover:bg-primary/5 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+                            Tolak
+                        </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white rounded-2xl p-padding-card shadow-[0_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden">
+<img alt="Sosis Jumbo" class="w-full h-full object-cover" data-alt="An appetizing macro shot of grilled jumbo sausages with char marks, glistening in bright studio lighting. The sausages are arranged neatly against a backdrop of vibrant yellow and deep red, creating a high-contrast and appetizing visual. The mood is energetic and highlights the quality and size of the meat product, perfect for a premium snack brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZIE6FdhniXT09hb_vTEy-ahxSTwnrzWeRQtpTBSmZQtTkT4PppFHbRR4oPJUcVeNHrtuT2R23UfgUKAZ6uZo_359aGitZ-gxvIZZWz-iDXROAA2PJP2be6WZIsXd4txtxsO0zmIOjVLkz1wwVljufQiz7-hT8nns79UFr7wvwDSZCUeM3S76ehKXaN350BOwoGLdKHcg2xJf4YN9vheok5C7-AXW05fThQQsArc-RYV1qPk8ExztqdTm158gpkL-01xMyG9QnTDI"/>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-primary">Sosis Jumbo</h4>
+<p class="text-on-surface-variant font-label-md">Outlet: CORNEY Sudirman</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-display-md text-display-md text-on-surface leading-none">25 <span class="text-on-surface-variant/40">→</span> 20</span>
+<span class="text-error font-bold text-headline-sm">(-5)</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg mb-6 border border-outline-variant/30">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="warning">warning</span>
+<p class="font-label-md text-on-surface-variant">Alasan Koreksi</p>
+</div>
+<p class="italic text-body-md">"rusak saat defrost"</p>
+<div class="mt-2 text-label-md opacity-60 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="person">person</span>
+                            Diajukan kasir · 10:45
+                        </div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 min-h-[52px] bg-primary text-on-primary rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md">Setujui &amp; Eksekusi</button>
+<button class="flex-1 min-h-[52px] border-2 border-primary text-primary rounded-2xl font-bold hover:bg-primary/5 active:scale-[0.98] transition-all">Tolak</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Audit Trail -->
+<div class="lg:col-span-4">
+<div class="bg-surface-container-low rounded-2xl p-padding-card audit-trail-ledger border border-outline-variant sticky top-24 shadow-inner min-h-[500px]">
+<div class="mb-6 border-b border-outline-variant pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface-variant">Riwayat Koreksi</h3>
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" data-icon="lock_clock">lock_clock</span>
+<p class="font-label-md">Tercatat berjejak (immutable)</p>
+</div>
+</div>
+<div class="space-y-4">
+<!-- History Row 1 -->
+<div class="bg-white/50 p-3 rounded-xl border border-outline-variant/50">
+<div class="flex justify-between items-start mb-1">
+<span class="font-bold text-on-surface">Mozza Ori</span>
+<span class="text-label-md text-tertiary">24 Oct</span>
+</div>
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Sepinggan</span>
+<span class="font-bold">5 → 10</span>
+</div>
+<div class="mt-2 flex justify-end">
+<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-[12px] font-bold uppercase tracking-wider">Setuju</span>
+</div>
+</div>
+<!-- History Row 2 -->
+<div class="bg-white/50 p-3 rounded-xl border border-outline-variant/50">
+<div class="flex justify-between items-start mb-1">
+<span class="font-bold text-on-surface">Sosis Reguler</span>
+<span class="text-label-md text-tertiary">23 Oct</span>
+</div>
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Thamrin</span>
+<span class="font-bold">12 → 15</span>
+</div>
+<div class="mt-2 flex justify-end">
+<span class="bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-[12px] font-bold uppercase tracking-wider">Ditolak</span>
+</div>
+</div>
+<!-- More History Row... -->
+<div class="bg-white/50 p-3 rounded-xl border border-outline-variant/50 opacity-60">
+<div class="flex justify-between items-start mb-1">
+<span class="font-bold text-on-surface">Mayo Dip</span>
+<span class="text-label-md text-tertiary">22 Oct</span>
+</div>
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Batakan</span>
+<span class="font-bold">2 → 0</span>
+</div>
+<div class="mt-2 flex justify-end">
+<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-[12px] font-bold uppercase tracking-wider">Setuju</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 text-primary font-bold text-label-md flex items-center justify-center gap-2 hover:bg-primary/5 rounded-xl transition-colors">
+                        Lihat Semua Log
+                        <span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="fixed bottom-0 w-full z-50 md:hidden bg-surface border-t border-outline-variant flex justify-around items-center h-min-tap-target shadow-lg">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-2 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="pending_actions" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
+<span class="font-label-md text-label-md">Pending</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="manage_search">manage_search</span>
+<span class="font-label-md text-label-md">Riwayat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-6 py-2 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for button press
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+    </script>
+</body></html>

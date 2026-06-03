@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY - Ajukan Koreksi Stok</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-low": "#f6f3f2",
+                "tertiary": "#575959",
+                "on-primary-fixed": "#410000",
+                "error-container": "#ffdad6",
+                "primary-container": "#da291c",
+                "on-primary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed-variant": "#454747",
+                "surface-container-high": "#eae7e7",
+                "on-secondary-fixed": "#251a00",
+                "secondary-fixed": "#ffdf99",
+                "on-tertiary-container": "#f6f7f7",
+                "on-error-container": "#93000a",
+                "on-background": "#1c1b1b",
+                "surface-container": "#f0eded",
+                "surface-tint": "#be0f09",
+                "secondary-fixed-dim": "#f6bf22",
+                "inverse-surface": "#313030",
+                "inverse-on-surface": "#f3f0ef",
+                "background": "#fcf9f8",
+                "inverse-primary": "#ffb4a8",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "on-surface-variant": "#5c403b",
+                "on-secondary-container": "#6f5400",
+                "surface": "#fcf9f8",
+                "surface-variant": "#e5e2e1",
+                "outline-variant": "#e6bdb7",
+                "on-error": "#ffffff",
+                "surface-bright": "#fcf9f8",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-primary-container": "#fff5f3",
+                "primary-fixed-dim": "#ffb4a8",
+                "secondary-container": "#ffc72c",
+                "on-primary-fixed-variant": "#930001",
+                "tertiary-container": "#707171",
+                "surface-container-highest": "#e5e2e1",
+                "outline": "#916f6a",
+                "surface-dim": "#dcd9d9",
+                "on-surface": "#1c1b1b",
+                "on-secondary-fixed-variant": "#5a4300",
+                "tertiary-fixed": "#e2e2e2",
+                "primary-fixed": "#ffdad4",
+                "primary": "#b50303",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed": "#1a1c1c",
+                "secondary": "#775a00"
+            },
+            "borderRadius": {
+                "DEFAULT": "14px",
+                "lg": "14px",
+                "xl": "18px",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-gap": "16px",
+                "min-tap-target": "52px",
+                "padding-card": "20px",
+                "margin-page": "16px",
+                "gutter-grid": "24px",
+                "base": "8px"
+            },
+            "fontFamily": {
+                "display-md": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "label-lg": ["Plus Jakarta Sans"],
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"],
+                "headline-md": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface mb-24 overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-primary dark:bg-primary text-on-primary dark:text-on-primary shadow-md flex items-center justify-between px-margin-page h-[64px]">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform flex items-center justify-center w-10 h-10 hover:bg-on-primary/10 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md leading-tight">Ajukan Koreksi Stok</h1>
+<span class="text-xs text-on-primary/80">CORNEY Sepinggan</span>
+</div>
+</div>
+<button class="active:scale-95 transition-transform flex items-center justify-center w-10 h-10 hover:bg-on-primary/10 rounded-full">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+</header>
+<main class="mt-20 px-margin-page space-y-6">
+<!-- Form Section -->
+<section class="bg-surface-container-lowest custom-shadow rounded-xl p-padding-card border border-outline-variant/30">
+<!-- Subtext Note -->
+<div class="bg-surface-container-low p-4 rounded-lg mb-6 flex gap-3 items-start border-l-4 border-secondary-container">
+<span class="material-symbols-outlined text-secondary-fixed-dim" data-icon="info">info</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                    Kasir hanya mengajukan. Owner yang menyetujui &amp; mengeksekusi dari jauh. Semua tercatat berjejak.
+                </p>
+</div>
+<div class="space-y-5">
+<!-- Select Item -->
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block">Pilih item</label>
+<div class="relative">
+<select class="w-full h-min-tap-target px-4 bg-surface border border-outline rounded-xl appearance-none focus:ring-2 focus:ring-primary focus:border-primary">
+<option>Keju Mozza</option>
+<option>Sosis Reguler</option>
+<option>Sosis Jumbo</option>
+<option>Mix</option>
+<option>Bahan Cair</option>
+<option>Kotak</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Stock Info -->
+<div class="bg-surface-container-high/50 p-4 rounded-xl flex justify-between items-center">
+<span class="font-label-md text-on-surface-variant">Stok sistem saat ini</span>
+<span class="font-headline-md text-on-surface">8</span>
+</div>
+<!-- Number Input -->
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block">Stok fisik sebenarnya</label>
+<div class="flex items-center gap-4">
+<button class="w-min-tap-target h-min-tap-target bg-surface-container border border-outline rounded-xl flex items-center justify-center active:scale-90 transition-all" onclick="decrementStock()">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="flex-1 h-min-tap-target text-center font-display-md bg-surface border-2 border-primary rounded-xl focus:outline-none" id="stockInput" type="number" value="11"/>
+<button class="w-min-tap-target h-min-tap-target bg-surface-container border border-outline rounded-xl flex items-center justify-center active:scale-90 transition-all" onclick="incrementStock()">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- Delta Line -->
+<div class="flex items-center justify-center py-2">
+<div class="bg-secondary-container text-on-secondary-container font-bold px-6 py-2 rounded-full flex items-center gap-2 animate-pulse">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span id="deltaText">Koreksi: 8 → 11 (+3)</span>
+</div>
+</div>
+<!-- Alasan -->
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block">Alasan koreksi *</label>
+<textarea class="w-full p-4 bg-surface border border-outline rounded-xl focus:ring-2 focus:ring-primary focus:border-primary resize-none" placeholder="contoh: salah hitung saat opening" rows="3"></textarea>
+</div>
+<!-- Info Chip -->
+<div class="inline-flex items-center gap-2 bg-tertiary-container/10 text-tertiary-fixed-dim px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+<span class="text-[10px] leading-tight">Stok boleh minus sebagai sinyal tidak sinkron — bukan diblok.</span>
+</div>
+<!-- Actions -->
+<div class="space-y-3 pt-4">
+<button class="w-full h-min-tap-target bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+                        Kirim Pengajuan ke Owner
+                    </button>
+<button class="w-full h-min-tap-target bg-transparent border-2 border-[#25D366] text-[#25D366] font-label-lg rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+                        Kirim WA ke Owner (teks otomatis)
+                    </button>
+<p class="text-center text-[10px] text-tertiary italic">tinggal tekan kirim</p>
+</div>
+</div>
+</section>
+<!-- Waiting List -->
+<section class="space-y-4">
+<h3 class="font-headline-md text-on-surface">Pengajuan Menunggu</h3>
+<div class="space-y-3">
+<!-- Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between border border-outline-variant/30 custom-shadow">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-secondary-container/20 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="restaurant_menu">restaurant_menu</span>
+</div>
+<div>
+<p class="font-label-lg text-on-surface">Keju Mozza</p>
+<p class="text-xs text-on-surface-variant">Hari ini, 09:12</p>
+</div>
+</div>
+<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-bold border border-amber-200 uppercase tracking-wider">Menunggu Owner</span>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between border border-outline-variant/30 custom-shadow opacity-80">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<p class="font-label-lg text-on-surface">Sosis Jumbo</p>
+<p class="text-xs text-on-surface-variant">Kemarin, 21:05</p>
+</div>
+</div>
+<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold border border-green-200 uppercase tracking-wider">Disetujui</span>
+</div>
+<!-- Item 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between border border-outline-variant/30 custom-shadow opacity-80">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<p class="font-label-lg text-on-surface">Bahan Cair</p>
+<p class="text-xs text-on-surface-variant">2 hari lalu</p>
+</div>
+</div>
+<span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-[10px] font-bold border border-gray-200 uppercase tracking-wider">Ditolak</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 lg:hidden flex justify-around items-center h-min-tap-target bg-surface border-t border-outline-variant shadow-lg">
+<div class="flex flex-col items-center justify-center text-tertiary hover:bg-surface-container transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Beranda</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary font-bold hover:bg-surface-container transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="edit_note" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-md text-label-md">Koreksi</span>
+</div>
+<div class="flex flex-col items-center justify-center text-tertiary hover:bg-surface-container transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
+<span class="font-label-md text-label-md">Pending</span>
+</div>
+<div class="flex flex-col items-center justify-center text-tertiary hover:bg-surface-container transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-label-md text-label-md">Kontak</span>
+</div>
+</nav>
+<script>
+        const stockInput = document.getElementById('stockInput');
+        const deltaText = document.getElementById('deltaText');
+        const initialStock = 8;
+
+        function updateDelta() {
+            const currentStock = parseInt(stockInput.value) || 0;
+            const diff = currentStock - initialStock;
+            const diffStr = diff >= 0 ? `+${diff}` : diff;
+            deltaText.innerText = `Koreksi: ${initialStock} → ${currentStock} (${diffStr})`;
+        }
+
+        function incrementStock() {
+            stockInput.value = parseInt(stockInput.value) + 1;
+            updateDelta();
+        }
+
+        function decrementStock() {
+            stockInput.value = Math.max(-99, parseInt(stockInput.value) - 1);
+            updateDelta();
+        }
+
+        stockInput.addEventListener('input', updateDelta);
+    </script>
+</body></html>

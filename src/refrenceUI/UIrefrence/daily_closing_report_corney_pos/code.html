@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Daily Closing Report - CORNEY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "inverse-primary": "#ffb4a8",
+                    "on-secondary-fixed": "#251a00",
+                    "surface-tint": "#be0f09",
+                    "on-tertiary-container": "#f6f7f7",
+                    "primary": "#b50303",
+                    "primary-fixed": "#ffdad4",
+                    "tertiary-fixed": "#e2e2e2",
+                    "primary-container": "#da291c",
+                    "surface-variant": "#e5e2e1",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "on-surface": "#1c1b1b",
+                    "outline-variant": "#e6bdb7",
+                    "outline": "#916f6a",
+                    "surface-container-high": "#eae7e7",
+                    "surface-dim": "#dcd9d9",
+                    "secondary": "#775a00",
+                    "tertiary": "#575959",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "surface-container-highest": "#e5e2e1",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "on-primary-container": "#fff5f3",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#707171",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "surface-container-low": "#f6f3f2",
+                    "inverse-on-surface": "#f3f0ef",
+                    "on-background": "#1c1b1b",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#6f5400",
+                    "secondary-container": "#ffc72c",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f0eded",
+                    "on-surface-variant": "#5c403b",
+                    "on-primary-fixed": "#410000",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#fcf9f8",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#ffdf99",
+                    "surface": "#fcf9f8",
+                    "background": "#fcf9f8",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#930001",
+                    "inverse-surface": "#313030"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "padding-card": "20px",
+                    "min-tap-target": "52px",
+                    "gutter-grid": "24px",
+                    "stack-gap": "16px",
+                    "margin-page": "32px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .app-shadow {
+            box-shadow: 0px 4px 16px 0px rgba(26, 26, 26, 0.08);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md flex overflow-hidden">
+<!-- Navigation Drawer (Shared Component Logic) -->
+<aside class="w-[240px] h-full fixed left-0 top-0 bg-surface-container-lowest shadow-[16px_0_16px_-4px_rgba(26,26,26,0.08)] flex flex-col p-spacing-base z-50">
+<div class="mb-8 px-4 pt-4">
+<span class="font-display-md text-display-md text-primary">CORNEY</span>
+</div>
+<nav class="flex-1 space-y-2">
+<div class="flex items-center gap-3 p-4 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant cursor-pointer group">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-body-md">Menu</span>
+</div>
+<div class="flex items-center gap-3 p-4 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-md">Transactions</span>
+</div>
+<div class="flex items-center gap-3 p-4 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md">Inventory</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-secondary-container text-on-secondary-container font-bold rounded-xl cursor-default">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md">Daily Report</span>
+</div>
+<div class="flex items-center gap-3 p-4 hover:bg-surface-container-high transition-colors duration-200 text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</div>
+</nav>
+<div class="mt-auto p-4 flex items-center gap-3 border-t border-outline-variant pt-6">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a professional female store manager in her 30s with a warm, confident smile. She is wearing a modern corporate uniform in a clean, brightly lit Indonesian fast-food environment. The lighting is soft and flattering, emphasizing a trustworthy and efficient brand personality. The overall aesthetic is clean, professional, and contemporary." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxDXLt_wqtQSt6hvAkra8rBoqb_Ynk1A_-GwNLKxPggFWD0YWIy0IAfl0JPOQckMJ0UF3w4g96SqZJMkIhCf-VDA8yWh_hcJuuxlakjrd52cB0ZbgtLkF6M_mT6SCjm61qrx3tika_AJk1WDutAH_3iCaQKaJMDPlkEJfx7Iugrnj33-IWx77tpNKcEf-lTZ21xN3gpGG1Lht23FOSgwCRDqsw5yfYJqC0292Y_OXHYwMsN6DQmvgCJDr7siCP8u6T_5ImLhYPpog"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface truncate">Branch Manager</p>
+<p class="text-[12px] text-on-surface-variant">Jakarta Central</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] flex-1 flex flex-col h-screen overflow-y-auto">
+<!-- TopAppBar (Shared Component Logic) -->
+<header class="sticky top-0 w-full z-40 bg-primary-container text-on-primary-container px-margin-page h-[72px] flex justify-between items-center shadow-md">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer active:opacity-70">arrow_back</span>
+<h1 class="font-headline-lg text-headline-lg">Laporan Tutup Hari</h1>
+</div>
+<div class="text-right">
+<p class="font-label-lg text-label-lg">CORNEY Sepinggan</p>
+<p class="text-label-md opacity-90">31 Mei 2026</p>
+</div>
+</header>
+<div class="p-margin-page space-y-gutter-grid max-w-7xl mx-auto w-full">
+<!-- Hero Anomaly Callout -->
+<div class="bg-green-100 border-l-8 border-green-500 p-4 rounded-xl flex items-center gap-4 animate-fade-in">
+<span class="material-symbols-outlined text-green-700" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-lg text-green-900">Mantap! Tidak ada anomali hari ini. Semua data tersinkronisasi dengan sempurna.</span>
+</div>
+<!-- Dashboard Bento Grid -->
+<div class="bento-grid">
+<!-- Hero Tile: Omzet Hari Ini -->
+<div class="col-span-12 lg:col-span-8 bg-white p-8 rounded-xl app-shadow border border-surface-variant flex flex-col justify-between overflow-hidden relative group">
+<div class="relative z-10">
+<p class="text-on-surface-variant font-label-lg mb-2">Omzet Hari Ini</p>
+<h2 class="font-display-lg text-display-lg text-primary mb-6">Rp 1.460.000</h2>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container px-3 py-1.5 rounded-full text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">payments</span> Tunai 856rb
+                            </span>
+<span class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">account_balance</span> Midtrans 240rb
+                            </span>
+<span class="bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span> GoPay 120rb
+                            </span>
+<span class="bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">delivery_dining</span> GoFood 144rb
+                            </span>
+<span class="bg-green-50 text-green-800 px-3 py-1.5 rounded-full text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">delivery_dining</span> Grab 100rb
+                            </span>
+</div>
+</div>
+<!-- Decorative Background Element -->
+<div class="absolute -right-12 -bottom-12 opacity-5 pointer-events-none group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined text-[240px]">trending_up</span>
+</div>
+</div>
+<!-- Card 1: Jumlah Transaksi -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-6 rounded-xl app-shadow border border-surface-variant flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-secondary text-[40px] mb-2">receipt</span>
+<p class="text-on-surface-variant font-label-md">Jumlah transaksi</p>
+<p class="font-display-md text-display-md text-on-surface">78</p>
+</div>
+<!-- Card 2: Selisih Kas -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-6 rounded-xl app-shadow border border-surface-variant">
+<div class="flex justify-between items-start mb-4">
+<p class="text-on-surface-variant font-label-md">Selisih kas</p>
+<span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">Cocok</span>
+</div>
+<p class="font-headline-lg text-headline-lg text-on-surface">Rp 0</p>
+<p class="text-label-md text-green-600 mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">verified</span> Data akurat
+                    </p>
+</div>
+<!-- Card 3: Uang Urgent -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-6 rounded-xl app-shadow border border-surface-variant">
+<p class="text-on-surface-variant font-label-md mb-2">Uang urgent</p>
+<p class="font-headline-lg text-headline-lg text-secondary">Rp 25.000</p>
+<p class="text-label-md text-on-surface-variant mt-2 italic">Petty cash used</p>
+</div>
+<!-- Card 4: Susut Stok -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white p-6 rounded-xl app-shadow border border-surface-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-error-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-error">inventory</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md">Susut stok</p>
+<p class="font-headline-lg text-headline-lg text-on-surface">3 porsi</p>
+</div>
+</div>
+</div>
+<!-- Card 5: Potongan Gaji -->
+<div class="col-span-12 lg:col-span-8 bg-white p-6 rounded-xl app-shadow border border-surface-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant font-label-md mb-1">Potongan gaji (patah + hilang + garansi)</p>
+<p class="font-headline-lg text-headline-lg text-error">Rp 173.000</p>
+</div>
+<button class="flex items-center gap-1 text-primary font-label-lg hover:underline cursor-pointer">
+                        lihat rincian <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Card 6: Gratis-gratis -->
+<div class="col-span-12 bg-surface-container-low p-6 rounded-xl border border-outline-variant flex flex-wrap gap-12">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">redeem</span>
+<div>
+<p class="text-on-surface-variant font-label-md">Gratis promo</p>
+<p class="font-headline-md text-headline-md text-on-surface">3 porsi</p>
+</div>
+</div>
+<div class="flex items-center gap-3 border-l border-outline-variant pl-12">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<p class="text-on-surface-variant font-label-md">Gratis garansi</p>
+<p class="font-headline-md text-headline-md text-on-surface">1 porsi</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Actions -->
+<div class="flex flex-col md:flex-row gap-4 pt-10 pb-20">
+<button class="flex-1 min-h-[52px] bg-primary text-white font-label-lg rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-lg">
+<span class="material-symbols-outlined">send</span>
+                    Kirim Laporan ke Owner &amp; Tutup Hari
+                </button>
+<button class="min-h-[52px] px-8 bg-surface-container-high text-on-surface font-label-lg rounded-xl flex items-center justify-center gap-3 hover:bg-surface-variant transition-colors border border-outline-variant">
+<span class="material-symbols-outlined">print</span>
+                    Cetak Struk Ringkasan
+                </button>
+</div>
+</div>
+<!-- Footer (Shared Component Logic) -->
+<footer class="mt-auto flex justify-between items-center py-4 px-margin-page border-t border-outline-variant bg-surface-container-low">
+<span class="font-label-md text-on-surface-variant">© 2023 Corndog POS System</span>
+<div class="flex gap-6">
+<a class="font-label-md text-on-surface-variant hover:text-primary underline cursor-pointer" href="#">Help Center</a>
+<a class="font-label-md text-on-surface-variant hover:text-primary underline cursor-pointer" href="#">Contact Support</a>
+</div>
+</footer>
+</main>
+<!-- Success Modal (Hidden by default) -->
+<div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4" id="successModal">
+<div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+<div class="relative bg-white w-full max-w-md rounded-xl p-8 text-center app-shadow transform animate-scale-in">
+<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-green-600 text-[48px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg mb-2">Laporan Terkirim!</h3>
+<p class="text-on-surface-variant mb-8">Data hari ini telah berhasil direkap dan dikirimkan ke dashboard owner.</p>
+<button class="w-full min-h-[52px] bg-primary text-white font-label-lg rounded-xl" onclick="toggleModal()">Selesai</button>
+</div>
+</div>
+<script>
+        function toggleModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Simulating the primary action
+        document.querySelector('button.bg-primary').addEventListener('click', () => {
+            toggleModal();
+        });
+
+        // Simple animation logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.app-shadow');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.5s ease-out';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Corndog King - Riwayat Pesanan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .order-card-shadow {
+            box-shadow: 0px 4px 16px rgba(26, 26, 26, 0.08);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#b50303",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-primary-container": "#fff5f3",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-secondary-container": "#6f5400",
+                      "surface-container-highest": "#e5e2e1",
+                      "primary-container": "#da291c",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "on-surface-variant": "#5c403b",
+                      "inverse-on-surface": "#f3f0ef",
+                      "on-primary-fixed": "#410000",
+                      "on-tertiary-container": "#f6f7f7",
+                      "background": "#fcf9f8",
+                      "on-primary-fixed-variant": "#930001",
+                      "surface-container-high": "#eae7e7",
+                      "secondary-fixed": "#ffdf99",
+                      "on-secondary-fixed-variant": "#5a4300",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "tertiary-fixed": "#e2e2e2",
+                      "tertiary-container": "#707171",
+                      "surface-dim": "#dcd9d9",
+                      "on-error": "#ffffff",
+                      "tertiary": "#575959",
+                      "on-error-container": "#93000a",
+                      "secondary": "#775a00",
+                      "inverse-primary": "#ffb4a8",
+                      "error": "#ba1a1a",
+                      "on-surface": "#1c1b1b",
+                      "surface-container-low": "#f6f3f2",
+                      "surface-container": "#f0eded",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#e5e2e1",
+                      "outline": "#916f6a",
+                      "on-background": "#1c1b1b",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#ffdad4",
+                      "surface-bright": "#fcf9f8",
+                      "secondary-container": "#ffc72c",
+                      "outline-variant": "#e6bdb7",
+                      "on-secondary-fixed": "#251a00",
+                      "surface": "#fcf9f8",
+                      "secondary-fixed-dim": "#f6bf22",
+                      "surface-tint": "#be0f09"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "12px",
+                      "2xl": "16px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap": "16px",
+                      "min-tap-target": "52px",
+                      "padding-card": "20px",
+                      "margin-page": "32px",
+                      "base": "8px",
+                      "gutter-grid": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-[100px] md:pb-0 md:pl-[240px]">
+<!-- Top AppBar -->
+<header class="w-full top-0 sticky shadow-sm bg-surface dark:bg-surface-dim flex items-center h-[64px] px-margin-page z-50">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-150">arrow_back</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">Riwayat Pesanan</h1>
+</div>
+</header>
+<!-- Sidebar (For Desktop Tablet Orientation) -->
+<aside class="hidden md:flex fixed left-0 top-0 h-full w-[240px] flex-col bg-surface border-r border-surface-container py-8 px-4 z-40">
+<div class="mb-12 px-4">
+<span class="font-display-md text-display-md text-primary">Corney</span>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-label-lg text-label-lg">Menu</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-on-secondary-container font-bold" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-lg text-label-lg">Orders</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="font-label-lg text-label-lg">Promo</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-lg text-label-lg">Profile</span>
+</a>
+</nav>
+</aside>
+<main class="max-w-4xl mx-auto p-margin-page">
+<!-- Content List -->
+<div class="flex flex-col gap-4" id="order-history-list">
+<!-- Order Item 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl order-card-shadow flex items-center gap-5 border border-surface-variant/20 hover:scale-[1.01] transition-transform cursor-pointer">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A close-up high-resolution shot of a crispy, golden-brown mozzarella corndog with cheese stretching out. The lighting is warm and cinematic, highlighting the crunchy panko texture against a clean white plate. The image uses a professional food photography style with soft shadows, fitting the vibrant red and yellow brand palette of a modern fast-food chain." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4gAhwTgs1MXwLkU_q7xYzPb48AFPx7dH5eR_ihT05dktpQhRq490imK4gwommd-wFMZ8SK3q0uHSybFjoNjW-f2GCjcNKE1U4E62KEVWkqd5qy7lfJ3I2Fcq3e7BVk1Q_bjBoW5FugVB-uGgdsgCw-Hrwv2a407V9g3sy4EEJlfMcasiiHVkITVaeszQYE32jLCxjVUBoohmNSN5JYhSeS2mmgobfaZI_Grr10o5r-NP_4-blPbw8YOupXPKSpeEY4pka6ItFxoM"/>
+</div>
+<div class="flex-grow flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-headline-md text-on-surface">Mozza Ori</p>
+<p class="font-label-md text-label-md text-on-surface-variant">#A-014 • Sepinggan Branch</p>
+</div>
+<span class="bg-green-600 text-white px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">Selesai</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<p class="font-label-md text-label-md text-on-surface-variant">24 Okt 2023</p>
+<p class="font-headline-md text-headline-md text-primary">Rp 38.000</p>
+</div>
+</div>
+</div>
+<!-- Order Item 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl order-card-shadow flex items-center gap-5 border border-surface-variant/20 hover:scale-[1.01] transition-transform cursor-pointer">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A stack of golden Korean street food corndogs drizzled with glossy mustard and ketchup. The setting is a vibrant street market at twilight with soft bokeh lights in the background. The aesthetic is clean and modern corporate fast-food, emphasizing high-energy appetite appeal through saturated colors and crisp, appetizing textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFmay9UcpdFOscQeo-1Aszrz3bqMQCq8fuI5rH9LgBHtCTA5y37ao0Epod59bGYgZS2igPl38nKjcCH7_k5N_d5r2z8fjSdJhGJusveyI-kepELUYYPJGOwkY6Db_WfRAJif_ZcxAAwJ6mNrASpzH0DoHIcVgZG9uWLaugD2iTCf4s3FQCUpJLnaYkb7VeXiolQ2AO6OFo-FS8Kt8JwCzfPRu4Q2qp97pUnfpDNgIB3GRvk__n9CC0eeTrBNKhdsK1yMrtMdMDH4s"/>
+</div>
+<div class="flex-grow flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-headline-md text-on-surface">Hotycorn Jumbo</p>
+<p class="font-label-md text-label-md text-on-surface-variant">#A-012 • Sudirman Branch</p>
+</div>
+<span class="bg-blue-600 text-white px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">Diproses</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<p class="font-label-md text-label-md text-on-surface-variant">23 Okt 2023</p>
+<p class="font-headline-md text-headline-md text-primary">Rp 45.000</p>
+</div>
+</div>
+</div>
+<!-- Order Item 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-2xl order-card-shadow flex items-center gap-5 border border-surface-variant/20 hover:scale-[1.01] transition-transform cursor-pointer">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Gourmet corndogs arranged artistically on a wooden surface, featuring varied toppings like potato cubes and squid ink batter. High-key professional lighting creates a premium street food atmosphere. The composition is clean with a focus on depth and detail, maintaining the energetic and approachable brand identity through high-contrast colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvRRRpq46GqGtzj_vyxEKIUjdyH7tzFzRTyzPn1nnKqKW-1OdvtyrJXBsMlUiqz-GcrahYzQQS_7FgI3r4APPMDKzru2LDXXxYm8ltvpyD26c9ml3B8r8IELTT6VeiMlFYltnXW_QoZRSpEER3Legh9WiOT1ALBuViLeidE60ki4NxM-5JUlg9GomstATkzZEvDeTDTr78i4WYIKqWsYhmAOhBn-_Ww-tYeBp-f2t2VYZcpjTVfEuVieZBZhE5XpHJ8QC9QZHQ-fY"/>
+</div>
+<div class="flex-grow flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-headline-md text-on-surface">Potato Mozza</p>
+<p class="font-label-md text-label-md text-on-surface-variant">#A-008 • Sepinggan Branch</p>
+</div>
+<span class="bg-green-600 text-white px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">Selesai</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<p class="font-label-md text-label-md text-on-surface-variant">20 Okt 2023</p>
+<p class="font-headline-md text-headline-md text-primary">Rp 42.000</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State (Toggleable via JS) -->
+<div class="hidden flex flex-col items-center justify-center py-24 text-center" id="empty-state">
+<div class="w-64 h-64 mb-8 bg-surface-container-low rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[120px] text-outline-variant">receipt_long</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Belum ada pesanan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xs">Kamu belum memesan corndog hari ini. Yuk, pilih menu favoritmu!</p>
+<button class="bg-primary text-on-primary font-bold px-12 py-4 rounded-2xl min-h-[52px] shadow-lg active:scale-95 transition-all">Pesan Sekarang</button>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile/Tablet Portrait) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 min-h-[80px] bg-surface dark:bg-inverse-surface shadow-[0_-4px_16px_rgba(26,26,26,0.08)] z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-label-md text-label-md">Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="font-label-md text-label-md">Promo</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple toggle for empty state demonstration
+        // Call toggleEmptyState() in console to switch views
+        function toggleEmptyState() {
+            const list = document.getElementById('order-history-list');
+            const empty = document.getElementById('empty-state');
+            list.classList.toggle('hidden');
+            empty.classList.toggle('hidden');
+        }
+
+        // Card interaction feedback
+        document.querySelectorAll('.order-card-shadow').forEach(card => {
+            card.addEventListener('mousedown', () => card.style.transform = 'scale(0.98)');
+            card.addEventListener('mouseup', () => card.style.transform = 'scale(1.01)');
+            card.addEventListener('mouseleave', () => card.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>

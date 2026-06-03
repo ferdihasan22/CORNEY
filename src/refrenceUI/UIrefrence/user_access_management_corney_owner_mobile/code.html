@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pengguna &amp; Hak Akses - CORNEY Owner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f0eded",
+                        "background": "#fcf9f8",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary": "#575959",
+                        "surface-variant": "#e5e2e1",
+                        "surface-dim": "#dcd9d9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface": "#fcf9f8",
+                        "on-primary-container": "#fff5f3",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-secondary-fixed": "#251a00",
+                        "primary-container": "#da291c",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fcf9f8",
+                        "on-surface-variant": "#5c403b",
+                        "on-primary-fixed-variant": "#930001",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-highest": "#e5e2e1",
+                        "primary": "#b50303",
+                        "tertiary-container": "#707171",
+                        "secondary-fixed": "#ffdf99",
+                        "inverse-primary": "#ffb4a8",
+                        "outline": "#916f6a",
+                        "surface-tint": "#be0f09",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary-container": "#f6f7f7",
+                        "secondary-container": "#ffc72c",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "primary-fixed": "#ffdad4",
+                        "on-secondary-container": "#6f5400",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-high": "#eae7e7",
+                        "secondary": "#775a00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "inverse-surface": "#313030",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-background": "#1c1b1b",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "padding-card": "20px",
+                        "margin-page": "32px",
+                        "gutter-grid": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-md-mobile": ["20px", {"lineHeight": "24px", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-primary-container text-on-primary-container rounded-b-xl shadow-[0px_4px_16px_rgba(26,26,26,0.08)] sticky top-0 z-40 transition-all">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined font-headline-md text-headline-md" data-icon="admin_panel_settings">admin_panel_settings</span>
+<h1 class="font-headline-md-mobile text-headline-md-mobile">Pengguna &amp; Hak Akses</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full border-2 border-on-primary-container/20 overflow-hidden">
+<img alt="Owner Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCX3-S0OFdjWSZYZO4TxwXxBHL9Th2LMO35sxO-MD1Zjim-53BW4ddxOWWEutndgzoYx5WqlPtXk5vyB67f3VYnfW1oB4etT3Nw0QhSmYoul7ng8vDr1R-hkLE807KGPL0TrXfaa2ITO9ThktlAnafdzhZ_-pkHyKObqm_exFv1xuyoD612j82quYl-ON_W_QUtZ6J-DVGlShiO3TbA20yhqxSpBYikAnp1NpEfVl5dTbWWrUrDQK8eyv1yFwJs7Kbc3jE-qrgBFE"/>
+</div>
+</div>
+</div>
+<!-- Quick Action Header -->
+<div class="px-6 pb-6 pt-2">
+<button class="w-full flex items-center justify-center gap-2 bg-on-primary text-primary-container h-[52px] rounded-2xl font-label-lg text-label-lg active:scale-95 transition-transform shadow-lg">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                + Tambah Pengguna
+            </button>
+</div>
+</header>
+<main class="px-6 py-6 space-y-6">
+<!-- Important Note -->
+<section class="bg-secondary-container/10 border border-secondary-container rounded-2xl p-4 flex gap-4 items-start shadow-sm">
+<div class="bg-secondary-container text-on-secondary-container p-2 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="info" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div class="space-y-1">
+<p class="font-label-lg text-label-lg text-on-secondary-container">Informasi Penting</p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Staf resign → nonaktifkan akun, bukan hapus. Jejak transaksinya harus tetap utuh.</p>
+</div>
+</section>
+<!-- Search & Filter -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+<div class="flex-shrink-0 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2">
+                Semua Role
+            </div>
+<div class="flex-shrink-0 bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2">
+                Kasir
+            </div>
+<div class="flex-shrink-0 bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2">
+                Produksi
+            </div>
+<div class="flex-shrink-0 bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2">
+                Auditor
+            </div>
+</div>
+<!-- User Cards List -->
+<div class="grid grid-cols-1 gap-4">
+<!-- User Card 1 -->
+<article class="bg-surface-container-lowest rounded-2xl p-padding-card shadow-[0px_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-12 h-12 bg-primary-fixed text-on-primary-fixed rounded-2xl flex items-center justify-center font-bold text-headline-md">C</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface">corney-sepinggan</h3>
+<div class="flex gap-2 mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">KASIR</span>
+<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">AKTIF</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant active:scale-90 transition-transform" onclick="openDrawer()">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-px bg-surface-variant/50 w-full"></div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md" data-icon="location_on">location_on</span>
+<span class="font-body-md text-body-md">Cabang Sepinggan</span>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center active:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="lock_reset">lock_reset</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="block">block</span>
+</button>
+</div>
+</div>
+</article>
+<!-- User Card 2 -->
+<article class="bg-surface-container-lowest rounded-2xl p-padding-card shadow-[0px_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-12 h-12 bg-tertiary-fixed text-on-tertiary-fixed rounded-2xl flex items-center justify-center font-bold text-headline-md">S</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface">staff-produksi</h3>
+<div class="flex gap-2 mt-1">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">PRODUKSI</span>
+<span class="bg-surface-dim text-on-surface-variant px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">NONAKTIF</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant" onclick="openDrawer()">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-px bg-surface-variant/50 w-full"></div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md" data-icon="hub">hub</span>
+<span class="font-body-md text-body-md">Semua Cabang</span>
+</div>
+<div class="flex gap-2 opacity-50">
+<button class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center" disabled="">
+<span class="material-symbols-outlined text-sm" data-icon="lock_reset">lock_reset</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-green-100 text-green-700 flex items-center justify-center" disabled="">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+</div>
+</article>
+<!-- User Card 3 (Auditor) -->
+<article class="bg-surface-container-lowest rounded-2xl p-padding-card shadow-[0px_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-12 h-12 bg-blue-100 text-blue-800 rounded-2xl flex items-center justify-center font-bold text-headline-md">A</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface">auditor-pusat</h3>
+<div class="flex gap-2 mt-1">
+<span class="bg-blue-200 text-blue-900 px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">AUDITOR</span>
+<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">AKTIF</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant" onclick="openDrawer()">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-px bg-surface-variant/50 w-full"></div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md" data-icon="hub">hub</span>
+<span class="font-body-md text-body-md">Semua Cabang</span>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="lock_reset">lock_reset</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="block">block</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- Bottom Drawer (Edit User) -->
+<div class="fixed inset-0 bg-on-surface/50 backdrop-blur-sm z-[60] hidden transition-opacity duration-300" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="fixed bottom-0 left-0 w-full bg-surface text-on-surface z-[70] rounded-t-[32px] translate-y-full transition-transform duration-300 ease-out shadow-2xl max-h-[795px] overflow-y-auto" id="drawer">
+<div class="w-12 h-1.5 bg-surface-variant rounded-full mx-auto my-4"></div>
+<div class="px-6 pb-12 space-y-8">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md">Edit Role &amp; Akses</h2>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center" onclick="closeDrawer()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Role Selection -->
+<div class="space-y-4">
+<label class="font-label-lg text-label-lg">Pilih Role Pengguna</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="p-4 rounded-2xl border-2 border-primary-container bg-primary-container/5 text-primary-container text-left space-y-1">
+<p class="font-bold">Kasir</p>
+<p class="text-[10px] opacity-70">Kelola pesanan &amp; pembayaran</p>
+</button>
+<button class="p-4 rounded-2xl border border-outline-variant bg-surface-container-low text-on-surface-variant text-left space-y-1">
+<p class="font-bold">Produksi</p>
+<p class="text-[10px] opacity-70">Cek order &amp; update stok</p>
+</button>
+<button class="p-4 rounded-2xl border border-outline-variant bg-surface-container-low text-on-surface-variant text-left space-y-1">
+<p class="font-bold">Owner</p>
+<p class="text-[10px] opacity-70">Akses penuh semua fitur</p>
+</button>
+<button class="p-4 rounded-2xl border border-outline-variant bg-surface-container-low text-on-surface-variant text-left space-y-1">
+<p class="font-bold">Auditor</p>
+<p class="text-[10px] opacity-70">Lihat data &amp; laporan saja</p>
+</button>
+</div>
+</div>
+<!-- Branch Picker -->
+<div class="space-y-4">
+<label class="font-label-lg text-label-lg">Penempatan Cabang</label>
+<div class="relative">
+<select class="w-full h-[52px] bg-surface-container rounded-2xl border-none font-body-md text-body-md px-4 appearance-none">
+<option>Cabang Sepinggan</option>
+<option>Cabang Sudirman</option>
+<option>Cabang MT Haryono</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Sensitive Actions -->
+<div class="space-y-4">
+<h3 class="font-label-lg text-label-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="security">security</span>
+                    Aksi sensitif butuh persetujuan Owner
+                </h3>
+<div class="bg-surface-container-low rounded-2xl p-4 divide-y divide-surface-variant/50">
+<div class="py-3 flex justify-between items-center">
+<span class="font-body-md text-body-md">Refund Transaksi</span>
+<div class="w-12 h-6 bg-primary-container rounded-full relative p-1">
+<div class="w-4 h-4 bg-white rounded-full absolute right-1"></div>
+</div>
+</div>
+<div class="py-3 flex justify-between items-center">
+<span class="font-body-md text-body-md">Koreksi Stok</span>
+<div class="w-12 h-6 bg-primary-container rounded-full relative p-1">
+<div class="w-4 h-4 bg-white rounded-full absolute right-1"></div>
+</div>
+</div>
+<div class="py-3 flex justify-between items-center">
+<span class="font-body-md text-body-md">Nonaktif Data</span>
+<div class="w-12 h-6 bg-surface-variant rounded-full relative p-1">
+<div class="w-4 h-4 bg-white rounded-full absolute left-1"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-3">
+<button class="w-full h-[52px] bg-secondary-container text-on-secondary-container rounded-2xl font-label-lg text-label-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="lock_reset">lock_reset</span>
+                    Reset Akses Akun
+                </button>
+<button class="w-full h-[52px] bg-primary text-on-primary rounded-2xl font-label-lg text-label-lg">
+                    Simpan Perubahan
+                </button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container dark:bg-inverse-surface shadow-[0px_-4px_16px_rgba(26,26,26,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-tertiary-container dark:text-tertiary-fixed-dim px-4 py-2 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-tertiary-container dark:text-tertiary-fixed-dim px-4 py-2 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+<span class="font-label-md text-label-md mt-1">Master Data</span>
+</a>
+<a class="flex flex-col items-center justify-center text-tertiary-container dark:text-tertiary-fixed-dim px-4 py-2 hover:bg-surface-container-highest transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md mt-1">Inventory</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-2 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group_add" style="font-variation-settings: 'FILL' 1;">group_add</span>
+<span class="font-label-md text-label-md mt-1">Users</span>
+</a>
+</nav>
+<script>
+        function openDrawer() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                drawer.classList.remove('translate-y-full');
+                overlay.classList.add('opacity-100');
+            }, 10);
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            drawer.classList.add('translate-y-full');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body></html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sparkline-container {
+            height: 40px;
+            width: 100px;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e5e2e1",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface-dim": "#dcd9d9",
+                    "primary": "#b50303",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#eae7e7",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "tertiary": "#575959",
+                    "surface-tint": "#be0f09",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "on-surface": "#1c1b1b",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#707171",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "inverse-surface": "#313030",
+                    "surface-variant": "#e5e2e1",
+                    "on-primary-fixed": "#410000",
+                    "primary-container": "#da291c",
+                    "surface-bright": "#fcf9f8",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#5c403b",
+                    "inverse-primary": "#ffb4a8",
+                    "on-secondary-fixed": "#251a00",
+                    "error": "#ba1a1a",
+                    "background": "#fcf9f8",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "primary-fixed": "#ffdad4",
+                    "surface": "#fcf9f8",
+                    "on-secondary-container": "#6f5400",
+                    "on-error-container": "#93000a",
+                    "on-primary-container": "#fff5f3",
+                    "outline-variant": "#e6bdb7",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary": "#775a00",
+                    "on-tertiary-container": "#f6f7f7",
+                    "surface-container-low": "#f6f3f2",
+                    "secondary-fixed": "#ffdf99",
+                    "outline": "#916f6a",
+                    "on-primary-fixed-variant": "#930001",
+                    "surface-container": "#f0eded",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-background": "#1c1b1b",
+                    "secondary-container": "#ffc72c",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "16px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "16px",
+                    "min-tap-target": "52px",
+                    "margin-page": "32px",
+                    "base": "8px",
+                    "padding-card": "20px",
+                    "gutter-grid": "24px"
+            },
+            "fontFamily": {
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top App Bar (Modified for Owner Identity) -->
+<header class="w-full top-0 sticky z-50 bg-primary-container shadow-[0_4px_16px_0_rgba(26,26,26,0.08)]">
+<div class="flex justify-between items-center px-6 h-[72px] max-w-full mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white text-3xl">storefront</span>
+<h1 class="font-display-md text-white tracking-tight">CORNEY · Owner</h1>
+</div>
+<div class="relative active:scale-95 duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-white text-2xl">notifications</span>
+<span class="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-secondary-container ring-2 ring-primary-container"></span>
+</div>
+</div>
+<!-- Period Filter -->
+<div class="flex gap-2 px-6 pb-4 overflow-x-auto no-scrollbar">
+<button class="px-4 py-2 bg-white text-primary rounded-full font-label-md whitespace-nowrap active:scale-95 transition-all">Hari ini</button>
+<button class="px-4 py-2 bg-primary text-white/80 rounded-full font-label-md whitespace-nowrap active:scale-95 transition-all">Minggu ini</button>
+<button class="px-4 py-2 bg-primary text-white/80 rounded-full font-label-md whitespace-nowrap active:scale-95 transition-all">Bulan ini</button>
+<button class="px-4 py-2 bg-primary text-white/80 rounded-full font-label-md whitespace-nowrap active:scale-95 transition-all">Custom</button>
+</div>
+</header>
+<main class="px-4 mt-6 flex flex-col gap-4">
+<!-- 1. HERO Omzet Card -->
+<section class="bg-white p-padding-card rounded-2xl shadow-[0_4px_16px_0_rgba(26,26,26,0.08)] flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md">Total Omzet</span>
+<div class="sparkline-container">
+<svg class="w-full h-full" viewbox="0 0 100 40">
+<path d="M0,35 Q10,30 20,32 T40,20 T60,25 T80,10 T100,5" fill="none" stroke="#10B981" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<h2 class="font-display-md text-primary">Rp 4.820.000</h2>
+</div>
+<div class="flex items-center gap-1 text-emerald-600 font-label-md">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% vs kemarin</span>
+</div>
+</section>
+<!-- 2. Anomali Card -->
+<section class="bg-error-container/30 border-2 border-error p-padding-card rounded-2xl flex items-center justify-between animate-pulse">
+<div class="flex items-center gap-4">
+<div class="bg-error text-white p-2 rounded-xl">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<h3 class="font-headline-md text-error">3 perlu diperiksa</h3>
+<p class="font-body-md text-on-surface-variant">Deteksi transaksi tidak wajar</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error">chevron_right</span>
+</section>
+<!-- 3. Menunggu Tindakan Card -->
+<section class="bg-surface p-padding-card rounded-2xl shadow-sm border border-outline-variant">
+<h3 class="font-label-lg text-on-surface-variant mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">pending_actions</span>
+                Menunggu Tindakan
+            </h3>
+<div class="space-y-3">
+<div class="flex items-start gap-3">
+<div class="w-2 h-2 mt-2 rounded-full bg-secondary-container"></div>
+<p class="font-body-md">2 koreksi stok menunggu approval</p>
+</div>
+<div class="flex items-start gap-3 border-t border-outline-variant pt-3">
+<div class="w-2 h-2 mt-2 rounded-full bg-secondary-container"></div>
+<p class="font-body-md">1 setoran belum diverifikasi</p>
+</div>
+</div>
+</section>
+<!-- 4. Per Cabang Card -->
+<section class="bg-white p-padding-card rounded-2xl shadow-sm border border-outline-variant">
+<h3 class="font-label-lg text-on-surface-variant mb-4">Per Cabang</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<p class="font-label-lg">CORNEY Sepinggan</p>
+</div>
+<p class="font-label-lg text-primary">Rp 2.400.000</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<p class="font-label-lg">CORNEY Batakan</p>
+</div>
+<p class="font-label-lg text-primary">Rp 1.800.000</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<p class="font-label-lg">CORNEY Sudirman</p>
+</div>
+<p class="font-label-lg text-primary">Rp 620.000</p>
+</div>
+</div>
+</section>
+<!-- 5. Stok Menipis Card -->
+<section class="bg-white p-padding-card rounded-2xl shadow-sm border border-outline-variant">
+<h3 class="font-label-lg text-on-surface-variant mb-3">Stok Menipis</h3>
+<div class="flex flex-wrap gap-2">
+<div class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full font-label-md flex items-center gap-2">
+                    Sosis Jumbo <span class="font-bold">5 pcs</span>
+</div>
+<div class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full font-label-md flex items-center gap-2">
+                    Keju Mozza <span class="font-bold">8 pcs</span>
+</div>
+</div>
+</section>
+<!-- 6. Wawasan Bisnis 2x2 Tiles -->
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant">
+<p class="text-[12px] font-label-md text-on-surface-variant uppercase tracking-wider mb-2">Terlaris</p>
+<p class="font-label-lg text-primary leading-tight">Mozza Ori</p>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant">
+<p class="text-[12px] font-label-md text-on-surface-variant uppercase tracking-wider mb-2">Paling Sepi</p>
+<p class="font-label-lg text-tertiary leading-tight">Sweet Greentea</p>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-lg">trending_down</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant relative">
+<p class="text-[12px] font-label-md text-on-surface-variant uppercase tracking-wider mb-2">Untung Kotor</p>
+<p class="font-label-lg text-on-surface leading-tight">Rp 1.9jt</p>
+<span class="absolute top-2 right-2 bg-gray-200 text-gray-600 text-[10px] px-1.5 py-0.5 rounded font-bold">ESTIMASI</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant">
+<p class="text-[12px] font-label-md text-on-surface-variant uppercase tracking-wider mb-2">Jam Ramai</p>
+<p class="font-label-lg text-on-surface leading-tight">18:00–20:00</p>
+<div class="mt-3 flex items-end gap-1 h-6">
+<div class="w-2 bg-primary/20 h-2 rounded-t"></div>
+<div class="w-2 bg-primary/20 h-3 rounded-t"></div>
+<div class="w-2 bg-primary h-6 rounded-t"></div>
+<div class="w-2 bg-primary h-5 rounded-t"></div>
+<div class="w-2 bg-primary/20 h-2 rounded-t"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-[72px] px-4 pb-safe bg-surface shadow-[0_-4px_16px_0_rgba(26,26,26,0.08)] border-t border-outline-variant z-50">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-1 active:scale-90 transition-all cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md">Beranda</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all cursor-pointer">
+<span class="material-symbols-outlined">store</span>
+<span class="font-label-md">Cabang</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all cursor-pointer">
+<span class="material-symbols-outlined">inventory</span>
+<span class="font-label-md">Stok</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all cursor-pointer">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md">Aktivitas</span>
+</div>
+</nav>
+<script>
+        // Simple click interaction for filter buttons
+        const filterButtons = document.querySelectorAll('header button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-white', 'text-primary');
+                    b.classList.add('bg-primary', 'text-white/80');
+                });
+                btn.classList.add('bg-white', 'text-primary');
+                btn.classList.remove('bg-primary', 'text-white/80');
+            });
+        });
+
+        // Small interaction for anomali card
+        const anomalyCard = document.querySelector('.bg-error-container\\/30');
+        anomalyCard.addEventListener('click', () => {
+            anomalyCard.classList.remove('animate-pulse');
+            setTimeout(() => anomalyCard.classList.add('animate-pulse'), 2000);
+        });
+    </script>
+</body></html>

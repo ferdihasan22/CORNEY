@@ -1,0 +1,269 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Rekap Request Belanja - CORNEY Operasional</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#f0eded",
+                    "inverse-primary": "#ffb4a8",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#e5e2e1",
+                    "on-secondary-fixed": "#251a00",
+                    "on-primary-container": "#fff5f3",
+                    "error": "#ba1a1a",
+                    "tertiary": "#575959",
+                    "surface-container-highest": "#e5e2e1",
+                    "on-secondary-container": "#6f5400",
+                    "outline-variant": "#e6bdb7",
+                    "on-primary-fixed-variant": "#930001",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dcd9d9",
+                    "primary-container": "#da291c",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "secondary-container": "#ffc72c",
+                    "outline": "#916f6a",
+                    "on-surface-variant": "#5c403b",
+                    "on-surface": "#1c1b1b",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#410000",
+                    "inverse-surface": "#313030",
+                    "background": "#fcf9f8",
+                    "tertiary-fixed": "#e2e2e2",
+                    "tertiary-container": "#707171",
+                    "surface": "#fcf9f8",
+                    "surface-container-high": "#eae7e7",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "secondary": "#775a00",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "primary": "#b50303",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#be0f09",
+                    "surface-container-low": "#f6f3f2",
+                    "primary-fixed": "#ffdad4",
+                    "on-background": "#1c1b1b",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "on-tertiary-container": "#f6f7f7",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface-bright": "#fcf9f8",
+                    "secondary-fixed": "#ffdf99",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "14px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "min-tap-target": "52px",
+                    "margin-page": "16px",
+                    "base": "8px",
+                    "padding-card": "20px",
+                    "gutter-grid": "24px",
+                    "stack-gap": "16px"
+            },
+            "fontFamily": {
+                    "display-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+        }
+        .active-pill {
+            background-color: #FFC72C;
+            color: #251a00;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-primary shadow-md fixed top-0 w-full z-50 flex flex-col pt-4 pb-3 px-margin-page">
+<div class="flex justify-between items-center mb-2">
+<span class="material-symbols-outlined text-on-primary">menu</span>
+<div class="flex-1 px-4">
+<h1 class="text-on-primary font-headline-md text-[18px] leading-tight truncate">Rekap Request Belanja</h1>
+<p class="text-on-primary opacity-80 text-label-md font-normal">Operasional CORNEY</p>
+</div>
+<span class="material-symbols-outlined text-on-primary">account_circle</span>
+</div>
+<!-- Date Selector Row -->
+<div class="flex items-center bg-white/10 rounded-lg px-3 py-2 mt-1">
+<span class="material-symbols-outlined text-on-primary text-[20px] mr-2">calendar_today</span>
+<span class="text-on-primary text-label-md">24 Okt 2023</span>
+<span class="material-symbols-outlined text-on-primary text-[18px] ml-auto">arrow_drop_down</span>
+</div>
+</header>
+<!-- Content Area -->
+<main class="mt-32 px-margin-page space-y-stack-gap">
+<!-- Summary Tile -->
+<section class="bg-secondary-container/10 border-2 border-secondary-container rounded-xl p-4 flex items-start gap-3">
+<div class="bg-secondary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" data-weight="fill">info</span>
+</div>
+<div>
+<h2 class="text-on-surface font-label-lg">Status Pengiriman</h2>
+<p class="text-on-surface-variant text-label-md mt-1">
+<span class="text-primary font-bold">3 cabang</span> sudah kirim request · <span class="text-outline font-bold">1 belum</span>
+</p>
+</div>
+</section>
+<!-- View Toggle -->
+<div class="flex bg-surface-container-high rounded-full p-1 w-full max-w-sm mx-auto">
+<button class="flex-1 py-2.5 rounded-full text-label-md font-bold transition-all active-pill">
+                Per Item
+            </button>
+<button class="flex-1 py-2.5 rounded-full text-label-md font-bold text-on-surface-variant">
+                Per Cabang
+            </button>
+</div>
+<!-- Section Title -->
+<div class="flex items-center justify-between pt-2">
+<h3 class="text-on-surface font-headline-md text-[20px]">Daftar Agregat</h3>
+<span class="text-primary text-label-md font-bold">3 Item Total</span>
+</div>
+<!-- Main Content (Per Item View) -->
+<div class="space-y-4">
+<!-- Card 1: Kentang -->
+<div class="bg-white rounded-xl custom-shadow p-padding-card border border-surface-container overflow-hidden relative group active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-on-surface font-headline-md text-[20px] mb-1">Kentang</h4>
+<p class="text-on-surface-variant text-label-md">Frozen Shoestring Fries</p>
+</div>
+<div class="text-right">
+<span class="text-primary font-display-md text-[32px] block">8</span>
+<span class="text-on-surface-variant text-label-md uppercase tracking-wider">Unit</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-surface-container-high grid grid-cols-2 gap-4">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[12px] font-bold uppercase opacity-60">Sepinggan</span>
+<span class="text-on-surface font-headline-md text-[18px]">5 <small class="text-[12px] font-normal">Unit</small></span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[12px] font-bold uppercase opacity-60">Batakan</span>
+<span class="text-on-surface font-headline-md text-[18px]">3 <small class="text-[12px] font-normal">Unit</small></span>
+</div>
+</div>
+<div class="absolute right-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+</div>
+<!-- Card 2: Glaze Coklat -->
+<div class="bg-white rounded-xl custom-shadow p-padding-card border border-surface-container overflow-hidden relative group active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-on-surface font-headline-md text-[20px] mb-1">Glaze Coklat</h4>
+<p class="text-on-surface-variant text-label-md">Topping Donuts 5kg</p>
+</div>
+<div class="text-right">
+<span class="text-primary font-display-md text-[32px] block">4</span>
+<span class="text-on-surface-variant text-label-md uppercase tracking-wider">Unit</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-surface-container-high">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[12px] font-bold uppercase opacity-60">Pusat</span>
+<span class="text-on-surface font-headline-md text-[18px]">4 <small class="text-[12px] font-normal">Unit</small></span>
+</div>
+</div>
+<div class="absolute right-0 top-0 bottom-0 w-1.5 bg-primary opacity-60"></div>
+</div>
+<!-- Card 3: Kotak -->
+<div class="bg-white rounded-xl custom-shadow p-padding-card border border-surface-container overflow-hidden relative group active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-on-surface font-headline-md text-[20px] mb-1">Kotak</h4>
+<p class="text-on-surface-variant text-label-md">Packaging Kraft Small</p>
+</div>
+<div class="text-right">
+<span class="text-primary font-display-md text-[32px] block">300</span>
+<span class="text-on-surface-variant text-label-md uppercase tracking-wider">Pcs</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-surface-container-high grid grid-cols-2 gap-4">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[12px] font-bold uppercase opacity-60">Sepinggan</span>
+<span class="text-on-surface font-headline-md text-[18px]">150 <small class="text-[12px] font-normal">Pcs</small></span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[12px] font-bold uppercase opacity-60">Batakan</span>
+<span class="text-on-surface font-headline-md text-[18px]">150 <small class="text-[12px] font-normal">Pcs</small></span>
+</div>
+</div>
+<div class="absolute right-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+</div>
+</div>
+<!-- Disclaimer Note -->
+<div class="bg-surface-container-low rounded-lg p-4 mt-8 flex gap-3 items-center">
+<span class="material-symbols-outlined text-outline text-[20px]">info</span>
+<p class="text-on-surface-variant text-[12px] leading-relaxed">
+                PWA Supplier berdiri sendiri — gunakan rekap ini sebagai acuan saat input pesanan ke PWA Supplier (bukan sinkron otomatis).
+            </p>
+</div>
+</main>
+<!-- Action Bar (Fixed Bottom) -->
+<div class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md p-margin-page pb-8 shadow-[0_-8px_24px_rgba(0,0,0,0.05)] border-t border-surface-container-high z-40">
+<button class="w-full bg-primary-container h-min-tap-target rounded-xl flex items-center justify-center gap-2 text-on-primary font-label-lg active:scale-95 transition-all custom-shadow" onclick="copyRekap()">
+<span class="material-symbols-outlined">content_copy</span>
+            Salin Rekap Belanja
+        </button>
+</div>
+<script>
+        function copyRekap() {
+            // Simple visual feedback for button click
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Berhasil Disalin';
+            btn.classList.replace('bg-primary-container', 'bg-secondary');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.replace('bg-secondary', 'bg-primary-container');
+            }, 2000);
+        }
+    </script>
+</body></html>

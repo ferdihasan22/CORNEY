@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5173/)",
+      "mcp__plugin_ecc_playwright__browser_navigate",
+      "Bash(pkill -f \"vite\")",
+      "Bash(python3 -c \"import pypdf; print\\('pypdf', pypdf.__version__\\)\")",
+      "Bash(python3 -c \"import PyPDF2; print\\('PyPDF2 ok'\\)\")",
+      "Bash(python3 -c \"import pdfplumber; print\\('pdfplumber ok'\\)\")",
+      "Bash(which pdftotext *)",
+      "mcp__stitch__get_screen",
+      "Bash(pdftotext -layout \".claude/skills/corney-pwa-builder/reference/CORNEY_PRD_v54.pdf\" /tmp/prd.txt)",
+      "Bash(curl -sL \"https://lh3.googleusercontent.com/aida/ADBb0uj99oZxxeCSix22e8QARdFNxfLfx0RLb-oHZfFRlkAIRAXcx_j5-6QpoemtyeDcqA017RMK2YRbiBW8Vy3TlewBTKGJ33aUFvat2fsvK8CDYkYV2PeIdsc3dTBjodnciMv-8O7fYEH4yq-t2y1qVfqHZkopCL_vIlCHIsH9w7xFhcOo2Jq_TFXWKeuA2pjpBXpSEFEPLTlp8QZMR07BXXs6nRNj2j1Kf1FHaaBeQTMMV183bmGEn8oBYQ\" -o /tmp/walkin.png)",
+      "Bash(mkdir -p .refs)",
+      "Bash(cp /tmp/walkin.png .refs/walkin-stitch.png)",
+      "Read(//c/Users/Lenovo/.claude/**)",
+      "Bash(mkdir -p .refs/stitch)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sX2JjMjExYzIyY2NkNzRiMTZhZDk2Y2M5ODBhYmMyMzBkEgsSBxDLyo73wBUYAZIBIwoKcHJvamVjdF9pZBIVQhM0NzQ3NzM1NTM2MzMwNDgxOTQw&filename=&opi=89354086\" -o .refs/stitch/walkin.html)",
+      "Bash(curl -sL \"https://lh3.googleusercontent.com/aida/AP1WRLudNqjujwNsFrqz9_drBCU5N2wBB18lNjUGgyqbHWDnxrc3_qfszII9UUPyCtSRrJbljVJ5QbiW5b0SgE-29rMB6yGCVnwi7nCxNWpL5mLoDClUKGY2fVJG4cdY1HTSWf6h7ghz0M84oFR0Da3cSMSagUM7ruEC4GYfOo98JnS354XvXdalvV6fK8ejU7x-ECOkwfh1UJYne5nuoxcY4LDbH4R6H5M7oKYeJW_eCFrhhxUxSEIf9kyTUso\" -o ss-login.png)",
+      "Bash(curl -sL \"https://lh3.googleusercontent.com/aida/AP1WRLscSh1pe1sHFgG6cjsdvpgrrU_VK8Kf98kYCDJi0FYOD9ME8_LYbkEX-lAIxjBmm8siGsLaZEN8SNo1wB8ub74A24FdD-5XWJJ8xMTB7gP6IizlZw5kXQ_3ZW9iXFuxkc-JxQHKfOfeRsSCbew-zGbwYHqfmI5GI1QCIlVDp7WSQzMYCcVZedEuvDEN-0jwkW37cf0tW9NNTPhVNaW4dULGLq4Q9Dam7pldhIPaeDhi5WLqdlc-Lj_qug\" -o ss-stock.png)",
+      "Bash(curl -sL \"https://lh3.googleusercontent.com/aida/AP1WRLvq9XHAo2qkf4zK39wGhObX-W4c8bMsI5eAnlBFQMlaU_SapjY8oXiUHGbVSayjTqxqFKvPfHK1Kz_yFBolYDAPJ-pa3K5qYQuca5ytrjr2w2iS4DWMxUE5lSDMzXk-mSUxBIN-_-7SIIlypjZuOnfGrWU3Ih2M3Wr0y9pItWD2Be_mup-hTKtgzsO97NglvCLHQ0RNMJNmSxuJsqKOpx0nNAS6Mb6yGvTk4kKxj79r5sFaRR7sK01vkQU\" -o ss-cash.png)",
+      "Bash(node _genref.mjs)",
+      "Bash(rm -f _genref.mjs)",
+      "Bash([ -f \"$d/code.html\" ])",
+      "Bash(npm i *)",
+      "Bash(npx playwright *)",
+      "Bash(pdftotext -layout \".claude/skills/corney-pwa-builder/reference/CORNEY_PRD_v56.pdf\" /tmp/prd56.txt)",
+      "Bash(sed -n '985,1045p' /tmp/prd56.txt)",
+      "Bash(sed -n '1089,1100p' /tmp/prd56.txt)",
+      "Edit(/.claude/skills/corney-pwa-builder/**)",
+      "Bash(npx vite *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Lenovo\\.claude"
+    ]
+  }
+}

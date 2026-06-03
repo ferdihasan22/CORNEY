@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY POS - Walk-in Sale</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#454747",
+                      "surface-bright": "#fcf9f8",
+                      "on-secondary-container": "#6f5400",
+                      "on-primary-fixed": "#410000",
+                      "on-surface-variant": "#5c403b",
+                      "on-surface": "#1c1b1b",
+                      "surface": "#fcf9f8",
+                      "surface-container": "#f0eded",
+                      "surface-tint": "#be0f09",
+                      "tertiary-fixed": "#e2e2e2",
+                      "surface-dim": "#dcd9d9",
+                      "inverse-primary": "#ffb4a8",
+                      "primary": "#b50303",
+                      "background": "#fcf9f8",
+                      "surface-variant": "#e5e2e1",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-secondary-fixed-variant": "#5a4300",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "error-container": "#ffdad6",
+                      "surface-container-high": "#eae7e7",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#251a00",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#707171",
+                      "secondary-fixed": "#ffdf99",
+                      "on-tertiary-container": "#f6f7f7",
+                      "surface-container-low": "#f6f3f2",
+                      "outline": "#916f6a",
+                      "on-background": "#1c1b1b",
+                      "error": "#ba1a1a",
+                      "on-error": "#ffffff",
+                      "outline-variant": "#e6bdb7",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "primary-fixed": "#ffdad4",
+                      "on-primary-fixed-variant": "#930001",
+                      "inverse-on-surface": "#f3f0ef",
+                      "inverse-surface": "#313030",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-container": "#ffc72c",
+                      "secondary-fixed-dim": "#f6bf22",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-secondary": "#ffffff",
+                      "primary-container": "#da291c",
+                      "on-primary-container": "#fff5f3",
+                      "on-primary": "#ffffff",
+                      "secondary": "#775a00",
+                      "tertiary": "#575959"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "min-tap-target": "52px",
+                      "margin-page": "32px",
+                      "padding-card": "20px",
+                      "gutter-grid": "24px",
+                      "stack-gap": "16px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcf9f8; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="overflow-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-page h-min-tap-target bg-primary shadow-md text-on-primary">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-headline-lg font-black text-on-primary tracking-tighter">CORNEY</span>
+<div class="h-6 w-px bg-on-primary/20 mx-2"></div>
+<span class="font-label-lg text-label-lg text-on-primary/90">Branch: Jakarta Selatan</span>
+</div>
+<nav class="flex gap-8 h-full">
+<button class="h-full flex items-center px-4 text-secondary-container font-bold border-b-4 border-secondary-container pb-1 transition-all duration-100 active:scale-95">
+                Walk-in
+            </button>
+<button class="relative h-full flex items-center px-4 text-on-primary/80 font-medium hover:bg-primary-container/20 transition-colors transition-all duration-100 active:scale-95">
+                Order Online
+                <span class="absolute -top-1 -right-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-primary">3</span>
+</button>
+</nav>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<p class="font-headline-md text-headline-md leading-none" id="clock">14:45</p>
+<p class="text-[10px] font-bold tracking-widest opacity-70">24 OCT 2023</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-primary-container/20 rounded-xl transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-primary-container/20 rounded-xl transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex pt-min-tap-target h-screen">
+<!-- SideNav (Fixed Anchor) -->
+<aside class="fixed left-0 top-0 h-full w-[240px] flex flex-col py-6 border-r border-outline-variant bg-surface-container-low z-40 pt-24">
+<div class="flex flex-col gap-1 px-2">
+<button class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-xl p-4 mx-2 transition-all duration-200">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-lg text-label-lg">Semua</span>
+</button>
+<button class="flex items-center gap-4 text-on-surface-variant p-4 mx-2 hover:bg-surface-variant rounded-xl transition-all duration-200">
+<span class="material-symbols-outlined">restaurant</span>
+<span class="font-label-lg text-label-lg">Corndog</span>
+</button>
+<button class="flex items-center gap-4 text-on-surface-variant p-4 mx-2 hover:bg-surface-variant rounded-xl transition-all duration-200">
+<span class="material-symbols-outlined">fastfood</span>
+<span class="font-label-lg text-label-lg">Snacks</span>
+</button>
+<button class="flex items-center gap-4 text-on-surface-variant p-4 mx-2 hover:bg-surface-variant rounded-xl transition-all duration-200">
+<span class="material-symbols-outlined">local_bar</span>
+<span class="font-label-lg text-label-lg">Drinks</span>
+</button>
+<button class="flex items-center gap-4 text-on-surface-variant p-4 mx-2 hover:bg-surface-variant rounded-xl transition-all duration-200">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-lg text-label-lg">Promos</span>
+</button>
+</div>
+<div class="mt-auto px-4 pb-8">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold shadow-md hover:brightness-110 active:scale-95 transition-all">
+                    Buka Shift
+                </button>
+<button class="flex items-center gap-4 text-on-surface-variant p-4 mt-4 w-full hover:bg-error-container hover:text-on-error-container rounded-xl transition-all duration-200">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-lg text-label-lg">Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content (65%) -->
+<main class="ml-[240px] w-[calc(65%-240px)] flex-grow p-gutter-grid overflow-y-auto bg-background">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-display-md text-headline-lg text-on-surface flex items-center gap-3">
+<span class="w-2 h-8 bg-primary rounded-full"></span>
+                    KEJU MOZZA <span class="text-on-surface-variant font-normal opacity-50">· sisa 18</span>
+</h2>
+<div class="relative">
+<input class="pl-12 pr-4 h-[52px] w-64 rounded-xl border border-outline bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="Cari menu..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+</div>
+</div>
+<!-- Menu Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter-grid pb-12">
+<!-- Product Card: Sweet Coklat -->
+<div class="bg-surface-container-lowest rounded-[14px] overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] group hover:-translate-y-1 transition-all duration-300">
+<div class="h-44 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A professional studio food photograph of a crispy golden-brown corndog drizzled heavily with glistening dark chocolate sauce and sprinkled with colorful sugar confetti. The lighting is warm and high-contrast, emphasizing the crunchy texture of the batter against a clean white minimalist background. The brand aesthetic is vibrant, appetizing, and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVkTCnCaSDsi9xEZV-vOwYjs1ut1eLplmWyrhl5XWBgkfkIXspTNViv4vlkxA6edQrYvdm-5DWxIwOIztQBYdPCWt3rBnV7Kbwxg6E1NdwGSpM5XRGpUA0gscN58JtBBnmUCbYhwMRSl0gpvx0BQtntWT0Gsg2v5LCy7f4ecGiFuKhRXDcStomVHTGfddxamJrt9tkbnZRzjwIQGhN3amzjSxGKhqNlxLwe0-o7oiHMqgOgVGG8QR3jBE_0Qn8_rM-7RXmyl17H_U"/>
+<span class="absolute top-3 left-3 bg-secondary-container text-on-secondary-container font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider">Sweet</span>
+</div>
+<div class="p-padding-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Sweet Coklat</h3>
+<p class="font-display-md text-headline-md text-primary mb-4">Rp 17.000</p>
+<button class="w-full h-min-tap-target bg-primary text-on-primary rounded-[14px] font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span> Tambah
+                        </button>
+</div>
+</div>
+<!-- Product Card: Mozza Ori -->
+<div class="bg-surface-container-lowest rounded-[14px] overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] group hover:-translate-y-1 transition-all duration-300">
+<div class="h-44 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Close-up of a premium mozzarella corndog being pulled apart to reveal an elastic, melty cheese core. The outer crust is deep golden and perfectly textured with panko breadcrumbs. The scene is illuminated with bright, energetic lighting that highlights the food's freshness and appetite appeal, adhering to a modern corporate fast-food style with vibrant reds and yellows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSg9n7nRuqGjG_N-fL5ttlazx-cIesKZTfPHJw59kGyopOa8XmluMSDDhXPIkDmduqqL9G9cqQhTNf4oDqWQU1I0Dx1C1pX_H8sr5rnMpux-0QIsIt0Muox1Eyjb154ERDOdw_kXlE827lEAYhHoQ4xmy3EBPkq78TYbCAt2dBNmYeZXbWHxYWzRrZbNPV_zMqEss_b8u8X1fnVr4Krb-wX3c4p9s2w8FdFHhxWPBXvSyN5MTPzugFB47pfHhPDQFs-Ax2uUTvWMI"/>
+<span class="absolute top-3 left-3 bg-on-tertiary-fixed-variant text-on-tertiary-container font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider">Savory</span>
+</div>
+<div class="p-padding-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Mozza Ori</h3>
+<p class="font-display-md text-headline-md text-primary mb-4">Rp 17.000</p>
+<button class="w-full h-min-tap-target bg-primary text-on-primary rounded-[14px] font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span> Tambah
+                        </button>
+</div>
+</div>
+<!-- Product Card: Sosis Kentang -->
+<div class="bg-surface-container-lowest rounded-[14px] overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] group hover:-translate-y-1 transition-all duration-300">
+<div class="h-44 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="High-quality photography of a potato-coated corndog, known as Gamja-hotdog, with cubes of golden fried potatoes embedded in the batter. The lighting is crisp and commercial-grade, emphasizing the extreme crunchiness. The mood is energetic and indulgent, using the brand's signature vibrant color palette to drive immediate hunger." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC8L20-dXICgqHB1jm_pBkeYBfjbPWxGHUTRi-jX0Dd97UTWd9XVDQzTtcAmgL7nyMeFLM2jYwuXesoQqQc9qxsGKBDkK7smbJviZfIEpiHijJXOLHDxa2foWwGXRptgQvJ_XvB7LhvEPoP49weyFs1MSCI0UBjvJXl-DnMBJICExRBa7Lp0vrH-i8jm7G2HUGXMiVYCfejjD0YGD5QtZFIOL0djb_eHpXqXS6Ts2v6He7YegCi-GZMh-o74EzVrQwlLEm4dcutm4"/>
+<span class="absolute top-3 left-3 bg-on-tertiary-fixed-variant text-on-tertiary-container font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider">Savory</span>
+<span class="absolute top-3 right-3 bg-secondary-fixed text-on-secondary-fixed-variant font-black text-[10px] px-3 py-1 rounded-full uppercase border border-secondary-container">sisa 3</span>
+</div>
+<div class="p-padding-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Sosis Kentang</h3>
+<p class="font-display-md text-headline-md text-primary mb-4">Rp 17.000</p>
+<button class="w-full h-min-tap-target bg-primary text-on-primary rounded-[14px] font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span> Tambah
+                        </button>
+</div>
+</div>
+<!-- Product Card: Jumbo Ori (HABIS) -->
+<div class="bg-surface-container-low rounded-[14px] overflow-hidden shadow-none opacity-60 pointer-events-none relative">
+<div class="h-44 overflow-hidden relative grayscale">
+<img class="w-full h-full object-cover" data-alt="Large jumbo-sized corndog on a wooden stick, placed against a neutral studio background. The lighting is soft and even, highlighting the uniform golden-brown color. The visual style is professional and clean, but currently presented with a grayscale filter to denote it is out of stock in a high-efficiency POS interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyoOCKAJ5TJFLz0Du6WOdA0g5gLzgyvc7HD3dnVxlYslGrhBGWU4HuwqSR0xFY49rCRBJCcDyi8H-MZsUpnklFlmGoPbDMMoYrVG9SrYmjgzYHxQWyO5tnBPKY1HH-5-9mMF2MzfhGvFXMKjrb0Acf05QF4TMiile08stYk9Jz0DTiKJAXbqAlJFpaWuJXtkVyjdv45nIaMXWrTa8ivkPfTRIbIJUPzljO6yVRA1XZdzVA2F4SILHj47-Y-MQZzz4xEhNR8GinIRc"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+<span class="bg-error text-on-error font-black text-xl px-6 py-2 rounded-lg rotate-12 shadow-xl border-4 border-on-error">HABIS</span>
+</div>
+</div>
+<div class="p-padding-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Jumbo Ori</h3>
+<p class="font-display-md text-headline-md text-on-surface-variant mb-4">Rp 17.000</p>
+<button class="w-full h-min-tap-target bg-surface-variant text-on-surface-variant rounded-[14px] font-bold flex items-center justify-center gap-2">
+                            Stok Kosong
+                        </button>
+</div>
+</div>
+<!-- Mix Ori -->
+<div class="bg-surface-container-lowest rounded-[14px] overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] group hover:-translate-y-1 transition-all duration-300">
+<div class="h-44 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Vibrant food photography featuring a mix-flavor corndog, half sausage and half mozzarella. The golden crust is dusted with sugar and drizzled with bright yellow mustard and red ketchup. High-key, appetizing lighting creates a professional fast-food aesthetic, focusing on the crunchy textures and bold colors of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ7zn99nAq_TmpTLqz0742U41bsLxU4iDlVlbrfSR0VYkLLPbD-dCDiVNLk2pLmWlzsYYXV8yOIauR6uRn1qgeOAxquk-5RKFLUT7Dr7rOYdGg-77MV6DtXaIF5_Ai6Vw2Sr58-lAFbJGfcQ8N7QbavPNBH2NjsLH9Q0MVED6MWqb2NYvNOB8BwRoiQ3qf5jE-31j2uJ6ZcPoRLGKAelOJt3CiMG3g57YoHMTapI7mpVKb8zaBFKrWZoCn0hQu5ZWU8MxBh7yy_qA"/>
+<span class="absolute top-3 left-3 bg-on-tertiary-fixed-variant text-on-tertiary-container font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider">Savory</span>
+</div>
+<div class="p-padding-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Mix Ori</h3>
+<p class="font-display-md text-headline-md text-primary mb-4">Rp 17.000</p>
+<button class="w-full h-min-tap-target bg-primary text-on-primary rounded-[14px] font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span> Tambah
+                        </button>
+</div>
+</div>
+<!-- 6 more variations (simplified placeholders for layout) -->
+<script>
+                    const titles = ["Mozza Full", "Sosis Full", "Cheesy Lava", "Spicy Dynamite", "Green Tea Sweet", "Caramel Crunch"];
+                    for(let i=0; i<6; i++) {
+                        document.write(`
+                        <div class="bg-surface-container-lowest rounded-[14px] overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] group hover:-translate-y-1 transition-all duration-300">
+                            <div class="h-44 overflow-hidden relative bg-surface-variant">
+                                <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=2069&auto=format&fit=crop" data-alt="A variation of a gourmet snack on a stick, featuring creative toppings like melted cheese or sweet glazes. The food is styled for maximum appetite appeal with warm, energetic lighting. The background is a clean, modern aesthetic with brand-consistent red and yellow accents." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <span class="absolute top-3 left-3 bg-secondary-container text-on-secondary-container font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider">Menu Baru</span>
+                            </div>
+                            <div class="p-padding-card">
+                                <h3 class="font-headline-md text-headline-md text-on-surface mb-1">${titles[i]}</h3>
+                                <p class="font-display-md text-headline-md text-primary mb-4">Rp 17.000</p>
+                                <button class="w-full h-min-tap-target bg-primary text-on-primary rounded-[14px] font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+                                    <span class="material-symbols-outlined">add_circle</span> Tambah
+                                </button>
+                            </div>
+                        </div>
+                        `);
+                    }
+                </script>
+</div>
+</main>
+<!-- Cart Panel (35%) -->
+<section class="w-[35%] bg-surface flex flex-col border-l border-outline-variant shadow-[-8px_0_24px_rgba(0,0,0,0.04)] z-10">
+<div class="p-8 border-b border-outline-variant flex justify-between items-center">
+<h2 class="font-display-md text-headline-lg text-on-surface">Keranjang</h2>
+<button class="text-primary font-bold flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">delete_sweep</span> Bersihkan
+                </button>
+</div>
+<div class="flex-grow overflow-y-auto p-6 space-y-6 hide-scrollbar">
+<!-- Cart Item 1 -->
+<div class="flex gap-4 group">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A focused close-up photo of a mozzarella corndog in a kitchen setting, showing the detail of the breaded crust. The lighting is bright and modern, consistent with a clean POS interface design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM-1j2t6B6fvj5PFwRarX9lPcY7e-_vmKwQJ7LtkKxoEfN6TRSv-GclE4UUpO8N8LKMvDzISNfrgHqpchzoi2lXRzHiyZj8yQ7Wk5EPoxBbux_H1x9LMNUw1RjNAd3xEYDdXvGMb9XN-r2l88_SY-0yRTj9lsvov5BVvOLBKc6i3BKqUgtQB9h9gaQXD4N2URcSjcVoA1_-Ic3PYQU_jX4fJa5SVCzZd52DAG1qq4ucyKb1xKNa_mH0dYGmwdpEpr1v2UGq6wkroI"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-lg text-on-surface leading-tight">2x Mozza Ori</h4>
+<p class="font-bold text-primary">Rp 34.000</p>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">− Keju Mozza</p>
+<p class="text-on-surface-variant text-sm">− Extra Spicy Sauce</p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center border border-outline rounded-lg overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-base">remove</span></button>
+<span class="w-10 text-center font-bold">2</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-base">add</span></button>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Cart Item 2 -->
+<div class="flex gap-4 group">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A single corndog drizzled with chocolate, presented clearly for a cart item entry. The style is appetizing and consistent with the brand's vibrant fast-food aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ4ywkr3ti6B6_2qg-G8251ute4mknd4-gK2_ywoP7n4K_dwpfQcEjPIDu6VEUMK2ai29xGImarNEFDmmRDOyahUQgSf-vdmmHGABgpaB3TfizF_lOo_DrmMwx2YcdviFVL1HZvXu71oXnSTjrbsIm4xWfUt2RILURhy3zzdnQzTzAyHep-6L0S85SfyGP1jhY1437SF6HI8EVUvun0R9kOBHFIinZnhhdI8wo9bFEiO5E8L0nC3KLPitY6DEMtMJK2ANQAIHKTC8"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-lg text-on-surface leading-tight">1x Sweet Coklat</h4>
+<p class="font-bold text-primary">Rp 17.000</p>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">− Rainbow Sprinkles</p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center border border-outline rounded-lg overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-base">remove</span></button>
+<span class="w-10 text-center font-bold">1</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-base">add</span></button>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Promo Row -->
+<div class="bg-secondary-container/10 border-2 border-dashed border-secondary-container rounded-xl p-4 flex items-center justify-between cursor-pointer hover:bg-secondary-container/20 transition-all group">
+<div class="flex items-center gap-3 text-on-secondary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_offer</span>
+<span class="font-bold">Terapkan Promo</span>
+</div>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+<!-- Footer Totals -->
+<div class="bg-surface-container-low p-8 space-y-4">
+<div class="flex justify-between text-on-surface-variant">
+<span class="font-body-md text-body-md">Subtotal</span>
+<span class="font-label-lg text-label-lg">Rp 51.000</span>
+</div>
+<div class="flex justify-between text-primary font-bold">
+<span class="font-body-md text-body-md">Biaya Tambahan</span>
+<span class="font-label-lg text-label-lg">Rp 3.000</span>
+</div>
+<div class="flex justify-between text-on-secondary-fixed-variant font-bold">
+<span class="font-body-md text-body-md">Promo</span>
+<span class="font-label-lg text-label-lg">Rp 0</span>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-center">
+<span class="font-display-md text-headline-md text-on-surface">Total</span>
+<span class="font-display-md text-display-md text-primary tracking-tight">Rp 54.000</span>
+</div>
+<div class="flex gap-4 pt-4">
+<button class="flex-1 h-min-tap-target border-2 border-secondary-container text-on-secondary-container rounded-[14px] font-black uppercase tracking-wider hover:bg-secondary-container/10 active:scale-95 transition-all">
+                        Buat Dulu
+                    </button>
+<button class="flex-[1.5] h-min-tap-target bg-primary text-on-primary rounded-[14px] font-black uppercase tracking-widest shadow-[0_8px_20px_rgba(181,3,3,0.3)] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">payments</span> Bayar Sekarang
+                    </button>
+</div>
+</div>
+</section>
+</div>
+<script>
+        // Digital Clock Update
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Simple tactile interaction feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.96)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = '';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = '';
+            });
+        });
+    </script>
+</body></html>

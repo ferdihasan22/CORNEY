@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY Owner Cockpit - Resep &amp; Bahan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffdad4",
+                        "on-tertiary-container": "#f6f7f7",
+                        "surface-container-low": "#f6f3f2",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdf99",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#5c403b",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#ffc72c",
+                        "primary-container": "#da291c",
+                        "on-primary-container": "#fff5f3",
+                        "surface-bright": "#fcf9f8",
+                        "on-secondary-container": "#6f5400",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "outline": "#916f6a",
+                        "on-surface": "#1c1b1b",
+                        "inverse-primary": "#ffb4a8",
+                        "tertiary": "#575959",
+                        "surface": "#fcf9f8",
+                        "secondary": "#775a00",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "outline-variant": "#e6bdb7",
+                        "on-primary-fixed-variant": "#930001",
+                        "background": "#fcf9f8",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary-container": "#707171",
+                        "surface-container-high": "#eae7e7",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "surface-tint": "#be0f09",
+                        "inverse-surface": "#313030",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-primary-fixed": "#410000",
+                        "primary": "#b50303",
+                        "on-background": "#1c1b1b",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#251a00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "margin-page": "32px",
+                        "padding-card": "20px",
+                        "gutter-grid": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e2e1; border-radius: 10px; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- Fixed SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container-low border-r border-outline-variant flex flex-col py-margin-page gap-stack-gap z-50">
+<div class="px-6 mb-8">
+<h1 class="font-display-md text-display-md text-primary tracking-tighter">CORNEY</h1>
+<div class="mt-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img alt="Owner Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxgrYd1hxFaEOXLC1j8ajfphNIVzCD_lHdR6DhpIXc9M5MoXgrz81Kc6aaLp80KEXbylR-ozi-UlRcUsVjtUZOLCwY_ZoXw_ZYIg2jZrvU8dGJobI_AifqCasS_clvJYCovvk3byE4AIUsLWuOelAQNa4FXaFxhiuTOvzX5eOJQT-pANrPFaX0sCC8rPxM5h4GfPpW11D9BjOiWzv-UEJTwKKeH1t27cwdosTSPHte5Bkxobh1sXDOaFxOGOPP3mD5BSdWZiJ3lKM"/>
+</div>
+<div>
+<p class="font-label-lg text-label-lg leading-tight">Owner Cockpit</p>
+<p class="text-[12px] text-on-surface-variant font-medium">Corney Indonesia</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-base text-on-surface-variant hover:bg-surface-container-high rounded-lg px-4 py-3 mx-2 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-base bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 mx-2 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-lg text-label-lg">Master Data</span>
+</a>
+<a class="flex items-center gap-base text-on-surface-variant hover:bg-surface-container-high rounded-lg px-4 py-3 mx-2 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory</span>
+</a>
+<a class="flex items-center gap-base text-on-surface-variant hover:bg-surface-container-high rounded-lg px-4 py-3 mx-2 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-lg text-label-lg">Sales Report</span>
+</a>
+<a class="flex items-center gap-base text-on-surface-variant hover:bg-surface-container-high rounded-lg px-4 py-3 mx-2 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-lg text-label-lg">Outlets</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full h-[52px] bg-primary text-on-primary rounded-xl font-label-lg flex items-center justify-center gap-2 hover:brightness-90 active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined">add_circle</span>
+                Add New Recipe
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] h-screen flex flex-col bg-background">
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center w-full px-margin-page h-min-tap-target z-40 bg-surface shadow-sm sticky top-0">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-primary">Master Data · Resep &amp; Bahan</h2>
+</div>
+<div class="flex items-center gap-6">
+<!-- Navigation Tabs within Top Bar -->
+<nav class="flex h-min-tap-target">
+<a class="h-full flex items-center px-4 text-primary font-bold border-b-2 border-primary transition-colors hover:bg-surface-container-high" href="#">Resep/BOM</a>
+<a class="h-full flex items-center px-4 text-on-surface-variant font-medium transition-colors hover:bg-surface-container-high" href="#">Setelan Saus</a>
+<a class="h-full flex items-center px-4 text-on-surface-variant font-medium transition-colors hover:bg-surface-container-high" href="#">Bahan Cair &amp; Reorder</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</header>
+<section class="flex-1 p-margin-page overflow-y-auto custom-scrollbar">
+<div class="flex gap-gutter-grid max-w-[1400px] mx-auto">
+<!-- Left Column: Recipe Configuration -->
+<div class="flex-1 space-y-6">
+<!-- Selection Header -->
+<div class="bg-surface-container-lowest rounded-xl p-padding-card shadow-sm border border-outline-variant flex items-center justify-between">
+<div class="flex-1 max-w-md">
+<label class="block font-label-md text-on-surface-variant mb-2">Pilih Produk</label>
+<div class="relative">
+<select class="w-full h-min-tap-target bg-surface-container-low border border-outline rounded-xl px-4 appearance-none focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md">
+<option>Mozza Ori</option>
+<option>Choco Melt</option>
+<option>Potato Corndog</option>
+<option>Full Mozza</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="h-min-tap-target px-6 border border-outline rounded-xl font-label-lg text-on-surface-variant hover:bg-surface-container-high transition-all">Duplicate BOM</button>
+<button class="h-min-tap-target px-6 bg-primary text-on-primary rounded-xl font-label-lg shadow-md hover:brightness-110 active:scale-95 transition-all">Save Changes</button>
+</div>
+</div>
+<!-- Main Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-md border border-outline-variant overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-on-surface">Bill of Materials (BOM)</h3>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-[12px]">Last updated: 2h ago</span>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="p-4 font-label-lg text-on-surface-variant border-b border-outline-variant">Ingredients</th>
+<th class="p-4 font-label-lg text-on-surface-variant border-b border-outline-variant">Qty/Takaran</th>
+<th class="p-4 font-label-lg text-on-surface-variant border-b border-outline-variant">Unit Price (Estimated)</th>
+<th class="p-4 font-label-lg text-on-surface-variant border-b border-outline-variant text-right">Sub-total</th>
+<th class="p-4 border-b border-outline-variant"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row: Tepung -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">grain</span>
+</div>
+<div>
+<p class="font-label-lg">Tepung adonan</p>
+<p class="text-[12px] text-on-surface-variant">Premix Corney Secret</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<input class="w-20 h-10 bg-surface border border-outline-variant rounded-lg text-center font-body-md" type="number" value="30"/>
+<span class="text-on-surface-variant">g</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-on-surface-variant">Rp 80 / g</td>
+<td class="p-4 font-label-lg text-right">Rp 2.400</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row: Keju -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">chess</span>
+</div>
+<div>
+<p class="font-label-lg">Keju Mozza</p>
+<p class="text-[12px] text-on-surface-variant">Block Cut (Standard)</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<input class="w-20 h-10 bg-surface border border-outline-variant rounded-lg text-center font-body-md" type="number" value="1"/>
+<span class="text-on-surface-variant">pcs</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-on-surface-variant">Rp 3.000 / pcs</td>
+<td class="p-4 font-label-lg text-right">Rp 3.000</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row: Tusuk -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">straighten</span>
+</div>
+<div>
+<p class="font-label-lg">Tusuk</p>
+<p class="text-[12px] text-on-surface-variant">Bambu 25cm</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<input class="w-20 h-10 bg-surface border border-outline-variant rounded-lg text-center font-body-md" type="number" value="1"/>
+<span class="text-on-surface-variant">pcs</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-on-surface-variant">Rp 150 / pcs</td>
+<td class="p-4 font-label-lg text-right">Rp 150</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row: Panir -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">blur_on</span>
+</div>
+<div>
+<p class="font-label-lg">Panir</p>
+<p class="text-[12px] text-on-surface-variant">Fine Crumb White</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<input class="w-20 h-10 bg-surface border border-outline-variant rounded-lg text-center font-body-md" type="number" value="15"/>
+<span class="text-on-surface-variant">g</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-on-surface-variant">Rp 30 / g</td>
+<td class="p-4 font-label-lg text-right">Rp 450</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row: Minyak -->
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">opacity</span>
+</div>
+<div>
+<p class="font-label-lg">Minyak</p>
+<p class="text-[12px] text-on-surface-variant">Sawit Premium (Deep Fry)</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<input class="w-20 h-10 bg-surface border border-outline-variant rounded-lg text-center font-body-md" type="number" value="10"/>
+<span class="text-on-surface-variant">ml</span>
+</div>
+</td>
+<td class="p-4 font-body-md text-on-surface-variant">Rp 20 / ml</td>
+<td class="p-4 font-label-lg text-right">Rp 200</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-6 bg-surface-container-low flex items-center justify-between">
+<button class="flex items-center gap-2 font-label-lg text-primary hover:underline transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+                                + Tambah bahan
+                            </button>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-wider rounded">perkiraan</span>
+<p class="font-label-lg text-on-surface-variant">Total Estimasi HPP</p>
+</div>
+<h4 class="font-display-md text-display-md text-on-surface">Rp 6.200</h4>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Business Insight Sidebar -->
+<div class="w-[360px] space-y-gutter-grid">
+<!-- Profit Margin Card -->
+<div class="bg-primary-container text-on-primary-container rounded-2xl p-6 shadow-xl relative overflow-hidden">
+<!-- Decorative circle -->
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-on-primary-container/10 rounded-full"></div>
+<p class="font-label-lg opacity-80 mb-1">Business Insight</p>
+<h3 class="font-headline-lg mb-6">Profit Margin Analysis</h3>
+<div class="flex items-end gap-3 mb-4">
+<span class="font-display-lg text-display-lg leading-none">64%</span>
+<span class="font-label-lg bg-on-primary-container/20 px-2 py-1 rounded-md mb-1">Healthy</span>
+</div>
+<div class="space-y-4 pt-4 border-t border-on-primary-container/20">
+<div class="flex justify-between items-center">
+<span class="font-body-md opacity-80">Harga Jual Menu</span>
+<span class="font-label-lg">Rp 17.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md opacity-80">Estimasi HPP</span>
+<span class="font-label-lg">Rp 6.200</span>
+</div>
+<div class="flex justify-between items-center text-secondary-container">
+<span class="font-label-lg">Laba Kotor / Pcs</span>
+<span class="font-headline-md">Rp 10.800</span>
+</div>
+</div>
+<button class="mt-8 w-full py-4 bg-on-primary-container text-primary-container font-label-lg rounded-xl hover:brightness-110 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">query_stats</span>
+                            View Detail Report
+                        </button>
+</div>
+<!-- Product Image Preview -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-md border border-outline-variant">
+<img class="w-full h-[240px] object-cover" data-alt="A professional, high-quality photograph of a golden-brown Indonesian corndog filled with melting mozzarella cheese. The corndog is perfectly fried with a crisp texture, drizzled with bright red chili sauce and creamy yellow mustard. It is presented on a minimalist white ceramic plate against a clean, warm background with soft cinematic lighting that highlights the appetizing steam and cheese pull. The overall aesthetic is vibrant, modern, and food-centric." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7tvkN9CqrCZIw3hR0snMNqMDp1ATl48qLCU-Hqv1VvXTpxuQbvZnhT1XDV7QN3sNJSUouLAjU_F6B9Afp1Y3AoRbJ3v9zG56bPrnLw13q9qOQGCXM8W_CGZc4Tkp19uAipPFEt_hkSgNovXesQPXxIyEuukEnS4Ta8erJX10KXeyhiDxkuuvMSr0J1dCA4VtNxh3CgyUEvIC7ENeYqqhq-b93r03Gxr0Bz-GBqI1aAi-pJnm5gwvBCCQMCvunT7NwYfmiqVvwo-4"/>
+<div class="p-5">
+<h4 class="font-headline-md mb-2">Mozza Ori</h4>
+<p class="font-body-md text-on-surface-variant">The signature best-seller. High protein mozzarella core with secret herb batter mix.</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-label-md text-[12px]">Best Seller</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-label-md text-[12px]">Mozzarella</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-label-md text-[12px]">Indo-Fusion</span>
+</div>
+</div>
+</div>
+<!-- Ingredient Alert -->
+<div class="bg-secondary-container rounded-2xl p-5 border border-on-secondary-container/10 flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-on-secondary-container/10 flex items-center justify-center text-on-secondary-container shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<p class="font-label-lg text-on-secondary-container">Low Stock Warning</p>
+<p class="text-sm text-on-secondary-container/80 mt-1">Keju Mozza block is below threshold at 3 outlets. Reorder recommended.</p>
+<button class="mt-3 text-on-secondary-container font-bold text-sm underline">Reorder Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Interactive script for demo -->
+<script>
+        // Simple scale interaction for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+
+        // Tab switching logic (Visual only)
+        const tabs = document.querySelectorAll('header nav a');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs.forEach(t => {
+                    t.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    t.classList.add('text-on-surface-variant', 'font-medium');
+                });
+                tab.classList.remove('text-on-surface-variant', 'font-medium');
+                tab.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+            });
+        });
+    </script>
+</body></html>

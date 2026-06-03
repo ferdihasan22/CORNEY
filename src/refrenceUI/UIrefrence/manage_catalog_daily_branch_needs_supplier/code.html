@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manage Catalog - CORNEY Supplier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+        }
+        /* Custom Scrollbar for better UX */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e2e1; border-radius: 10px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#775a00",
+                        "tertiary-container": "#707171",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#fff5f3",
+                        "inverse-on-surface": "#f3f0ef",
+                        "primary-fixed": "#ffdad4",
+                        "tertiary": "#575959",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary-container": "#f6f7f7",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-surface": "#1c1b1b",
+                        "on-primary-fixed-variant": "#930001",
+                        "background": "#fcf9f8",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#5c403b",
+                        "surface-container-high": "#eae7e7",
+                        "on-secondary-fixed": "#251a00",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0eded",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "primary-container": "#da291c",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "secondary-container": "#ffc72c",
+                        "on-primary-fixed": "#410000",
+                        "surface-tint": "#be0f09",
+                        "inverse-primary": "#ffb4a8",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "inverse-surface": "#313030",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "surface-bright": "#fcf9f8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "outline": "#916f6a",
+                        "on-secondary-container": "#6f5400",
+                        "primary": "#b50303"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-page": "32px",
+                        "stack-gap": "16px",
+                        "padding-card": "20px",
+                        "min-tap-target": "52px",
+                        "gutter-grid": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-body-md text-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-primary text-on-primary font-headline-md text-headline-md shadow-md docked full-width top-0 flex items-center justify-between px-margin-page h-[64px] w-full z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-primary">storefront</span>
+<div class="flex flex-col">
+<h1 class="font-bold tracking-tight">Katalog · Kategori 1</h1>
+<span class="text-[12px] font-bold uppercase tracking-widest text-on-primary/70 -mt-1 leading-none">CORNEY Supplier</span>
+</div>
+<span class="bg-on-primary/20 text-on-primary px-3 py-1 rounded-full font-label-md text-label-md">Supplier</span>
+</div>
+<button class="bg-on-primary-container text-primary font-bold px-6 py-2 rounded-xl flex items-center gap-2 active:scale-95 transition-transform hover:bg-white shadow-sm">
+<span class="material-symbols-outlined">add</span>
+            + Add Item
+        </button>
+</header>
+<div class="flex flex-1 pt-[64px]">
+<!-- NavigationDrawer (Sidebar) -->
+<aside class="bg-surface-container-low text-primary font-label-lg text-label-lg fixed left-0 top-0 h-full w-[240px] hidden lg:flex flex-col pt-20 pb-4 gap-2 shadow-sm z-40">
+<div class="px-6 py-4">
+<h2 class="font-display-md text-[20px] text-primary font-extrabold">Item Categories</h2>
+</div>
+<nav class="flex flex-col">
+<a class="bg-secondary-container text-on-secondary-container rounded-full mx-2 px-4 py-3 flex items-center gap-3 transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                    All Items
+                </a>
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-full mx-2 px-4 py-3 flex items-center gap-3 transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">kebab_dining</span>
+                    Meat &amp; Poultry
+                </a>
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-full mx-2 px-4 py-3 flex items-center gap-3 transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">eco</span>
+                    Produce
+                </a>
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-full mx-2 px-4 py-3 flex items-center gap-3 transition-all active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">bakery_dining</span>
+                    Dry Goods
+                </a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-[240px] px-margin-page py-stack-gap">
+<!-- Tabs Section -->
+<div class="flex border-b border-outline-variant mb-6 overflow-x-auto no-scrollbar">
+<button class="px-4 py-3 border-b-4 border-primary text-primary font-bold whitespace-nowrap">
+                    Kategori 1 (Kebutuhan Cabang)
+                </button>
+<button class="px-4 py-3 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">
+                    Kategori 2 (Bahan Adonan)
+                </button>
+</div>
+<!-- Bento Grid Catalog -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter-grid pb-32">
+<!-- Glaze Coklat -->
+<div class="bg-surface-container-lowest rounded-[14px] shadow-[0_4px_16px_rgba(26,26,26,0.08)] overflow-hidden flex flex-col border border-transparent hover:border-outline-variant transition-all">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional close-up of thick, glossy dark chocolate glaze being poured into a high-quality stainless steel container. The lighting is warm and cinematic, highlighting the rich texture and deep brown color of the glaze. The background is a clean, modern commercial kitchen setting. The aesthetic is appetizing and premium fast-food corporate." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM2GJ6XvmQ-dSZ6gH_TdH5y_vnndwWRzFfF3t1LlnKXFMZ8K7sFCl4SssG9ZoklFibtrBSpwpSL2h2-cdyL_5zwaeSEIH40MOBySlvg_m-Vmej-GmVB8Y1vJSxRROdPeRaBnr7MEigVy6kmh1tOPecUgZq8ndXtXxuJi5pEeRQxpxArVSHXrHNJdG94HXme-wEny3qwfbVax5KbBDdC4hrqBw-ajGr6JkP48BRODcMxZVexyMErGPTOClyi-1X_erEeiTDfU1JanE"/>
+<div class="absolute top-3 left-3 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-md font-bold shadow-sm">
+                            Best Seller
+                        </div>
+</div>
+<div class="p-padding-card flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-on-surface">Glaze Coklat</h3>
+<div class="flex items-center gap-1.5 text-label-md text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-emerald-600"></div>
+                                Tersedia
+                            </div>
+</div>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="text-primary font-bold text-headline-md">Rp 45.000</span>
+<span class="text-on-surface-variant text-label-md">/ kg</span>
+</div>
+<button class="mt-4 bg-primary text-on-primary h-[52px] rounded-[14px] font-bold active:scale-95 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2" onclick="openModal()">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                            Edit Item
+                        </button>
+</div>
+</div>
+<!-- Saus Tomat -->
+<div class="bg-surface-container-lowest rounded-[14px] shadow-[0_4px_16px_rgba(26,26,26,0.08)] overflow-hidden flex flex-col border border-transparent hover:border-outline-variant transition-all">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A large, industrial-sized clear container filled with vibrant, bright red tomato sauce. The lighting is bright and clean, typical of a high-end food production facility. Small drops of sauce are visible on the interior rim, showing viscosity. The overall atmosphere is energetic and professional, with a focus on color vibrance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAneWH0AA7ZjE_gNrsP3T9vCXAYxeM_-51OJwIBCvpLcaH_R51DPE4kgtvjXSjAyNE3QO9SWxpzosilCQIcPBIi2vQP_2I7EFovkO2MXBlY4bqP5kzWTFsxlhh_zjMhlJ8PcRMOEpVx25DR1-dXdYUWwuowoyzkJGAia2lFDpNfqprPBwM2YLArt63rr68XDN4Oev0f98vucwhcVr4f_1K59D_jAIi-gOWY1wz6AUNL7hX-0R_g6IpNMMjZuINN2jHasUh2ZUCRg-Y"/>
+</div>
+<div class="p-padding-card flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-on-surface">Saus Tomat</h3>
+<div class="flex items-center gap-1.5 text-label-md text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-emerald-600"></div>
+                                Tersedia
+                            </div>
+</div>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="text-primary font-bold text-headline-md">Rp 25.000</span>
+<span class="text-on-surface-variant text-label-md">/ liter</span>
+</div>
+<button class="mt-4 bg-primary text-on-primary h-[52px] rounded-[14px] font-bold active:scale-95 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                            Edit Item
+                        </button>
+</div>
+</div>
+<!-- Tepung Panir -->
+<div class="bg-surface-container-lowest rounded-[14px] shadow-[0_4px_16px_rgba(26,26,26,0.08)] overflow-hidden flex flex-col border border-transparent hover:border-outline-variant transition-all">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High-quality golden breadcrumbs in a bulk container, ready for commercial kitchen use. The texture is crisp and evenly colored in a beautiful golden yellow. High-key, clean lighting emphasizes the grainy texture. The aesthetic is clean, B2B focused, and highlights the quality of basic ingredients in a vibrant, corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkB99-Fyj6HnykJ3wCOUeFcmVHsVGK9kSSwvDtN86WVqkJ_alul8CoJNasKbTNQQWH6e3PckR_yZYu77P8MZCIJ484kRXkXueG3SMUqzPt4fH2tOSatDINN77yrpYf2vFsrbu1CArqk71HF4-XMzBfDIjgxQyDHIpeikiCmNyo0P_-cmHLxxL_PhVz6qGpKFDs18oKPl57qEYaywht_UwN2Q-fklMHG3HxpCyPtpCqx6z9aQTxqmj_anPWkEnffbvWU_T58Y3MCG8"/>
+</div>
+<div class="p-padding-card flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-on-surface">Tepung Panir</h3>
+<div class="flex items-center gap-1.5 text-label-md text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-emerald-600"></div>
+                                Tersedia
+                            </div>
+</div>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="text-primary font-bold text-headline-md">Rp 18.500</span>
+<span class="text-on-surface-variant text-label-md">/ kg</span>
+</div>
+<button class="mt-4 bg-primary text-on-primary h-[52px] rounded-[14px] font-bold active:scale-95 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                            Edit Item
+                        </button>
+</div>
+</div>
+<!-- Plastik 15 -->
+<div class="bg-surface-container-lowest rounded-[14px] shadow-[0_4px_16px_rgba(26,26,26,0.08)] overflow-hidden flex flex-col border border-transparent opacity-80 grayscale-[0.3]">
+<div class="h-48 relative overflow-hidden bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-on-surface-variant/30">inventory</span>
+<div class="absolute inset-0 bg-black/5 flex items-center justify-center">
+<span class="bg-inverse-surface text-inverse-on-surface px-4 py-1.5 rounded-full font-bold text-label-lg">Stok Habis</span>
+</div>
+</div>
+<div class="p-padding-card flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-on-surface">Plastik 15</h3>
+<div class="flex items-center gap-1.5 text-label-md text-on-surface-variant font-bold bg-surface-variant px-2 py-0.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-on-surface-variant"></div>
+                                Kosong
+                            </div>
+</div>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="text-on-surface-variant font-bold text-headline-md">Rp 12.000</span>
+<span class="text-on-surface-variant text-label-md">/ pack</span>
+</div>
+<button class="mt-4 bg-surface-container-highest text-on-surface-variant h-[52px] rounded-[14px] font-bold transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                            Edit Item
+                        </button>
+</div>
+</div>
+<!-- Minyak Goreng -->
+<div class="bg-surface-container-lowest rounded-[14px] shadow-[0_4px_16px_rgba(26,26,26,0.08)] overflow-hidden flex flex-col border border-transparent hover:border-outline-variant transition-all">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Large translucent industrial jerrycans filled with clear, golden premium cooking oil. The golden liquid catches the bright, soft studio lighting, creating beautiful reflections. The setting is clean, organized, and professional, representing high-volume food supply for a fast-food chain. Bold and Appetizing corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6u_XUYz4MRgTtreTE30HWXRU-LUdmswzURT_PZu0yLsYJx77kZ7xrZo6teLIfviJSqoOPOvuYyfY2fm_sgDLGxgpsFLECdFOo9LFXuMQDZSrDah0zMKoluJpHAd_-fx_FffQtQWn8u7YhN4_UoagWQSd4wwwvpKP-awMH81gfRcpbZ3jO9FVK6IqHmUf0lnd1lgGzCphmdsQVVIsVzkHdG1JMCEogOORKS__z310EBsp3n_CN9fm4-OE3XXPsYkqyLXUGK_Sn-YE"/>
+</div>
+<div class="p-padding-card flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-on-surface">Minyak Goreng</h3>
+<div class="flex items-center gap-1.5 text-label-md text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-emerald-600"></div>
+                                Tersedia
+                            </div>
+</div>
+<div class="flex items-baseline gap-1 mt-2">
+<span class="text-primary font-bold text-headline-md">Rp 98.000</span>
+<span class="text-on-surface-variant text-label-md">/ jerigen</span>
+</div>
+<button class="mt-4 bg-primary text-on-primary h-[52px] rounded-[14px] font-bold active:scale-95 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                            Edit Item
+                        </button>
+</div>
+</div>
+</div>
+<!-- Footer Message -->
+<footer class="mt-auto py-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4 text-on-surface-variant font-label-md text-label-md text-center md:text-left">
+<p class="max-w-2xl">
+                    Katalog ini tersimpan &amp; sama untuk semua cabang. Yang berbeda hanya centang/qty saat menyusun pesanan.
+                    <span class="block text-primary/60 mt-1">© 2024 Supplier Network. Catalog synchronization occurs every 15 minutes across all branches.</span>
+</p>
+<div class="flex gap-6 font-bold text-primary">
+<a class="hover:underline" href="#">Sync Status</a>
+<a class="hover:underline" href="#">Support</a>
+<a class="hover:underline" href="#">API Docs</a>
+</div>
+</footer>
+</main>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-margin-page right-margin-page z-40">
+<button class="bg-primary text-on-primary w-full md:w-auto h-[60px] px-8 rounded-full font-bold shadow-[0_12px_24px_rgba(181,3,3,0.3)] active:scale-95 transition-transform flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-[24px]">add</span>
+            Tambah Item
+        </button>
+</div>
+<!-- Edit Item Modal (Bottom Sheet Style on Tablet) -->
+<div class="fixed inset-0 z-[60] flex items-end md:items-center justify-center modal-backdrop transition-opacity" id="editModal">
+<div class="bg-surface-container-lowest w-full md:max-w-md rounded-t-[24px] md:rounded-[24px] shadow-2xl p-margin-page flex flex-col gap-6 animate-slide-up">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-lg text-on-surface">Edit Item</h2>
+<button class="w-10 h-10 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-base">
+<div class="flex flex-col gap-1">
+<label class="text-label-md text-on-surface-variant px-1">Nama Item</label>
+<input class="h-[52px] border border-outline-variant rounded-[14px] px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="text" value="Glaze Coklat"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-md text-on-surface-variant px-1">Harga (Rp)</label>
+<input class="h-[52px] border border-outline-variant rounded-[14px] px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="number" value="45000"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-md text-on-surface-variant px-1">Satuan</label>
+<div class="relative">
+<select class="w-full h-[52px] border border-outline-variant rounded-[14px] px-4 appearance-none focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+<option selected="" value="kg">kg</option>
+<option value="liter">liter</option>
+<option value="pack">pack</option>
+<option value="jerigen">jerigen</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4 mt-2">
+<button class="flex-1 h-[52px] border border-outline rounded-[14px] font-bold text-on-surface-variant hover:bg-surface-variant/20 transition-all active:scale-95" onclick="closeModal()">
+                    Batal
+                </button>
+<button class="flex-1 h-[52px] bg-primary text-on-primary rounded-[14px] font-bold shadow-md hover:bg-primary-container active:scale-95 transition-all">
+                    Simpan
+                </button>
+</div>
+</div>
+</div>
+<script>
+        function openModal() {
+            const modal = document.getElementById('editModal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'none';
+        }
+
+        // Initialize modal as visible per request
+        document.addEventListener('DOMContentLoaded', () => {
+            openModal();
+        });
+    </script>
+<style>
+        @keyframes slide-up {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

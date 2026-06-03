@@ -1,0 +1,238 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>CORNEY - Pilih Cabang</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#575959",
+                        "on-surface": "#1c1b1b",
+                        "on-secondary-fixed": "#251a00",
+                        "inverse-primary": "#ffb4a8",
+                        "inverse-on-surface": "#f3f0ef",
+                        "secondary": "#775a00",
+                        "outline-variant": "#e6bdb7",
+                        "surface-container-low": "#f6f3f2",
+                        "primary": "#b50303",
+                        "outline": "#916f6a",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#be0f09",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "surface-container": "#f0eded",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary-container": "#f6f7f7",
+                        "surface-bright": "#fcf9f8",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#fff5f3",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "primary-fixed": "#ffdad4",
+                        "on-primary-fixed-variant": "#930001",
+                        "tertiary-container": "#707171",
+                        "surface": "#fcf9f8",
+                        "surface-dim": "#dcd9d9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-secondary-container": "#6f5400",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#ffc72c",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container-high": "#eae7e7",
+                        "on-primary-fixed": "#410000",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-surface-variant": "#5c403b",
+                        "surface-variant": "#e5e2e1",
+                        "inverse-surface": "#313030",
+                        "background": "#fcf9f8",
+                        "tertiary-fixed": "#e2e2e2",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "primary-container": "#da291c",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "18px",
+                        "lg": "18px",
+                        "xl": "24px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "16px",
+                        "padding-card": "20px",
+                        "base": "8px",
+                        "min-tap-target": "52px",
+                        "margin-page": "24px",
+                        "gutter-grid": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .branch-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .branch-card:active { transform: scale(0.98); }
+        .safe-bottom { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface flex items-center justify-between px-margin-page h-[64px] shadow-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary font-bold cursor-pointer active:scale-90 transition-transform">menu</span>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 text-headline-lg font-headline-lg font-black text-primary uppercase tracking-tighter">
+            CORNEY
+        </div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-primary-container">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyU3jHRrgDmVbmdG84KL3p1DKHvadjyV7zaer683hwZ6u7ZtwxL2FLlb7BsBaVZmoj-YpbocIs7YuAHHuUPWKpYqLOQroCpIJ_557cWQ5e1c-XZPtd14iOwQAaugHxEi4O7CM5hkcGZFqnYjURY4fpqjrIW7L-v4a4SkjnZHJ5lmZBgPXG73DGbW-d_o1Fwr0NOH0RW4oKxYRl0hs87zsATGMhrntpbv2Rvmbgm-8C-MKxcFlnZuhururX4mKNjlnDUXefoCbD9fs">
+</div>
+</header>
+<main class="pt-[80px] px-margin-page pb-32">
+<!-- Page Title Section -->
+<section class="text-center mb-6">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-1">Pilih Cabang Terdekat</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Menu &amp; harga bisa beda tiap cabang</p>
+</section>
+<!-- Location Chip -->
+<div class="flex justify-center mb-8">
+<div class="inline-flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-full border border-outline-variant shadow-sm animate-pulse">
+<span class="material-symbols-outlined text-primary text-[18px]">location_on</span>
+<span class="font-label-md text-label-md text-on-surface">Dekat kamu: Sepinggan (1.2 km)</span>
+</div>
+</div>
+<!-- Branch List -->
+<div class="flex flex-col gap-4">
+<!-- Card 1 (Active/Focused) -->
+<button class="branch-card relative flex items-stretch w-full bg-white rounded-xl overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] ring-2 ring-primary text-left">
+<div class="w-1/3 min-h-[140px] relative">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A vibrant, modern fast food booth design for Corney brand. The booth is brightly lit with warm yellow and bold red corporate colors. The environment is a clean, bustling suburban street in Indonesia during the golden hour. Professional architectural photography style with appetizing food displays visible in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaxLsBjPYEhnKLCbEd0p_2sKBDpNH4QMJl7z42jHhZs0hLkgswhmnjaBZ1Q1VV7bSk61UuB-QHc_FaD8hiUCbYTWcq_rf1NY8oEuGaE8M3jgBT7iIvEawzibcVoRwQMWVqCzoyvXwN7Uqu7QuPTQEaLvK1NZJ4uDUS0osW2ZdGzrR8astfniD-MAJ8RfUn5V7iyxidcZmvdQKqW655NEZ0yh-59eija7Lhr2jd2YBBLllCraFZtzjrXxy9FHXcYIJaAfIySwSJgGE">
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">CORNEY Sepinggan</h3>
+<span class="font-label-md text-[12px] text-primary font-bold">1.2 km</span>
+</div>
+<p class="font-body-md text-[14px] text-on-surface-variant mb-2">Jl. Syarifuddin Yoes</p>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-green-100 text-green-700 text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Buka · tutup 22:00</span>
+</div>
+</div>
+<p class="font-label-md text-[12px] text-on-surface-variant italic">online sampai 21:30</p>
+</div>
+</button>
+<!-- Card 2 -->
+<button class="branch-card flex items-stretch w-full bg-white rounded-xl overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] text-left border border-transparent hover:border-outline-variant">
+<div class="w-1/3 min-h-[140px] relative">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A contemporary street food kiosk in an upscale commercial district. The kiosk features high-contrast red and yellow brand colors of Corney. Sharp, modern lines and clean stainless steel surfaces are illuminated by cool night city lights and warm interior LEDs. High-quality commercial photography style, appetizing and inviting atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgsSnvd0Lw7i4jC1HjCWUv-WvWi9e_Q42gyCyn_rj7YlSWb1RlMex48-vq-_UFF8OqmUxvRJIZ_pNzAJHnArL3lDHkMR196pndE7AGbEOcO5M_vWNOc1GTaHDBSu6m8W1sDFKCfyaLQxOOzynPIZ_pu2_jv3dV2RZSt2PtYdZ4jS3kCLivfsaeoi0B0lH94MFYZ2yZiFGc9zCyXqi0r07pQWtha0zxCIdZ3Y-sRkGq71ngQcy0kERQsJke3-_7LEIX3PhFHUxQWr0">
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">CORNEY Sudirman</h3>
+<span class="font-label-md text-[12px] text-on-surface-variant">3.5 km</span>
+</div>
+<p class="font-body-md text-[14px] text-on-surface-variant mb-2">Kawasan Sudirman</p>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-green-100 text-green-700 text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Buka · tutup 22:00</span>
+</div>
+</div>
+<p class="font-label-md text-[12px] text-on-surface-variant italic">online sampai 21:30</p>
+</div>
+</button>
+<!-- Card 3 (Closed) -->
+<button class="branch-card flex items-stretch w-full bg-surface-container-high rounded-xl overflow-hidden opacity-75 grayscale-[0.5] text-left">
+<div class="w-1/3 min-h-[140px] relative">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A sleek, modern fast food outlet exterior during late evening with lights dimmed. The prominent Corney brand logo is slightly visible. The setting is a clean, organized urban environment with a professional and premium feel, reflecting a modern corporate fast-food aesthetic in Indonesia. Soft ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0kmCLI_Kwz-XctG5ZW2xEI3PWg7OPj1sH53bMwGIQZxOnXc1B3fE_RYV0G3tL1r6irShABMiuDy8W2UNqeTYHS7B4fA1RXpA2rxBBXKTC7uC0xBKyLYV4mU6RfNJK80N7AZruvGa49CtdNQsZLiaBIUHR65ytaL-f4CH5zHpRn0Who6V4mLl-wgkjJWJEi0y4tWyWvep7O-DaeUXiXPQUkIoaLuDDEZ7WrIOEIS1q0ZuOsB0QswnEzNC7_zue9gMDBWI-6cHmvXo">
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface-variant leading-tight">CORNEY MT Haryono</h3>
+<span class="font-label-md text-[12px] text-on-surface-variant">5.8 km</span>
+</div>
+<p class="font-body-md text-[14px] text-on-surface-variant mb-2">Jl. MT Haryono No. 12</p>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-surface-dim text-on-surface-variant text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Tutup</span>
+</div>
+</div>
+<p class="font-label-md text-[12px] text-on-surface-variant">Kembali buka esok 09:00</p>
+</div>
+</button>
+</div>
+</main>
+<!-- Sticky Bottom Note & Navigation -->
+<div class="fixed bottom-0 w-full z-50">
+<!-- Sticky Bottom Note -->
+<div class="bg-secondary-container text-on-secondary-container px-base py-3 text-center font-label-md text-label-md">
+            Cabang terpilih akan ditampilkan terus selama kamu belanja.
+        </div>
+<!-- BottomNavBar -->
+<nav class="bg-surface flex justify-around items-center h-[80px] px-base pb-safe rounded-t-xl shadow-[0_-4px_16px_rgba(26,26,26,0.08)]">
+<a class="flex flex-col items-center justify-center text-tertiary-container px-4 py-1.5 hover:bg-surface-container-low transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-label-md text-label-md">Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center text-tertiary-container px-4 py-1.5 hover:bg-surface-container-low transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-tertiary-container px-4 py-1.5 hover:bg-surface-container-low transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-md text-label-md">Promo</span>
+</a>
+<!-- Active State Logic for Profile/Branch Selection -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1.5 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+</div>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('.branch-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Clear existing rings
+                document.querySelectorAll('.branch-card').forEach(c => {
+                    c.classList.remove('ring-2', 'ring-primary');
+                    c.classList.add('border-transparent');
+                });
+                
+                // Add ring to selected (if not closed)
+                if (!this.classList.contains('opacity-75')) {
+                    this.classList.remove('border-transparent');
+                    this.classList.add('ring-2', 'ring-primary');
+                    
+                    // Haptic simulation feedback
+                    if (window.navigator.vibrate) {
+                        window.navigator.vibrate(20);
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

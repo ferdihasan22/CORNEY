@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manage Customer PWA Banners - Ops Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .phone-mockup-shadow {
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #da291c;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#775a00",
+                        "tertiary-container": "#707171",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#fff5f3",
+                        "inverse-on-surface": "#f3f0ef",
+                        "tertiary": "#575959",
+                        "primary-fixed": "#ffdad4",
+                        "on-background": "#1c1b1b",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-tertiary-container": "#f6f7f7",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-surface": "#1c1b1b",
+                        "on-primary-fixed-variant": "#930001",
+                        "background": "#fcf9f8",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "on-surface-variant": "#5c403b",
+                        "surface-container": "#f0eded",
+                        "on-secondary-fixed": "#251a00",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "secondary-container": "#ffc72c",
+                        "on-primary-fixed": "#410000",
+                        "primary-container": "#da291c",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-tint": "#be0f09",
+                        "inverse-primary": "#ffb4a8",
+                        "outline-variant": "#e6bdb7",
+                        "inverse-surface": "#313030",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fcf9f8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-container": "#6f5400",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "outline": "#916f6a",
+                        "primary": "#b50303"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "16px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-grid": "24px",
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "padding-card": "20px",
+                        "margin-page": "32px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col md:flex-row font-body-md text-on-surface">
+<!-- Navigation Drawer (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container shadow-sm flex flex-col p-4 gap-2 z-50 hidden md:flex">
+<div class="font-headline-md text-headline-md text-primary mb-6 px-2">Ops Admin</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg transition-colors duration-200 font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" data-icon="ads_click">ads_click</span>
+<span>Banner Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Customer Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>System Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg font-label-lg text-label-lg mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Content Area -->
+<main class="flex-1 md:ml-[240px] min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component Applied to Request) -->
+<header class="sticky top-0 w-full z-40 bg-primary-container h-[72px] md:h-[84px] px-4 md:px-margin-page flex items-center justify-between shadow-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 text-on-primary-container opacity-80 text-[12px] font-label-md">
+<span>PWA Customer</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Banner</span>
+</div>
+<h1 class="text-on-primary font-headline-md text-headline-md">Kelola Banner</h1>
+</div>
+<button class="bg-white text-primary px-4 py-2.5 rounded-xl font-label-lg text-label-lg flex items-center gap-2 active:scale-95 transition-transform shadow-sm">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span class="hidden sm:inline">+ Tambah Banner</span>
+<span class="sm:hidden">+ Tambah</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<div class="p-4 md:p-margin-page max-w-4xl mx-auto w-full space-y-8">
+<!-- LIVE PREVIEW SECTION -->
+<section class="space-y-4">
+<h2 class="font-headline-md text-headline-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+                    Live Preview
+                </h2>
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant flex justify-center items-center overflow-hidden">
+<!-- Phone Frame Mockup -->
+<div class="w-[280px] h-[560px] bg-black rounded-[40px] p-3 shadow-2xl relative border-[6px] border-neutral-800">
+<!-- Camera Notch -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 w-16 h-4 bg-black rounded-full z-20"></div>
+<!-- PWA Screen Content -->
+<div class="w-full h-full bg-white rounded-[28px] overflow-hidden relative flex flex-col">
+<div class="h-14 bg-white flex items-center px-4 justify-between border-b border-surface-container">
+<div class="w-20 h-4 bg-surface-container rounded-full"></div>
+<div class="flex gap-2">
+<div class="w-6 h-6 bg-surface-container rounded-full"></div>
+<div class="w-6 h-6 bg-surface-container rounded-full"></div>
+</div>
+</div>
+<!-- The Banner Carousel Mockup -->
+<div class="relative w-full aspect-[16/9] mt-4">
+<img class="w-full h-full object-cover px-3 rounded-2xl" data-alt="A professional fast-food marketing banner for a pizza promotion. The design features a high-resolution close-up of a delicious, melting pepperoni pizza on a vibrant red and yellow background. Bold, clean white typography displays a Beli 2 Gratis 1 offer. The overall style is modern corporate, bright, and highly appetizing, designed to attract younger customers with high-energy visual energy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQG0CL-vRoMhuC_Xsnhocp5LmS1PYdEZKxLWDD1iNLU0J3uT8u4lpzubReeksTyns1hJev0SuVWcNY7elywTbaIpeoCs-CpM7uXWVkpNGgJL6wfJQZvPca_OQzVWrqNEkMUl2FsjijLcp1co_FDjDONNNiij77CSZKcv5iB7W54n7iwwkCOpiikrRAHHNrW2QiWYuUzi0ntPCJ3YUZRj4wasvybZ11-9aCSThqNUQNCoH0lk5hUnQHk-lDSyPal2Y9kUZAFx4T3Og"/>
+<!-- Dots -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+<div class="w-2 h-2 bg-white/40 rounded-full"></div>
+<div class="w-2 h-2 bg-white/40 rounded-full"></div>
+</div>
+</div>
+<!-- Mockup Content Skeleton -->
+<div class="p-4 space-y-4">
+<div class="h-4 w-1/2 bg-surface-container rounded-full"></div>
+<div class="grid grid-cols-4 gap-3">
+<div class="aspect-square bg-surface-container rounded-xl"></div>
+<div class="aspect-square bg-surface-container rounded-xl"></div>
+<div class="aspect-square bg-surface-container rounded-xl"></div>
+<div class="aspect-square bg-surface-container rounded-xl"></div>
+</div>
+<div class="h-24 w-full bg-surface-container-high rounded-xl"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- BANNER LIST SECTION -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="view_list">view_list</span>
+                        Daftar Banner
+                    </h2>
+<span class="text-label-md font-label-md text-primary bg-primary/10 px-3 py-1 rounded-full">3 Banner Total</span>
+</div>
+<div class="space-y-stack-gap">
+<!-- Banner Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant flex gap-4 items-center group hover:shadow-md transition-shadow">
+<div class="cursor-move text-on-surface-variant opacity-40 hover:opacity-100 px-1">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<div class="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A marketing thumbnail for a fast food promotion featuring a Beli 2 Gratis 1 pizza offer. The visual is bright and energetic with dominant brand colors of primary red and secondary yellow. The pizza is shown in a crisp, appetizing macro shot with melted cheese and fresh toppings, creating a professional and premium commercial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwtcHmRgeoYctCkoS8RDHMSnIqEqA39tu4-ta90Jeh4lvfoOi4SNJGD6c4sOfZr3KoPTRs5bR1VBWnSENTf3xtaKqRbTiZVCxtjGOPUbIJNnwUcdL9xZs7TVrtwtAq-dFBK_tCCWEArI_33Y1a35I9VT3vIvNVpSW4y6ZXB5mdQAOJ6-BVhpdNVoYWhejXEfygKirvIQ2UwuHpu4WjRJx3Ke2YwqSsMiDZUzgswPP_BYfbh4YyBv7aIJhiZUsaHpNcqTZY4Vi38lM"/>
+</div>
+<div class="flex-1 space-y-1">
+<div class="flex items-center gap-2">
+<h3 class="font-label-lg text-label-lg text-on-surface">Promo Beli 2 Gratis 1</h3>
+<span class="bg-tertiary-fixed text-[10px] font-bold px-1.5 py-0.5 rounded text-on-tertiary-fixed-variant uppercase tracking-wider">Global</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-[12px] font-bold">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                    Aktif
+                                </div>
+<p class="text-label-md text-on-surface-variant text-[12px]">Berlaku di semua cabang</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Banner Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant flex gap-4 items-center group hover:shadow-md transition-shadow">
+<div class="cursor-move text-on-surface-variant opacity-40 hover:opacity-100 px-1">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<div class="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A premium food photography marketing banner showcasing a new 'Sweet Greentea' drink. The drink is presented in a modern transparent cup with vibrant green tea layers and a splash of milk, garnished with mint. The background is a clean, minimal white with soft yellow lighting accents, reflecting a professional and energetic Indonesian fast-food brand style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_Md_OldzlBIk65tNJH-Swbts48NnlVBm9EsxzerupLm_qcSK63g6N_PeUNm8al-eztUysFYKXL8evZsNG1fczPQ4rQ-zvhLnG0G1QHgzbcXyX6maLQuFJhqfg_2KySDoJ5TU6GiZS4EWuK47grmJeOMK8Nv6FHS_kIFdJqiIHD-yRCDF3vdgbmnb24hRdTxCOY5S3_JF_rjc1z6P-RrihM3qFbieFEz9Y7LLlzubI5MtqM2O-KCjCt2E1pStB0LNED4LeMIbU-nY"/>
+</div>
+<div class="flex-1 space-y-1">
+<div class="flex items-center gap-2">
+<h3 class="font-label-lg text-label-lg text-on-surface">Menu Baru: Sweet Greentea</h3>
+<span class="bg-tertiary-fixed text-[10px] font-bold px-1.5 py-0.5 rounded text-on-tertiary-fixed-variant uppercase tracking-wider">Global</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-[12px] font-bold">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                    Aktif
+                                </div>
+<p class="text-label-md text-on-surface-variant text-[12px]">Berlaku di semua cabang</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<!-- Banner Card 3 (Inactive) -->
+<div class="bg-surface-container p-4 rounded-xl shadow-sm border border-outline-variant flex gap-4 items-center group opacity-80 transition-all">
+<div class="cursor-move text-on-surface-variant opacity-40 px-1">
+<span class="material-symbols-outlined">drag_indicator</span>
+</div>
+<div class="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 grayscale">
+<img class="w-full h-full object-cover" data-alt="A promotional fast-food banner for a burger combo set. The image highlights a large, juicy beef burger with fries and a soda in a classic professional studio setup. The lighting is high-key and bright, following a modern corporate aesthetic. The overall mood is high-appetite and energetic, though currently presented as inactive in the UI dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA12gS_dlh8DzaXnmfEMwXy3zu0n51L7c-os5l3FeQbUHgqmlBy-htoH_L9ntr3Z4HN9IuL5k9slul7rhbFAGgj5TP8qG1DwnxWRGUhItqF4SWD0GlKOm46mpV_bW-Q4nbT1Irwa5q-SPSBAPYHjYSzLMktzIWOVSGBR7vqXdQR6xk9listWNf2HObNSFIZRtnUVgkDAzNosQT0lu9OKB2JwhXbD-tLqafqp8Ii-WSjrofTrZEQjUPoyftesxIsFaBBDmCR0yEt0sI"/>
+</div>
+<div class="flex-1 space-y-1">
+<div class="flex items-center gap-2">
+<h3 class="font-label-lg text-label-lg text-on-surface">Promo Weekend Seru</h3>
+<span class="bg-tertiary-fixed text-[10px] font-bold px-1.5 py-0.5 rounded text-on-tertiary-fixed-variant uppercase tracking-wider">Global</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded-full text-[12px] font-bold">
+<span class="w-1.5 h-1.5 bg-on-surface-variant rounded-full"></span>
+                                    Nonaktif
+                                </div>
+<p class="text-label-md text-on-surface-variant text-[12px]">Dijadwalkan segera</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- FOOTNOTE SECTION -->
+<section class="bg-secondary-fixed/30 border border-secondary p-5 rounded-xl flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary flex-shrink-0" data-icon="info">info</span>
+<div class="space-y-1">
+<p class="font-label-lg text-label-lg text-on-secondary-fixed">Catatan Pengelolaan Banner</p>
+<p class="text-on-secondary-fixed-variant text-label-md leading-relaxed">
+                        Banner berlaku sama untuk semua cabang. Aktif/nonaktif manual saat promo mulai/selesai — tanpa jadwal otomatis. Perubahan urutan (drag &amp; drop) akan langsung berdampak pada urutan tampilan di aplikasi customer.
+                    </p>
+</div>
+</section>
+</div>
+<!-- Mobile FAB (Contextual) -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</main>
+<script>
+        // Simple micro-interaction for toggle effect simulation
+        document.querySelectorAll('[data-icon="edit"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Membuka panel edit banner...');
+            });
+        });
+
+        // Simulating banner cards hover states or small interactive feel
+        const bannerCards = document.querySelectorAll('.bg-surface-container-lowest');
+        bannerCards.forEach(card => {
+            card.addEventListener('mousedown', () => card.style.transform = 'scale(0.99)');
+            card.addEventListener('mouseup', () => card.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>

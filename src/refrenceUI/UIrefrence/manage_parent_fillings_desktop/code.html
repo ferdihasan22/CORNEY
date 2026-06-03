@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY Owner Cockpit - Isian Induk</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+            color: #1c1b1b;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#93000a",
+                      "primary-container": "#da291c",
+                      "on-primary-fixed-variant": "#930001",
+                      "on-secondary-fixed": "#251a00",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "on-secondary-fixed-variant": "#5a4300",
+                      "on-primary-container": "#fff5f3",
+                      "secondary-fixed-dim": "#f6bf22",
+                      "surface-bright": "#fcf9f8",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "outline": "#916f6a",
+                      "on-secondary-container": "#6f5400",
+                      "surface-variant": "#e5e2e1",
+                      "surface-container": "#f0eded",
+                      "on-surface-variant": "#5c403b",
+                      "error": "#ba1a1a",
+                      "secondary": "#775a00",
+                      "surface": "#fcf9f8",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#ffdf99",
+                      "on-background": "#1c1b1b",
+                      "on-error": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1c1b1b",
+                      "surface-tint": "#be0f09",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-primary": "#ffb4a8",
+                      "surface-container-low": "#f6f3f2",
+                      "primary": "#b50303",
+                      "tertiary-container": "#707171",
+                      "secondary-container": "#ffc72c",
+                      "inverse-surface": "#313030",
+                      "on-tertiary-container": "#f6f7f7",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "surface-container-highest": "#e5e2e1",
+                      "background": "#fcf9f8",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f3f0ef",
+                      "tertiary": "#575959",
+                      "primary-fixed": "#ffdad4",
+                      "outline-variant": "#e6bdb7",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-primary-fixed": "#410000",
+                      "tertiary-fixed": "#e2e2e2",
+                      "surface-container-high": "#eae7e7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap": "16px",
+                      "min-tap-target": "52px",
+                      "margin-page": "32px",
+                      "base": "8px",
+                      "padding-card": "20px",
+                      "gutter-grid": "24px"
+              },
+              "fontFamily": {
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "display-md": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                      "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="flex min-h-screen overflow-hidden">
+<!-- SIDE NAVIGATION BAR -->
+<aside class="fixed left-0 top-0 h-screen w-[240px] bg-surface dark:bg-inverse-surface shadow-md flex flex-col p-4 gap-stack-gap z-50">
+<div class="flex flex-col gap-1 mb-6 px-2">
+<span class="text-headline-lg font-headline-lg font-black text-primary dark:text-primary-container">CORNEY</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Owner Cockpit</span>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<!-- Menu Management -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-label-lg text-label-lg">Menu Management</span>
+</a>
+<!-- Inventory -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory</span>
+</a>
+<!-- Master Data (ACTIVE) -->
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-xl px-4 py-3 font-bold transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+<span class="font-label-lg text-label-lg">Master Data</span>
+</a>
+<!-- Sales Reports -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label-lg text-label-lg">Sales Reports</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-lg text-label-lg">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Owner Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWlpGLixeYGX_8adX_Vb19Eg4VHgbdCvUvb_J_48dNgOqeYvnY2r6Qx_PWQBmB1WzNSDu-i-fpL85jsWA_u2mpANkUNhx5jvRlS1XdHboNiZMc-u229LpG5hJIZcWVACLAhdbHUXaQuGNVbJXUviJvMYlAdZBsN9MjBaVti34d2IZE4_-Q5tZW295SHwiJcuJVhkvtdRUNzhDhyKrEAB7jx_svuhSseIj2egpgjJHdrNqwcdiQfQjpSmDF6sghgqStqYaVFnWfYLM"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold">Corney Admin</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Superuser</span>
+</div>
+</div>
+</aside>
+<!-- MAIN CONTENT AREA -->
+<main class="ml-[240px] flex-grow flex flex-col h-screen overflow-hidden">
+<!-- TOP APP BAR -->
+<header class="flex justify-between items-center h-[72px] px-margin-page sticky top-0 z-40 bg-surface dark:bg-surface-container shadow-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md mb-0.5">
+<span>Home</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Master Data</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-bold border-b-2 border-primary">Isian Induk</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary">Master Data · Isian Induk</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex gap-2">
+<button class="px-4 h-[44px] rounded-xl border border-outline text-on-surface font-label-md hover:bg-surface-variant transition-all active:opacity-80 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Import
+                    </button>
+<button class="px-4 h-[44px] rounded-xl border border-outline text-on-surface font-label-md hover:bg-surface-variant transition-all active:opacity-80 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">upload</span>
+                        Export Data
+                    </button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">help_outline</span>
+</div>
+</div>
+</header>
+<!-- CANVAS -->
+<div class="flex-grow p-margin-page overflow-y-auto scroll-hide">
+<!-- Welcome Header & CTA -->
+<div class="flex justify-between items-start mb-8">
+<div class="max-w-2xl">
+<div class="bg-primary-container/10 border border-primary-container/20 p-4 rounded-xl flex gap-4 items-start shadow-sm">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+<div>
+<p class="font-label-md text-on-surface leading-snug">
+<strong class="text-primary">Isian induk</strong> = unit stok yang dipotong saat menu terjual. <br/>
+<span class="text-on-surface-variant font-normal">Data tidak dihapus permanen, hanya dinonaktifkan untuk menjaga integritas histori transaksi.</span>
+</p>
+</div>
+</div>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-4 rounded-xl font-bold flex items-center gap-2 shadow-md hover:brightness-110 active:scale-95 transition-all" onclick="document.getElementById('modal-overlay').classList.remove('hidden')">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    Tambah Isian Induk
+                </button>
+</div>
+<!-- TABLE CONTAINER -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-[0_4px_16px_rgba(26,26,26,0.08)] overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label-lg text-on-surface-variant">Nama Isian</th>
+<th class="px-6 py-4 font-label-lg text-on-surface-variant text-center">Status</th>
+<th class="px-6 py-4 font-label-lg text-on-surface-variant">Menu Tertaut</th>
+<th class="px-6 py-4 font-label-lg text-on-surface-variant">Ambang Peringatan</th>
+<th class="px-6 py-4 font-label-lg text-on-surface-variant text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-5">
+<span class="font-bold text-lg text-on-surface">Keju Mozza</span>
+</td>
+<td class="px-6 py-5 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 font-bold text-xs">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    AKTIF
+                                </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface">5</span>
+<span class="text-on-surface-variant text-sm">item menu</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="px-3 py-1 bg-secondary-container/20 text-secondary border border-secondary-container rounded-lg inline-block font-bold">
+                                    10 Unit
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-variant text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 text-error transition-colors" title="Deactivate">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-5">
+<span class="font-bold text-lg text-on-surface">Sosis Reguler</span>
+</td>
+<td class="px-6 py-5 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 font-bold text-xs">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    AKTIF
+                                </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface">3</span>
+<span class="text-on-surface-variant text-sm">item menu</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="px-3 py-1 bg-secondary-container/20 text-secondary border border-secondary-container rounded-lg inline-block font-bold">
+                                    15 Unit
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-variant text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 text-error transition-colors">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-5">
+<span class="font-bold text-lg text-on-surface">Sosis Jumbo</span>
+</td>
+<td class="px-6 py-5 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 font-bold text-xs">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    AKTIF
+                                </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface">4</span>
+<span class="text-on-surface-variant text-sm">item menu</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="px-3 py-1 bg-secondary-container/20 text-secondary border border-secondary-container rounded-lg inline-block font-bold">
+                                    10 Unit
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-variant text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 text-error transition-colors">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-low/30 grayscale opacity-80">
+<td class="px-6 py-5">
+<span class="font-bold text-lg text-on-surface-variant">Mix (Isian Campuran)</span>
+</td>
+<td class="px-6 py-5 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-bold text-xs">
+<div class="w-2 h-2 rounded-full bg-on-surface-variant"></div>
+                                    NONAKTIF
+                                </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface-variant">2</span>
+<span class="text-on-surface-variant text-sm">item menu</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="px-3 py-1 bg-outline-variant text-on-surface-variant rounded-lg inline-block font-bold">
+                                    5 Unit
+                                </div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-variant text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors" title="Activate">
+<span class="material-symbols-outlined">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- FOOTER -->
+<footer class="flex justify-between items-center py-8 mt-auto w-full border-t border-outline-variant">
+<p class="font-label-md text-label-md text-on-surface-variant">© 2024 CORNEY Indonesia. System Version 2.1.0-Kiosk</p>
+<div class="flex gap-6">
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-md hover:text-primary transition-colors" href="#">System Status</a>
+</div>
+</footer>
+</div>
+</main>
+<!-- ADD/EDIT MODAL OVERLAY -->
+<div class="hidden fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex items-center justify-end" id="modal-overlay">
+<!-- Right Drawer Style Modal -->
+<div class="w-[480px] h-full bg-surface shadow-2xl p-margin-page flex flex-col transform transition-transform duration-300">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface">Tambah Isian Induk</h2>
+<button class="p-2 rounded-full hover:bg-surface-variant transition-all" onclick="document.getElementById('modal-overlay').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="flex-grow flex flex-col gap-6">
+<!-- Name Input -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-on-surface-variant">Nama Isian</label>
+<input class="w-full h-min-tap-target border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" placeholder="Contoh: Sosis Premium" type="text"/>
+</div>
+<!-- Warning Threshold -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-on-surface-variant">Ambang Peringatan Stok Menipis (Unit)</label>
+<div class="relative">
+<input class="w-full h-min-tap-target border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" placeholder="10" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">Unit</span>
+</div>
+<p class="text-xs text-on-surface-variant italic">System akan memberikan notifikasi jika sisa stok isian berada di bawah nilai ini.</p>
+</div>
+<!-- Status Toggle -->
+<div class="bg-surface-container rounded-xl p-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Status Aktif</span>
+<span class="text-xs text-on-surface-variant">Tampilkan dalam pilihan inventory menu</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Warning Note -->
+<div class="mt-4 p-4 rounded-xl border border-dashed border-outline-variant flex gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="shield">shield</span>
+<p class="text-sm text-on-surface-variant">
+<strong>Keamanan Data:</strong> Mengubah status menjadi Nonaktif akan menyembunyikan isian ini dari operasional harian tanpa menghapus data historisnya.
+                    </p>
+</div>
+<!-- Action Buttons -->
+<div class="mt-auto flex gap-4 pt-6 border-t border-outline-variant">
+<button class="flex-1 h-min-tap-target border border-outline rounded-xl font-bold text-on-surface-variant hover:bg-surface-variant active:opacity-80 transition-all" onclick="document.getElementById('modal-overlay').classList.add('hidden')" type="button">
+                        Batal
+                    </button>
+<button class="flex-1 h-min-tap-target bg-primary text-on-primary rounded-xl font-bold hover:brightness-110 active:scale-[0.98] transition-all shadow-md" type="submit">
+                        Simpan Isian
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Background Illustration / Accent (Optional micro-interaction) -->
+<div class="fixed bottom-[-100px] right-[-50px] opacity-10 pointer-events-none select-none z-0">
+<img alt="Corney Decoration" class="w-[400px] h-[400px]" data-alt="A stylized, large-scale graphic illustration of a gourmet corn dog with mustard drizzled over it. The illustration uses a vibrant pop-art style with bold red and yellow brand colors, floating against a clean white background. Soft shadows and a slight isometric perspective give it a modern, appetizing feel. The mood is energetic and aligns with the fast-food aesthetic of the Corney brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCbgnRN80f0aK2WScLuNBTz6MUMTOCmzHD8yHBZObsT05UwIDYUsdYgLCUqysX_hjzM-hgQOC6XgZMnKha8I_Sq0hKE3gnS5lZ02zkqfZrJnMobYdsvL7fgW5aMlO5u2bqAdVdz6GqwBWCy7lfXk6u2QJeek2fSIo0U-m95jztrynzGFPjlDv-hUANO307P7Tj37fIkfAtKZmOzG9MMsiPQy8MQWAbNAMjoIOE1Y6BDcsF6VlIVRWvvu6P68oVWegX0GYsejBdAyE"/>
+</div>
+<script>
+        // Simple JS for micro-interactions
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.96)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+    </script>
+</body></html>

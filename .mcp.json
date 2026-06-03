@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "cloudinary-assets": {
+      "type": "http",
+      "url": "https://asset-management.mcp.cloudinary.com/mcp"
+    },
+    "cloudinary-config": {
+      "type": "http",
+      "url": "https://environment-config.mcp.cloudinary.com/mcp"
+    }
+  }
+}

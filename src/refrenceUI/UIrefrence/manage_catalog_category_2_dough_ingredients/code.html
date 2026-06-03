@@ -1,0 +1,286 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CORNEY Supplier - Manage Catalog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#f6bf22",
+                    "surface-bright": "#fcf9f8",
+                    "on-surface-variant": "#5c403b",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-tertiary-container": "#f6f7f7",
+                    "secondary-container": "#ffc72c",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "surface": "#fcf9f8",
+                    "secondary-fixed": "#ffdf99",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "tertiary": "#575959",
+                    "on-background": "#1c1b1b",
+                    "primary-fixed": "#ffdad4",
+                    "background": "#fcf9f8",
+                    "primary-container": "#da291c",
+                    "primary": "#b50303",
+                    "on-secondary-container": "#6f5400",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "tertiary-container": "#707171",
+                    "on-primary-container": "#fff5f3",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#be0f09",
+                    "outline-variant": "#e6bdb7",
+                    "on-primary-fixed": "#410000",
+                    "on-surface": "#1c1b1b",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface-container": "#f0eded",
+                    "error": "#ba1a1a",
+                    "secondary": "#775a00",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "surface-dim": "#dcd9d9",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#313030",
+                    "surface-container-high": "#eae7e7",
+                    "on-primary-fixed-variant": "#930001",
+                    "on-secondary-fixed": "#251a00",
+                    "tertiary-fixed": "#e2e2e2",
+                    "outline": "#916f6a",
+                    "surface-container-highest": "#e5e2e1",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e5e2e1",
+                    "surface-container-low": "#f6f3f2",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#ffb4a8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "min-tap-target": "52px",
+                    "margin-page": "32px",
+                    "padding-card": "20px",
+                    "gutter-grid": "24px",
+                    "base": "8px",
+                    "stack-gap": "16px"
+            },
+            "fontFamily": {
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+        }
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 100px;
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #b50303 0%, #da291c 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08);
+        }
+        .active-tab {
+            border-bottom: 3px solid #ffffff;
+            opacity: 1 !important;
+        }
+        .pill-tag {
+            background: #ffc72c;
+            color: #6f5400;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<div class="app-container">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 header-gradient px-4 pt-4 pb-0 shadow-md">
+<div class="flex justify-between items-center h-min-tap-target w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-primary">storefront</span>
+<h1 class="font-headline-md text-headline-md text-on-primary">Katalog · Kategori 2</h1>
+</div>
+<div class="pill-tag">Supplier</div>
+</div>
+<!-- Sub-tabs -->
+<div class="flex mt-4">
+<button class="flex-1 py-3 text-on-primary opacity-60 font-label-md text-label-md text-center border-b-2 border-transparent transition-all">
+                    Kategori 1 (Kebutuhan Cabang)
+                </button>
+<button class="flex-1 py-3 text-on-primary font-label-md text-label-md text-center border-b-4 border-on-primary font-bold">
+                    Kategori 2 (Bahan Adonan)
+                </button>
+</div>
+</header>
+<main class="flex-1 px-4 py-6">
+<!-- Info Chip -->
+<div class="bg-secondary-container text-on-secondary-container p-4 rounded-xl flex gap-3 mb-6 shadow-sm">
+<span class="material-symbols-outlined shrink-0" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="font-body-md text-body-md leading-tight">
+                    Checklist Kategori 2 tersimpan &amp; muncul lagi besok — kebutuhan rutin, tinggal pakai ulang tanpa menyusun dari nol.
+                </p>
+</div>
+<!-- Ingredient List -->
+<div class="flex flex-col gap-4">
+<!-- Item: Tepung Terigu -->
+<div class="bg-surface-container-lowest p-4 rounded-xl card-shadow flex items-center justify-between border border-surface-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Close-up shot of high-quality organic wheat flour spilled on a rustic wooden surface. The lighting is bright and natural, reflecting a clean and professional B2B kitchen environment. The overall aesthetic is minimalist and appetizing, using a white and earthy color palette to emphasize purity and raw quality ingredients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSErLs_ANImKEuyiLhEzCjCFdQqMaa4xUArfxLQDlRCPsT_Fm1wrVaM3z_2-ANNWXQUYVuLWai9sHIZYUntFvE7EROrAyoTN17POrHgR8PnORjWvSCRZR3Eo--cYlIVSxQcO5dHkIv0Dc7zUy0-2USEJHW0y_9AY1HY0dP2uEBDo1DvO_0Jiu9k46KaglSBBQYs75gT1ZvLIx6rAD1aXBD584646bor6K-YKkETmgh8xY062k7r0BXr6PAFYwtMEplZF86V3ziJPo">
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface">Tepung Terigu</h3>
+<div class="flex items-center gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-primary">Rp 14.500</span>
+<span class="font-body-md text-body-md text-on-surface-variant opacity-70">/ kg</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-label-md text-[12px] text-green-600">Tersedia</span>
+</div>
+</div>
+</div>
+<a class="text-primary font-label-md text-label-md underline" href="#">Ubah</a>
+</div>
+<!-- Item: Tepung Tapioka -->
+<div class="bg-surface-container-lowest p-4 rounded-xl card-shadow flex items-center justify-between border border-surface-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A clean, studio-lit photograph of fine white starch powder in a small glass bowl. The background is a soft beige tone that creates a premium, clinical laboratory feel for food supplies. Bright high-key lighting creates soft shadows, suggesting fresh and high-grade industrial dough ingredients for professional use." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1pIx0DftUmpJkKO14fmBuEkWqDoUFcSZYWPbzXfOoxMU2UrbDXYvSi-XyX-4piYJiunpguIeQ3N2LvBMKEIt8rY8pI51_3flEZk1zaYhhWAmjekdyx9B3Zz0-mTppY339ebcLFErI5lFRaQUJaDHB_vfgra-VI_Jwc_kR5aIefibPwCWdkI-hZJj5h2z5U4faso9rQvoGWcW_nkcXwtNZAifhob1TWomTtp93ytzk-cCB2FKqDBQDEa1LGlTzAUkSyZYs54kCt-g">
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface">Tepung Tapioka</h3>
+<div class="flex items-center gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-primary">Rp 12.000</span>
+<span class="font-body-md text-body-md text-on-surface-variant opacity-70">/ kg</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-label-md text-[12px] text-green-600">Tersedia</span>
+</div>
+</div>
+</div>
+<a class="text-primary font-label-md text-label-md underline" href="#">Ubah</a>
+</div>
+<!-- Item: Ragi Instan -->
+<div class="bg-surface-container-lowest p-4 rounded-xl card-shadow flex items-center justify-between border border-surface-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Detailed close-up of dry instant yeast granules in a dark ceramic spoon. The contrast between the tan grains and the deep black spoon highlights the texture of the ingredient. Dramatic lighting from the side emphasizes depth, portraying it as an essential, high-quality baking component for high-output commercial kitchens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIMjOYVY9jjg1KcI_YyK_yj1_cSX8G1YoEtivB-WqtdVD_4ryjyWXWV2GScYuOHnqcnhUKtKFbSmz3Mwfcepu6qfDMSgKq4IPDy44VLlyMR1Juldi6MzLDg2wOs7ZQehRGWA0kPwBOR4Ftk6weoVa9ZnavcG6m0JcGqMQcnSsruV6yD_G5vEPQz-QxRDRe9TNcnqXeMxkF0E46DA0u-vNvTMO59Tz6W-UfVSFphkKunaYSD9sqiAPsU2d5GGs2k3sYGe93SMoaqT4">
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface">Ragi Instan</h3>
+<div class="flex items-center gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-primary">Rp 8.000</span>
+<span class="font-body-md text-body-md text-on-surface-variant opacity-70">/ pack</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-label-md text-[12px] text-green-600">Tersedia</span>
+</div>
+</div>
+</div>
+<a class="text-primary font-label-md text-label-md underline" href="#">Ubah</a>
+</div>
+<!-- Item: Gula Pasir -->
+<div class="bg-surface-container-lowest p-4 rounded-xl card-shadow flex items-center justify-between border border-surface-variant/20 opacity-75">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-surface-variant grayscale">
+<img class="w-full h-full object-cover" data-alt="Sparkling white refined sugar crystals captured in a high-resolution macro shot. The lighting is vibrant and energetic, catching the geometric reflections of the sugar grains against a clean white background. The composition is modern and sharp, reflecting the high standards of a professional food supply chain for fast-food products." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZmWjL5VIaZ6QwXukH9dtcphxNXbKwOSJvfNp2ibcRNJ15hHlKrCFXTsL_06Old0jkD4zovOJmabTqTMRhCJaPMfipX21a_J1yoXqIE3tiHrOyhbKnuraYKGG6eDyetrBq5i_en0NdNnxlQ9gxCqig6qpRunAyMFZrtBHq_2jSSi5igeAZ4ZWBzVW-rJmym0yYAu8YZ0sYduecTe_30qq57Uhkxhw4uTE9QWKyJ7tVrfq7B_4S6gDixQoYyzu0CrcjM_DXEiZ2_i4">
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-lg text-label-lg text-on-surface">Gula Pasir</h3>
+<div class="flex items-center gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-tertiary">Rp 16.000</span>
+<span class="font-body-md text-body-md text-on-surface-variant opacity-70">/ kg</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-2 h-2 rounded-full bg-neutral-400"></div>
+<span class="font-label-md text-[12px] text-on-surface-variant">Kosong</span>
+</div>
+</div>
+</div>
+<a class="text-primary font-label-md text-label-md underline" href="#">Ubah</a>
+</div>
+</div>
+</main>
+<!-- Fixed Primary Button -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-surface via-surface to-transparent z-40 max-w-[480px] mx-auto">
+<button class="w-full bg-primary-container text-on-primary font-label-lg text-label-lg h-min-tap-target rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">add</span>
+                Tambah Bahan
+            </button>
+</div>
+<!-- Bottom Navigation Shell (Consistent with Shared Component BottomNavBar) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface max-w-[480px] mx-auto border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full p-2 px-6">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">list_alt</span>
+<span class="font-label-md text-label-md">Stock</span>
+</div>
+</nav>
+</div>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.transform = 'scale(0.98)';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

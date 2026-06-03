@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY Owner Cockpit Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-highest": "#e5e2e1",
+                "inverse-on-surface": "#f3f0ef",
+                "surface-dim": "#dcd9d9",
+                "primary": "#b50303",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "on-primary": "#ffffff",
+                "surface-container-high": "#eae7e7",
+                "on-tertiary-fixed": "#1a1c1c",
+                "tertiary": "#575959",
+                "surface-tint": "#be0f09",
+                "primary-fixed-dim": "#ffb4a8",
+                "on-surface": "#1c1b1b",
+                "error-container": "#ffdad6",
+                "tertiary-container": "#707171",
+                "secondary-fixed-dim": "#f6bf22",
+                "inverse-surface": "#313030",
+                "surface-variant": "#e5e2e1",
+                "on-primary-fixed": "#410000",
+                "primary-container": "#da291c",
+                "surface-bright": "#fcf9f8",
+                "on-error": "#ffffff",
+                "on-surface-variant": "#5c403b",
+                "inverse-primary": "#ffb4a8",
+                "on-secondary-fixed": "#251a00",
+                "error": "#ba1a1a",
+                "background": "#fcf9f8",
+                "on-secondary-fixed-variant": "#5a4300",
+                "primary-fixed": "#ffdad4",
+                "surface": "#fcf9f8",
+                "on-secondary-container": "#6f5400",
+                "on-error-container": "#93000a",
+                "on-primary-container": "#fff5f3",
+                "outline-variant": "#e6bdb7",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "tertiary-fixed": "#e2e2e2",
+                "secondary": "#775a00",
+                "on-tertiary-container": "#f6f7f7",
+                "surface-container-low": "#f6f3f2",
+                "secondary-fixed": "#ffdf99",
+                "outline": "#916f6a",
+                "on-primary-fixed-variant": "#930001",
+                "surface-container": "#f0eded",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-background": "#1c1b1b",
+                "secondary-container": "#ffc72c",
+                "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "16px",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-gap": "16px",
+                "min-tap-target": "52px",
+                "margin-page": "32px",
+                "base": "8px",
+                "padding-card": "20px",
+                "gutter-grid": "24px"
+            },
+            "fontFamily": {
+                "label-md": ["Plus Jakarta Sans"],
+                "headline-lg": ["Plus Jakarta Sans"],
+                "headline-md": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"],
+                "display-md": ["Plus Jakarta Sans"],
+                "label-lg": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-pill {
+            box-shadow: 0 4px 12px rgba(218, 41, 28, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e5e2e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface overflow-hidden">
+<div class="flex h-screen overflow-hidden">
+<!-- Navigation Drawer (Left Sidebar) -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container-low dark:bg-inverse-surface hidden lg:flex flex-col gap-base py-margin-page border-r border-outline-variant z-50">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">storefront</span>
+</div>
+<h1 class="font-display-md text-headline-md text-primary tracking-tight">CORNEY</h1>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<!-- Ringkasan (Active) -->
+<a class="bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-xl mx-2 my-1 flex items-center gap-4 px-4 py-3 active:scale-98 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-lg text-label-lg">Ringkasan</span>
+</a>
+<a class="text-on-surface-variant dark:text-tertiary-fixed mx-2 my-1 flex items-center gap-4 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-xl active:scale-98 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span class="font-label-lg text-label-lg">Cabang</span>
+</a>
+<a class="text-on-surface-variant dark:text-tertiary-fixed mx-2 my-1 flex items-center gap-4 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-xl active:scale-98 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Stok</span>
+</a>
+<a class="text-on-surface-variant dark:text-tertiary-fixed mx-2 my-1 flex items-center gap-4 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-xl active:scale-98 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-lg text-label-lg">Persetujuan</span>
+</a>
+<a class="text-on-surface-variant dark:text-tertiary-fixed mx-2 my-1 flex items-center gap-4 px-4 py-3 hover:bg-surface-container-highest dark:hover:bg-surface-container-high rounded-xl active:scale-98 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-lg text-label-lg">Laporan</span>
+</a>
+</nav>
+<div class="mt-auto px-6 py-4 flex items-center gap-4">
+<img alt="Bapak Owner" class="w-10 h-10 rounded-full object-cover border-2 border-primary" data-alt="A professional portrait of a cheerful middle-aged Indonesian male business owner in a modern corporate setting. He is wearing a sharp, clean casual blazer over a white shirt. The background is a brightly lit, high-end office interior with soft natural lighting and a minimalist aesthetic that aligns with a premium brand identity. The overall mood is confident and welcoming." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCToMVU5_6raEmW9PlVPes78lTABPAovypY7F9Q__18Y3BRPTpplyK7kMeM5MP4NKWXTXcdxk3JqYvPE6pUgJyJI7hDZybE_PpARsxgygMqjChfO2XrQN_V9rVLnFmNDTEOqJ5fAwM9ZqaucLthL4SdNlY9BnLH7MLzmkXyjbltp6vCoLaHXzWTyBKMVZZwWM1wkXdHZ3Zpru7KHCR6VkgQdhd9GqpdKTrbPjXj35nZl90w3PuzOxJqnN11C57qaTA2jecmsny7aHM"/>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Bapak Owner</p>
+<p class="text-[12px] text-on-surface-variant">Super Admin</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-[240px] flex flex-col h-screen">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface-dim shadow-[0_4px_16px_0_rgba(26,26,26,0.08)] w-full top-0 sticky z-40 flex justify-between items-center px-margin-page h-[72px]">
+<div class="flex items-center gap-6">
+<h2 class="font-headline-md text-headline-md text-primary">Dashboard</h2>
+<div class="hidden md:flex bg-surface-container rounded-full p-1 gap-1">
+<button class="px-4 py-1.5 rounded-full text-label-md font-label-md bg-white text-primary shadow-sm active-pill">Hari ini</button>
+<button class="px-4 py-1.5 rounded-full text-label-md font-label-md text-on-surface-variant hover:bg-white/50 transition-colors">Minggu ini</button>
+<button class="px-4 py-1.5 rounded-full text-label-md font-label-md text-on-surface-variant hover:bg-white/50 transition-colors">Bulan ini</button>
+<button class="px-4 py-1.5 rounded-full text-label-md font-label-md text-on-surface-variant hover:bg-white/50 transition-colors">Custom</button>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-12 h-12 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 border border-outline rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+<span class="text-label-md font-label-md">Filter</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-margin-page custom-scrollbar">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter-grid max-w-7xl mx-auto">
+<!-- Column 1: Core Metrics (Wide) -->
+<div class="md:col-span-6 space-y-gutter-grid">
+<!-- Hero Omzet Card -->
+<div class="bg-white rounded-xl shadow-[0_4px_16px_0_rgba(26,26,26,0.08)] p-padding-card border border-white relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-10 scale-150 pointer-events-none group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined text-[120px] text-primary">payments</span>
+</div>
+<div class="flex justify-between items-start relative z-10">
+<div>
+<p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Total Omzet Hari Ini</p>
+<h3 class="font-display-md text-display-md text-primary mt-2">Rp 4.820.000</h3>
+<div class="flex items-center gap-2 mt-4 text-green-600">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="font-label-md text-label-md">+12.5% dibanding kemarin</span>
+</div>
+</div>
+<div class="w-24 h-12">
+<!-- Visual Sparkline representation using CSS -->
+<div class="flex items-end justify-between h-full gap-1">
+<div class="w-2 bg-primary/20 rounded-t h-[40%]"></div>
+<div class="w-2 bg-primary/20 rounded-t h-[60%]"></div>
+<div class="w-2 bg-primary/20 rounded-t h-[30%]"></div>
+<div class="w-2 bg-primary/20 rounded-t h-[80%]"></div>
+<div class="w-2 bg-primary/20 rounded-t h-[100%]"></div>
+<div class="w-2 bg-primary rounded-t h-[90%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Business Insights Grid -->
+<div class="space-y-4">
+<h4 class="font-headline-md text-headline-md text-on-surface">Wawasan Bisnis</h4>
+<div class="grid grid-cols-2 gap-4">
+<!-- Best Seller -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface-variant">Best Seller</span>
+</div>
+<p class="font-headline-md text-headline-md leading-tight">Mozzarella Jumbo</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-1">142 Porsi Terjual</p>
+</div>
+<!-- Peak Hours -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">schedule</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface-variant">Jam Sibuk</span>
+</div>
+<p class="font-headline-md text-headline-md leading-tight">16:00 - 19:00</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-1">Avg. 45 Transaksi/Jam</p>
+</div>
+<!-- Profit Margin -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface-variant">Margin Laba</span>
+</div>
+<p class="font-headline-md text-headline-md leading-tight">64%</p>
+<p class="text-label-md font-label-md text-green-600 mt-1">Efisiensi Bahan +3%</p>
+</div>
+<!-- Worst Seller (Opportunity) -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-surface-container hover:shadow-md transition-shadow">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">trending_down</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface-variant">Underperforming</span>
+</div>
+<p class="font-headline-md text-headline-md leading-tight">Choco Corndog</p>
+<p class="text-label-md font-label-md text-error mt-1">-18% Drop Penjualan</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Alerts & Actions (Narrow) -->
+<div class="md:col-span-3 space-y-gutter-grid">
+<!-- Anomali Alert -->
+<div class="bg-primary p-6 rounded-xl shadow-lg relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[100px] text-white">warning</span>
+</div>
+<h4 class="text-white font-label-lg text-label-lg opacity-80 mb-2 uppercase tracking-wide">Anomali Terdeteksi</h4>
+<p class="text-white font-display-md text-headline-lg">3 Perlu Diperiksa</p>
+<p class="text-white/80 text-label-md font-label-md mt-2">Selisih stok &amp; void transaksi tinggi</p>
+<button class="mt-6 w-full bg-white text-primary py-3 rounded-xl font-label-lg text-label-lg hover:bg-white/90 transition-colors">Lihat Detail</button>
+</div>
+<!-- Waiting Actions -->
+<div class="bg-white rounded-xl shadow-sm border border-surface-container p-5">
+<h4 class="font-label-lg text-label-lg mb-4 text-on-surface">Menunggu Tindakan</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<span class="text-label-md font-label-md">Reimbursement (5)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">shopping_cart_checkout</span>
+</div>
+<span class="text-label-md font-label-md">PO Supplier (2)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">assignment_late</span>
+</div>
+<span class="text-label-md font-label-md">Absensi Manual (8)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Low Stock -->
+<div class="bg-white rounded-xl shadow-sm border border-surface-container p-5">
+<h4 class="font-label-lg text-label-lg mb-4 text-on-surface">Stok Menipis</h4>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-secondary-container/30 text-secondary border border-secondary/20 rounded-full font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Keju Mozzarella
+                                </span>
+<span class="px-3 py-1.5 bg-secondary-container/30 text-secondary border border-secondary/20 rounded-full font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Tepung Premix
+                                </span>
+<span class="px-3 py-1.5 bg-secondary-container/30 text-secondary border border-secondary/20 rounded-full font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Sosis Jumbo
+                                </span>
+<span class="px-3 py-1.5 bg-error-container/30 text-error border border-error/20 rounded-full font-label-md text-[12px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Minyak Goreng
+                                </span>
+</div>
+</div>
+</div>
+<!-- Column 3: Branch List -->
+<div class="md:col-span-3">
+<div class="bg-white rounded-xl shadow-sm border border-surface-container h-full overflow-hidden flex flex-col">
+<div class="p-5 border-b border-surface-container flex justify-between items-center">
+<h4 class="font-label-lg text-label-lg text-on-surface">Per Cabang</h4>
+<span class="text-primary font-label-md text-label-md cursor-pointer hover:underline">Semua</span>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<div class="divide-y divide-surface-container">
+<!-- Branch Item 1 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<p class="font-label-lg text-label-lg">Sudirman Central</p>
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-primary font-label-md text-label-md">Rp 1.450k</p>
+<p class="text-on-surface-variant text-[12px]">68 Orders</p>
+</div>
+</div>
+<!-- Branch Item 2 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<p class="font-label-lg text-label-lg">Mall Kelapa Gading</p>
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-primary font-label-md text-label-md">Rp 1.120k</p>
+<p class="text-on-surface-variant text-[12px]">52 Orders</p>
+</div>
+</div>
+<!-- Branch Item 3 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<p class="font-label-lg text-label-lg">Bintaro Xchange</p>
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-primary font-label-md text-label-md">Rp 980k</p>
+<p class="text-on-surface-variant text-[12px]">44 Orders</p>
+</div>
+</div>
+<!-- Branch Item 4 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<p class="font-label-lg text-label-lg">Grand Indonesia</p>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-primary font-label-md text-label-md">Rp 850k</p>
+<p class="text-on-surface-variant text-[12px]">39 Orders</p>
+</div>
+</div>
+<!-- Branch Item 5 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<p class="font-label-lg text-label-lg">Lippo Mall Puri</p>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-primary font-label-md text-label-md">Rp 420k</p>
+<p class="text-on-surface-variant text-[12px]">18 Orders</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-lowest">
+<button class="w-full py-2 border border-outline rounded-xl font-label-md text-label-md hover:bg-surface-container transition-colors">
+                                    Tambah Cabang Baru
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Decorative Banner -->
+<div class="mt-margin-page rounded-xl bg-gradient-to-r from-primary to-primary-container p-8 flex items-center justify-between overflow-hidden relative">
+<div class="relative z-10 text-white max-w-lg">
+<h3 class="font-headline-lg text-headline-lg mb-2">Ekspansi Lebih Cepat dengan Data</h3>
+<p class="text-white/80 body-md">Gunakan analitik prediktif kami untuk menentukan lokasi outlet berikutnya. Promo akhir pekan tersedia untuk fitur AI Market Analysis.</p>
+<button class="mt-6 px-6 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-label-lg text-label-lg hover:scale-105 transition-transform active:scale-95">Pelajari Selengkapnya</button>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-30">
+<img alt="Corney Signature Product" class="h-full w-full object-cover" data-alt="A macro food photography shot of a perfectly fried, crispy Indonesian mozzarella corndog with vibrant yellow mustard and deep red ketchup drizzled artfully. The golden brown crust is highly detailed, showing a light and airy texture. The lighting is warm and energetic, against a minimalist white background that makes the food colors pop in a premium fast-food aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxbAqfj5bIWY44m_-GMngo9RdQ6eJmv_bLRFsrBgI-ZddGWXQtNbTuf54cODZXqh6qQ5GXalyV1kR3mXaEzRRX_ZEtKOaQJ8LSiPyR6Ryh6Q2Y3x-veDfsmMcsnYgzb8MmbQxrDr628CRGxcHHhUITLQzx_me4vEZIC0r2_W07quSg90gHMXn2YormjuE-vpNJbDpUENKRi5LkruriieNFGLi45r0ihvVvWY3wmH5AYcZ1RIzRrMRINty0r8968Pyyp22EEWvVpNA"/>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('.active-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                // Toggle logic could go here
+                console.log('Period Filter Changed');
+            });
+        });
+
+        // Simple animation for the branch status indicators
+        const indicators = document.querySelectorAll('.animate-pulse');
+        setInterval(() => {
+            indicators.forEach(ind => {
+                ind.classList.toggle('opacity-50');
+            });
+        }, 1500);
+    </script>
+</body></html>

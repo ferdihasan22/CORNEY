@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#930001",
+                        "background": "#fcf9f8",
+                        "on-surface": "#1c1b1b",
+                        "on-primary-container": "#fff5f3",
+                        "inverse-on-surface": "#f3f0ef",
+                        "primary-fixed": "#ffdad4",
+                        "tertiary": "#575959",
+                        "secondary": "#775a00",
+                        "tertiary-container": "#707171",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#f6f7f7",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-background": "#1c1b1b",
+                        "secondary-fixed": "#ffdf99",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "surface-bright": "#fcf9f8",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#be0f09",
+                        "inverse-primary": "#ffb4a8",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "outline": "#916f6a",
+                        "on-secondary-container": "#6f5400",
+                        "primary": "#b50303",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-surface-variant": "#5c403b",
+                        "surface-container-high": "#eae7e7",
+                        "on-secondary-fixed": "#251a00",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#da291c",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#fcf9f8",
+                        "secondary-container": "#ffc72c",
+                        "on-primary-fixed": "#410000",
+                        "on-secondary-fixed-variant": "#5a4300"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "14px",
+                        "xl": "18px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "min-tap-target": "52px",
+                        "gutter-grid": "24px",
+                        "base": "8px",
+                        "margin-page": "32px",
+                        "stack-gap": "16px",
+                        "padding-card": "20px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-shadow { box-shadow: 0 4px 16px rgba(26, 26, 26, 0.08); }
+        .active-tap:active { transform: scale(0.98); transition: transform 0.1s ease; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-margin-page">
+<!-- Header (Sticky Red) -->
+<header class="fixed top-0 left-0 right-0 h-[80px] bg-primary-container text-on-primary-container z-50 flex items-center justify-between px-margin-page shadow-md">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-[32px]">storefront</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg opacity-80 uppercase tracking-wider">Cabang</span>
+<span class="font-headline-md text-headline-md leading-tight">CORNEY Sepinggan</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-display-md text-[24px] font-extrabold tracking-tight">Buka Toko</span>
+<span class="font-label-md text-label-md bg-white/20 px-3 py-1 rounded-full mt-1">Langkah 1 dari 2</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="mt-[100px] px-margin-page max-w-[1280px] mx-auto">
+<!-- Title Section -->
+<section class="mb-8">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Konfirmasi Stok Isian</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+                Hitung fisik isian di kulkas, lalu konfirmasi.
+            </p>
+</section>
+<!-- Product Grid - 3 columns as per style guidance -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter-grid">
+<!-- Card 1: Keju Mozza -->
+<div class="bg-surface-container-lowest rounded-lg custom-shadow p-padding-card border border-outline-variant flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-headline-md text-primary">Keju Mozza</h3>
+<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Cocok</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3">
+<p class="font-label-md text-label-md text-on-surface-variant">Sisa kemarin (sistem): <span class="font-bold text-on-surface">12</span></p>
+</div>
+<div class="space-y-4">
+<div>
+<label class="font-label-md text-label-md block mb-1">Barang datang (+)</label>
+<input class="w-full h-min-tap-target border-outline border-2 rounded-lg px-4 font-headline-md text-primary focus:ring-primary focus:border-primary" type="number" value="48"/>
+</div>
+<div>
+<label class="font-label-md text-label-md block mb-1">Hitung fisik hari ini</label>
+<input class="w-full h-[64px] border-primary border-4 rounded-lg px-4 font-display-md text-primary focus:ring-primary focus:border-primary text-center" type="number" value="60"/>
+</div>
+</div>
+<div class="mt-2 pt-4 border-t border-dashed border-outline-variant">
+<p class="font-label-lg text-label-lg text-secondary-container bg-on-secondary-container px-3 py-2 rounded-lg text-center font-bold">
+                        Stok awal hari ini = 60
+                    </p>
+</div>
+</div>
+<!-- Card 2: Sosis Reguler -->
+<div class="bg-surface-container-lowest rounded-lg custom-shadow p-padding-card border border-outline-variant flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-headline-md text-primary">Sosis Reguler</h3>
+<span class="bg-secondary-container text-on-secondary-container text-xs font-bold px-2.5 py-1 rounded-full uppercase">Selisih -2</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3">
+<p class="font-label-md text-label-md text-on-surface-variant">Sisa kemarin (sistem): <span class="font-bold text-on-surface">15</span></p>
+</div>
+<div class="space-y-4">
+<div>
+<label class="font-label-md text-label-md block mb-1">Barang datang (+)</label>
+<input class="w-full h-min-tap-target border-outline border-2 rounded-lg px-4 font-headline-md text-primary focus:ring-primary focus:border-primary" type="number" value="50"/>
+</div>
+<div>
+<label class="font-label-md text-label-md block mb-1">Hitung fisik hari ini</label>
+<input class="w-full h-[64px] border-primary border-4 rounded-lg px-4 font-display-md text-primary focus:ring-primary focus:border-primary text-center" type="number" value="63"/>
+</div>
+</div>
+<div class="mt-2 pt-4 border-t border-dashed border-outline-variant">
+<p class="font-label-lg text-label-lg text-secondary-container bg-on-secondary-container px-3 py-2 rounded-lg text-center font-bold">
+                        Stok awal hari ini = 63
+                    </p>
+</div>
+</div>
+<!-- Card 3: Sosis Jumbo -->
+<div class="bg-surface-container-lowest rounded-lg custom-shadow p-padding-card border border-outline-variant flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-headline-md text-primary">Sosis Jumbo</h3>
+<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Cocok</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3">
+<p class="font-label-md text-label-md text-on-surface-variant">Sisa kemarin (sistem): <span class="font-bold text-on-surface">8</span></p>
+</div>
+<div class="space-y-4">
+<div>
+<label class="font-label-md text-label-md block mb-1">Barang datang (+)</label>
+<input class="w-full h-min-tap-target border-outline border-2 rounded-lg px-4 font-headline-md text-primary focus:ring-primary focus:border-primary" type="number" value="32"/>
+</div>
+<div>
+<label class="font-label-md text-label-md block mb-1">Hitung fisik hari ini</label>
+<input class="w-full h-[64px] border-primary border-4 rounded-lg px-4 font-display-md text-primary focus:ring-primary focus:border-primary text-center" type="number" value="40"/>
+</div>
+</div>
+<div class="mt-2 pt-4 border-t border-dashed border-outline-variant">
+<p class="font-label-lg text-label-lg text-secondary-container bg-on-secondary-container px-3 py-2 rounded-lg text-center font-bold">
+                        Stok awal hari ini = 40
+                    </p>
+</div>
+</div>
+<!-- Card 4: Mix -->
+<div class="bg-surface-container-lowest rounded-lg custom-shadow p-padding-card border border-outline-variant flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-headline-md text-primary">Mix</h3>
+<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Cocok</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3">
+<p class="font-label-md text-label-md text-on-surface-variant">Sisa kemarin (sistem): <span class="font-bold text-on-surface">20</span></p>
+</div>
+<div class="space-y-4">
+<div>
+<label class="font-label-md text-label-md block mb-1">Barang datang (+)</label>
+<input class="w-full h-min-tap-target border-outline border-2 rounded-lg px-4 font-headline-md text-primary focus:ring-primary focus:border-primary" type="number" value="80"/>
+</div>
+<div>
+<label class="font-label-md text-label-md block mb-1">Hitung fisik hari ini</label>
+<input class="w-full h-[64px] border-primary border-4 rounded-lg px-4 font-display-md text-primary focus:ring-primary focus:border-primary text-center" type="number" value="100"/>
+</div>
+</div>
+<div class="mt-2 pt-4 border-t border-dashed border-outline-variant">
+<p class="font-label-lg text-label-lg text-secondary-container bg-on-secondary-container px-3 py-2 rounded-lg text-center font-bold">
+                        Stok awal hari ini = 100
+                    </p>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Action Bar -->
+<div class="mt-12 bg-white rounded-xl custom-shadow p-6 flex flex-col md:flex-row items-center justify-between gap-6 border-t-4 border-secondary-container">
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-lg flex-1">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[40px]">info</span>
+<p class="font-body-md text-body-md text-on-surface-variant italic">
+                    Selisih fisik vs sistem tercatat otomatis sebagai data susut untuk Owner. Pastikan hitungan sudah benar sebelum lanjut.
+                </p>
+</div>
+<button class="bg-primary text-white h-[64px] px-10 rounded-lg font-headline-md flex items-center gap-3 active-tap custom-shadow hover:brightness-110 transition-all">
+                Konfirmasi &amp; Lanjut ke Buka Kas
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Visual Polish: Background Pattern (Abstract Corndog Shape/Circle Texture) -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-5">
+<div class="absolute top-1/4 right-0 w-64 h-64 bg-primary rounded-full blur-[100px]"></div>
+<div class="absolute bottom-0 left-1/4 w-96 h-96 bg-secondary-container rounded-full blur-[120px]"></div>
+</div>
+<script>
+        // Micro-interaction: Update calculated stok logic
+        const cards = document.querySelectorAll('.bg-surface-container-lowest');
+        cards.forEach(card => {
+            const inputs = card.querySelectorAll('input');
+            const stokDisplay = card.querySelector('.font-label-lg.text-secondary-container');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    // This is a mockup of the calc logic
+                    const physicalInput = card.querySelectorAll('input')[1].value;
+                    stokDisplay.innerHTML = `Stok awal hari ini = ${physicalInput || 0}`;
+                    
+                    // Simple interaction effect
+                    stokDisplay.classList.add('scale-105');
+                    setTimeout(() => stokDisplay.classList.remove('scale-105'), 100);
+                });
+            });
+        });
+    </script>
+</body></html>

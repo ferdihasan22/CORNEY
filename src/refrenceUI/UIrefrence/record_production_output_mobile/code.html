@@ -1,0 +1,332 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CORNEY - Record Production Output</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#930001",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-highest": "#e5e2e1",
+                        "primary": "#b50303",
+                        "tertiary-container": "#707171",
+                        "secondary-fixed": "#ffdf99",
+                        "inverse-primary": "#ffb4a8",
+                        "on-primary-container": "#fff5f3",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "on-secondary-fixed": "#251a00",
+                        "primary-container": "#da291c",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fcf9f8",
+                        "on-surface-variant": "#5c403b",
+                        "surface-dim": "#dcd9d9",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface": "#fcf9f8",
+                        "surface-container": "#f0eded",
+                        "background": "#fcf9f8",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary": "#575959",
+                        "surface-variant": "#e5e2e1",
+                        "inverse-surface": "#313030",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-background": "#1c1b1b",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "surface-container-high": "#eae7e7",
+                        "secondary": "#775a00",
+                        "inverse-on-surface": "#f3f0ef",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "primary-fixed": "#ffdad4",
+                        "on-secondary-container": "#6f5400",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "outline": "#916f6a",
+                        "surface-tint": "#be0f09",
+                        "on-primary-fixed": "#410000",
+                        "on-tertiary-container": "#f6f7f7",
+                        "secondary-container": "#ffc72c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "16px",
+                        "min-tap-target": "52px",
+                        "gutter-grid": "24px",
+                        "base": "8px",
+                        "padding-card": "20px",
+                        "margin-page": "32px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, #f0eded 25%, #e5e2e1 50%, #f0eded 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Navigation Drawer (SideNav) -->
+<aside class="w-[240px] h-full fixed left-0 top-0 bg-surface-container-lowest dark:bg-surface-dim shadow-sm flex flex-col py-base px-gutter-grid gap-stack-gap z-50">
+<div class="mb-8 mt-4">
+<span class="font-display-md text-display-md text-primary dark:text-primary-fixed">CORNEY</span>
+</div>
+<nav class="flex-grow space-y-2">
+<div class="bg-secondary-container text-on-secondary-container rounded-lg font-bold p-3 flex items-center gap-3 transition-colors active:scale-95 duration-150 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">factory</span>
+<span class="font-label-lg text-label-lg">Production Dashboard</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container-low p-3 flex items-center gap-3 rounded-lg transition-colors active:scale-95 duration-150 cursor-pointer">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Inventory Status</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container-low p-3 flex items-center gap-3 rounded-lg transition-colors active:scale-95 duration-150 cursor-pointer">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-lg text-label-lg">Yield Reports</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container-low p-3 flex items-center gap-3 rounded-lg transition-colors active:scale-95 duration-150 cursor-pointer">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-lg text-label-lg">Quality Check</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container-low p-3 flex items-center gap-3 rounded-lg transition-colors active:scale-95 duration-150 cursor-pointer">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-label-lg text-label-lg">Shift Handover</span>
+</div>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Staff Operations</p>
+<p class="text-xs text-on-surface-variant">Shift A - Kitchen Unit</p>
+</div>
+</div>
+<div class="text-[10px] text-outline text-center">V1.2.4</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] min-h-screen">
+<!-- Top App Bar -->
+<header class="w-full sticky top-0 z-40 bg-surface dark:bg-background border-b border-outline-variant flex items-center justify-between px-margin-page h-[64px]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer">menu</span>
+<h1 class="font-headline-lg text-headline-lg text-primary">Record Production Output</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-primary text-on-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">PRODUKSI</span>
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary" data-alt="A professional close-up portrait of a kitchen supervisor in a clean, modern Indonesian food service environment. The person wears a crisp red and white uniform with a matching brand hat. The background shows soft-focus stainless steel kitchen equipment under bright, appetizing warm lighting. The overall mood is clean, professional, and energetic, following the brand's high-contrast red and yellow palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjDAQ3Q5qyzma7AaL-h-3xqmv2g88PHyl8jBedUV4KGmXdJygZQuLGSRzWnI_-kHIz9n-YZkIdX8pzcUpVTExChFdC5W3NbXGEFBgQbQZ3AT-5gzsR1-xtTLG4_ySde8NUTCOLqNewqrq3SFQtco5pyAdayhfOO35oNhDNzm9Fbi2Nbg7uRqW1azOjmvna6PJ2LxpBEEz0vw0u7nJisBDY9m2N-pcMeeiWroLBLS6mBuXAHC4exWkAjBPBOP8FK93U5jxBRZJNFi0">
+</div>
+</header>
+<div class="p-margin-page grid grid-cols-12 gap-gutter-grid">
+<!-- Form Section -->
+<div class="col-span-12 lg:col-span-7 space-y-stack-gap">
+<div class="bg-surface-container-lowest p-padding-card rounded-[14px] shadow-[0_4px_16px_rgba(26,26,26,0.08)] border border-outline-variant">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Sesi Produksi Baru</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span id="current-date">Kamis, 24 Okt 2023 · 14:20</span>
+</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">LIVE BATCH</span>
+</div>
+<div class="space-y-6">
+<!-- Filling Dropdown -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface">Pilih Isian (Filling)</label>
+<div class="relative">
+<select class="w-full h-min-tap-target px-4 rounded-[14px] border border-outline bg-surface-container-low focus:ring-2 focus:ring-primary focus:border-primary appearance-none font-body-lg text-body-lg">
+<option>Keju Mozza</option>
+<option>Sosis Reguler</option>
+<option>Sosis Jumbo</option>
+<option>Mix (Keju &amp; Sosis)</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Quantity Input -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface">Jumlah jadi (porsi beku)</label>
+<div class="relative">
+<input class="w-full h-[80px] px-6 text-display-md font-display-md text-primary rounded-[14px] border-2 border-primary-container bg-surface-bright focus:outline-none focus:ring-4 focus:ring-primary-container/20 text-center" placeholder="0" type="number" value="80">
+<span class="absolute right-6 top-1/2 -translate-y-1/2 font-label-lg text-label-lg text-outline">PCS</span>
+</div>
+<p class="text-xs text-on-surface-variant italic px-2">*Pastikan produk sudah dalam suhu ruang sebelum masuk chiller.</p>
+</div>
+<!-- Shrinkage Section -->
+<div class="p-4 bg-error-container/20 rounded-[14px] border border-error-container space-y-4">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined">warning</span>
+<h3 class="font-label-lg text-label-lg">Susut Produksi</h3>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="text-xs font-bold text-on-surface-variant">JUMLAH GAGAL</label>
+<input class="w-full h-min-tap-target px-4 rounded-[14px] border border-outline-variant focus:border-error focus:ring-1 focus:ring-error font-body-lg text-body-lg" placeholder="0" type="number" value="4">
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-on-surface-variant">ALASAN SUSUT *</label>
+<input class="w-full h-min-tap-target px-4 rounded-[14px] border border-outline-variant focus:border-error focus:ring-1 focus:ring-error font-body-md text-body-md" placeholder="Contoh: Mozza bocor" type="text">
+</div>
+</div>
+</div>
+<!-- Recap & Action -->
+<div class="pt-4 border-t border-outline-variant">
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-green-700 font-bold">
+<span class="material-symbols-outlined">add_circle</span>
+<span>Stok beku bertambah: +80</span>
+</div>
+<div class="w-[1px] h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-1 text-error font-bold">
+<span class="material-symbols-outlined">remove_circle</span>
+<span>Susut: 4</span>
+</div>
+</div>
+</div>
+<button class="w-full h-[60px] bg-primary text-on-primary rounded-[14px] font-headline-md text-headline-md flex items-center justify-center gap-3 shadow-[0_8px_16px_rgba(181,3,3,0.3)] active:scale-[0.98] transition-all hover:brightness-110">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">save</span>
+                                Simpan Hasil Produksi
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- History Section -->
+<div class="col-span-12 lg:col-span-5 space-y-stack-gap">
+<div class="bg-surface-container-highest/50 p-padding-card rounded-[14px] border border-outline-variant">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Riwayat Hari Ini</h3>
+<span class="text-primary font-label-md text-label-md cursor-pointer hover:underline">Lihat Semua</span>
+</div>
+<div class="space-y-3">
+<!-- History Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-[14px] flex items-center justify-between border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-secondary-container rounded-lg flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">lunch_dining</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Sosis Jumbo</p>
+<p class="text-xs text-on-surface-variant italic">Gagal: 2 (Adonan pecah)</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-display-md text-[24px] text-primary">120</p>
+<p class="text-[10px] text-outline font-bold uppercase">10:15 WIB</p>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-[14px] flex items-center justify-between border-l-4 border-secondary-fixed-dim">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-container/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">bakery_dining</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Keju Mozza</p>
+<p class="text-xs text-on-surface-variant italic">Gagal: 0</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-display-md text-[24px] text-primary">200</p>
+<p class="text-[10px] text-outline font-bold uppercase">08:45 WIB</p>
+</div>
+</div>
+<!-- Stats Card -->
+<div class="grid grid-cols-2 gap-3 mt-6">
+<div class="bg-on-primary-fixed-variant text-on-primary p-4 rounded-[14px]">
+<p class="text-[10px] opacity-80 font-bold uppercase">TOTAL OUTPUT</p>
+<p class="text-headline-lg font-display-md">400 <span class="text-sm font-label-md">PCS</span></p>
+</div>
+<div class="bg-secondary-container text-on-secondary-container p-4 rounded-[14px]">
+<p class="text-[10px] opacity-80 font-bold uppercase">YIELD RATE</p>
+<p class="text-headline-lg font-display-md">98.5%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Visual Asset / Context -->
+<div class="relative h-[200px] rounded-[14px] overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A macro photography shot of golden-brown, crispy Indonesian corndogs being neatly arranged on a stainless steel tray in a bright, modern commercial kitchen. The corndogs have a perfect panko crust, and one is slightly pulled apart to show stretching mozzarella cheese. The lighting is bright and high-contrast, emphasizing the appetizing textures and the vibrant red and yellow branding present on the packaging in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUpePkIya9-Kss4IcC875scje1J4_UM-VNLI_0ahD_ZqeYh2aUvdjvKQrZ_sx6zOgU9ZZ2i9i6JEGMmtLi-IeuZAw9qbOLb8eXcYkzm0RF8UAH07iDbLcKOoqAJLBVBWRiqSpsMBFwd18uy0HfG0U7viZmGyULpr4eFNgDdSD5_EJ6Kovf2Oo6B1Z4HLUIEpuNpWCj3x25GFUTFmHMQC9fdqnoxTeRzAIa5E2ledKfoDKzHg_T-lmIaCGoAVLDZ6Rv2es_o3_3f7E">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+<p class="text-white font-bold">Standard Kualitas Corney</p>
+<p class="text-secondary-fixed text-xs italic">"Pastikan adonan merata dan penggorengan suhu 180°C"</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple interactive feedback for inputs
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Set Current Time
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('id-ID', options).replace(/\./g, ':');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body></html>

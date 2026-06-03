@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY Operations - Laporan Anomali</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e2e1; border-radius: 10px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#b50303",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdf99",
+                        "secondary-fixed-dim": "#f6bf22",
+                        "inverse-primary": "#ffb4a8",
+                        "primary-container": "#da291c",
+                        "on-secondary-container": "#6f5400",
+                        "on-background": "#1c1b1b",
+                        "tertiary-container": "#707171",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-error": "#ffffff",
+                        "tertiary": "#575959",
+                        "tertiary-fixed": "#e2e2e2",
+                        "primary-fixed": "#ffdad4",
+                        "secondary-container": "#ffc72c",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#be0f09",
+                        "surface-variant": "#e5e2e1",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#f6f7f7",
+                        "surface-bright": "#fcf9f8",
+                        "secondary": "#775a00",
+                        "on-primary-fixed": "#410000",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-primary-fixed-variant": "#930001",
+                        "surface-container-high": "#eae7e7",
+                        "surface": "#fcf9f8",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#251a00",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#5c403b",
+                        "inverse-surface": "#313030",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container": "#f0eded",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#fff5f3",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e6bdb7",
+                        "outline": "#916f6a",
+                        "on-surface": "#1c1b1b",
+                        "background": "#fcf9f8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "16px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "padding-card": "20px",
+                        "min-tap-target": "52px",
+                        "stack-gap": "16px",
+                        "margin-page": "32px",
+                        "gutter-grid": "24px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                        "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col md:flex-row">
+<!-- Sidebar Navigation (Mandatory Shared Component Logic) -->
+<aside class="hidden md:flex flex-col bg-surface-container-low w-[240px] fixed left-0 top-0 h-full shadow-md z-50">
+<div class="p-margin-page">
+<h1 class="text-primary font-display-md text-display-md tracking-tight">CORNEY</h1>
+<p class="text-on-surface-variant font-label-md text-label-md mt-1 opacity-70">Operations Manager</p>
+</div>
+<nav class="flex-1 px-base space-y-base overflow-y-auto">
+<a class="flex items-center gap-4 px-4 py-3 text-on-tertiary-fixed-variant hover:bg-surface-container-highest rounded-lg transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-tertiary-fixed-variant hover:bg-surface-container-highest rounded-lg transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-lg text-label-lg">Branches</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-tertiary-fixed-variant hover:bg-surface-container-highest rounded-lg transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-lg text-label-lg">Stock</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold shadow-sm transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-lg text-label-lg">Reports</span>
+</a>
+</nav>
+<div class="p-base mt-auto">
+<div class="flex items-center gap-3 p-3 bg-surface rounded-xl shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">OM</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md leading-none">Corney Indonesia</span>
+<span class="text-xs text-on-surface-variant">HQ West Jakarta</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-[240px] pb-24 md:pb-margin-page">
+<!-- Header (Shared Component: TopAppBar Medium) -->
+<header class="sticky top-0 z-40 bg-surface shadow-sm px-margin-page py-4 w-full flex justify-between items-center">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">monitoring</span>
+<h2 class="text-primary font-headline-md text-headline-md">Laporan Anomali</h2>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-md text-on-surface-variant">31 Mei 2026</span>
+<button class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full font-label-md text-label-md hover:bg-surface-container-highest transition-colors active:scale-95">
+                    Period: Aug 2023
+                    <span class="material-symbols-outlined text-sm">calendar_month</span>
+</button>
+</div>
+</header>
+<div class="px-margin-page pt-stack-gap space-y-gutter-grid">
+<!-- Summary Strip (Bento Pattern) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter-grid">
+<div class="bg-surface p-6 rounded-xl shadow-sm border-l-4 border-primary hover:shadow-md transition-shadow">
+<p class="text-on-surface-variant font-label-md text-label-md mb-2">Total Anomali</p>
+<div class="flex items-baseline gap-2">
+<span class="text-display-md font-display-md text-primary">5</span>
+<span class="text-on-surface-variant text-sm">kejadian</span>
+</div>
+</div>
+<div class="bg-surface p-6 rounded-xl shadow-sm border-l-4 border-secondary-fixed-dim hover:shadow-md transition-shadow">
+<p class="text-on-surface-variant font-label-md text-label-md mb-2">Cabang Terdampak</p>
+<div class="flex items-baseline gap-2">
+<span class="text-display-md font-display-md text-on-background">2</span>
+<span class="text-on-surface-variant text-sm">lokasi</span>
+</div>
+</div>
+<div class="bg-surface p-6 rounded-xl shadow-sm border-l-4 border-tertiary-container hover:shadow-md transition-shadow">
+<p class="text-on-surface-variant font-label-md text-label-md mb-2">Total Nilai Selisih</p>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-lg font-headline-lg text-primary">Rp 95.000</span>
+</div>
+</div>
+</section>
+<!-- Filter Row -->
+<section class="flex flex-wrap items-center gap-stack-gap bg-surface-container-low p-4 rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Filter:</span>
+</div>
+<select class="bg-surface border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary shadow-sm min-h-[44px]">
+<option>Semua Tipe</option>
+<option>Selisih Kas</option>
+<option>Void Berlebih</option>
+</select>
+<select class="bg-surface border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary shadow-sm min-h-[44px]">
+<option>Semua Cabang</option>
+<option>CORNEY Sepinggan</option>
+<option>CORNEY Thamrin</option>
+</select>
+<select class="bg-surface border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary shadow-sm min-h-[44px]">
+<option>Semua Keparahan</option>
+<option>Perlu Tindakan</option>
+<option>Perlu Diselidiki</option>
+</select>
+</section>
+<!-- Anomaly Content List -->
+<div class="space-y-gutter-grid pb-12">
+<!-- Group: Perlu Tindakan -->
+<section>
+<div class="flex items-center gap-3 mb-4">
+<div class="h-2 w-2 rounded-full bg-error"></div>
+<h3 class="font-headline-md text-headline-md text-error">Perlu Tindakan</h3>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-gutter-grid">
+<!-- Card 1 -->
+<div class="bg-surface p-padding-card rounded-xl shadow-sm border border-error/10 hover:shadow-md transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Perlu Tindakan</span>
+<span class="text-on-surface-variant text-xs">08:15 AM</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Cashier" class="w-full h-full object-cover" data-alt="A detailed, professional close-up of a modern point-of-sale cash register system in a vibrant, high-energy fast food restaurant. The lighting is bright and warm, reflecting off clean, metallic surfaces. In the background, out of focus, are glowing red and yellow menu boards typical of a premium global burger chain. The mood is busy but efficient, emphasizing a corporate operational environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiJY59_L-E6y3ADwgusEaEHSCHCOGlEaKS79ILEn7kvmNtYI4JDNhENdFcewbCFEUW-SIVd-Kvsg2o-0d1tpLa_d-ognw2vJmCgeWnE1Rh8tlb9PubDAEu8pnngO01XPWR-1iq0lyQTQJ1t8qglJ8XuVnDNi5pyQuIwvJuKCJoBacN4Dm_j8BGo6HVwgRTy9GknLmxPjtAyTeT8oWRNk26WxRQDcP7Uv57gXKdIQVYPB8_3PZI-HMGHAbc3dh3LPGSIdJ_3mRUs4s"/>
+</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md">Selisih Kas</h4>
+<p class="text-on-surface-variant font-body-md text-body-md">CORNEY Sepinggan · <span class="font-bold">Kasir</span></p>
+<p class="text-primary font-bold text-lg mt-1">Selisih Rp −15.000</p>
+</div>
+</div>
+<!-- Action Box -->
+<div class="bg-surface-container-low p-4 rounded-xl space-y-2">
+<div class="flex items-center gap-2 text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-sm">lightbulb</span>
+<p class="font-label-md text-label-md">Saran Tindak Lanjut</p>
+</div>
+<p class="text-sm text-on-surface">Tanya ke: <span class="font-bold">Kasir cabang</span></p>
+<div class="bg-white p-3 rounded-lg border border-surface-container-highest italic text-on-surface-variant text-sm">
+                                    "Boleh dibantu hitung ulang kas closing tadi? Ada selisih."
+                                </div>
+<button class="w-full mt-2 h-10 bg-primary text-on-primary rounded-lg font-label-md hover:bg-primary-container transition-colors active:scale-[0.98]">
+                                    Hubungi Cabang
+                                </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface p-padding-card rounded-xl shadow-sm border border-error/10 hover:shadow-md transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Perlu Tindakan</span>
+<span class="text-on-surface-variant text-xs">10:30 AM</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Kitchen" class="w-full h-full object-cover" data-alt="A high-quality interior shot of a commercial fast-food kitchen featuring clean stainless steel countertops and organized workstations. The scene is lit with bright, overhead fluorescent lights that create a high-contrast, professional atmosphere. Elements of red and yellow branding are subtly visible on packaging. The image conveys order and hygiene in a fast-paced environment, using a modern corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtXEzw9aTw5CN-x2m6egTbZzs46tpBJ4TsND6sj7YjZVVheHyclS2DnPwOvbaeJmVHkhG1gC7qSUcV8H-w4QTEdiZ81gElX_KI0sEa5TOWIxUbk1X8MUAbw46-YRsrxxFBVwOttBrOi6Kk2o4WXXQhdrqENUAzBkSOm7FVvkGC7yTJsipr_FH_iQ-80SveUBUWsPmfx4DmONXNw_TAQdJtUDRHhrcm6jSKcR3J8InkYDX_uK1RfOzYMwq1DuWxCEQi1uUsEa16huM"/>
+</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md">Void Transaksi Tinggi</h4>
+<p class="text-on-surface-variant font-body-md text-body-md">CORNEY Thamrin · <span class="font-bold">Supervisor</span></p>
+<p class="text-primary font-bold text-lg mt-1">12 Transaksi Dihapus</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl space-y-2">
+<div class="flex items-center gap-2 text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-sm">lightbulb</span>
+<p class="font-label-md text-label-md">Saran Tindak Lanjut</p>
+</div>
+<p class="text-sm text-on-surface">Tanya ke: <span class="font-bold">Supervisor On-Duty</span></p>
+<div class="bg-white p-3 rounded-lg border border-surface-container-highest italic text-on-surface-variant text-sm">
+                                    "Apakah tadi ada kendala teknis atau salah input massal sampai banyak void?"
+                                </div>
+<button class="w-full mt-2 h-10 bg-primary text-on-primary rounded-lg font-label-md hover:bg-primary-container transition-colors active:scale-[0.98]">
+                                    Hubungi Cabang
+                                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Group: Perlu Diselidiki -->
+<section>
+<div class="flex items-center gap-3 mb-4">
+<div class="h-2 w-2 rounded-full bg-secondary-fixed-dim"></div>
+<h3 class="font-headline-md text-headline-md text-on-secondary-container">Perlu Diselidiki</h3>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-gutter-grid opacity-90">
+<!-- Card 3 -->
+<div class="bg-surface p-padding-card rounded-xl shadow-sm border border-secondary/10 hover:shadow-md transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Perlu Diselidiki</span>
+<span class="text-on-surface-variant text-xs">Kemarin</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Warehouse" class="w-full h-full object-cover" data-alt="A clean, organized inventory warehouse for a food business. High shelves are filled with branded red boxes and supplies. The lighting is cool-toned and even, highlighting the meticulous organization. The atmosphere is quiet and professional, focusing on the scale and efficiency of logistics. The primary color palette includes whites, grays, and bold hits of red." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4gythsQKcdl3PJcIkDBT3Yw_PSy3HG3GJLt2Vcgjgd0Yy5me_3zMNW5h5kR8aWU5hnb2R8oH8dzU56f72Fb0JCjo_nCEdRopfmks5QWAfZS3C81UhmMEwF4voHorizSK1QcpgINEMti3ltdDDuN-vbHgagk5Ly8EuEZ-rXVCGz0pFfmKwD5y_yToL459OdMRsR3umGGKnzgpisAg4kpRrLhoafJjd2FCeDEAJ84SYmKrMo-nmlFHIHSvn4B9r-9hR9uYPSAz43mg"/>
+</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md">Stok Ayam Tidak Sinkron</h4>
+<p class="text-on-surface-variant font-body-md text-body-md">CORNEY Sepinggan · <span class="font-bold">Admin Gudang</span></p>
+<p class="text-secondary font-bold text-lg mt-1">Selisih 5.5 Kg</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl space-y-2">
+<div class="flex items-center gap-2 text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-sm">search</span>
+<p class="font-label-md text-label-md">Saran Analisis</p>
+</div>
+<p class="text-sm text-on-surface">Cek data: <span class="font-bold">Log Penerimaan Barang</span></p>
+<div class="bg-white p-3 rounded-lg border border-surface-container-highest italic text-on-surface-variant text-sm">
+                                    "Bisa tolong difotokan surat jalan dari supplier untuk kiriman pagi tadi?"
+                                </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Group: Info -->
+<section>
+<div class="flex items-center gap-3 mb-4">
+<div class="h-2 w-2 rounded-full bg-tertiary"></div>
+<h3 class="font-headline-md text-headline-md text-tertiary">Info</h3>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-gutter-grid opacity-75">
+<div class="bg-surface p-padding-card rounded-xl shadow-sm border border-tertiary/10">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Info</span>
+<span class="text-on-surface-variant text-xs">Kemarin</span>
+</div>
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">login</span>
+</div>
+<div class="flex-1">
+<h4 class="font-label-lg text-label-lg">Login di Luar Jam Operasional</h4>
+<p class="text-on-surface-variant text-sm">CORNEY Thamrin · Supervisor A</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- FAB for Quick Export -->
+<button class="fixed bottom-24 right-8 md:bottom-8 bg-secondary-container text-on-secondary-container w-14 h-14 rounded-2xl shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl">download</span>
+</button>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only - Mandatory Logic) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-lowest flex justify-around items-center py-3 px-2 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-50">
+<button class="flex flex-col items-center gap-1 text-on-tertiary-fixed-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Beranda</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-tertiary-fixed-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">store</span>
+<span class="text-[10px] font-bold">Cabang</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-tertiary-fixed-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">inventory</span>
+<span class="text-[10px] font-bold">Stok</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
+<span class="text-[10px] font-bold">Aktivitas</span>
+<div class="h-1 w-1 bg-primary rounded-full"></div>
+</button>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.bg-surface').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

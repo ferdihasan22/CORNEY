@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcf9f8;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-drip {
+            background-image: radial-gradient(circle at 20% 10%, rgba(181, 3, 3, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 90%, rgba(255, 199, 44, 0.1) 0%, transparent 50%);
+        }
+        .wa-green {
+            background-color: #25D366;
+        }
+        .curved-edge {
+            border-radius: 18px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#b50303",
+                        "primary-container": "#da291c",
+                        "secondary-container": "#ffc72c",
+                        "on-secondary-container": "#6f5400",
+                        "surface": "#fcf9f8",
+                        "on-surface": "#1c1b1b",
+                        "on-surface-variant": "#5c403b",
+                        "outline-variant": "#e6bdb7",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-highest": "#e5e2e1",
+                    },
+                    borderRadius: {
+                        "custom": "18px",
+                    },
+                    spacing: {
+                        "min-tap-target": "52px",
+                        "margin-page": "24px",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"],
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"],
+                    },
+                    fontSize: {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col items-center overflow-x-hidden">
+<!-- Subtle Decorative Background Elements -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-20">
+<div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-primary blur-3xl"></div>
+<div class="absolute top-1/2 -left-20 w-60 h-60 rounded-full bg-secondary-container blur-[100px]"></div>
+</div>
+<!-- Main Content Canvas (Mobile-First Constraints) -->
+<main class="relative z-10 w-full max-w-md flex flex-col px-margin-page pt-12 pb-8 flex-grow bg-drip">
+<!-- 1. Celebratory Header -->
+<header class="flex flex-col items-center text-center mb-8 animate-[bounce_1s_ease-in-out_infinite_alternate]">
+<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4 shadow-sm border-4 border-white">
+<span class="material-symbols-outlined text-[48px] text-green-600 font-bold" data-weight="fill">check_circle</span>
+</div>
+<h1 class="font-headline text-headline-lg text-on-surface mb-2">Pembayaran Berhasil!</h1>
+<p class="font-body text-body-md text-on-surface-variant">Pesanan kamu sudah masuk ke kasir.</p>
+</header>
+<!-- 2. Hero PIN Card -->
+<section class="bg-secondary-container rounded-custom p-6 mb-6 shadow-[0_12px_24px_-8px_rgba(255,199,44,0.5)] flex flex-col items-center text-center relative overflow-hidden">
+<!-- Decorative Drip Pattern -->
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-white opacity-20 rounded-full"></div>
+<div class="absolute top-12 -left-8 w-24 h-4 bg-white opacity-10 rotate-45"></div>
+<span class="font-label text-label-md text-on-secondary-container uppercase tracking-widest mb-2">PIN PENGAMBILAN</span>
+<div class="font-display text-[72px] leading-none font-extrabold text-on-secondary-container mb-4 tracking-tighter drop-shadow-sm">
+                4821
+            </div>
+<p class="font-body text-body-md text-on-secondary-container/80 max-w-[240px]">
+                Tunjukkan PIN ini saat ambil / tulis di catatan driver Maxim.
+            </p>
+</section>
+<!-- 3. Order Recap Card -->
+<section class="bg-white rounded-custom p-6 mb-8 shadow-[0_16px_32px_-12px_rgba(26,26,26,0.08)] border border-surface-container-highest">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-label text-label-md text-primary bg-primary-fixed p-1 rounded">#A-014</span>
+<h2 class="font-headline text-headline-md mt-1">CORNEY Sepinggan</h2>
+</div>
+<div class="text-right">
+<span class="material-symbols-outlined text-primary mb-1">schedule</span>
+<p class="font-label text-label-md">17:30</p>
+</div>
+</div>
+<div class="border-y border-dashed border-outline-variant py-4 my-4 flex flex-col gap-2">
+<div class="flex justify-between items-center font-body text-body-md">
+<span>2x Corndog Mozzarella</span>
+<span class="font-label text-label-md text-on-surface">Rp 28.000</span>
+</div>
+<div class="flex justify-between items-center font-body text-body-md">
+<span>1x Es Teh Manis</span>
+<span class="font-label text-label-md text-on-surface">Rp 10.000</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label text-label-lg">Total Pembayaran</span>
+<div class="text-right">
+<p class="font-headline text-headline-md text-primary">Rp 38.000</p>
+<span class="font-label text-[12px] uppercase text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">Lunas</span>
+</div>
+</div>
+</section>
+<!-- 4. Primary Action -->
+<div class="w-full flex flex-col items-center gap-3">
+<button class="wa-green w-full h-min-tap-target rounded-full flex items-center justify-center gap-3 text-white font-label text-label-lg shadow-lg active:scale-95 transition-transform">
+<img alt="WhatsApp Icon" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1l0id3QPf5-diQTG899FzdMy21Wb8ZxvLtvujjdrOZ7OVdazGMX7SXWO040r7A8QHPdO7aW42hdd5lmqrHkK6oCWe_1tRbYfWWxx-_I7M8cpY6SFHCxlJ0XAu6tb3Zgz_qzQOu3SscLKqxfN0TlqZpiA9kTizzsQ41YmUwvzZqtCGntOCr9tjjomEVVr8TsXHG7vKn0XHt7fL7akVHLzGvWq3ua65MNRXbW2q6jGzUlsbcEQlHsKoieRPxHnOc5DUlkQr-MeEbq8"/>
+                Hubungi Kasir via WhatsApp
+            </button>
+<p class="font-body text-[12px] text-on-surface-variant text-center px-4">
+                Pesan &amp; PIN sudah terketik otomatis — kamu tinggal kirim.
+            </p>
+</div>
+<!-- 5. Secondary Actions -->
+<div class="mt-8 flex flex-col gap-3">
+<button class="w-full h-min-tap-target rounded-full border-2 border-primary text-primary font-label text-label-lg hover:bg-primary/5 active:bg-primary/10 transition-colors">
+                Lacak Pesanan
+            </button>
+<button class="w-full h-min-tap-target rounded-full text-on-surface-variant font-label text-label-md hover:underline">
+                Lihat Struk Digital
+            </button>
+</div>
+<!-- 6. Reassurance Note -->
+<footer class="mt-12 mb-4">
+<p class="font-body text-[11px] text-on-surface-variant/60 text-center leading-relaxed">
+                Pesanan kamu sudah tercatat otomatis walau belum menekan tombol WhatsApp. <br/>
+                © 2023 CORNEY POS System
+            </p>
+</footer>
+</main>
+<!-- Success Confetti/Drip Decoration (Visual Only) -->
+<div class="fixed top-0 left-0 w-full h-4 z-50 flex justify-around overflow-hidden pointer-events-none">
+<div class="w-4 h-8 bg-primary rounded-b-full"></div>
+<div class="w-6 h-12 bg-secondary-container rounded-b-full transform translate-y-[-20%]"></div>
+<div class="w-4 h-6 bg-primary rounded-b-full transform translate-y-[-50%]"></div>
+<div class="w-8 h-10 bg-secondary-container rounded-b-full"></div>
+<div class="w-5 h-7 bg-primary rounded-b-full transform translate-y-[-10%]"></div>
+</div>
+<script>
+        // Simple haptic-like feedback simulation for the WhatsApp button
+        document.querySelector('.wa-green').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                console.log("Redirecting to WhatsApp with pre-filled message...");
+            }, 150);
+        });
+    </script>
+</body></html>

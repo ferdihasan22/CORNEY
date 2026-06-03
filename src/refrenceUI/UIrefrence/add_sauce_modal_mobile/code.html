@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORNEY POS - Add Sauce Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#f0eded",
+                    "surface-dim": "#dcd9d9",
+                    "surface-container-highest": "#e5e2e1",
+                    "inverse-surface": "#313030",
+                    "primary": "#b50303",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-surface-variant": "#5c403b",
+                    "surface-container-low": "#f6f3f2",
+                    "surface": "#fcf9f8",
+                    "tertiary": "#575959",
+                    "secondary-fixed": "#ffdf99",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#ffb4a8",
+                    "on-primary-container": "#fff5f3",
+                    "inverse-on-surface": "#f3f0ef",
+                    "surface-container-high": "#eae7e7",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-tertiary-container": "#f6f7f7",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-primary-fixed": "#410000",
+                    "tertiary-container": "#707171",
+                    "outline": "#916f6a",
+                    "background": "#fcf9f8",
+                    "primary-container": "#da291c",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-background": "#1c1b1b",
+                    "secondary-fixed-dim": "#f6bf22",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#e6bdb7",
+                    "secondary": "#775a00",
+                    "primary-fixed": "#ffdad4",
+                    "surface-tint": "#be0f09",
+                    "on-error-container": "#93000a",
+                    "surface-variant": "#e5e2e1",
+                    "on-secondary-fixed": "#251a00",
+                    "on-surface": "#1c1b1b",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#fcf9f8",
+                    "secondary-container": "#ffc72c",
+                    "on-primary-fixed-variant": "#930001",
+                    "on-secondary-container": "#6f5400"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "padding-card": "20px",
+                    "stack-gap": "16px",
+                    "min-tap-target": "52px",
+                    "gutter-grid": "24px",
+                    "margin-page": "32px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-md": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "display-md": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<!-- Background Simulation (Menu Grid Dimmed) -->
+<div class="fixed inset-0 z-0 flex flex-col pointer-events-none">
+<!-- Mock Top App Bar -->
+<header class="flex justify-between items-center px-4 h-[72px] w-full bg-surface shadow-sm">
+<span class="font-display-md text-display-md text-primary border-b-4 border-secondary-container">CORNEY</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant">help</span>
+</div>
+</header>
+<!-- Mock Content Grid (Blurred & Dimmed) -->
+<main class="flex-1 p-4 grid grid-cols-2 gap-4 filter blur-sm grayscale opacity-50">
+<div class="bg-surface-container-lowest rounded-xl h-48 shadow-sm p-4 flex flex-col gap-2">
+<div class="w-full h-24 bg-surface-dim rounded-lg"></div>
+<div class="h-4 w-3/4 bg-surface-dim rounded"></div>
+<div class="h-4 w-1/2 bg-surface-dim rounded"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl h-48 shadow-sm p-4 flex flex-col gap-2 border-2 border-primary">
+<div class="w-full h-24 bg-surface-dim rounded-lg"></div>
+<div class="h-4 w-3/4 bg-surface-dim rounded"></div>
+<div class="h-4 w-1/2 bg-surface-dim rounded"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl h-48 shadow-sm p-4 flex flex-col gap-2">
+<div class="w-full h-24 bg-surface-dim rounded-lg"></div>
+<div class="h-4 w-3/4 bg-surface-dim rounded"></div>
+<div class="h-4 w-1/2 bg-surface-dim rounded"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl h-48 shadow-sm p-4 flex flex-col gap-2">
+<div class="w-full h-24 bg-surface-dim rounded-lg"></div>
+<div class="h-4 w-3/4 bg-surface-dim rounded"></div>
+<div class="h-4 w-1/2 bg-surface-dim rounded"></div>
+</div>
+</main>
+</div>
+<!-- Backdrop Dimmer -->
+<div class="fixed inset-0 bg-on-background/20 backdrop-blur-[2px] z-10"></div>
+<!-- Mobile Sauce Modal Container -->
+<div class="fixed inset-0 z-20 flex items-end sm:items-center justify-center p-0 sm:p-4">
+<!-- Actual Modal -->
+<div class="bg-surface-container-lowest w-full sm:max-w-[420px] rounded-t-[24px] sm:rounded-[16px] shadow-[0px_8px_32px_rgba(26,26,26,0.12)] flex flex-col max-h-[795px] overflow-hidden animate-in slide-in-from-bottom duration-300">
+<!-- Handle for mobile feel -->
+<div class="flex justify-center pt-3 pb-1 sm:hidden">
+<div class="w-12 h-1.5 bg-surface-dim rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="px-6 py-4 flex justify-between items-start">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mozza Ori</h2>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">Pilih saus. Gratis maks 2, selebihnya berbayar.</p>
+</div>
+<button class="p-2 -mr-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-6 py-2 hide-scrollbar">
+<!-- Sauce Selection List -->
+<div class="space-y-stack-gap">
+<!-- Saus Tomat -->
+<label class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-transparent active:border-primary-container transition-all cursor-pointer">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Saus Tomat</span>
+<span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-[12px] w-fit">Gratis</span>
+</div>
+<input checked="" class="w-6 h-6 rounded border-outline-variant text-primary-container focus:ring-primary-container" type="checkbox"/>
+</label>
+<!-- Saus Keju -->
+<label class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-transparent active:border-primary-container transition-all cursor-pointer">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Saus Keju</span>
+<span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-[12px] w-fit">Gratis</span>
+</div>
+<input class="w-6 h-6 rounded border-outline-variant text-primary-container focus:ring-primary-container" type="checkbox"/>
+</label>
+<!-- Saus Sambal -->
+<label class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-transparent active:border-primary-container transition-all cursor-pointer">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Saus Sambal</span>
+<span class="font-label-md text-label-md text-primary-container mt-1">+Rp 2.000</span>
+</div>
+<input checked="" class="w-6 h-6 rounded border-outline-variant text-primary-container focus:ring-primary-container" type="checkbox"/>
+</label>
+<!-- Mayonaise -->
+<label class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-transparent active:border-primary-container transition-all cursor-pointer">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Mayonaise</span>
+<span class="font-label-md text-label-md text-primary-container mt-1">+Rp 2.000</span>
+</div>
+<input class="w-6 h-6 rounded border-outline-variant text-primary-container focus:ring-primary-container" type="checkbox"/>
+</label>
+</div>
+<!-- Info Counter -->
+<div class="mt-6 flex items-center gap-2 bg-surface-container-high/50 p-3 rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-tertiary text-[20px]">info</span>
+<span class="font-label-md text-label-md text-on-surface">Saus gratis: <span class="text-primary font-bold">1/2</span></span>
+</div>
+</div>
+<!-- Footer / CTA -->
+<div class="p-6 bg-surface-container-lowest border-t border-outline-variant/20 shadow-[0px_-4px_12px_rgba(0,0,0,0.04)]">
+<div class="mb-4 text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Harga corndog <span class="text-on-surface">Rp 17.000</span> + saus <span class="text-on-surface">Rp 2.000</span> = <span class="text-on-surface font-bold">Rp 19.000</span>
+</p>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full h-[52px] bg-primary text-on-primary font-label-lg text-label-lg rounded-[14px] shadow-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                        Tambah ke Keranjang
+                    </button>
+<button class="w-full h-min-tap-target text-tertiary-container font-label-lg text-label-lg hover:bg-surface-container-low rounded-[14px] transition-colors">
+                        Batal
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Optional micro-interaction logic -->
+<script>
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const parent = this.closest('label');
+                if (this.checked) {
+                    parent.classList.add('border-primary-container', 'bg-primary-container/5');
+                } else {
+                    parent.classList.remove('border-primary-container', 'bg-primary-container/5');
+                }
+            });
+            // Init state
+            if (checkbox.checked) {
+                checkbox.closest('label').classList.add('border-primary-container', 'bg-primary-container/5');
+            }
+        });
+    </script>
+</body></html>
