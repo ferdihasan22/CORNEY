@@ -48,6 +48,15 @@ if (isSupabase()) {
     .catch((e) => console.warn('[master] hidrasi Supabase gagal, pakai cache lokal:', e?.message || e))
 }
 
+// Dorong perubahan master ke Supabase (mode supabase) via modul tulis terpisah.
+// Dynamic import → klien Supabase tak masuk bundle mode local. Fire-and-forget;
+// localStorage sudah jadi cache. Entitas lain (parents/branches/promos/banners/
+// override) menyusul pola sama.
+function remoteWrite(fn) {
+  if (!isSupabase()) return
+  import('./master.write.js').then(fn).catch((e) => console.warn('[master] modul tulis gagal dimuat:', e?.message || e))
+}
+
 function seed() {
   return {
     // Isian induk — the only stock units. threshold = per-parent low-stock
@@ -238,6 +247,7 @@ export function addMenu(data) {
   while (state.menus.some((x) => x.id === id)) id = `${base}_${n++}`
   const menu = { id, ...m }
   commit({ ...state, menus: [...state.menus, menu] })
+  remoteWrite((w) => w.pushMenu(menu))
   return menu
 }
 
@@ -258,6 +268,7 @@ export function updateMenu(id, data) {
   })
   if (!found) return null
   commit({ ...state, menus })
+  remoteWrite((w) => w.pushMenu(found))
   return found
 }
 
@@ -271,6 +282,7 @@ export function toggleMenuActive(id) {
   })
   if (!found) return null
   commit({ ...state, menus })
+  remoteWrite((w) => w.pushMenu(found))
   return found
 }
 
