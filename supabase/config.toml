@@ -1,0 +1,3 @@
+# CORNEY — Supabase project config (CLI & integrasi GitHub).
+# Ref project produksi. Jalankan `supabase init` lokal bila butuh konfigurasi penuh.
+project_id = "cajjvmnenxypcolriesf"
