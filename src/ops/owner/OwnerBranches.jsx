@@ -6,7 +6,7 @@ import { addBranch, updateBranch, toggleBranchActive } from '../../store/master.
 import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
-import { adminResetPasswordKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
+import { adminResetPasswordKasir, adminCreateKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 
 // 2.3 — §3 Multi-cabang · Kelola Cabang. Ported from Stitch
 // "manage_branches_desktop", made responsive (card grid + drawer). The left
@@ -54,8 +54,19 @@ export default function OwnerBranches() {
         if (!res.ok) { setSaveErr('Tersimpan lokal, tapi gagal set password di server: ' + res.error); return }
       }
     } else {
-      const b = addBranch(form); if (b) applyPar(b.id)
-      // Catatan: di mode Supabase, akun kasir cabang BARU dibuat saat write-wiring config (belum).
+      const b = addBranch(form)
+      if (b) {
+        applyPar(b.id)
+        // Mode Supabase: buat akun kasir cabang baru via Edge admin-users.
+        if (isSupabase()) {
+          const pw = form.password || '123456'
+          if (pw.length < MIN_PASSWORD) { setSaveErr(`Password kasir minimal ${MIN_PASSWORD} karakter.`); return }
+          setBusy(true)
+          const res = await adminCreateKasir(b.id, pw, 'Kasir ' + b.name)
+          setBusy(false)
+          if (!res.ok) { setSaveErr('Cabang tersimpan, tapi gagal buat akun kasir: ' + res.error); return }
+        }
+      }
     }
     close()
   }

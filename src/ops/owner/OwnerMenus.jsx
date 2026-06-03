@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { fmtRp } from '../../data/menu.js'
 import { useMaster } from '../../store/useMaster.js'
 import { addMenu, updateMenu, toggleMenuActive, activeParents, parentNameById } from '../../store/master.js'
+import ImageUploadButton from '../../app/ImageUploadButton.jsx'
 
 // 1B.3 — OW-02 (2-4) Master Data · Menu & Varian. No dedicated Stitch ref;
 // designed consistent with the Isian Induk screen (1B.2). Each menu links 1:1
@@ -173,6 +174,7 @@ export default function OwnerMenus() {
                 <div className="flex-1">
                   <label className="font-label-md text-on-surface-variant">URL Foto</label>
                   <input value={form.img} onChange={(e) => setForm((f) => ({ ...f, img: e.target.value }))} placeholder="https://…" type="url" className="w-full h-[44px] border border-outline rounded-xl px-3 mt-1 focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-surface-container-lowest text-sm" />
+                  <div className="mt-2"><ImageUploadButton value={form.img} onChange={(url) => setForm((f) => ({ ...f, img: url }))} /></div>
                 </div>
               </div>
 

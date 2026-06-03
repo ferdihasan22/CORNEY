@@ -34,6 +34,10 @@ export function adminResetPasswordRole(role, password) {
 export function adminResetPasswordKasir(branchId, password) {
   return invokeAdmin({ action: 'reset_password', email: kasirEmail(branchId), password })
 }
+// Buat akun kasir untuk cabang BARU (email sintetis kasir.<branch>@corney.app).
+export function adminCreateKasir(branchId, password, name) {
+  return invokeAdmin({ action: 'create_user', email: kasirEmail(branchId), password, role: 'kasir', branch_id: branchId, name })
+}
 export function adminSetActiveRole(role, active) {
   return invokeAdmin({ action: 'set_active', email: roleEmail(role), active })
 }

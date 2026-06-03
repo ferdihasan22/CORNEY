@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMaster } from '../../store/useMaster.js'
 import { addBanner, updateBanner, toggleBannerActive, deleteBanner, moveBanner, activeBanners } from '../../store/master.js'
+import ImageUploadButton from '../../app/ImageUploadButton.jsx'
 
 // 2.6 — CUS-06 / OWN-09 Kelola Banner. Ported from Stitch
 // "manage_customer_pwa_banners_mobile" (sidebar stripped). Banners are global
@@ -187,6 +188,7 @@ export default function OwnerBanners() {
               <div className="space-y-2">
                 <label className="font-label-md text-on-surface-variant">URL Gambar</label>
                 <input value={form.img} onChange={(e) => setForm((f) => ({ ...f, img: e.target.value }))} placeholder="https://…" type="url" className="w-full h-[52px] px-4 rounded-xl border border-outline focus:border-primary outline-none bg-surface-container-lowest text-sm" />
+                <ImageUploadButton value={form.img} onChange={(url) => setForm((f) => ({ ...f, img: url }))} />
                 <p className="text-xs text-on-surface-variant italic">Ukuran ideal <strong>1280×512 px (rasio 5:2)</strong>, min lebar 1000px. Gambar otomatis dipotong rata tengah (object-cover) — bagian penting taruh di tengah. Banner baru langsung Aktif & tampil paling bawah carousel.</p>
               </div>
             </form>
