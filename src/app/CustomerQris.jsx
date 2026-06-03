@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { fmtRp } from '../data/menu.js'
-import { getOrder, markPaid, cancelOrder } from '../store/orders.js'
+import { getOrder, markPaid, cancelOrder, refreshMyOrder } from '../store/orders.js'
+import { isSupabase } from '../lib/backend.js'
+import { supabase } from '../lib/supabase.js'
 
 // 2.1 — CUS-03 Pembayaran QRIS. Now wired to REAL Midtrans (sandbox) via the Vite
 // dev middleware (/api/midtrans/*). On mount we charge QRIS server-side and show
@@ -43,15 +45,21 @@ export default function CustomerQris() {
   useEffect(() => {
     if (!order || charged.current) return
     charged.current = true
-    // Unique id per charge so a re-open never collides (Midtrans rejects reused order_id).
     const mid = `${order.id}-${Date.now().toString(36)}`
     setMidId(mid)
-    fetch('/api/midtrans/charge', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: mid, gross: order.total }),
-    })
-      .then((r) => r.json())
+
+    // Mode supabase: panggil Edge Function (Server Key di server, aman).
+    // Mode local: panggil Vite dev middleware /api/midtrans/charge (Server Key via Vite).
+    const chargePromise = isSupabase() && supabase
+      ? supabase.functions.invoke('midtrans-charge', { body: { orderId: mid, gross: order.total } })
+          .then(({ data, error }) => { if (error) throw error; return data })
+      : fetch('/api/midtrans/charge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: mid, gross: order.total }),
+        }).then((r) => r.json())
+
+    chargePromise
       .then((d) => {
         const qrAction = (d.actions || []).find((a) => a.name === 'generate-qr-code')
         if (d.qr_string || qrAction) {
@@ -59,12 +67,11 @@ export default function CustomerQris() {
           setQrUrl(qrAction?.url || '')
           setMode('live')
         } else {
-          // API reachable but error (e.g. bad key) → show message + dummy.
           setStatusMsg(d.error || d.status_message || 'QRIS tidak bisa dibuat — pakai mode dummy.')
           setMode('dummy')
         }
       })
-      .catch(() => setMode('dummy')) // endpoint not available (build/preview)
+      .catch(() => setMode('dummy'))
   }, [order])
 
   // Auto-poll the real transaction status while live & waiting.
@@ -85,6 +92,21 @@ export default function CustomerQris() {
   const pollStatus = (silent) => {
     if (!midId) return
     if (!silent) { setChecking(true); setStatusMsg('') }
+
+    // Mode supabase: cek field `paid` dari DB via get_my_order (webhook yang meng-update-nya).
+    // Tak perlu hit Midtrans API dari klien; lebih aman & webhook sudah otoritatif.
+    // Mode local: poll /api/midtrans/status seperti biasa.
+    if (isSupabase() && order?.pin) {
+      refreshMyOrder(order.id, order.pin)
+        .then((o) => {
+          if (o?.paid) finishPaid()
+          else if (!silent) setStatusMsg('Belum lunas. Bayar dulu via QRIS ya.')
+        })
+        .catch(() => { if (!silent) setStatusMsg('Gagal cek status. Coba lagi.') })
+        .finally(() => { if (!silent) setChecking(false) })
+      return
+    }
+
     fetch(`/api/midtrans/status?order_id=${encodeURIComponent(midId)}`)
       .then((r) => r.json())
       .then((d) => {
