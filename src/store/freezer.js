@@ -5,6 +5,8 @@
 //
 // Shape: { [branchId]: { [parent]: { sisa, min, target } } }
 
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_freezer'
 const subscribers = new Set()
 
@@ -48,6 +50,11 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./freezer.remote.js').then(({ initFreezerSync }) => initFreezerSync(commit)).catch(() => {})
+}
+const pushCell = (b, p, cell) => { if (isSupabase()) import('./freezer.remote.js').then((w) => w.pushFreezerCell(b, p, cell)).catch(() => {}) }
+
 export function getFreezer() {
   return state
 }
@@ -64,6 +71,7 @@ export function takeFreezer(branchId, parent, qty) {
   const taken = Math.max(0, Math.round(Number(qty) || 0))
   const next = { ...state, [branchId]: { ...branch, [parent]: { ...cur, sisa: Math.max(0, cur.sisa - taken) } } }
   commit(next)
+  pushCell(branchId, parent, next[branchId][parent])
   return next[branchId][parent]
 }
 
@@ -73,7 +81,9 @@ export function addFreezerStock(branchId, parent, qty) {
   if (q <= 0) return
   const branch = state[branchId] || {}
   const cur = branch[parent] || { sisa: 0, min: 0, target: 0 }
-  commit({ ...state, [branchId]: { ...branch, [parent]: { ...cur, sisa: cur.sisa + q } } })
+  const next = { ...state, [branchId]: { ...branch, [parent]: { ...cur, sisa: cur.sisa + q } } }
+  commit(next)
+  pushCell(branchId, parent, next[branchId][parent])
 }
 
 // Produksi edits the min/target (and may correct sisa) for one branch×filling.
@@ -92,5 +102,6 @@ export function setFreezerLevel(branchId, parent, { sisa, min, target }) {
     },
   }
   commit(next)
+  pushCell(branchId, parent, next[branchId][parent])
   return next[branchId][parent]
 }

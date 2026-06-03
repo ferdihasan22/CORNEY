@@ -6,6 +6,9 @@
 // Shipment: { id, branchId, branchName, parent, parentName, qty, status
 //   ('menunggu'|'diterima'|'selisih'), selisih, createdAt }
 
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_shipments'
 const subscribers = new Set()
 let list = load()
@@ -29,6 +32,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./shipments.remote.js').then(({ initShipmentsSync }) => initShipmentsSync(commit)).catch(() => {})
+}
+
 export function getShipments() {
   return list
 }
@@ -43,7 +50,7 @@ export function createShipment({ branchId, branchName, items }) {
   const rows = (items || [])
     .filter((it) => (it.qty || 0) > 0)
     .map((it, i) => ({
-      id: `SHP-${stamp}-${i}`,
+      id: isSupabase() ? genUuid() : `SHP-${stamp}-${i}`,
       branchId,
       branchName: branchName || branchId,
       parent: it.parent,
@@ -55,6 +62,7 @@ export function createShipment({ branchId, branchName, items }) {
     }))
   if (rows.length === 0) return []
   commit([...rows, ...list])
+  if (isSupabase()) rows.forEach((s) => import('./shipments.remote.js').then((w) => w.pushShipment(s)).catch(() => {}))
   return rows
 }
 
@@ -72,10 +80,11 @@ export function confirmShipmentsReceived(branchId, receivedByParent) {
   const sent = {}
   list.forEach((s) => { if (s.branchId === branchId && s.status === 'menunggu') sent[s.parent] = (sent[s.parent] || 0) + s.qty })
   const stamp = new Date().toISOString()
+  const changed = []
   commit(list.map((s) => {
     if (s.branchId !== branchId || s.status !== 'menunggu') return s
-    const recv = receivedByParent?.[s.parent]
-    const sel = (recv == null ? sent[s.parent] : recv) - (sent[s.parent] || 0)
-    return { ...s, status: sel === 0 ? 'diterima' : 'selisih', selisih: sel, confirmedAt: stamp }
+    const ns = { ...s, status: ((receivedByParent?.[s.parent] == null ? sent[s.parent] : receivedByParent[s.parent]) - (sent[s.parent] || 0)) === 0 ? 'diterima' : 'selisih', selisih: (receivedByParent?.[s.parent] == null ? sent[s.parent] : receivedByParent[s.parent]) - (sent[s.parent] || 0), confirmedAt: stamp }
+    changed.push(ns); return ns
   }))
+  if (isSupabase()) changed.forEach((s) => import('./shipments.remote.js').then((w) => w.pushShipment(s)).catch(() => {}))
 }

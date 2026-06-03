@@ -5,6 +5,9 @@
 // Audit: { id, branchId, branchName, note, allCocok, createdAt,
 //   rows: [{ parent, parentName, sys:{sisa,patah,hilang}, riil:{sisa,patah,hilang}, cocok }] }
 
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_audits'
 const subscribers = new Set()
 let list = load()
@@ -26,6 +29,10 @@ function commit(next) {
 // Sinkron antar-tab: reload saat tab lain menulis (cegah clobber + realtime).
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
+}
+
+if (isSupabase()) {
+  import('./audits.remote.js').then(({ initAuditsSync }) => initAuditsSync(commit)).catch(() => {})
 }
 
 export function getAudits() {
@@ -63,7 +70,7 @@ export function submitAudit({ branchId, branchName, rows, note }) {
       r.sys.hilang === r.riil.hilang,
   }))
   const audit = {
-    id: 'AUD-' + Date.now(),
+    id: isSupabase() ? genUuid() : 'AUD-' + Date.now(),
     branchId,
     branchName: branchName || branchId,
     note: (note || '').trim(),
@@ -72,5 +79,6 @@ export function submitAudit({ branchId, branchName, rows, note }) {
     createdAt: new Date().toISOString(),
   }
   commit([audit, ...list])
+  if (isSupabase()) import('./audits.remote.js').then((w) => w.pushAudit(audit)).catch(() => {})
   return audit
 }

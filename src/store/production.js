@@ -4,6 +4,9 @@
 //
 // Batch: { id, parent, parentName, jadi, susut, alasan, createdAt }
 
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_production'
 const subscribers = new Set()
 let list = load()
@@ -28,6 +31,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./production.remote.js').then(({ initProductionSync }) => initProductionSync(commit)).catch(() => {})
+}
+
 export function getProduction() {
   return list
 }
@@ -38,7 +45,7 @@ export function subscribeProduction(fn) {
 
 export function addProduction({ branchId, branchName, parent, parentName, jadi, susut, alasan }) {
   const batch = {
-    id: 'PRD-' + Date.now(),
+    id: isSupabase() ? genUuid() : 'PRD-' + Date.now(),
     branchId: branchId || null,
     branchName: branchName || null,
     parent,
@@ -49,5 +56,6 @@ export function addProduction({ branchId, branchName, parent, parentName, jadi, 
     createdAt: new Date().toISOString(),
   }
   commit([batch, ...list])
+  if (isSupabase()) import('./production.remote.js').then((w) => w.pushProduction(batch)).catch(() => {})
   return batch
 }

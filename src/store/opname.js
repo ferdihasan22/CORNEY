@@ -4,6 +4,9 @@
 //
 // Opname: { id, branchId, branchName, mode, rows:[{parent,parentName,sys,fisik,selisih}], totalSelisih, createdAt }
 
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
+
 const KEY = 'corney_opname'
 const subscribers = new Set()
 let list = load()
@@ -16,18 +19,23 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./opname.remote.js').then(({ initOpnameSync }) => initOpnameSync(commit)).catch(() => {})
+}
+
 export function getOpname() { return list }
 export function subscribeOpname(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
 export function submitOpname({ branchId, branchName, mode, rows }) {
   const checked = (rows || []).map((r) => ({ ...r, selisih: (r.fisik ?? r.sys) - r.sys }))
   const rec = {
-    id: 'OPN-' + Date.now(),
+    id: isSupabase() ? genUuid() : 'OPN-' + Date.now(),
     branchId, branchName: branchName || branchId, mode: mode || 'isi',
     rows: checked,
     totalSelisih: checked.reduce((s, r) => s + r.selisih, 0),
     createdAt: new Date().toISOString(),
   }
   commit([rec, ...list])
+  if (isSupabase()) import('./opname.remote.js').then((w) => w.pushOpname(rec)).catch(() => {})
   return rec
 }
