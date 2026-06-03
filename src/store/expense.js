@@ -1,6 +1,8 @@
 // CORNEY — Uang Belanjaan (biaya) per TANGGAL + CABANG, diisi Owner di tab Laba Bersih.
 // Laba Bersih = Sisa Bersih (dari Omzet Bersih) − Uang Belanjaan.
 // Row: { tgl, branchId, amount }. Dummy/localStorage; TAHAP 4 → backend.
+import { isSupabase } from '../lib/backend.js'
+
 const KEY = 'corney_expense_v2'
 const subscribers = new Set()
 
@@ -19,6 +21,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./expense.remote.js').then(({ initExpenseSync }) => initExpenseSync(commit)).catch(() => {})
+}
+
 export function getExpense() { return list }
 export function subscribeExpense(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -28,6 +34,7 @@ export function setExpense(tgl, branchId, amount) {
   const ex = list.find((e) => e.tgl === tgl && e.branchId === branchId)
   if (ex) commit(list.map((e) => (e === ex ? { ...e, amount: amt } : e)))
   else commit([{ tgl, branchId, amount: amt }, ...list])
+  if (isSupabase()) import('./expense.remote.js').then((w) => w.pushExpense(tgl, branchId, amt)).catch(() => {})
 }
 export function expenseAmount(tgl, branchId) {
   const e = list.find((x) => x.tgl === tgl && x.branchId === branchId)

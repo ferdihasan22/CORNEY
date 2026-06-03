@@ -7,6 +7,7 @@
 // CATATAN SINKRON: "terjual" per induk TIDAK berdiri sendiri — DITURUNKAN dari
 // Variant Terjual (salesdaily) via rollup, supaya Stok Isian & Variant pasti cocok.
 import { getSalesDaily, terjualPerParent, setSalesDate } from './salesdaily.js'
+import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_stockdaily_v3' // v3: Juni-only (samakan dgn salesdaily)
 export const STOCK_PARENTS = [['mozza', 'MOZ'], ['mix', 'MIX'], ['sosis', 'SOS'], ['jumbo', 'SOS-J']]
@@ -31,6 +32,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./stockdaily.remote.js').then(({ initStockSync }) => initStockSync(commit)).catch(() => {})
+}
+
 export function getStockDaily() { return list }
 export function subscribeStockDaily(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -42,7 +47,9 @@ export function computeParent(c) {
 
 // Owner koreksi satu baris (audit log dipanggil dari layar).
 export function updateStockRow(id, v) {
-  commit(list.map((r) => (r.id === id ? { ...r, v } : r)))
+  let found = null
+  commit(list.map((r) => { if (r.id !== id) return r; found = { ...r, v }; return found }))
+  if (found && isSupabase()) import('./stockdaily.remote.js').then((w) => w.pushStockRow(found)).catch(() => {})
 }
 
 export function hasStockDay(tgl, branchId) { return list.some((r) => r.tgl === tgl && r.branchId === branchId) }
@@ -53,8 +60,10 @@ export function clearStockDaily() { commit([]) }
 // Tulis/timpa baris stok induk untuk satu tanggal+cabang (dipanggil saat closing).
 export function upsertStockDay({ tgl, branchId, v }) {
   const ex = list.find((r) => r.tgl === tgl && r.branchId === branchId)
-  if (ex) commit(list.map((r) => (r === ex ? { ...r, v } : r)))
-  else commit([{ id: 'SR-' + Date.now(), tgl, branchId, v }, ...list])
+  const row = ex ? { ...ex, v } : { id: 'SR-' + Date.now(), tgl, branchId, v }
+  if (ex) commit(list.map((r) => (r === ex ? row : r)))
+  else commit([row, ...list])
+  if (isSupabase()) import('./stockdaily.remote.js').then((w) => w.pushStockRow(row)).catch(() => {})
 }
 
 // Owner ganti tanggal laporan → tanggal di Variant Terjual ikut berubah (sinkron).

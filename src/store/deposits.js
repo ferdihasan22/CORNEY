@@ -11,6 +11,8 @@
 import { logAudit } from './auditlog.js'
 import { BRANCHES } from '../data/menu.js'
 import { getSalesDaily, rowCashSistem } from './salesdaily.js'
+import { isSupabase } from '../lib/backend.js'
+import { genUuid } from '../lib/util.js'
 
 const KEY = 'corney_deposits_v4' // ikut reseed salesdaily v4
 const subscribers = new Set()
@@ -56,6 +58,10 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./deposits.remote.js').then(({ initDepositsSync }) => initDepositsSync(commit)).catch(() => {})
+}
+
 export function getDeposits() {
   return list
 }
@@ -68,7 +74,7 @@ export function subscribeDeposits(fn) {
 // Kasir declares a deposit (side 1) — called when closing is sent.
 export function createDeposit({ branchId, branchName, kasirName, amount, tgl, rincian }) {
   const dep = {
-    id: 'DEP-' + Date.now(),
+    id: isSupabase() ? genUuid() : 'DEP-' + Date.now(),
     branchId,
     branchName: branchName || branchId,
     kasirName: kasirName || 'Kasir',
@@ -84,6 +90,7 @@ export function createDeposit({ branchId, branchName, kasirName, amount, tgl, ri
     confirmedAt: null,
   }
   commit([dep, ...list])
+  if (isSupabase()) import('./deposits.remote.js').then((w) => w.pushDeposit(dep)).catch(() => {})
   return dep
 }
 
@@ -97,13 +104,16 @@ export function confirmDeposit(id, opsAmount, opsName = 'Operasional') {
     found = { ...d, opsAmount: amt, opsName, selisih, status: selisih === 0 ? 'cocok' : 'selisih', confirmedAt: new Date().toISOString() }
     return found
   })
-  if (found) { commit(next); logAudit({ type: 'Settlement', who: `Operasional · ${found.opsName}`, branchId: found.branchId, oldVal: `Kasir Rp ${found.kasirAmount.toLocaleString('id-ID')}`, newVal: `Diterima Rp ${found.opsAmount.toLocaleString('id-ID')} (${found.status})`, note: 'Terima setoran tunai dari kasir.' }) }
+  if (found) { commit(next); logAudit({ type: 'Settlement', who: `Operasional · ${found.opsName}`, branchId: found.branchId, oldVal: `Kasir Rp ${found.kasirAmount.toLocaleString('id-ID')}`, newVal: `Diterima Rp ${found.opsAmount.toLocaleString('id-ID')} (${found.status})`, note: 'Terima setoran tunai dari kasir.' }); if (isSupabase()) import('./deposits.remote.js').then((w) => w.pushDeposit(found)).catch(() => {}) }
   return found
 }
 
 // Forward all collected (confirmed) deposits up the chain (Auditor/Owner).
 export function forwardDeposits() {
-  commit(list.map((d) => (d.status !== 'menunggu' && !d.forwarded ? { ...d, forwarded: true } : d)))
+  const changed = []
+  const next = list.map((d) => { if (d.status !== 'menunggu' && !d.forwarded) { const nd = { ...d, forwarded: true }; changed.push(nd); return nd } return d })
+  commit(next)
+  if (isSupabase()) changed.forEach((d) => import('./deposits.remote.js').then((w) => w.pushDeposit(d)).catch(() => {}))
 }
 
 // Auditor (side 3): recount physical, match vs what Operasional received → report
@@ -118,6 +128,6 @@ export function auditorVerify(id, auditorAmount, note = '') {
     found = { ...d, auditorAmount: amt, auditorSelisih: sel, auditorStatus: sel === 0 ? 'cocok' : 'selisih', auditorNote: (note || '').trim(), auditedAt: new Date().toISOString() }
     return found
   })
-  if (found) { commit(next); logAudit({ type: 'Settlement', who: 'Auditor', branchId: found.branchId, oldVal: `Operasional Rp ${(found.opsAmount ?? 0).toLocaleString('id-ID')}`, newVal: `Audit Rp ${found.auditorAmount.toLocaleString('id-ID')} (${found.auditorStatus})`, note: found.auditorNote || 'Verifikasi setoran oleh auditor.' }) }
+  if (found) { commit(next); logAudit({ type: 'Settlement', who: 'Auditor', branchId: found.branchId, oldVal: `Operasional Rp ${(found.opsAmount ?? 0).toLocaleString('id-ID')}`, newVal: `Audit Rp ${found.auditorAmount.toLocaleString('id-ID')} (${found.auditorStatus})`, note: found.auditorNote || 'Verifikasi setoran oleh auditor.' }); if (isSupabase()) import('./deposits.remote.js').then((w) => w.pushDeposit(found)).catch(() => {}) }
   return found
 }

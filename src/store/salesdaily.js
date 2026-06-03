@@ -12,6 +12,7 @@
 //        → Omzet Bersih (uang riil) = Cash Aktual + transfer (semua non-tunai).
 //        trx = jumlah transaksi; peakHour = jam paling ramai (Laporan Keuangan + Dashboard).
 import { MENUS } from '../data/menu.js'
+import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_salesdaily_v4' // v4: checklist belanja kini { item: jumlah }
 const subscribers = new Set()
@@ -52,11 +53,17 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { list = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+if (isSupabase()) {
+  import('./salesdaily.remote.js').then(({ initSalesSync }) => initSalesSync(commit)).catch(() => {})
+}
+
 export function getSalesDaily() { return list }
 export function subscribeSalesDaily(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
 export function updateSalesRow(id, patch) {
-  commit(list.map((r) => (r.id === id ? { ...r, ...patch } : r)))
+  let found = null
+  commit(list.map((r) => { if (r.id !== id) return r; found = { ...r, ...patch }; return found }))
+  if (found && isSupabase()) import('./salesdaily.remote.js').then((w) => w.pushSalesRow(found)).catch(() => {})
 }
 
 // Omzet baris = Σ qty×harga varian (diturunkan dari varian = 1 sumber).
@@ -99,8 +106,10 @@ export function clearSalesDaily() { commit([]) }
 export function upsertSalesDay({ tgl, branchId, variants, channels, source, potongan, kasAktual, trx, peakHour, sauces, belanja }) {
   const ex = list.find((r) => r.tgl === tgl && r.branchId === branchId)
   const extra = { variants, channels, source, potongan, kasAktual, trx, peakHour, sauces, belanja }
-  if (ex) commit(list.map((r) => (r === ex ? { ...r, ...extra } : r)))
-  else commit([{ id: 'SD-' + Date.now(), tgl, branchId, ...extra }, ...list])
+  const row = ex ? { ...ex, ...extra } : { id: 'SD-' + Date.now(), tgl, branchId, ...extra }
+  if (ex) commit(list.map((r) => (r === ex ? row : r)))
+  else commit([row, ...list])
+  if (isSupabase()) import('./salesdaily.remote.js').then((w) => w.pushSalesRow(row)).catch(() => {})
 }
 
 // Owner ganti tanggal → baris varian ikut pindah tanggal (tetap sinkron dgn stok).
