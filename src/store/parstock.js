@@ -4,6 +4,7 @@
 // Sebelumnya hardcoded di menu.js (DUMMY_STANDARD_STOCK); kini bisa diubah Owner.
 // Dummy/localStorage; TAHAP 4 → backend.
 import { BRANCHES, PARENT_FILLINGS, DUMMY_STANDARD_STOCK } from '../data/menu.js'
+import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_parstock'
 const subscribers = new Set()
@@ -26,6 +27,12 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { map = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+// Hidrasi Supabase (mode supabase) — dipicu saat ADA sesi staf (lihat
+// parstock.remote.js). localStorage tetap cache/fallback offline.
+if (isSupabase()) {
+  import('./parstock.remote.js').then(({ initParStockSync }) => initParStockSync(commit, () => map)).catch((e) => console.warn('[parstock] modul remote gagal dimuat:', e?.message || e))
+}
+
 export function getParStock() { return map }
 export function subscribeParStock(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
@@ -35,4 +42,5 @@ export function parOf(branchId) { return map[branchId] || {} }
 export function setPar(branchId, parentId, val) {
   const b = { ...(map[branchId] || {}), [parentId]: Math.max(0, Number(val) || 0) }
   commit({ ...map, [branchId]: b })
+  if (isSupabase()) import('./parstock.remote.js').then((w) => w.pushPar(branchId, parentId, b[parentId])).catch(() => {})
 }
