@@ -34,23 +34,6 @@ const waIntl = (raw) => {
 // Pretty grouping for display: 0895-3418-69458.
 const waPretty = (raw) => (raw || '').replace(/\D/g, '').replace(/(\d{4})(\d{4})(\d+)/, '$1-$2-$3')
 
-// Short beep via Web Audio (no asset) — rings when a new order arrives.
-function beep() {
-  try {
-    const Ctx = window.AudioContext || window.webkitAudioContext
-    if (!Ctx) return
-    const ctx = new Ctx()
-    const o = ctx.createOscillator()
-    const g = ctx.createGain()
-    o.connect(g); g.connect(ctx.destination)
-    o.type = 'sine'; o.frequency.value = 880
-    g.gain.setValueAtTime(0.0001, ctx.currentTime)
-    g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.02)
-    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4)
-    o.start(); o.stop(ctx.currentTime + 0.42)
-  } catch { /* autoplay blocked until first interaction — fine */ }
-}
-
 export default function KasirOnline() {
   const day = useDay()
   const master = useMaster()
@@ -83,15 +66,9 @@ export default function KasirOnline() {
   )
   const newCount = mine.filter((o) => o.status === 'baru').length
 
-  // Ring on a NEW order (count goes up). Seed the ref to the initial count so we
-  // don't beep on first paint.
-  const prevNew = useRef(null)
+  // Suara "order online masuk" kini ditangani GLOBAL oleh <KasirAlerts/> (2x, berbunyi
+  // di layar kasir mana pun) → tak ada lagi beep oscillator lokal di sini.
   const masakRef = useRef(null) // target animasi bola → tombol Antrean Masak
-  useEffect(() => {
-    if (prevNew.current === null) { prevNew.current = newCount; return }
-    if (newCount > prevNew.current) beep()
-    prevNew.current = newCount
-  }, [newCount])
 
   if (!day || !branch) return <Navigate to="/ops/kasir/login" replace />
   if (day.phase === PHASE.OPENING || day.phase === PHASE.CASH) return <Navigate to="/ops/kasir" replace />
