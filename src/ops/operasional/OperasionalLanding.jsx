@@ -19,6 +19,7 @@ export default function OperasionalLanding() {
     { to: '/ops/operasional/stok', icon: 'local_shipping', label: 'Isi Stok ke Standar', desc: 'Kirim stok isian ke cabang sesuai Stok Standar', ready: true },
     { to: '/ops/operasional/audit', icon: 'fact_check', label: 'Audit Lapangan', desc: 'Hitung fisik vs sistem — bisa audit dadakan saat kasir jualan', ready: true },
     { to: '/ops/operasional/cek-selisih', icon: 'rule', label: 'Cek Selisih Stok', desc: 'Tabel stok: seharusnya vs aktual vs selisih (hilang) per cabang', ready: true },
+    { to: '/ops/operasional/freezer', icon: 'ac_unit', label: 'Stok Freezer (Lihat)', desc: 'Lihat jumlah & status stok freezer per cabang (read-only)', ready: true },
     { to: '/ops/operasional/belanja', icon: 'shopping_cart', label: 'Rekap Request Belanja', desc: 'Gabungan request semua cabang → PWA Supplier', ready: true },
     { to: '/ops/operasional/analisa', icon: 'science', label: 'Cek Bahan vs Jualan', desc: 'Lihat glaze/saus/kentang wajar atau perlu ditanya ke kasir', ready: true },
   ]

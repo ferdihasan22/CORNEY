@@ -46,6 +46,7 @@ const OperasionalSetoran = lazy(() => import('./ops/operasional/OperasionalSetor
 const OperasionalStockPar = lazy(() => import('./ops/operasional/OperasionalStockPar.jsx'))
 const OperasionalAudit = lazy(() => import('./ops/operasional/OperasionalAudit.jsx'))
 const OperasionalCekSelisih = lazy(() => import('./ops/operasional/OperasionalCekSelisih.jsx'))
+const OperasionalFreezer = lazy(() => import('./ops/operasional/OperasionalFreezer.jsx'))
 const OperasionalShopping = lazy(() => import('./ops/operasional/OperasionalShopping.jsx'))
 const ProduksiLanding = lazy(() => import('./ops/produksi/ProduksiLanding.jsx'))
 const ProduksiProduction = lazy(() => import('./ops/produksi/ProduksiProduction.jsx'))
@@ -239,6 +240,7 @@ export default function App() {
       <Route path="/ops/operasional/stok" element={<OperasionalStockPar />} />
       <Route path="/ops/operasional/audit" element={<OperasionalAudit />} />
       <Route path="/ops/operasional/cek-selisih" element={<OperasionalCekSelisih />} />
+      <Route path="/ops/operasional/freezer" element={<OperasionalFreezer />} />
       <Route path="/ops/operasional/belanja" element={<OperasionalShopping />} />
       <Route path="/ops/operasional/analisa" element={<OperasionalAnalisa />} />
       <Route path="/ops/produksi" element={<ProduksiLanding />} />
