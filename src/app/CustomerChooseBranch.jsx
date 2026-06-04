@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BRANCHES } from '../data/menu.js'
 import { useDay } from '../store/useDay.js'
@@ -8,30 +8,42 @@ import { useBranchStatus } from '../store/useBranchStatus.js'
 import { refreshBranchStatus } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
 
-// 1C.2 — CORNEY App Customer · Pilih Cabang (PRD §4.4). Ported from Stitch
-// "choose_branch_corney_app". Booth photos aren't available, so each card uses a
-// branded tile (consistent + offline-safe) instead of a broken image. The
-// decorative bottom nav (Orders/Promo/Profile = Fase 2) is stripped; the sticky
-// "cabang terpilih dipakai selama belanja" note is kept.
+// 1C.2 — CORNEY App Customer · Pilih Cabang (PRD §4.4). Booth photos aren't
+// available → branded tile. NEW: izin lokasi (GPS) → urutkan cabang TERDEKAT
+// (jarak haversine ke koordinat cabang yang diisi Owner). Popup ajakan muncul
+// selama belum diizinkan; sekali diizinkan, tak mengganggu lagi.
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-// Dummy storefront status (Fase 1) — real hours/geo come with the backend.
-const STATUS = {
-  sepinggan: { distance: '1.2 km', open: true, openUntil: '22:00', onlineUntil: '21:30', near: true },
-  gunungsari: { distance: '3.5 km', open: true, openUntil: '22:00', onlineUntil: '21:30', near: false },
+// Jarak (km) antar dua titik lat/lng — haversine.
+function haversineKm(a, b) {
+  const R = 6371
+  const toRad = (d) => (d * Math.PI) / 180
+  const dLat = toRad(b.lat - a.lat)
+  const dLng = toRad(b.lng - a.lng)
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(x))
 }
+function parseCoord(c) {
+  if (!c) return null
+  const [la, ln] = String(c).split(',').map((s) => parseFloat(s.trim()))
+  return Number.isFinite(la) && Number.isFinite(ln) ? { lat: la, lng: ln } : null
+}
+const fmtKm = (km) => (km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`)
 
 export default function CustomerChooseBranch() {
   const navigate = useNavigate()
   const day = useDay()
   useMaster() // re-render saat Owner tambah/edit/nonaktifkan cabang (sumber tunggal)
   const status = useBranchStatus() // status buka cabang dari SERVER (lintas perangkat)
+
+  const [coords, setCoords] = useState(null) // {lat,lng} lokasi customer
+  const [showGeo, setShowGeo] = useState(false) // popup ajakan izin lokasi
+  const [geoHint, setGeoHint] = useState('') // pesan bila izin diblokir browser
+
   useEffect(() => {
-    // Poll RINGAN: hanya saat di halaman ini, tiap 30 dtk, BERHENTI saat tab tak
-    // aktif → customer lihat cabang buka tanpa refresh, tanpa koneksi realtime.
-    // (re-fetch sekaligus me-refresh gate jam tutup online.)
+    // Poll RINGAN status buka cabang (tanpa realtime).
     let t = null
     const start = () => { if (!t) { refreshBranchStatus(); t = setInterval(refreshBranchStatus, 30000) } }
     const stop = () => { clearInterval(t); t = null }
@@ -40,14 +52,43 @@ export default function CustomerChooseBranch() {
     document.addEventListener('visibilitychange', onVis)
     return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
   }, [])
-  const near = BRANCHES.find((b) => STATUS[b.id]?.near)
+
+  // Minta lokasi. fromButton=true → tampilkan petunjuk bila diblokir.
+  const askLocation = (fromButton) => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setShowGeo(false); setGeoHint('') },
+      (err) => {
+        if (fromButton && err.code === err.PERMISSION_DENIED) setGeoHint('Izin lokasi sedang diblokir. Aktifkan lewat ikon 🔒/ⓘ di address bar → Izinkan Lokasi.')
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 },
+    )
+  }
+
+  // Cek izin saat masuk: sudah diizinkan → ambil diam-diam (TANPA popup); belum →
+  // munculkan ajakan (akan tampil lagi tiap masuk halaman ini selama belum diizinkan).
+  useEffect(() => {
+    if (!navigator.geolocation) return
+    let cancelled = false
+    const decide = (state) => {
+      if (cancelled) return
+      if (state === 'granted') { setShowGeo(false); askLocation(false) }
+      else setShowGeo(true)
+    }
+    if (navigator.permissions?.query) {
+      navigator.permissions.query({ name: 'geolocation' })
+        .then((res) => { decide(res.state); res.onchange = () => decide(res.state) })
+        .catch(() => setShowGeo(true))
+    } else {
+      setShowGeo(true) // Permissions API tak ada → ajakan (aman)
+    }
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const now = new Date()
   const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
   const nowHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
-  // Cabang BUKA untuk online:
-  //  - mode supabase → status SERVER: kasir buka HARI INI & belum lewat jam tutup
-  //    online (terlihat lintas perangkat).
-  //  - mode local → sesi day.js lokal (perangkat sama).
   const isOpen = (id) => {
     if (isSupabase()) {
       const st = status[id]
@@ -56,6 +97,15 @@ export default function CustomerChooseBranch() {
     }
     return !!day && day.branchId === id && day.phase === PHASE.SELLING
   }
+
+  // Daftar cabang + jarak; urutkan TERDEKAT bila lokasi sudah ada.
+  const list = BRANCHES.filter((b) => b.active !== false).map((b) => {
+    const bc = parseCoord(b.coord)
+    const dist = coords && bc ? haversineKm(coords, bc) : null
+    return { b, dist }
+  })
+  if (coords) list.sort((x, y) => (x.dist ?? Infinity) - (y.dist ?? Infinity))
+  const nearest = coords && list[0]?.dist != null ? list[0] : null
 
   return (
     <div className="bg-background text-on-surface min-h-screen flex flex-col">
@@ -71,27 +121,36 @@ export default function CustomerChooseBranch() {
           <p className="font-body-md text-on-surface-variant">Menu &amp; harga bisa beda tiap cabang</p>
         </section>
 
-        {near && (
+        {nearest ? (
           <div className="flex justify-center mb-7">
-            <div className="inline-flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-full border border-outline-variant shadow-sm">
-              <Icon name="location_on" className="text-primary text-[18px]" />
-              <span className="font-label-md text-label-md">Dekat kamu: {near.name.replace('CORNEY ', '')} ({STATUS[near.id].distance})</span>
+            <div className="inline-flex items-center gap-2 bg-primary-fixed text-primary px-4 py-2 rounded-full border border-primary/20 shadow-sm">
+              <Icon name="near_me" fill className="text-primary text-[18px]" />
+              <span className="font-label-md text-label-md font-bold">Terdekat: {nearest.b.name.replace('CORNEY ', '')} · {fmtKm(nearest.dist)}</span>
             </div>
+          </div>
+        ) : (
+          <div className="flex justify-center mb-7">
+            <button onClick={() => askLocation(true)} className="inline-flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-full border border-outline-variant shadow-sm active:scale-95">
+              <Icon name="location_on" className="text-primary text-[18px]" />
+              <span className="font-label-md text-label-md">Aktifkan lokasi untuk cabang terdekat</span>
+            </button>
           </div>
         )}
 
         <div className="flex flex-col gap-4">
-          {BRANCHES.filter((b) => b.active !== false).map((b) => {
-            const s = STATUS[b.id] || { distance: '', openUntil: '22:00', onlineUntil: '21:30' }
+          {list.map(({ b, dist }, idx) => {
             const open = isOpen(b.id)
+            const isNear = coords && idx === 0 && dist != null
+            const openUntil = b.closeBooth || '22:00'
+            const onlineUntil = b.stopOnline || '21:30'
             return (
               <button
                 key={b.id}
                 onClick={() => open && navigate(`/app/katalog/${b.id}`)}
                 disabled={!open}
-                className={`relative flex items-stretch w-full rounded-xl overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] text-left transition-all active:scale-[.98] ${open ? 'bg-white ring-1 ring-outline-variant hover:ring-2 hover:ring-primary' : 'bg-surface-container-high opacity-75 grayscale-[0.5] cursor-not-allowed'}`}
+                className={`relative flex items-stretch w-full rounded-xl overflow-hidden shadow-[0_4px_16px_rgba(26,26,26,0.08)] text-left transition-all active:scale-[.98] ${open ? 'bg-white ring-1 ring-outline-variant hover:ring-2 hover:ring-primary' : 'bg-surface-container-high opacity-75 grayscale-[0.5] cursor-not-allowed'} ${isNear ? 'ring-2 ring-primary' : ''}`}
               >
-                {/* Branded tile (placeholder for booth photo) */}
+                {isNear && <span className="absolute top-2 left-2 z-20 bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full shadow flex items-center gap-1"><Icon name="near_me" fill className="!text-[12px]" /> Terdekat</span>}
                 <div className="w-1/3 min-h-[140px] relative bg-primary-container flex items-center justify-center overflow-hidden">
                   <div className="absolute top-0 left-0 w-24 h-24 bg-primary rounded-full mix-blend-multiply blur-2xl opacity-60 -translate-x-1/3 -translate-y-1/3" />
                   <Icon name="storefront" fill className="text-on-primary-container !text-5xl relative z-10" />
@@ -100,16 +159,16 @@ export default function CustomerChooseBranch() {
                   <div>
                     <div className="flex justify-between items-start mb-1 gap-2">
                       <h3 className="font-headline-md text-[18px] leading-tight">{b.name}</h3>
-                      <span className={`font-label-md text-[12px] shrink-0 ${s.near ? 'text-primary font-bold' : 'text-on-surface-variant'}`}>{s.distance}</span>
+                      {dist != null && <span className={`font-label-md text-[12px] shrink-0 flex items-center gap-0.5 ${isNear ? 'text-primary font-bold' : 'text-on-surface-variant'}`}><Icon name="near_me" className="!text-[13px]" />{fmtKm(dist)}</span>}
                     </div>
                     <p className="font-body-md text-[14px] text-on-surface-variant mb-2 line-clamp-1">{b.address}</p>
                     {open ? (
-                      <span className="bg-green-100 text-green-700 text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Buka · tutup {s.openUntil}</span>
+                      <span className="bg-green-100 text-green-700 text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Buka · tutup {openUntil}</span>
                     ) : (
                       <span className="bg-surface-dim text-on-surface-variant text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Belum buka</span>
                     )}
                   </div>
-                  <p className="font-label-md text-[12px] text-on-surface-variant italic">{open ? `online sampai ${s.onlineUntil}` : 'kasir belum buka toko hari ini'}</p>
+                  <p className="font-label-md text-[12px] text-on-surface-variant italic">{open ? `online sampai ${onlineUntil}` : 'kasir belum buka toko hari ini'}</p>
                 </div>
               </button>
             )
@@ -122,6 +181,29 @@ export default function CustomerChooseBranch() {
           Cabang terpilih dipakai terus selama kamu belanja.
         </div>
       </div>
+
+      {/* Popup ajakan izin lokasi — ramah, tidak memaksa. Muncul selama belum diizinkan. */}
+      {showGeo && (
+        <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <style>{`@keyframes geoPop{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
+          <div className="w-full max-w-sm bg-surface rounded-3xl p-6 shadow-2xl text-center" style={{ animation: 'geoPop .25s ease-out' }}>
+            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-fixed flex items-center justify-center relative">
+              <span className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+              <Icon name="near_me" fill className="text-primary !text-[38px] relative z-10" />
+            </div>
+            <h2 className="font-headline-md text-headline-md text-on-surface mb-1">Cari corndog terdekat? 📍</h2>
+            <p className="text-body-md text-on-surface-variant leading-snug mb-1">
+              Izinkan lokasi sebentar yuk, biar CORNEY bisa <strong>mengurutkan cabang dari yang paling dekat</strong> denganmu — hemat waktu, corndog cepat sampai! 🌽
+            </p>
+            <p className="text-[12px] text-on-surface-variant/80 mb-5">Cuma untuk cari cabang terdekat kok, santai aja 😊</p>
+            {geoHint && <p className="text-[12px] text-error mb-4 leading-snug flex items-start gap-1 text-left"><Icon name="info" className="!text-[16px] shrink-0" /> {geoHint}</p>}
+            <button onClick={() => askLocation(true)} className="w-full h-[52px] bg-primary text-on-primary rounded-2xl font-bold text-body-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+              <Icon name="my_location" /> Izinkan Lokasi
+            </button>
+            <button onClick={() => setShowGeo(false)} className="w-full h-11 mt-2 text-on-surface-variant font-label-lg rounded-xl active:bg-surface-container transition-colors">Nanti saja</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

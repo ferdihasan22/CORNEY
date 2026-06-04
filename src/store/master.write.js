@@ -43,6 +43,7 @@ export async function pushBranch(b) {
     address: b.address || '',
     wa: b.wa || '',
     maps: b.maps || '',
+    coord: b.coord || '', // "lat,lng" cabang terdekat (customer)
     maxim_name: b.maximName || b.name,
     kembalian: Math.max(0, Math.round(Number(b.kembalian) || 0)),
     stop_online: b.stopOnline || '21:30',

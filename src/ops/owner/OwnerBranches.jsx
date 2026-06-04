@@ -19,7 +19,7 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-const EMPTY = { name: '', address: '', wa: '', maps: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', par: {} }
+const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', par: {} }
 
 export default function OwnerBranches() {
   const navigate = useNavigate()
@@ -36,7 +36,7 @@ export default function OwnerBranches() {
   const [saveErr, setSaveErr] = useState('')
 
   const openNew = () => { setForm({ ...EMPTY, par: {} }); setEditing({}) }
-  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
+  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
   const close = () => { setEditing(null); setSaveErr(''); setBusy(false) }
   const setParField = (pid, v) => setForm((f) => ({ ...f, par: { ...f.par, [pid]: Math.max(0, Number(String(v).replace(/\D/g, '')) || 0) } }))
   const applyPar = (id) => PARENT_FILLINGS.forEach((p) => setPar(id, p.id, form.par?.[p.id] || 0))
@@ -170,6 +170,21 @@ export default function OwnerBranches() {
                   <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="location_on" className="!text-[16px]" /> Link Google Maps</label>
                   <input value={form.maps} onChange={(e) => setForm((f) => ({ ...f, maps: e.target.value }))} placeholder="https://maps.app.goo.gl/..." type="url" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
                   <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Link lokasi cabang. Dikirim otomatis ke customer <strong>ambil sendiri</strong> lewat WA saat pesanan siap.</p>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="my_location" className="!text-[16px]" /> Koordinat GPS (cabang terdekat)</label>
+                  <input value={form.coord} onChange={(e) => setForm((f) => ({ ...f, coord: e.target.value }))} placeholder="-1.267500, 116.894500" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest font-mono" />
+                  <div className="mt-1 rounded-xl bg-secondary-container/40 border border-secondary/30 p-3">
+                    <p className="text-[12px] font-bold text-on-surface flex items-center gap-1 mb-1.5"><Icon name="help" className="!text-[15px] text-primary" /> Cara ambil koordinat dari Google Maps</p>
+                    <ol className="text-[11px] text-on-surface-variant leading-relaxed list-decimal ml-4 space-y-0.5">
+                      <li>Buka <strong>Google Maps</strong>, cari lokasi cabang.</li>
+                      <li><strong>Tekan &amp; tahan</strong> tepat di titik lokasi cabang → muncul pin merah.</li>
+                      <li>Koordinat muncul (mis. <span className="font-mono">-1.267500, 116.894500</span>) — di kolom pencarian / kartu bawah.</li>
+                      <li><strong>Ketuk angka itu</strong> untuk menyalin, lalu <strong>tempel</strong> di kolom di atas.</li>
+                    </ol>
+                    <a href="https://www.google.com/maps" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[12px] font-bold text-primary"><Icon name="open_in_new" className="!text-[14px]" /> Buka Google Maps</a>
+                  </div>
+                  <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Dipakai app customer untuk mengurutkan <strong>cabang terdekat</strong> dari lokasinya. Format: <span className="font-mono">lat,lng</span>.</p>
                 </div>
                 <div className="space-y-1">
                   <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="two_wheeler" className="!text-[16px]" /> Nama Lokasi di Maxim</label>

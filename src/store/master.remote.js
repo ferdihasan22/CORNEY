@@ -66,6 +66,7 @@ function mapBranch(b) {
     address: b.address || '',
     wa: b.wa || '',
     maps: b.maps || '',
+    coord: b.coord || '', // "lat,lng" cabang terdekat (customer)
     username: 'corney-' + b.id, // disintesis (lihat catatan di atas)
     maximName: b.maxim_name || b.name,
     kembalian: b.kembalian ?? 200000,

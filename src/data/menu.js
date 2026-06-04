@@ -49,8 +49,8 @@ export const FREE_SAUCE_MAX = 2 // Owner-set max free sauces per corndog
 
 // Dummy branches (account = branch, PRD §6.1).
 export const BRANCHES = [
-  { id: 'sepinggan', name: 'CORNEY Sepinggan', username: 'corney-sepinggan', address: 'Jl. Marsma R. Iswahyudi, Balikpapan', wa: '6281200000001', maps: 'https://www.google.com/maps/search/?api=1&query=CORNEY+Sepinggan+Balikpapan' },
-  { id: 'gunungsari', name: 'CORNEY Gunung Sari', username: 'corney-gunungsari', address: 'Jl. Gunung Sari Ilir, Balikpapan', wa: '6281200000002', maps: 'https://www.google.com/maps/search/?api=1&query=CORNEY+Gunung+Sari+Balikpapan' },
+  { id: 'sepinggan', name: 'CORNEY Sepinggan', username: 'corney-sepinggan', address: 'Jl. Marsma R. Iswahyudi, Balikpapan', wa: '6281200000001', maps: 'https://www.google.com/maps/search/?api=1&query=CORNEY+Sepinggan+Balikpapan', coord: '-1.2675,116.8945' },
+  { id: 'gunungsari', name: 'CORNEY Gunung Sari', username: 'corney-gunungsari', address: 'Jl. Gunung Sari Ilir, Balikpapan', wa: '6281200000002', maps: 'https://www.google.com/maps/search/?api=1&query=CORNEY+Gunung+Sari+Balikpapan', coord: '-1.2479,116.8529' },
 ]
 
 // Demo passwords (dummy only — real auth via Supabase later).
