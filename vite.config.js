@@ -60,7 +60,15 @@ function midtransDevApi(env) {
 // CORNEY PWA — Vite config (Fase 1). PWA + offline-ready for kasir.
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  // Penanda versi: di Cloudflare Pages pakai SHA commit (CF_PAGES_COMMIT_SHA),
+  // lokal → 'lokal'. Ditanam saat build → ditampilkan di layar (cek versi PWA).
+  const BUILD_ID = (env.CF_PAGES_COMMIT_SHA || process.env.CF_PAGES_COMMIT_SHA || '').slice(0, 7) || 'lokal'
+  const BUILD_TIME = new Date().toISOString().slice(0, 16).replace('T', ' ')
   return {
+    define: {
+      __BUILD_ID__: JSON.stringify(BUILD_ID),
+      __BUILD_TIME__: JSON.stringify(BUILD_TIME),
+    },
   plugins: [
     midtransDevApi(env),
     react(),
