@@ -169,7 +169,14 @@ export default function CustomerQris() {
     } finally { setSaving(false) }
   }
 
-  const cekStatus = () => { mode === 'live' ? pollStatus(false) : finishPaid() }
+  // KEAMANAN: di mode supabase, JANGAN pernah tandai lunas dari sisi klien (status
+  // LUNAS hanya dari webhook Midtrans). 'dummy' (Edge gagal) hanya boleh auto-LUNAS
+  // di mode lokal/testing. Mode supabase + dummy → minta buat QR baru, bukan finishPaid.
+  const cekStatus = () => {
+    if (mode === 'live') return pollStatus(false)
+    if (isSupabase()) return setStatusMsg('Pembayaran belum bisa diproses. Coba "Buat QR Baru" atau ulangi sebentar lagi.')
+    finishPaid() // hanya mode lokal/dummy non-supabase
+  }
   const batal = () => { cancelOrder(order.id); navigate(`/app/katalog/${order.branchId}`) }
 
   return (
