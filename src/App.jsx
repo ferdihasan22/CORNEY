@@ -109,11 +109,15 @@ const HOST_APP = {
   'kantor.corney.id': 'kantor',
 }
 function hostApp() {
+  // DOMAIN PRODUKSI MENANG DULU: corney.id → customer, dapur/kantor/gudang → app-nya.
+  // (normalisasi: huruf kecil + buang titik akhir 'corney.id.')
+  const h = (typeof window !== 'undefined' ? window.location.hostname : '').toLowerCase().replace(/\.$/, '')
+  if (HOST_APP[h]) return HOST_APP[h]
   // Build native (Capacitor APK) memaksa satu app via VITE_APP_TARGET — di WebView
-  // hostname = 'localhost' jadi tak bisa andalkan domain. mis. APK Kasir → 'kasir'.
+  // hostname = 'localhost' (tak dikenal di HOST_APP), BARU pakai paksaan ini.
   const forced = (import.meta.env.VITE_APP_TARGET || '').toLowerCase()
   if (forced) return forced
-  return (typeof window !== 'undefined' && HOST_APP[window.location.hostname]) || 'all'
+  return 'all'
 }
 
 function Home() {
