@@ -9,6 +9,7 @@ import { isSupabase } from '../../lib/backend.js'
 import { adminResetPasswordKasir, adminCreateKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 import { useBranchStatus } from '../../store/useBranchStatus.js'
 import { setBranchOpenFor } from '../../store/branchStatus.js'
+import ImageUploadButton from '../../app/ImageUploadButton.jsx'
 
 // 2.3 — §3 Multi-cabang · Kelola Cabang. Ported from Stitch
 // "manage_branches_desktop", made responsive (card grid + drawer). The left
@@ -19,7 +20,7 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', par: {} }
+const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', qrisImg: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', par: {} }
 
 export default function OwnerBranches() {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export default function OwnerBranches() {
   const [saveErr, setSaveErr] = useState('')
 
   const openNew = () => { setForm({ ...EMPTY, par: {} }); setEditing({}) }
-  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
+  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', qrisImg: b.qrisImg || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
   const close = () => { setEditing(null); setSaveErr(''); setBusy(false) }
   const setParField = (pid, v) => setForm((f) => ({ ...f, par: { ...f.par, [pid]: Math.max(0, Number(String(v).replace(/\D/g, '')) || 0) } }))
   const applyPar = (id) => PARENT_FILLINGS.forEach((p) => setPar(id, p.id, form.par?.[p.id] || 0))
@@ -185,6 +186,13 @@ export default function OwnerBranches() {
                     <a href="https://www.google.com/maps" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[12px] font-bold text-primary"><Icon name="open_in_new" className="!text-[14px]" /> Buka Google Maps</a>
                   </div>
                   <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Dipakai app customer untuk mengurutkan <strong>cabang terdekat</strong> dari lokasinya. Format: <span className="font-mono">lat,lng</span>.</p>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="qr_code_2" className="!text-[16px]" /> Gambar QRIS GoPay</label>
+                  <ImageUploadButton value={form.qrisImg} onChange={(url) => setForm((f) => ({ ...f, qrisImg: url }))} label="Upload QRIS GoPay" />
+                  <input value={form.qrisImg} onChange={(e) => setForm((f) => ({ ...f, qrisImg: e.target.value }))} placeholder="atau tempel URL gambar https://…" type="url" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
+                  {form.qrisImg && <img src={form.qrisImg} alt="QRIS GoPay" className="mt-1 w-32 h-32 object-contain rounded-xl border border-outline-variant bg-white p-1" />}
+                  <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Muncul di kasir saat metode <strong>QRIS GoPay</strong> dipilih — pelanggan scan gambar ini. Pakai screenshot QR GoPay/QRIS statis cabang.</p>
                 </div>
                 <div className="space-y-1">
                   <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="two_wheeler" className="!text-[16px]" /> Nama Lokasi di Maxim</label>

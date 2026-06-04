@@ -341,7 +341,7 @@ export function saveRecipe(menuId, rows) {
 }
 
 // ── Branches / outlets (§3) ─────────────────────────────
-function normBranch({ name, address, wa, maps, coord, maximName, kembalian, stopOnline, closeBooth, username, password, active = true }) {
+function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembalian, stopOnline, closeBooth, username, password, active = true }) {
   const nm = (name || '').trim()
   return {
     name: nm,
@@ -349,6 +349,7 @@ function normBranch({ name, address, wa, maps, coord, maximName, kembalian, stop
     wa: (wa || '').trim(),
     maps: (maps || '').trim(), // link Google Maps lokasi cabang
     coord: (coord || '').trim(), // "lat,lng" untuk cabang terdekat (customer)
+    qrisImg: (qrisImg || '').trim(), // gambar QRIS GoPay (statis) per cabang
     // Default ke nama cabang bila kosong, supaya tutorial Maxim tetap terisi.
     maximName: (maximName || '').trim() || nm.replace('CORNEY', 'Corney'),
     kembalian: Math.max(0, Math.round(Number(kembalian) || 0)),
@@ -381,7 +382,7 @@ export function updateBranch(id, data) {
   const branches = state.branches.map((x) => {
     if (x.id !== id) return x
     const patch = {}
-    for (const k of ['name', 'address', 'wa', 'maps', 'coord', 'maximName', 'kembalian', 'stopOnline', 'closeBooth', 'username', 'password']) {
+    for (const k of ['name', 'address', 'wa', 'maps', 'coord', 'qrisImg', 'maximName', 'kembalian', 'stopOnline', 'closeBooth', 'username', 'password']) {
       if (data[k] != null) patch[k] = typeof data[k] === 'string' ? data[k].trim() : data[k]
     }
     if (patch.username != null) patch.username = patch.username.toLowerCase() // username login selalu huruf kecil

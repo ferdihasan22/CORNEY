@@ -3,6 +3,8 @@ import { fmtRp } from '../../data/menu.js'
 import { isSupabase } from '../../lib/backend.js'
 import { supabase } from '../../lib/supabase.js'
 import { playSfx } from '../../lib/sfx.js'
+import { useDay } from '../../store/useDay.js'
+import { useMaster } from '../../store/useMaster.js'
 
 // Step 1A.6 — WLK-03 "Bayar Sekarang" + §6.7 lima channel pembayaran.
 // QRIS Midtrans = DINAMIS ASLI (charge server-side via Edge midtrans-charge →
@@ -25,6 +27,10 @@ const SIMULATOR_URL = 'https://simulator.sandbox.midtrans.com/v2/qris/index'
 const PAID_STATUSES = ['settlement', 'capture']
 
 export default function PaymentModal({ total, onClose, onComplete }) {
+  const day = useDay()
+  const master = useMaster()
+  // Gambar QRIS GoPay statis cabang ini (di-upload Owner di Kelola Cabang).
+  const qrisGopayImg = (master?.branches || []).find((b) => b.id === day?.branchId)?.qrisImg || ''
   const [method, setMethod] = useState('tunai')
   const [cash, setCash] = useState(0)
   // QRIS Midtrans dinamis
@@ -219,13 +225,20 @@ export default function PaymentModal({ total, onClose, onComplete }) {
             </div>
           )}
 
-          {/* QRIS GoPay — statis/manual (seperti semula) */}
+          {/* QRIS GoPay — gambar statis per cabang (di-upload Owner di Kelola Cabang) */}
           {method === 'qris_gopay' && (
             <div className="flex flex-col items-center gap-3 py-2">
-              <div className="w-44 h-44 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-center">
-                <Icon name="qr_code_2" className="!text-[120px] text-on-surface" />
-              </div>
-              <p className="font-body-md text-on-surface-variant text-center">QR statis GoPay — pelanggan scan, lalu kasir tandai sudah bayar (manual).</p>
+              {qrisGopayImg ? (
+                <div className="w-56 h-56 rounded-xl bg-white border border-outline-variant p-2 flex items-center justify-center overflow-hidden">
+                  <img src={qrisGopayImg} alt="QRIS GoPay" className="w-full h-full object-contain" />
+                </div>
+              ) : (
+                <div className="w-44 h-44 rounded-xl bg-surface-container-low border border-dashed border-outline-variant flex flex-col items-center justify-center gap-1 text-center px-3">
+                  <Icon name="qr_code_2" className="!text-[64px] text-on-surface-variant/50" />
+                  <p className="text-[11px] text-on-surface-variant leading-snug">Gambar QRIS GoPay belum di-set. Owner upload di <strong>Kelola Cabang</strong>.</p>
+                </div>
+              )}
+              <p className="font-body-md text-on-surface-variant text-center">Pelanggan scan QR di atas, lalu kasir tandai sudah bayar (manual).</p>
             </div>
           )}
 
