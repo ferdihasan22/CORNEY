@@ -88,6 +88,20 @@ export default function CustomerTrack() {
           <div className="flex items-center gap-2 text-on-surface-variant pt-2"><Icon name="schedule" className="!text-[18px]" /><p className="font-label-md">{order.method === 'maxim' ? 'Maxim' : `Ambil · ${order.schedule}`}</p></div>
         </section>
 
+        {/* Belum dibayar → ajak lanjut bayar (order tersimpan, belum masuk antrean dapur) */}
+        {!order.paid && (
+          <section className="bg-error-container/40 border border-error/40 rounded-xl p-4 flex items-start gap-3">
+            <Icon name="payments" className="text-error !text-[24px] shrink-0" />
+            <div className="flex-1">
+              <p className="font-label-lg text-error">Pesanan belum dibayar</p>
+              <p className="text-[13px] text-on-surface-variant leading-snug mb-3">Pesananmu tersimpan tapi <strong>belum masuk antrean dapur</strong> sampai pembayaran selesai.</p>
+              <button onClick={() => navigate(`/app/qris/${order.id}`)} className="w-full h-11 rounded-xl bg-primary text-on-primary font-label-lg flex items-center justify-center gap-2 active:scale-[0.98]">
+                <Icon name="qr_code_2" className="!text-[20px]" /> Lanjutkan Pembayaran
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* Stepper */}
         <section className="relative pl-1">
           {STEPS.map((s, i) => {
@@ -111,8 +125,8 @@ export default function CustomerTrack() {
           })}
         </section>
 
-        {/* Current status context */}
-        {order.status !== 'selesai' ? (
+        {/* Current status context — hanya bila SUDAH dibayar (kalau belum, banner di atas yang tampil) */}
+        {order.paid && (order.status !== 'selesai' ? (
           <section className="bg-blue-50 border border-blue-100 rounded-xl p-5 flex items-start gap-4">
             <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shrink-0"><Icon name="restaurant" fill className="text-white" /></div>
             <p className="text-blue-900 font-label-md">{order.status === 'siap' ? 'Pesananmu sudah siap! Silakan ambil / pesan Maxim.' : 'Sedang menyiapkan corndog spesialmu. Tunggu sebentar ya!'}</p>
@@ -121,7 +135,7 @@ export default function CustomerTrack() {
           <section className="bg-green-50 border border-green-100 rounded-xl p-5 flex items-center gap-4">
             <Icon name="celebration" fill className="text-green-600 !text-3xl" /><p className="text-green-900 font-label-md">Pesanan selesai. Terima kasih sudah pesan di CORNEY!</p>
           </section>
-        )}
+        ))}
 
         <a href={`https://wa.me/${branch?.wa || ''}?text=${encodeURIComponent(`Halo, mau tanya pesanan #${String(order.no).padStart(3, '0')} (PIN ${order.pin})`)}`} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 text-white font-label-lg shadow-lg active:scale-[0.98]" style={{ backgroundColor: '#25D366' }}>
           <Icon name="chat" /> Hubungi Kasir via WhatsApp

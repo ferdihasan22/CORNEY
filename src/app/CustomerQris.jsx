@@ -25,7 +25,9 @@ export default function CustomerQris() {
   const { orderId } = useParams()
   const navigate = useNavigate()
   const order = getOrder(orderId)
-  const [secs, setSecs] = useState(5 * 60)
+  const QR_TTL = 15 * 60 // detik — selaras dgn custom_expiry Midtrans (15 menit)
+  const [secs, setSecs] = useState(QR_TTL)
+  const [expired, setExpired] = useState(false)
   const [mode, setMode] = useState('loading') // 'loading' | 'live' | 'dummy'
   const [qrString, setQrString] = useState('')
   const [qrUrl, setQrUrl] = useState('')
@@ -36,9 +38,9 @@ export default function CustomerQris() {
   const [saving, setSaving] = useState(false)
   const charged = useRef(false)
 
-  // Countdown
+  // Countdown — saat habis: tandai kedaluwarsa (QR Midtrans ikut expire 15 menit).
   useEffect(() => {
-    if (secs <= 0) return
+    if (secs <= 0) { setExpired(true); return }
     const t = setInterval(() => setSecs((s) => s - 1), 1000)
     return () => clearInterval(t)
   }, [secs])
@@ -47,12 +49,12 @@ export default function CustomerQris() {
   // cegah race guard "cart kosong → pilih cabang" yang menyalip navigasi ke QRIS).
   useEffect(() => { if (order) clearCart() }, [order?.id])
 
-  // Charge QRIS once on mount (ref guard survives StrictMode double-invoke).
-  useEffect(() => {
-    if (!order || charged.current) return
-    charged.current = true
+  // Buat (atau buat-ulang) transaksi QRIS. order_id Midtrans unik tiap charge → QR baru.
+  const runCharge = () => {
+    if (!order) return
     const mid = `${order.id}-${Date.now().toString(36)}`
     setMidId(mid)
+    setMode('loading'); setStatusMsg('')
 
     // Mode supabase: panggil Edge Function (Server Key di server, aman).
     // Mode local: panggil Vite dev middleware /api/midtrans/charge (Server Key via Vite).
@@ -78,11 +80,27 @@ export default function CustomerQris() {
         }
       })
       .catch(() => setMode('dummy'))
+  }
+
+  // Charge QRIS once on mount (ref guard survives StrictMode double-invoke).
+  useEffect(() => {
+    if (!order || charged.current) return
+    charged.current = true
+    runCharge()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order])
+
+  // "Buat QR Baru" setelah waktu habis → charge ulang + reset hitung mundur.
+  const buatQrBaru = () => {
+    setQrUrl(''); setQrString('')
+    setExpired(false); setSecs(QR_TTL)
+    runCharge()
+  }
 
   // Auto-poll the real transaction status while live & waiting.
   useEffect(() => {
     if (mode !== 'live' || !midId) return
+    if (expired) { pollStatus(true); return } // habis → cek sekali lagi lalu berhenti
     let t = null
     const check = () => pollStatus(true)
     const start = () => { if (!t) { check(); t = setInterval(check, 8000) } } // 8 dtk
@@ -92,7 +110,7 @@ export default function CustomerQris() {
     document.addEventListener('visibilitychange', onVis)
     return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, midId])
+  }, [mode, midId, expired])
 
   if (!order) return <Navigate to="/app/cabang" replace />
   const mm = String(Math.floor(secs / 60)).padStart(2, '0')
@@ -172,12 +190,18 @@ export default function CustomerQris() {
         <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-[0_4px_16px_rgba(26,26,26,0.08)] flex flex-col items-center mb-4">
           <div className="w-full aspect-square bg-white p-4 rounded-xl border border-surface-variant mb-4 flex items-center justify-center relative overflow-hidden">
             {mode === 'live' && qrUrl ? (
-              <img src={qrUrl} alt="QRIS" className="w-full h-full object-contain" />
+              <img src={qrUrl} alt="QRIS" className={`w-full h-full object-contain transition ${expired ? 'blur-[3px] opacity-40' : ''}`} />
             ) : (
               <>
-                <Icon name="qr_code_2" className="!text-[180px] text-on-surface" />
+                <Icon name="qr_code_2" className={`!text-[180px] text-on-surface ${expired ? 'opacity-30' : ''}`} />
                 <span className="absolute bottom-2 text-[10px] text-on-surface-variant bg-white/80 px-2 rounded">{mode === 'loading' ? 'Membuat QR…' : 'QR contoh (dummy)'}</span>
               </>
+            )}
+            {expired && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-white/40">
+                <Icon name="timer_off" className="!text-[44px] text-error" />
+                <span className="bg-error text-on-error font-bold text-sm px-3 py-1 rounded-full shadow">Waktu habis</span>
+              </div>
             )}
           </div>
           <div className="flex items-center gap-2 text-on-surface-variant">
@@ -187,7 +211,7 @@ export default function CustomerQris() {
         </div>
 
         {/* Bayar pakai aplikasi lain — unduh / screenshot QR lalu scan dari galeri */}
-        {qrUrl && (
+        {qrUrl && !expired && (
           <div className="bg-surface-container-lowest rounded-2xl p-4 mb-4 shadow-[0_2px_8px_rgba(26,26,26,0.06)] space-y-3">
             <div className="flex items-start gap-2">
               <Icon name="account_balance_wallet" className="text-primary !text-[20px] shrink-0 mt-0.5" />
@@ -206,7 +230,7 @@ export default function CustomerQris() {
         )}
 
         {/* Live testing helpers — copy qr_string + open simulator */}
-        {mode === 'live' && (
+        {mode === 'live' && !expired && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 space-y-3">
             <div className="flex items-start gap-2">
               <Icon name="science" className="text-amber-600 !text-[18px] shrink-0 mt-0.5" />
@@ -229,23 +253,39 @@ export default function CustomerQris() {
           </div>
         )}
 
-        {/* Status row */}
-        <div className="bg-surface-container-low border border-surface-variant rounded-full px-5 py-3 flex items-center justify-between shadow-sm mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <span className="text-on-surface-variant font-label-md">Menunggu pembayaran…</span>
+        {/* Status row — menunggu vs waktu habis */}
+        {expired ? (
+          <div className="bg-error-container/40 border border-error/40 rounded-2xl px-5 py-4 flex items-start gap-3 shadow-sm mb-4">
+            <Icon name="timer_off" className="text-error !text-[22px] shrink-0 mt-0.5" />
+            <div>
+              <p className="font-label-lg text-error">Waktu pembayaran habis</p>
+              <p className="text-[13px] text-on-surface-variant leading-snug">QR ini sudah tidak berlaku. Pesananmu <strong>masih tersimpan</strong> — buat QR baru untuk membayar, atau batalkan.</p>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5"><Icon name="timer" className="text-primary !text-[18px]" /><span className="text-primary font-bold tabular-nums">{mm}:{ss}</span></div>
-        </div>
+        ) : (
+          <div className="bg-surface-container-low border border-surface-variant rounded-full px-5 py-3 flex items-center justify-between shadow-sm mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <span className="text-on-surface-variant font-label-md">Menunggu pembayaran…</span>
+            </div>
+            <div className="flex items-center gap-1.5"><Icon name="timer" className="text-primary !text-[18px]" /><span className="text-primary font-bold tabular-nums">{mm}:{ss}</span></div>
+          </div>
+        )}
 
         {statusMsg && <p className="text-[13px] text-center text-on-surface-variant mb-4 px-2">{statusMsg}</p>}
 
         <div className="flex flex-col gap-3">
-          <button onClick={cekStatus} disabled={checking} className="w-full h-[52px] bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-[0.98] transition-all disabled:opacity-60">
-            {checking ? 'Mengecek…' : 'Sudah bayar? Cek status'}
-          </button>
+          {expired ? (
+            <button onClick={buatQrBaru} className="w-full h-[52px] bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+              <Icon name="refresh" className="!text-[20px]" /> Buat QR Baru
+            </button>
+          ) : (
+            <button onClick={cekStatus} disabled={checking} className="w-full h-[52px] bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-[0.98] transition-all disabled:opacity-60">
+              {checking ? 'Mengecek…' : 'Sudah bayar? Cek status'}
+            </button>
+          )}
           <button onClick={batal} className="w-full h-[52px] bg-surface-container text-on-surface-variant font-label-lg rounded-xl active:scale-[0.98] transition-all">Batalkan Pesanan</button>
-          {import.meta.env.DEV && (
+          {import.meta.env.DEV && !expired && (
             <button onClick={finishPaid} className="w-full py-3 rounded-xl border border-dashed border-primary text-primary text-sm flex items-center justify-center gap-2 active:scale-95">
               <Icon name="bolt" className="!text-[18px]" /> Simulasi Bayar (testing) — tandai LUNAS
             </button>

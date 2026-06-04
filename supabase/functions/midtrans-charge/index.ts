@@ -30,6 +30,9 @@ Deno.serve(async (req: Request) => {
       payment_type: "qris",
       transaction_details: { order_id: String(orderId), gross_amount: Math.round(Number(gross) || 0) },
       qris: { acquirer: "gopay" },
+      // Masa berlaku QR pasti = 15 menit → setelah itu Midtrans tolak (expire). UI
+      // menampilkan hitung mundur yang sama, lalu menawarkan "Buat QR Baru".
+      custom_expiry: { unit: "minute", expiry_duration: 15 },
     }),
   })
   return json(await r.json(), r.status)

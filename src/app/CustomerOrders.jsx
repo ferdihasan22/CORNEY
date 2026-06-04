@@ -71,10 +71,11 @@ export default function CustomerOrders() {
             {orders.map((o) => {
               const first = menuById(o.lines?.[0]?.menuId)
               const more = (o.lines?.length || 0) - 1
-              const st = STATUS[o.status] || STATUS.baru
+              const unpaid = !o.paid // belum bayar → lanjut ke QRIS, bukan lacak
+              const st = unpaid ? { label: 'Belum dibayar', cls: 'bg-error text-on-error' } : (STATUS[o.status] || STATUS.baru)
               return (
                 <div key={o.id} className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant/20 overflow-hidden">
-                  <button onClick={() => navigate(`/app/lacak/${o.id}`)} className="w-full p-4 flex items-center gap-4 text-left active:scale-[0.99] transition-transform">
+                  <button onClick={() => navigate(unpaid ? `/app/qris/${o.id}` : `/app/lacak/${o.id}`)} className="w-full p-4 flex items-center gap-4 text-left active:scale-[0.99] transition-transform">
                     <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-surface-container">
                       {first?.img ? <img src={first.img} alt={first.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Icon name="lunch_dining" className="text-on-surface-variant" /></div>}
                     </div>
@@ -92,8 +93,12 @@ export default function CustomerOrders() {
                       </div>
                     </div>
                   </button>
-                  {/* Komplain → hanya aktif setelah SELESAI. Teks otomatis berisi detail, kirim ke WA Pusat */}
-                  {o.status === 'selesai' ? (
+                  {/* Belum bayar → CTA lanjut bayar (ke QRIS). Selain itu → tombol komplain. */}
+                  {unpaid ? (
+                    <button onClick={() => navigate(`/app/qris/${o.id}`)} className="w-full flex items-center justify-center gap-2 py-3 border-t border-error/20 bg-error/5 text-error text-[14px] font-bold active:scale-95 transition-transform">
+                      <Icon name="payments" className="!text-[18px]" /> Lanjutkan Pembayaran
+                    </button>
+                  ) : o.status === 'selesai' ? (
                     <a href={complaintHref(o)} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-2.5 border-t border-surface-variant/30 text-error text-[13px] font-label-md active:scale-95 transition-transform">
                       <Icon name="report_problem" className="!text-[18px]" /> Komplain pesanan ini
                     </a>
