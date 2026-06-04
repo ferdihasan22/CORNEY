@@ -54,6 +54,7 @@ const OperasionalAnalisa = lazy(() => import('./ops/operasional/OperasionalAnali
 const OwnerNotifications = lazy(() => import('./ops/owner/OwnerNotifications.jsx'))
 const OwnerInvestor = lazy(() => import('./ops/owner/OwnerInvestor.jsx'))
 const OwnerUsers = lazy(() => import('./ops/owner/OwnerUsers.jsx'))
+const OwnerSettings = lazy(() => import('./ops/owner/OwnerSettings.jsx'))
 const OwnerBranchOverride = lazy(() => import('./ops/owner/OwnerBranchOverride.jsx'))
 const OwnerLedger = lazy(() => import('./ops/owner/OwnerLedger.jsx'))
 const OwnerMonthClose = lazy(() => import('./ops/owner/OwnerMonthClose.jsx'))
@@ -232,6 +233,7 @@ export default function App() {
       <Route path="/ops/owner/notifikasi" element={<OwnerNotifications />} />
       <Route path="/ops/owner/bagihasil" element={<OwnerInvestor />} />
       <Route path="/ops/owner/users" element={<OwnerUsers />} />
+      <Route path="/ops/owner/pengaturan" element={<OwnerSettings />} />
       <Route path="/ops/owner/harga-cabang" element={<OwnerBranchOverride />} />
       <Route path="/ops/owner/bukubesar" element={<OwnerLedger />} />
       <Route path="/ops/owner/tutup-bulan" element={<OwnerMonthClose />} />

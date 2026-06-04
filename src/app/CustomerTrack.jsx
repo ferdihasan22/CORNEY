@@ -5,6 +5,7 @@ import { useMaster } from '../store/useMaster.js'
 import { useOrders } from '../store/useOrders.js'
 import { getOrder, advanceOrder, refreshMyOrder, ORDER_FLOW } from '../store/orders.js'
 import { isSupabase } from '../lib/backend.js'
+import { useAppConfig } from '../store/useAppConfig.js'
 
 // 2.1 — CUS Lacak Pesanan. Ported from Stitch "lacak_pesanan_status_diproses".
 // Status comes from the orders store; in Fase 1 the kasir's live updates are
@@ -20,13 +21,15 @@ const STEPS = [
   { key: 'selesai', label: 'Selesai', desc: 'Pesanan selesai' },
 ]
 
-// Nomor WA Pusat (Customer Service) untuk komplain — bukan WA kasir cabang.
-const COMPLAINT_WA = '6285174200152' // 0851-7420-0152 → format internasional
+// Nomor WA komplain (Customer Service) diatur Owner di Pengaturan Aplikasi — bukan
+// WA kasir cabang. Default dipakai bila config belum sempat hidrasi.
+const COMPLAINT_WA_DEFAULT = '6285174200152'
 
 export default function CustomerTrack() {
   const { orderId } = useParams()
   const navigate = useNavigate()
   const master = useMaster()
+  const appCfg = useAppConfig()
   useOrders() // re-render on status change
   const order = getOrder(orderId)
   // Mode supabase: poll status live via RPC ber-pin (customer TAK buka realtime).
@@ -60,7 +63,7 @@ export default function CustomerTrack() {
       `Item:\n${items}\n` +
       `Total: ${fmtRp(order.total)}\n\n` +
       `Keluhan saya:\n`
-    return `https://wa.me/${COMPLAINT_WA}?text=${encodeURIComponent(text)}`
+    return `https://wa.me/${appCfg.complaint_wa || COMPLAINT_WA_DEFAULT}?text=${encodeURIComponent(text)}`
   }
 
   return (

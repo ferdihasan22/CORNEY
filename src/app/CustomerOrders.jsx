@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { BRANCHES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useOrders } from '../store/useOrders.js'
+import { useAppConfig } from '../store/useAppConfig.js'
 
 // 2.1 — CUS-04 Riwayat Pesanan. Ported from Stitch "riwayat_pesanan_corney_app"
 // but stripped of the decorative sidebar / bottom-nav (Menu/Promo/Profile aren't
@@ -18,12 +19,13 @@ const STATUS = {
   selesai: { label: 'Selesai', cls: 'bg-green-600 text-white' },
 }
 
-// Nomor WA Pusat (Customer Service) untuk komplain — bukan WA kasir cabang.
-const COMPLAINT_WA = '6285174200152' // 0851-7420-0152 → format internasional
+// Nomor WA komplain diatur Owner di Pengaturan Aplikasi. Default bila belum hidrasi.
+const COMPLAINT_WA_DEFAULT = '6285174200152'
 
 export default function CustomerOrders() {
   const navigate = useNavigate()
   const master = useMaster()
+  const appCfg = useAppConfig()
   const orders = useOrders() || []
 
   const menuById = (id) => (master?.menus || []).find((m) => m.id === id)
@@ -44,7 +46,7 @@ export default function CustomerOrders() {
       `Total: ${fmtRp(o.total)}\n` +
       `Tanggal: ${fmtDate(o.createdAt)}\n\n` +
       `Keluhan saya:\n`
-    return `https://wa.me/${COMPLAINT_WA}?text=${encodeURIComponent(text)}`
+    return `https://wa.me/${appCfg.complaint_wa || COMPLAINT_WA_DEFAULT}?text=${encodeURIComponent(text)}`
   }
 
   return (

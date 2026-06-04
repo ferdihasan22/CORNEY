@@ -1,0 +1,86 @@
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAppConfig } from '../../store/useAppConfig.js'
+import { setAppConfigField, normalizeWa } from '../../store/appconfig.js'
+
+// OWN — Pengaturan Aplikasi (setelan GLOBAL, berlaku semua cabang). Saat ini berisi
+// nomor WhatsApp tujuan komplain customer. Tersimpan ke app_config (Supabase) →
+// langsung dipakai app customer (Lacak & Riwayat) lintas perangkat.
+const Icon = ({ name, className = '', fill }) => (
+  <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
+)
+
+export default function OwnerSettings() {
+  const navigate = useNavigate()
+  const cfg = useAppConfig()
+  const [wa, setWa] = useState('')
+  const [saved, setSaved] = useState(false)
+
+  // Sinkronkan input dengan nilai tersimpan (termasuk saat hidrasi dari server).
+  useEffect(() => { setWa(cfg.complaint_wa || '') }, [cfg.complaint_wa])
+
+  const norm = normalizeWa(wa)
+  const valid = norm.startsWith('62') && norm.length >= 10 && norm.length <= 15
+  const dirty = norm !== (cfg.complaint_wa || '')
+
+  const save = () => {
+    if (!valid || !dirty) return
+    setAppConfigField('complaint_wa', norm)
+    setSaved(true); setTimeout(() => setSaved(false), 2500)
+  }
+
+  // Tampilan nomor enak dibaca: 62 851-7420-0152
+  const pretty = (d) => {
+    if (!d) return '—'
+    const rest = d.slice(2)
+    const a = rest.slice(0, 3), b = rest.slice(3, 7), c = rest.slice(7)
+    return `62 ${[a, b, c].filter(Boolean).join('-')}`
+  }
+
+  return (
+    <div className="bg-background text-on-surface min-h-screen flex flex-col">
+      <header className="bg-primary text-on-primary px-5 pt-5 pb-4 shadow-md">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <button onClick={() => navigate('/ops/owner')} className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center active:scale-95"><Icon name="arrow_back" /></button>
+          <h1 className="font-headline-lg text-headline-lg flex-1">Pengaturan Aplikasi</h1>
+        </div>
+      </header>
+
+      <main className="flex-1 max-w-2xl mx-auto w-full p-5 space-y-4">
+        {/* Nomor komplain */}
+        <section className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/40 shadow-sm">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0"><Icon name="support_agent" /></div>
+            <div>
+              <h2 className="font-label-lg text-on-surface">Nomor WhatsApp Komplain</h2>
+              <p className="text-[12px] text-on-surface-variant leading-snug">Tujuan tombol <b>“Komplain pesanan”</b> di app customer (Lacak &amp; Riwayat). <b>Satu nomor untuk semua cabang.</b></p>
+            </div>
+          </div>
+
+          <label className="text-[11px] font-bold text-on-surface-variant uppercase">Nomor WhatsApp</label>
+          <div className="relative mt-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"><Icon name="call" className="!text-[18px]" /></span>
+            <input
+              inputMode="tel" value={wa} onChange={(e) => setWa(e.target.value)}
+              placeholder="0851-7420-0152"
+              className={`w-full h-12 pl-10 pr-3 rounded-xl border outline-none font-bold tracking-wide ${valid || !wa ? 'border-outline focus:border-primary bg-surface' : 'border-error bg-error-container/20'}`}
+            />
+          </div>
+          {!valid && wa ? (
+            <p className="text-[11px] text-error mt-1.5 flex items-center gap-1"><Icon name="error" className="!text-[14px]" /> Nomor belum valid. Contoh: 0851-7420-0152</p>
+          ) : (
+            <p className="text-[11px] text-on-surface-variant mt-1.5">Tersimpan sebagai: <b className="text-on-surface">{pretty(norm)}</b> · format WhatsApp <span className="font-mono">{norm || '—'}</span></p>
+          )}
+
+          <button onClick={save} disabled={!valid || !dirty}
+            className="mt-4 w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-40">
+            <Icon name={saved ? 'check_circle' : 'save'} className="!text-[20px]" /> {saved ? 'Tersimpan!' : dirty ? 'Simpan Nomor' : 'Tersimpan'}
+          </button>
+          {dirty && valid && <p className="text-[11px] text-amber-700 mt-2 flex items-center gap-1"><Icon name="info" className="!text-[14px]" /> Ada perubahan belum disimpan.</p>}
+        </section>
+
+        <p className="text-[12px] text-on-surface-variant/70 leading-relaxed px-1">Perubahan langsung berlaku ke semua app customer (tersimpan di server &amp; ter-update otomatis tanpa mereka perlu refresh).</p>
+      </main>
+    </div>
+  )
+}

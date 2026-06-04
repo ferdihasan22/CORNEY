@@ -182,6 +182,11 @@ export default function OwnerDashboard() {
               <span className="font-label-lg leading-tight">Manajemen User</span>
               <span className="text-[11px] text-on-surface-variant">Akun staf per peran/cabang</span>
             </button>
+            <button onClick={() => navigate('/ops/owner/pengaturan')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
+              <Icon name="settings" className="text-primary text-2xl" />
+              <span className="font-label-lg leading-tight">Pengaturan Aplikasi</span>
+              <span className="text-[11px] text-on-surface-variant">Nomor WhatsApp komplain customer</span>
+            </button>
             <button onClick={() => navigate('/ops/owner/harga-cabang')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
               <Icon name="price_change" className="text-primary text-2xl" />
               <span className="font-label-lg leading-tight">Harga & Menu per Cabang</span>

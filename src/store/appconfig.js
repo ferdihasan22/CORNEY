@@ -1,0 +1,46 @@
+// CORNEY — Konfigurasi GLOBAL aplikasi (key-value). Satu sumber untuk setelan yang
+// berlaku ke SEMUA cabang. Saat ini: nomor WhatsApp tujuan komplain customer.
+// DIPERSIST localStorage + sinkron Supabase (tabel app_config). Owner tulis; semua
+// baca (customer anon perlu nomor komplain tanpa login).
+import { isSupabase } from '../lib/backend.js'
+
+const KEY = 'corney_app_cfg_v1'
+const subscribers = new Set()
+// Default aman kalau server belum sempat hidrasi (mis. customer baru buka app).
+const DEFAULTS = { complaint_wa: '6285174200152' }
+
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); return s && typeof s === 'object' && !Array.isArray(s) ? { ...DEFAULTS, ...s } : { ...DEFAULTS } }
+  catch { return { ...DEFAULTS } }
+}
+let map = load()
+function commit(next) { map = next; localStorage.setItem(KEY, JSON.stringify(next)); subscribers.forEach((fn) => fn()) }
+
+// Sinkron antar-tab: reload saat tab lain menulis.
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => { if (e.key === KEY) { map = load(); subscribers.forEach((fn) => fn()) } })
+}
+
+if (isSupabase()) {
+  import('./appconfig.remote.js').then(({ initAppConfigSync }) => initAppConfigSync(commit, () => map)).catch(() => {})
+}
+
+export function getAppConfig() { return map }
+export function subscribeAppConfig(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
+export function appConfigValue(key) { return map[key] ?? DEFAULTS[key] ?? '' }
+
+export function setAppConfigField(key, val) {
+  const next = { ...map, [key]: val }
+  commit(next)
+  if (isSupabase()) import('./appconfig.remote.js').then((w) => w.pushAppConfig(key, val)).catch(() => {})
+}
+
+// Normalisasi nomor WA Indonesia → format internasional tanpa simbol (62xxxxxxxxxx).
+// Terima "0851-7420-0152", "62 851...", "+62851...", dll.
+export function normalizeWa(raw) {
+  let d = String(raw || '').replace(/\D/g, '')
+  if (d.startsWith('620')) d = '62' + d.slice(3)
+  else if (d.startsWith('0')) d = '62' + d.slice(1)
+  else if (d && !d.startsWith('62')) d = '62' + d
+  return d
+}
