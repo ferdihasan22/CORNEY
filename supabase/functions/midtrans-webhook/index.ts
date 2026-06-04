@@ -20,7 +20,11 @@ Deno.serve(async (req: Request) => {
   const raw = `${n.order_id}${n.status_code}${n.gross_amount}${KEY}`
   const buf = await crypto.subtle.digest("SHA-512", new TextEncoder().encode(raw))
   const sig = [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("")
-  if (!KEY || sig !== n.signature_key) return new Response(JSON.stringify({ error: "bad signature" }), { status: 401 })
+  if (!KEY || sig !== n.signature_key) {
+    // Audit: log percobaan signature gagal (kemungkinan fraud) — terlihat di Edge logs.
+    console.warn("[midtrans-webhook] signature TIDAK cocok — tolak (kemungkinan fraud). order_id=", n.order_id, "status=", n.transaction_status)
+    return new Response(JSON.stringify({ error: "bad signature" }), { status: 401 })
+  }
 
   const paid = ["settlement", "capture"].includes(n.transaction_status)
   if (paid && n.order_id) {

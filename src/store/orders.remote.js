@@ -69,11 +69,11 @@ export async function fetchMyOrder(id, pin) {
   if (error) return null
   return one(data)
 }
-export async function rpcMarkPaid(id, pin) {
-  if (!supabase) return null
-  const { data } = await supabase.rpc('customer_mark_paid', { p_id: id, p_pin: pin })
-  return one(data)
-}
+// KEAMANAN: status LUNAS HANYA boleh di-set webhook Midtrans (signature-verified).
+// Frontend TIDAK boleh menandai lunas (RPC customer_mark_paid sudah dihapus dari DB,
+// migrasi security_drop_customer_mark_paid_backdoor). No-op — paid datang dari poll
+// order.paid yang di-set webhook.
+export async function rpcMarkPaid() { return null }
 export async function rpcCancel(id, pin) {
   if (!supabase) return
   await supabase.rpc('customer_cancel_order', { p_id: id, p_pin: pin })
