@@ -5,7 +5,7 @@ import { useMaster } from '../../store/useMaster.js'
 import { startDay } from '../../store/day.js'
 import { setKasirBranch } from './kasirSession.js'
 import { lockInfo, recordFail, clearLock } from '../../auth/roleAuth.js'
-import { isSupabase } from '../../lib/backend.js'
+import { isSupabase, BACKEND } from '../../lib/backend.js'
 import { signInKasir } from '../../auth/supabaseAuth.js'
 import { BUILD_ID, BUILD_TIME } from '../../lib/build.js'
 
@@ -161,9 +161,14 @@ export default function KasirLogin() {
           <span className="text-[12px] font-label-md text-on-surface-variant">System ID: POS-IDX-7721</span>
           <span className="text-[12px] font-label-md text-on-surface-variant">v0.1.0</span>
         </div>
-        <span className="text-[11px] font-mono text-on-surface-variant/70 flex items-center gap-1" title={`Build ${BUILD_ID} · ${BUILD_TIME}`}>
-          <Icon name="tag" className="!text-[13px]" /> build {BUILD_ID}{BUILD_TIME ? ` · ${BUILD_TIME}` : ''}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-mono text-on-surface-variant/70 flex items-center gap-1" title={`Build ${BUILD_ID} · ${BUILD_TIME}`}>
+            <Icon name="tag" className="!text-[13px]" /> build {BUILD_ID}
+          </span>
+          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${isSupabase() ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`} title="Mode data: supabase = ke server (benar untuk produksi); lokal = cuma di perangkat ini">
+            <Icon name={isSupabase() ? 'cloud_done' : 'cloud_off'} className="!text-[13px]" /> {BACKEND}
+          </span>
+        </div>
       </footer>
     </div>
   )
