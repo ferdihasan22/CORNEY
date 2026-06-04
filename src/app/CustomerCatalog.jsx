@@ -205,8 +205,8 @@ export default function CustomerCatalog() {
           </section>
         )}
 
-        {/* Category filters — geser samping (panah muncul bila ada yang tersembunyi) */}
-        <section className="mb-6 -mx-4 px-4 relative">
+        {/* Category filters — NEMPEL jadi header saat di-scroll (sticky) + geser samping */}
+        <section className="sticky top-[64px] z-30 -mx-4 px-4 py-2.5 mb-6 bg-surface/95 backdrop-blur-sm border-b border-outline-variant/40 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
           {catArrow.l && (
             <>
               <div className="absolute left-3 top-0 bottom-0 w-10 bg-gradient-to-r from-surface to-transparent pointer-events-none z-[5]" />
