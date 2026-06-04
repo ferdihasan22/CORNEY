@@ -108,6 +108,10 @@ const HOST_APP = {
   'kantor.corney.id': 'kantor',
 }
 function hostApp() {
+  // Build native (Capacitor APK) memaksa satu app via VITE_APP_TARGET — di WebView
+  // hostname = 'localhost' jadi tak bisa andalkan domain. mis. APK Kasir → 'kasir'.
+  const forced = (import.meta.env.VITE_APP_TARGET || '').toLowerCase()
+  if (forced) return forced
   return (typeof window !== 'undefined' && HOST_APP[window.location.hostname]) || 'all'
 }
 

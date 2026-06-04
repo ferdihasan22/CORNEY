@@ -1,0 +1,8 @@
+{
+  "appId": "id.corney.kasir",
+  "appName": "CORNEY Kasir",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#C8102E"
+  }
+}

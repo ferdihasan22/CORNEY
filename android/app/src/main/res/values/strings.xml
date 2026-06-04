@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CORNEY Kasir</string>
+    <string name="title_activity_main">CORNEY Kasir</string>
+    <string name="package_name">id.corney.kasir</string>
+    <string name="custom_url_scheme">id.corney.kasir</string>
+</resources>
