@@ -90,6 +90,8 @@ export default function ClosingReport() {
   const tunaiSales = total.tunai || 0
   const setoran = day.closing.reconcile?.setoran ?? (tunaiSales - urgentT - refundT - gajiT)
   const anomali = selisihKas !== 0 || hilangT > 0
+  // Order online yang BELUM diserahkan (selesai) di sesi ini → ingatkan sebelum tutup.
+  const activeOnline = getOrders().filter((o) => o.branchId === day.branchId && o.paid && new Date(o.createdAt).getTime() >= (day.startedAt || 0) && o.status !== 'selesai').length
 
   // Validasi tanggal laporan.
   const tglDDMM = isoToDDMM(dateISO)
@@ -189,6 +191,18 @@ export default function ClosingReport() {
               <button onClick={() => navigate('/ops/kasir/closing/belanja')} className="text-primary font-bold underline underline-offset-4 text-label-md">{dateDup ? 'Tanggal sudah ada — ubah di Langkah 1' : 'Perbaiki tanggal di Langkah 1'}</button>
             )}
           </div>
+
+          {/* Ingat: masih ada order online aktif → selesaikan dulu */}
+          {activeOnline > 0 && (
+            <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 flex items-start gap-3">
+              <Icon name="pending_actions" className="text-amber-700 !text-[22px] shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-bold text-amber-900">Masih ada {activeOnline} order online belum selesai</p>
+                <p className="text-[13px] text-amber-900/90 leading-snug mt-0.5">Sebaiknya selesaikan dulu di tab <b>Order Online</b> (serahkan ke pelanggan/kurir) sebelum tutup hari, supaya tak ada pesanan tergantung.</p>
+                <button onClick={() => navigate('/ops/kasir/online')} className="mt-2 h-9 px-4 rounded-lg bg-amber-500 text-white font-bold text-[13px] inline-flex items-center gap-1.5 active:scale-95"><Icon name="arrow_back" className="!text-[16px]" /> Ke Order Online</button>
+              </div>
+            </div>
+          )}
 
           {/* Anomaly callout */}
           {anomali ? (
