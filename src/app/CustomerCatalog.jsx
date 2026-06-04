@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
 import { BRANCHES, DUMMY_STOCK, LOW_STOCK_THRESHOLD, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
@@ -37,6 +37,27 @@ export default function CustomerCatalog() {
   const [bIdx, setBIdx] = useState(0)
   const [toast, setToast] = useState('')
   const [sheetMenu, setSheetMenu] = useState(null) // savory quick-add sauce sheet
+
+  // Scroll kategori ke samping (panah muncul hanya bila ada yang bisa digeser).
+  const catRef = useRef(null)
+  const [catArrow, setCatArrow] = useState({ l: false, r: false })
+  const updateCatArrow = () => {
+    const el = catRef.current
+    if (!el) return
+    const l = el.scrollLeft > 4
+    const r = el.scrollLeft + el.clientWidth < el.scrollWidth - 4
+    setCatArrow((p) => (p.l === l && p.r === r ? p : { l, r }))
+  }
+  const scrollCat = (dir) => {
+    const el = catRef.current
+    if (el) el.scrollBy({ left: dir * Math.max(160, el.clientWidth * 0.7), behavior: 'smooth' })
+  }
+  useEffect(() => {
+    updateCatArrow()
+    const onResize = () => updateCatArrow()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   // Toast on arrival from the detail page ("2x Mozza Ori ditambahkan"), and a
   // self-dismiss timer for any toast (works for catalog quick-adds too).
@@ -184,13 +205,29 @@ export default function CustomerCatalog() {
           </section>
         )}
 
-        {/* Category filters */}
-        <section className="mb-6 -mx-4 px-4">
-          <div className="flex gap-3 overflow-x-auto hide-scrollbar py-1">
+        {/* Category filters — geser samping (panah muncul bila ada yang tersembunyi) */}
+        <section className="mb-6 -mx-4 px-4 relative">
+          {catArrow.l && (
+            <>
+              <div className="absolute left-3 top-0 bottom-0 w-10 bg-gradient-to-r from-surface to-transparent pointer-events-none z-[5]" />
+              <button onClick={() => scrollCat(-1)} aria-label="Geser kategori ke kiri" className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-surface shadow-md border border-outline-variant flex items-center justify-center active:scale-95">
+                <Icon name="chevron_left" className="!text-[22px] text-primary" />
+              </button>
+            </>
+          )}
+          <div ref={catRef} onScroll={updateCatArrow} className="flex gap-3 overflow-x-auto hide-scrollbar py-1 scroll-smooth">
             {FILTERS.map((f) => (
               <button key={f} onClick={() => setFilter(f)} className={`whitespace-nowrap px-5 py-2.5 rounded-full font-label-lg transition-all ${filter === f ? 'bg-secondary-container text-on-secondary-container shadow-sm' : 'border border-outline-variant text-on-surface-variant'}`}>{f}</button>
             ))}
           </div>
+          {catArrow.r && (
+            <>
+              <div className="absolute right-3 top-0 bottom-0 w-10 bg-gradient-to-l from-surface to-transparent pointer-events-none z-[5]" />
+              <button onClick={() => scrollCat(1)} aria-label="Geser kategori ke kanan" className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-surface shadow-md border border-outline-variant flex items-center justify-center active:scale-95">
+                <Icon name="chevron_right" className="!text-[22px] text-primary" />
+              </button>
+            </>
+          )}
         </section>
 
         {/* Product grid */}
