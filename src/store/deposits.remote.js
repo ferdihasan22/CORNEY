@@ -38,3 +38,14 @@ export async function pushDeposit(d) {
   if (!supabase || !d?.id) return
   enqueue({ kind: 'upsert', table: 'deposits', row: toRow(d), key: `deposits:${d.id}` })
 }
+
+// Auditor: tak punya hak tulis tabel deposits (RLS read-only) → lewat RPC ber-gate
+// auditor (merge field verifikasi ke meta). Cegah verifikasi gagal diam-diam.
+export async function auditorVerifyRemote(d) {
+  if (!supabase || !d?.id) return
+  const meta = {
+    auditorAmount: d.auditorAmount, auditorSelisih: d.auditorSelisih,
+    auditorStatus: d.auditorStatus, auditorNote: d.auditorNote, auditedAt: d.auditedAt,
+  }
+  enqueue({ kind: 'rpc', fn: 'auditor_verify_deposit', args: { p_id: d.id, p_meta: meta }, key: `auditor_verify:${d.id}` })
+}

@@ -30,7 +30,10 @@ if (typeof window !== 'undefined') {
 if (isSupabase()) {
   import('./supplierReq.remote.js').then(({ initSupplierReqSync }) => initSupplierReqSync(commit)).catch(() => {})
 }
-const pushReqById = (orderId) => { if (isSupabase()) { const o = list.find((x) => x.id === orderId); if (o) import('./supplierReq.remote.js').then((w) => w.pushSupplierReq(o)).catch(() => {}) } }
+// Dipakai HANYA oleh aksi SUPPLIER (centang/qty/status) → lewat RPC ber-gate supplier
+// (RLS tak izinkan supplier tulis tabel langsung). Pembuatan request oleh Operasional
+// tetap lewat pushSupplierReq (upsert, ops boleh).
+const pushReqById = (orderId) => { if (isSupabase()) { const o = list.find((x) => x.id === orderId); if (o) import('./supplierReq.remote.js').then((w) => w.supplierSetRequestRemote(o)).catch(() => {}) } }
 
 export function getSupplierReq() { return list }
 export function subscribeSupplierReq(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }

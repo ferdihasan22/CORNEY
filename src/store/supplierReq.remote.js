@@ -25,6 +25,13 @@ export async function pushSupplierReq(o) {
   if (!supabase || !o?.id) return
   enqueue({ kind: 'upsert', table: 'supplier_requests', key: `supplier_requests:${o.id}`, row: { id: o.id, branch_id: o.branchId, tgl: o.tgl && o.tgl.includes('/') ? ddToISO(o.tgl) : null, status: o.status, items: o.items || [] } })
 }
+// Supplier: tak punya hak tulis tabel supplier_requests (RLS read-only) → lewat RPC
+// ber-gate supplier (ubah items/status request yg dibuat Operasional). Cegah update
+// checklist gagal diam-diam.
+export async function supplierSetRequestRemote(o) {
+  if (!supabase || !o?.id) return
+  enqueue({ kind: 'rpc', fn: 'supplier_set_request', args: { p_id: o.id, p_items: o.items || [], p_status: o.status || null }, key: `supplier_set_req:${o.id}` })
+}
 export async function removeSupplierReqRemote(id) {
   if (!supabase) return
   enqueue({ kind: 'delete', table: 'supplier_requests', matchId: id, key: `supplier_requests_del:${id}` })

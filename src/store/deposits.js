@@ -128,6 +128,6 @@ export function auditorVerify(id, auditorAmount, note = '') {
     found = { ...d, auditorAmount: amt, auditorSelisih: sel, auditorStatus: sel === 0 ? 'cocok' : 'selisih', auditorNote: (note || '').trim(), auditedAt: new Date().toISOString() }
     return found
   })
-  if (found) { commit(next); logAudit({ type: 'Settlement', who: 'Auditor', branchId: found.branchId, oldVal: `Operasional Rp ${(found.opsAmount ?? 0).toLocaleString('id-ID')}`, newVal: `Audit Rp ${found.auditorAmount.toLocaleString('id-ID')} (${found.auditorStatus})`, note: found.auditorNote || 'Verifikasi setoran oleh auditor.' }); if (isSupabase()) import('./deposits.remote.js').then((w) => w.pushDeposit(found)).catch(() => {}) }
+  if (found) { commit(next); logAudit({ type: 'Settlement', who: 'Auditor', branchId: found.branchId, oldVal: `Operasional Rp ${(found.opsAmount ?? 0).toLocaleString('id-ID')}`, newVal: `Audit Rp ${found.auditorAmount.toLocaleString('id-ID')} (${found.auditorStatus})`, note: found.auditorNote || 'Verifikasi setoran oleh auditor.' }); if (isSupabase()) import('./deposits.remote.js').then((w) => w.auditorVerifyRemote(found)).catch(() => {}) }
   return found
 }
