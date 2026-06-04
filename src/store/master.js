@@ -9,6 +9,7 @@
 
 import { PARENT_FILLINGS, MENUS, SAUCES, LOW_STOCK_THRESHOLD, INGREDIENTS, defaultRecipe, BRANCHES } from '../data/menu.js'
 import { isSupabase } from '../lib/backend.js'
+import { deleteImageByUrl } from '../lib/cloudinary.js'
 
 const KEY = 'corney_master'
 
@@ -41,11 +42,27 @@ syncSaucesConst()
 // recipes BELUM dimigrasi → dipertahankan dari cache lokal. Gagal/offline →
 // diam-diam tetap pakai cache (offline-first). CATATAN: ini baru jalur BACA;
 // tulis (addMenu dll) masih ke localStorage sampai fase berikutnya.
-if (isSupabase()) {
+export function refreshMaster() {
+  if (!isSupabase()) return
   import('./master.remote.js')
     .then(({ fetchMasterFromSupabase }) => fetchMasterFromSupabase())
     .then((remote) => { commit({ ...state, ...remote, recipes: state.recipes }) })
     .catch((e) => console.warn('[master] hidrasi Supabase gagal, pakai cache lokal:', e?.message || e))
+}
+if (isSupabase()) refreshMaster()
+
+// #2 Gambar/menu terbaru "langsung": segarkan master saat tab KEMBALI aktif (mis.
+// owner ganti banner → customer buka lagi app → lihat banner baru tanpa reload).
+// Throttle 10 dtk supaya tak refetch beruntun; tak ada poll terus-menerus (hemat).
+if (typeof window !== 'undefined' && isSupabase()) {
+  let _lastRefresh = 0
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return
+    const t = Date.now()
+    if (t - _lastRefresh < 10000) return
+    _lastRefresh = t
+    refreshMaster()
+  })
 }
 
 // Dorong perubahan master ke Supabase (mode supabase) via modul tulis terpisah.
@@ -256,9 +273,10 @@ export function addMenu(data) {
 
 export function updateMenu(id, data) {
   if (!state) return null
-  let found = null
+  let found = null, oldImg = null
   const menus = state.menus.map((x) => {
     if (x.id !== id) return x
+    oldImg = x.img
     const patch = {}
     if (data.name != null) patch.name = data.name.trim()
     if (data.parent != null) patch.parent = data.parent
@@ -272,6 +290,7 @@ export function updateMenu(id, data) {
   if (!found) return null
   commit({ ...state, menus })
   remoteWrite((w) => w.pushMenu(found))
+  if (oldImg && oldImg !== found.img) deleteImageByUrl(oldImg) // anti-sampah: hapus gambar lama
   return found
 }
 
@@ -495,15 +514,17 @@ export function addBanner({ title, img, active = true }) {
 
 export function updateBanner(id, { title, img }) {
   if (!state) return null
-  let found = null
+  let found = null, oldImg = null
   const banners = state.banners.map((x) => {
     if (x.id !== id) return x
+    oldImg = x.img
     found = { ...x, ...(title != null ? { title: title.trim() } : {}), ...(img != null ? { img: img.trim() } : {}) }
     return found
   })
   if (!found) return null
   commit({ ...state, banners })
   remoteWrite((w) => w.pushBanners(state.banners))
+  if (oldImg && oldImg !== found.img) deleteImageByUrl(oldImg) // anti-sampah
   return found
 }
 
@@ -524,8 +545,10 @@ export function toggleBannerActive(id) {
 // Banners aren't transaction-historical → safe to delete outright.
 export function deleteBanner(id) {
   if (!state) return null
+  const old = state.banners.find((x) => x.id === id)
   commit({ ...state, banners: state.banners.filter((x) => x.id !== id) })
   remoteWrite((w) => w.removeBanner(id))
+  if (old?.img) deleteImageByUrl(old.img) // anti-sampah: hapus gambar banner yang dihapus
 }
 
 // Reorder (display order) — move one slot up/down (drag-free).
