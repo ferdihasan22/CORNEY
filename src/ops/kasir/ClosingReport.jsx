@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { PARENT_FILLINGS, BRANCHES, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
@@ -8,6 +8,7 @@ import { upsertStockDay, hasStockDay } from '../../store/stockdaily.js'
 import { upsertSalesDay } from '../../store/salesdaily.js'
 import { getOrders } from '../../store/orders.js'
 import { clearKasirBranch } from './kasirSession.js'
+import { flush, pendingCount, subscribe as subscribeOutbox } from '../../store/outbox.js'
 
 // Tanggal: input <date> pakai YYYY-MM-DD; laporan disimpan DD/MM/YYYY.
 const pad = (n) => String(n).padStart(2, '0')
@@ -33,7 +34,28 @@ export default function ClosingReport() {
   const day = useDay()
   const navigate = useNavigate()
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
-  const [sent, setSent] = useState(false)
+  // Status kirim laporan: idle → syncing (mengirim/menunggu jaringan) → done (benar2 sampai server).
+  const [phase2, setPhase2] = useState('idle')
+  const [online, setOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true)
+  const [pending, setPending] = useState(0)
+
+  // Pantau koneksi + antrean outbox (status kirim saat offline).
+  useEffect(() => {
+    const upd = () => setOnline(navigator.onLine)
+    window.addEventListener('online', upd); window.addEventListener('offline', upd)
+    const off = subscribeOutbox(() => setPending(pendingCount()))
+    return () => { window.removeEventListener('online', upd); window.removeEventListener('offline', upd); off() }
+  }, [])
+  // Saat 'syncing': beri jeda agar enqueue (dynamic import) mendarat, lalu dorong;
+  // tandai 'done' begitu antrean BENAR-BENAR kosong (laporan sampai server).
+  useEffect(() => {
+    if (phase2 !== 'syncing') return
+    let settled = false
+    const finish = () => { if (!settled && pendingCount() === 0) { settled = true; setPhase2('done') } }
+    const off = subscribeOutbox(finish)
+    const t = setTimeout(() => { flush().finally(finish) }, 700)
+    return () => { off(); clearTimeout(t) }
+  }, [phase2])
   // Langkah 5 — tanggal laporan. Default hari ini; izinkan hari ini & kemarin
   // (untuk closing lewat tengah malam), tolak masa depan & tanggal yang sudah ada.
   const nowD = new Date()
@@ -115,7 +137,7 @@ export default function ClosingReport() {
     if (setoran > 0) {
       createDeposit({ branchId: day.branchId, branchName: branch.name, amount: setoran, tgl: tglDDMM, rincian: { tunai: tunaiSales, urgent: urgentT, refund: refundT, gaji: gajiT, urgentItems: (day.closing.urgent?.items || []).map((it) => ({ amount: it.amount, reason: it.reason })) } })
     }
-    setSent(true)
+    setPhase2('syncing')
   }
   function selesai() {
     endDay()
@@ -262,7 +284,7 @@ export default function ClosingReport() {
 
           {/* Actions */}
           <div className="flex flex-col md:flex-row gap-4 pt-6 pb-10">
-            <button onClick={kirim} disabled={!dateOk} className="flex-1 min-h-[52px] bg-primary text-white font-label-lg rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-lg disabled:opacity-40 disabled:hover:scale-100">
+            <button onClick={kirim} disabled={!dateOk || phase2 !== 'idle'} className="flex-1 min-h-[52px] bg-primary text-white font-label-lg rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-lg disabled:opacity-40 disabled:hover:scale-100">
               <Icon name="send" /> Kirim Laporan (tgl {tglDDMM}) &amp; Tutup Hari
             </button>
             <button onClick={() => window.print()} className="min-h-[52px] px-8 bg-surface-container-high text-on-surface font-label-lg rounded-xl flex items-center justify-center gap-3 hover:bg-surface-variant transition-colors border border-outline-variant">
@@ -272,14 +294,36 @@ export default function ClosingReport() {
         </div>
       </main>
 
-      {sent && (
+      {phase2 !== 'idle' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
           <div className="relative bg-white w-full max-w-md rounded-xl p-8 text-center shadow-[0_16px_32px_rgba(26,26,26,0.12)]">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><Icon name="check_circle" fill className="text-green-600 !text-[48px]" /></div>
-            <h3 className="font-headline-lg text-headline-lg mb-2">Laporan Terkirim!</h3>
-            <p className="text-on-surface-variant mb-8">Hari ini selesai direkap & dikirim ke Owner. Sisa bagus jadi "sisa kemarin" untuk Opening besok.</p>
-            <button onClick={selesai} className="w-full min-h-[52px] bg-primary text-white font-label-lg rounded-xl">Selesai</button>
+            {phase2 === 'done' ? (
+              <>
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><Icon name="check_circle" fill className="text-green-600 !text-[48px]" /></div>
+                <h3 className="font-headline-lg text-headline-lg mb-2">Laporan Terkirim!</h3>
+                <p className="text-on-surface-variant mb-8">Hari ini selesai direkap &amp; dikirim ke Owner. Sisa bagus jadi "sisa kemarin" untuk Opening besok.</p>
+                <button onClick={selesai} className="w-full min-h-[52px] bg-primary text-white font-label-lg rounded-xl">Selesai</button>
+              </>
+            ) : !online ? (
+              <>
+                <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6"><Icon name="wifi_off" className="text-amber-600 !text-[40px]" /></div>
+                <h3 className="font-headline-lg text-headline-lg mb-2">Menunggu jaringan internet…</h3>
+                <p className="text-on-surface-variant mb-3">Sambungkan ke internet sebentar ya — <b>cek koneksimu</b>. Begitu online, laporan otomatis terkirim.</p>
+                <p className="text-[13px] text-green-800 bg-green-50 rounded-lg py-2 px-3 mb-5 flex items-center justify-center gap-1.5"><Icon name="verified_user" fill className="!text-[16px] text-green-600" /> Tenang — laporan sudah <b>AMAN tersimpan</b>, tidak akan hilang.</p>
+                <div className="flex items-center justify-center gap-2 mb-6 text-on-surface-variant"><div className="w-5 h-5 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" /><span className="text-label-md">{pending} data menunggu terkirim…</span></div>
+                <div className="flex flex-col gap-2">
+                  <button onClick={() => flush()} className="w-full min-h-[48px] bg-primary text-white font-label-lg rounded-xl flex items-center justify-center gap-2"><Icon name="sync" /> Coba kirim lagi</button>
+                  <button onClick={selesai} className="w-full min-h-[44px] text-on-surface-variant text-label-md underline underline-offset-2">Tutup hari dulu (terkirim otomatis saat online &amp; login lagi)</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6"><div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>
+                <h3 className="font-headline-lg text-headline-lg mb-2">Mengirim laporan…</h3>
+                <p className="text-on-surface-variant">Sebentar ya, sedang menyimpan ke server.</p>
+              </>
+            )}
           </div>
         </div>
       )}

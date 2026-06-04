@@ -74,6 +74,11 @@ export async function flush() {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return false
   flushing = true
   try {
+    // Tulisan staf butuh sesi login (RLS). Bila belum login (mis. baru logout saat
+    // ada antrean), TUNDA — jangan dicoba lalu di-quarantine. Akan terkirim saat
+    // login lagi (onAuthStateChange memicu flush lewat hydrate).
+    const { data: sess } = await supabase.auth.getSession()
+    if (!sess?.session) return false
     while (queue.length) {
       const op = queue[0]
       try {
