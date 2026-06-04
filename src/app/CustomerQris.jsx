@@ -5,6 +5,8 @@ import { getOrder, markPaid, cancelOrder, refreshMyOrder, extendPayDeadline } fr
 import { clearCart } from '../store/cart.js'
 import { isSupabase } from '../lib/backend.js'
 import { onlineNo } from '../lib/util.js'
+import TurnstileWidget from '../components/TurnstileWidget.jsx'
+import { turnstileEnabled, takeTurnstileToken, setTurnstileToken } from '../lib/turnstile.js'
 import { supabase } from '../lib/supabase.js'
 
 // 2.1 — CUS-03 Pembayaran QRIS. Now wired to REAL Midtrans (sandbox) via the Vite
@@ -37,6 +39,7 @@ export default function CustomerQris() {
   const [statusMsg, setStatusMsg] = useState('')
   const [copied, setCopied] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [regenReady, setRegenReady] = useState(false) // token Turnstile siap utk "Buat QR Baru"
   const charged = useRef(false)
 
   // Countdown — saat habis: tandai kedaluwarsa (QR Midtrans ikut expire 15 menit).
@@ -57,16 +60,17 @@ export default function CustomerQris() {
     const mid = `${order.id}-${Date.now().toString(36)}`
     setMidId(mid)
     setMode('loading'); setStatusMsg('')
+    const cf = takeTurnstileToken() // token Turnstile (null bila fitur mati)
 
     // Mode supabase: panggil Edge Function (Server Key di server, aman).
     // Mode local: panggil Vite dev middleware /api/midtrans/charge (Server Key via Vite).
     const chargePromise = isSupabase() && supabase
-      ? supabase.functions.invoke('midtrans-charge', { body: { orderId: mid, gross: order.total } })
+      ? supabase.functions.invoke('midtrans-charge', { body: { orderId: mid, gross: order.total, cf } })
           .then(({ data, error }) => { if (error) throw error; return data })
       : fetch('/api/midtrans/charge', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderId: mid, gross: order.total }),
+          body: JSON.stringify({ orderId: mid, gross: order.total, cf }),
         }).then((r) => r.json())
 
     chargePromise
@@ -101,9 +105,10 @@ export default function CustomerQris() {
 
   // "Buat QR Baru" setelah waktu habis → batalkan QR lama, charge ulang + reset mundur.
   const buatQrBaru = () => {
+    if (turnstileEnabled() && !regenReady) { setStatusMsg('Selesaikan verifikasi keamanan dulu.'); return }
     cancelOldCharge(midId)
     setQrUrl(''); setQrString('')
-    setExpired(false); setSecs(QR_TTL)
+    setExpired(false); setSecs(QR_TTL); setRegenReady(false)
     runCharge()
   }
 
@@ -299,9 +304,12 @@ export default function CustomerQris() {
 
         <div className="flex flex-col gap-3">
           {expired ? (
-            <button onClick={buatQrBaru} className="w-full h-[52px] bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-              <Icon name="refresh" className="!text-[20px]" /> Buat QR Baru
-            </button>
+            <>
+              {turnstileEnabled() && <TurnstileWidget onToken={(t) => { setTurnstileToken(t); setRegenReady(!!t) }} />}
+              <button onClick={buatQrBaru} disabled={turnstileEnabled() && !regenReady} className="w-full h-[52px] bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                <Icon name="refresh" className="!text-[20px]" /> Buat QR Baru
+              </button>
+            </>
           ) : (
             <button onClick={cekStatus} disabled={checking} className="w-full h-[52px] bg-primary text-on-primary font-headline-md rounded-xl shadow-lg active:scale-[0.98] transition-all disabled:opacity-60">
               {checking ? 'Mengecek…' : 'Sudah bayar? Cek status'}

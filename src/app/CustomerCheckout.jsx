@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
+import TurnstileWidget from '../components/TurnstileWidget.jsx'
+import { turnstileEnabled, setTurnstileToken } from '../lib/turnstile.js'
 import { BRANCHES, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
@@ -68,6 +70,8 @@ export default function CustomerCheckout() {
   const [confirm, setConfirm] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [err, setErr] = useState('')
+  const [cfToken, setCfToken] = useState('') // token Turnstile (kalau fitur aktif)
+  const onCf = useCallback((t) => { setCfToken(t || ''); setTurnstileToken(t) }, [])
 
   if (!cart || cart.lines.length === 0) return <Navigate to="/app/cabang" replace />
   const branch = BRANCHES.find((b) => b.id === cart.branchId)
@@ -111,6 +115,7 @@ export default function CustomerCheckout() {
     if (!/^[0-9]{8,15}$/.test(wa.replace(/\D/g, ''))) return setErr('Nomor WhatsApp tidak valid.')
     if (method === 'maxim' && !address.trim()) return setErr('Alamat antar wajib diisi untuk Maxim.')
     if (method !== 'maxim' && schedule && schedule < nowHHMM) return setErr('Jam ambil tidak boleh sebelum waktu sekarang.')
+    if (turnstileEnabled() && !cfToken) return setErr('Selesaikan verifikasi keamanan dulu (kotak di bawah).')
     setErr('')
     setConfirm(true)
   }
@@ -227,6 +232,12 @@ export default function CustomerCheckout() {
             <span className="text-sm text-on-surface-variant">Ingat data ini untuk order berikutnya (terisi otomatis)</span>
           </label>
 
+          {turnstileEnabled() && (
+            <div className="pt-1">
+              <p className="text-[12px] text-on-surface-variant mb-1 flex items-center gap-1"><Icon name="verified_user" className="!text-[15px]" /> Verifikasi keamanan (anti-spam):</p>
+              <TurnstileWidget onToken={onCf} />
+            </div>
+          )}
           {err && <p className="text-sm text-error flex items-center gap-1"><Icon name="error" className="!text-[16px]" /> {err}</p>}
         </section>
 
