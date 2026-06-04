@@ -125,6 +125,8 @@ function Home() {
   if (host === 'customer') return <Navigate to="/app" replace />
   if (host === 'kasir') return <Navigate to="/ops/kasir/login" replace />
   if (host === 'supplier') return <Navigate to="/supplier" replace />
+  // kantor.corney.id → LANGSUNG halaman login (pemilih peran 4 back-office), bukan launcher.
+  if (host === 'kantor') return <RoleLogin roles={['owner', 'operasional', 'produksi', 'auditor']} />
   const allApps = [
     { to: '/ops/kasir/login', label: 'CORNEY Ops — Kasir', desc: 'Login → Buka Toko → Jualan → Closing (P0)' },
     { to: '/ops/owner', label: 'CORNEY Ops — Owner', desc: 'Dashboard & laporan (P0)' },
@@ -134,10 +136,9 @@ function Home() {
     { to: '/app', label: 'CORNEY App — Customer', desc: 'Katalog menu & struk digital' },
     { to: '/supplier', label: 'CORNEY Supplier', desc: 'Standalone (P1)' },
   ]
-  // kantor.corney.id → hanya 4 role back-office (owner/operasional/produksi/auditor).
-  const apps = host === 'kantor'
-    ? allApps.filter((a) => a.to.startsWith('/ops/') && a.to !== '/ops/kasir/login')
-    : allApps
+  // Launcher hanya untuk 'all' (dev/localhost/pages.dev) — semua domain produksi sudah
+  // diarahkan langsung di atas (kantor → login pemilih peran).
+  const apps = allApps
   return (
     <div className="min-h-full p-6 max-w-md mx-auto">
       <div className="text-center pt-8">

@@ -9,8 +9,11 @@ import { signInRole } from './supabaseAuth.js'
 const Icon = ({ name, className = '' }) => <span className={`material-symbols-outlined ${className}`}>{name}</span>
 const mmss = (ms) => { const s = Math.ceil(ms / 1000); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` }
 
-export default function RoleLogin({ role }) {
+export default function RoleLogin({ role: fixedRole, roles }) {
   const navigate = useNavigate()
+  // Mode "kantor": banyak peran berbagi 1 halaman login → tampilkan pemilih peran.
+  const pickable = Array.isArray(roles) && roles.length > 1
+  const [role, setRole] = useState(pickable ? roles[0] : fixedRole)
   const meta = ROLE_META[role] || { label: role, home: '/', icon: 'lock' }
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -18,6 +21,9 @@ export default function RoleLogin({ role }) {
   const [remember, setRemember] = useState(true)
   const [error, setError] = useState('')
   const [lock, setLock] = useState(() => lockInfo(role))
+
+  // Ganti peran → reset error/lock/password (status kunci per-peran).
+  useEffect(() => { setLock(lockInfo(role)); setError(''); setPassword('') }, [role])
 
   // Hitung mundur saat terkunci.
   useEffect(() => {
@@ -64,7 +70,24 @@ export default function RoleLogin({ role }) {
       <main className="w-full max-w-[420px]">
         <div className="bg-surface-container-lowest border border-surface-container-high rounded-xl p-8 shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
           <h2 className="font-headline-md text-headline-md text-on-surface mb-1 text-center flex items-center justify-center gap-2"><Icon name={meta.icon} /> Masuk {meta.label}</h2>
-          <p className="text-center text-label-md text-on-surface-variant mb-7">Akun {meta.label} CORNEY</p>
+          <p className="text-center text-label-md text-on-surface-variant mb-5">Akun {meta.label} CORNEY</p>
+
+          {pickable && (
+            <div className="mb-6">
+              <p className="text-center text-label-md text-on-surface-variant mb-2">Pilih peran kamu</p>
+              <div className="grid grid-cols-2 gap-2">
+                {roles.map((r) => {
+                  const m = ROLE_META[r] || { label: r, icon: 'lock' }
+                  const active = r === role
+                  return (
+                    <button key={r} type="button" onClick={() => setRole(r)} className={`flex items-center justify-center gap-1.5 h-11 rounded-xl border font-label-md transition-all active:scale-95 ${active ? 'bg-primary-container text-on-primary border-primary-container shadow' : 'border-outline-variant text-on-surface-variant hover:border-primary'}`}>
+                      <Icon name={m.icon} className="!text-[18px]" /> {m.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           {lock.locked && (
             <div className="mb-5 bg-error-container/40 border border-error/40 rounded-xl p-3 text-center text-error">
