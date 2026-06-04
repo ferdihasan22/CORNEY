@@ -14,7 +14,7 @@
 //  - 1:1 — one menu sold deducts its parent filling by one.
 
 import { MENUS } from '../data/menu.js'
-import { getOrders } from './orders.js'
+import { getOrders, subscribeOrders } from './orders.js'
 import { setBranchOpen, setBranchAvailability } from './branchStatus.js'
 
 const KEY = 'corney_day'
@@ -41,6 +41,7 @@ function load() {
     if (!Array.isArray(s.corrections)) s.corrections = []
     if (!Array.isArray(s.menuOff)) s.menuOff = []
     if (!Array.isArray(s.breakageLog)) s.breakageLog = []
+    if (!Array.isArray(s.appliedStock)) s.appliedStock = [] // id order online yg stoknya sudah dikurangi
     return s
   } catch {
     return null
@@ -129,6 +130,7 @@ export function startDay(branchId) {
     closing: null, // Closing Day working data (CLS-02..06)
     menuOff: [], // menu ids turned OFF (e.g. coating habis) — WLK-01 toggle
     breakageLog: [], // patah recorded during the day (reduces stock as it happens)
+    appliedStock: [], // id order online yg stoknya SUDAH dikurangi (anti dobel-kurang)
   })
 }
 
@@ -184,18 +186,31 @@ export function soldByParentAll() {
   return out
 }
 
-// Kurangi stok hidup karena order ONLINE dibuat (dipanggil saat kasir konfirmasi/
-// proses) → ketersediaan ke customer akurat (bukan cuma walk-in). Clamp di 0.
-// TIDAK memengaruhi rekonsiliasi (recon pakai openingStock + soldByParentAll +
-// sisa fisik, bukan stok hidup) → tak ada dobel-hitung.
-export function applyOnlineToStock(lines) {
-  if (!state || !state.stock) return
+// ANTI-OVERSELL (G1): kurangi stok hidup begitu order ONLINE **LUNAS** (bukan nunggu
+// kasir konfirmasi) → stok "terkunci" lebih awal, customer lain lihat HABIS lebih cepat.
+// Idempoten: tiap order ditandai di `appliedStock` (persisten di localStorage) → aman
+// dipanggil berkali-kali (realtime hydrate, reload, dsb) tanpa dobel-kurang.
+// TIDAK memengaruhi rekonsiliasi (recon pakai openingStock + soldByParentAll + sisa
+// fisik, BUKAN stok hidup) → tak ada dobel-hitung.
+export function reconcileOnlineStock() {
+  if (!state || !state.stock || state.phase !== PHASE.SELLING) return 0
+  const applied = new Set(state.appliedStock || [])
+  const toApply = (getOrders() || []).filter((o) =>
+    o.paid && o.branchId === state.branchId &&
+    new Date(o.createdAt).getTime() >= (state.startedAt || 0) &&
+    !applied.has(o.id),
+  )
+  if (!toApply.length) return 0
   const stock = { ...state.stock }
-  ;(lines || []).forEach((l) => {
-    const parent = l.parent || MENUS.find((m) => m.id === l.menuId)?.parent
-    if (parent != null) stock[parent] = Math.max(0, (stock[parent] ?? 0) - (l.qty || 0))
+  toApply.forEach((o) => {
+    ;(o.lines || []).forEach((l) => {
+      const parent = l.parent || MENUS.find((m) => m.id === l.menuId)?.parent
+      if (parent != null) stock[parent] = Math.max(0, (stock[parent] ?? 0) - (l.qty || 0))
+    })
+    applied.add(o.id)
   })
-  commit({ ...state, stock })
+  commit({ ...state, stock, appliedStock: [...applied] })
+  return toApply.length
 }
 
 // OPN-01 — lock today's opening stock.
@@ -580,4 +595,12 @@ export function finalizeClosing(report) {
 export function endDay() {
   commit(null)
   setBranchOpen(false) // mode supabase: kabari customer cabang TUTUP untuk online
+}
+
+// Reservasi stok LINTAS-LAYAR (anti-oversell): begitu daftar order berubah (mis.
+// webhook menandai LUNAS via realtime), kurangi stok order online yang baru lunas —
+// walau kasir sedang di layar walk-in / belum buka tab Online. Idempoten & otomatis
+// no-op kalau tak ada sesi jualan (perangkat customer/role lain aman).
+if (typeof window !== 'undefined') {
+  subscribeOrders(() => { try { reconcileOnlineStock() } catch { /* abaikan */ } })
 }

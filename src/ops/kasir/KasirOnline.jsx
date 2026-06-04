@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { BRANCHES, SAUCES, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
-import { PHASE, cookingCounts, applyOnlineToStock } from '../../store/day.js'
+import { PHASE, cookingCounts, reconcileOnlineStock } from '../../store/day.js'
 import { flyBall, pulse } from './flyBall.js'
 import { clearKasirBranch } from './kasirSession.js'
 import { useMaster } from '../../store/useMaster.js'
@@ -67,6 +67,11 @@ export default function KasirOnline() {
     const t = setInterval(() => setClock(new Date()), 30000)
     return () => clearInterval(t)
   }, [])
+
+  // ANTI-OVERSELL (G1): begitu ada order online LUNAS baru (lewat realtime/poll),
+  // kurangi stok hidup SEKARANG — tak nunggu kasir konfirmasi. Idempoten (appliedStock),
+  // jadi aman dijalankan tiap kali daftar order berubah / saat layar dibuka.
+  useEffect(() => { reconcileOnlineStock() }, [orders])
 
   // Orders for THIS branch that are paid (= entered via Jalur 1) DAN dari sesi hari
   // ini saja (createdAt ≥ startedAt) — biar order/Selesai hari kemarin tidak nongol
@@ -173,9 +178,8 @@ export default function KasirOnline() {
       window.open(url, '_blank', 'noopener')
     }
     advanceOrder(o.id)
-    // Online dibuat (baru → diproses): kurangi stok hidup → ketersediaan ke customer
-    // akurat (induk bisa HABIS karena online juga, bukan cuma walk-in). 1x per order.
-    if (o.status === 'baru') applyOnlineToStock(o.lines)
+    // Stok hidup TAK dikurangi di sini lagi — sudah dikurangi saat order LUNAS
+    // (reconcileOnlineStock, anti-oversell). Konfirmasi hanya memajukan status.
   }
 
   const shown = mine
