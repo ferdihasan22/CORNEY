@@ -1,8 +1,10 @@
 // CORNEY — Upload gambar ke Cloudinary via UNSIGNED upload preset (TAHAP 4 FASE 7).
 // API Secret TIDAK di browser — preset unsigned membatasi folder/format/ukuran.
 // Env: VITE_CLOUDINARY_CLOUD (nama cloud akunmu), VITE_CLOUDINARY_PRESET (=corney_unsigned).
-const CLOUD = import.meta.env.VITE_CLOUDINARY_CLOUD
-const PRESET = import.meta.env.VITE_CLOUDINARY_PRESET
+// Nilai publik ditanam sebagai default (preset unsigned aman di browser) → upload
+// gambar jalan di produksi tanpa set env. Env VITE_* tetap bisa menimpa.
+const CLOUD = import.meta.env.VITE_CLOUDINARY_CLOUD || 'ddw6hisvn'
+const PRESET = import.meta.env.VITE_CLOUDINARY_PRESET || 'corney_unsigned'
 
 export const cloudinaryReady = () => !!(CLOUD && PRESET)
 

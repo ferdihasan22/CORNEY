@@ -8,11 +8,11 @@ import { createClient } from '@supabase/supabase-js'
 // browser; hanya di Supabase Edge Function. Jangan pernah meng-import kunci
 // rahasia ke modul ini.
 //
-// Client hanya dibuat bila env terisi. Kalau kosong (mode 'local' murni tanpa
-// project), export `null` supaya import tidak meledak selama backend masih
-// localStorage.
-const url = import.meta.env.VITE_SUPABASE_URL
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY
+// URL + anon key ditanam sebagai DEFAULT (publik, aman karena RLS aktif) supaya
+// produksi online tanpa perlu set env Cloudflare. Env VITE_* tetap bisa menimpa
+// (mis. ganti project). Client SELALU dibuat → app online by default.
+const url = import.meta.env.VITE_SUPABASE_URL || 'https://cajjvmnenxypcolriesf.supabase.co'
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamp2bW5lbnh5cGNvbHJpZXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODQwMTYsImV4cCI6MjA5NjA2MDAxNn0.9RRmAtRqknWB1LR3vRmvXd4PHzY_XKW9jIRoXk0H2MA'
 
 export const supabase = (url && anon)
   ? createClient(url, anon, {

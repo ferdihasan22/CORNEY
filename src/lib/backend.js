@@ -1,12 +1,9 @@
-// Saklar backend global untuk migrasi TAHAP 4 (lihat docs/TAHAP4-SUPABASE.md §5).
-//   'local'    -> semua store pakai localStorage (perilaku Fase 1/2, DEFAULT aman)
-//   'supabase' -> store yang SUDAH dimigrasi baca/tulis ke Supabase
-// Dibaca dari env VITE_BACKEND; default 'local' bila kosong.
-//
-// Dipakai tiap store-adapter untuk memilih implementasi tanpa mengubah komponen
-// (antarmuka get/subscribe/commit tetap sama). Migrasi bisa di-rollback dengan
-// mengganti flag ini → localStorage tetap jadi jaring pengaman tiap fase.
-export const BACKEND = (import.meta.env.VITE_BACKEND || 'local').toLowerCase()
+// Saklar backend global (TAHAP 4 selesai → DEFAULT 'supabase' = online).
+//   'supabase' -> baca/tulis ke Supabase (DEFAULT — produksi online penuh)
+//   'local'    -> localStorage saja (hanya bila SENGAJA set VITE_BACKEND=local)
+// Dibaca dari env VITE_BACKEND; kosong = 'supabase'. Jadi produksi (Cloudflare)
+// otomatis online tanpa perlu set env apa pun.
+export const BACKEND = (import.meta.env.VITE_BACKEND || 'supabase').toLowerCase()
 
 export const isSupabase = () => BACKEND === 'supabase'
 export const isLocal = () => !isSupabase()
