@@ -15,7 +15,7 @@
 
 import { MENUS } from '../data/menu.js'
 import { getOrders } from './orders.js'
-import { setBranchOpen } from './branchStatus.js'
+import { setBranchOpen, setBranchAvailability } from './branchStatus.js'
 
 const KEY = 'corney_day'
 
@@ -52,6 +52,22 @@ function commit(next) {
   if (state) localStorage.setItem(KEY, JSON.stringify(state))
   else localStorage.removeItem(KEY)
   subscribers.forEach((fn) => fn())
+  pushAvailabilityIfChanged()
+}
+
+// Dorong ketersediaan menu ke server (mode supabase) HANYA saat berubah → customer
+// lintas perangkat lihat menu habis/dimatikan. off = menu dimatikan kasir,
+// sold = induk dengan stok <= 0. Reset penanda saat tak jualan (cegah lewat hari).
+let _lastAvail = ''
+function pushAvailabilityIfChanged() {
+  if (!state || state.phase !== PHASE.SELLING) { _lastAvail = ''; return }
+  const off = state.menuOff || []
+  const stock = state.stock || {}
+  const sold = Object.keys(stock).filter((p) => (stock[p] ?? 0) <= 0)
+  const k = JSON.stringify({ off: [...off].sort(), sold: [...sold].sort() })
+  if (k === _lastAvail) return
+  _lastAvail = k
+  setBranchAvailability({ off, sold })
 }
 
 // ── Phases ──────────────────────────────────────────────

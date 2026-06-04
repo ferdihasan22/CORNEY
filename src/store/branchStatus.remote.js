@@ -10,6 +10,11 @@ export function setBranchOpenRemote(open) {
   enqueue({ kind: 'rpc', fn: 'kasir_set_open', args: { p_open: !!open }, key: 'kasir_set_open' })
 }
 
+// Kasir set ketersediaan menu cabang sendiri: { off:[menuId], sold:[parentId] }.
+export function setBranchAvailabilityRemote(avail) {
+  enqueue({ kind: 'rpc', fn: 'kasir_set_availability', args: { p_avail: avail || {} }, key: 'kasir_set_availability' })
+}
+
 // Hidrasi status semua cabang. Return fungsi refresh (panggil ulang saat perlu).
 export function initBranchStatusSync(commit) {
   if (!supabase) return () => {}
@@ -17,7 +22,7 @@ export function initBranchStatusSync(commit) {
     const { data, error } = await supabase.from('branch_status').select('*')
     if (error || !data) return
     const out = {}
-    data.forEach((r) => { out[r.branch_id] = { open: !!r.online_open, openDate: r.open_date } })
+    data.forEach((r) => { out[r.branch_id] = { open: !!r.online_open, openDate: r.open_date, availability: r.availability || {} } })
     commit(out)
   }
   hydrate() // customer anon bisa baca → picker tampil status terkini saat dibuka

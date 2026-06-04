@@ -6,6 +6,9 @@ import { useDay } from '../store/useDay.js'
 import { useCart } from '../store/useCart.js'
 import { cartCount, addItem } from '../store/cart.js'
 import { menuForBranch } from '../store/master.js'
+import { useBranchStatus } from '../store/useBranchStatus.js'
+import { refreshBranchStatus } from '../store/branchStatus.js'
+import { isSupabase } from '../lib/backend.js'
 import SauceSheet from './SauceSheet.jsx'
 
 // 1C.3 — CORNEY App Customer · Katalog (CUS-01). Ported from Stitch
@@ -28,6 +31,7 @@ export default function CustomerCatalog() {
   const location = useLocation()
   const master = useMaster()
   const day = useDay()
+  const status = useBranchStatus() // ketersediaan menu dari SERVER (lintas perangkat)
   const cart = useCart()
   const [filter, setFilter] = useState('Semua')
   const [bIdx, setBIdx] = useState(0)
@@ -48,6 +52,19 @@ export default function CustomerCatalog() {
     return () => clearTimeout(t)
   }, [toast])
 
+  // Mode supabase: poll RINGAN ketersediaan menu (habis/dimatikan) tiap 30 dtk saat
+  // di halaman ini, jeda saat tab tak aktif → update tanpa refresh & tanpa realtime.
+  useEffect(() => {
+    if (!isSupabase()) return
+    let t = null
+    const start = () => { if (!t) { refreshBranchStatus(); t = setInterval(refreshBranchStatus, 30000) } }
+    const stop = () => { clearInterval(t); t = null }
+    const onVis = () => (document.hidden ? stop() : start())
+    if (!document.hidden) start()
+    document.addEventListener('visibilitychange', onVis)
+    return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
+  }, [])
+
   // Auto-advance the banner carousel every 4s (cross-fade). Kept before any
   // early return so hook order stays stable.
   const bannerCount = (master?.banners || []).filter((b) => b.active).length
@@ -60,10 +77,16 @@ export default function CustomerCatalog() {
   const branch = BRANCHES.find((b) => b.id === branchId)
   if (!branch) return <Navigate to="/app/cabang" replace />
 
-  // Live stock when this device's open day belongs to the chosen branch.
-  const isLive = day?.branchId === branchId && day?.stock
+  // Ketersediaan menu:
+  //  - mode supabase → dari SERVER (branch_status.availability: off=menu dimatikan
+  //    kasir, sold=induk habis) → LINTAS PERANGKAT (kasir matikan → customer habis).
+  //  - mode local → sesi day.js lokal (perangkat sama; tampil "sisa N").
+  const supa = isSupabase()
+  const avail = supa ? (status[branchId]?.availability || {}) : null
+  const isLive = !supa && day?.branchId === branchId && day?.stock
   const stockMap = isLive ? day.stock : (DUMMY_STOCK[branchId] || {})
-  const menuOff = isLive ? (day.menuOff || []) : []
+  const offList = supa ? (avail.off || []) : (isLive ? (day.menuOff || []) : [])
+  const soldList = supa ? (avail.sold || []) : null
   const thresholdOf = (parentId) => master?.parents?.find((p) => p.id === parentId)?.threshold ?? LOW_STOCK_THRESHOLD
 
   const banners = (master?.banners || []).filter((b) => b.active)
@@ -86,7 +109,8 @@ export default function CustomerCatalog() {
   })
 
   const stockState = (m) => {
-    if (menuOff.includes(m.id)) return { habis: true, qty: 0 }
+    if (offList.includes(m.id)) return { habis: true, qty: 0 }
+    if (supa) return { habis: (soldList || []).includes(m.parent), qty: null } // server: tahu habis (qty pasti tak disinkron)
     const qty = stockMap[m.parent] ?? 0
     return { habis: qty <= 0, qty, low: qty > 0 && qty <= thresholdOf(m.parent) }
   }
@@ -191,7 +215,7 @@ export default function CustomerCatalog() {
                           <span className="text-error font-label-md text-[12px] uppercase font-black">HABIS</span>
                         ) : (
                           <span className={`font-label-md text-[12px] flex items-center gap-1 ${st.low ? 'text-amber-600' : 'text-green-600'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${st.low ? 'bg-amber-600' : 'bg-green-600'}`} /> sisa {st.qty}
+                            <span className={`w-1.5 h-1.5 rounded-full ${st.low ? 'bg-amber-600' : 'bg-green-600'}`} /> {st.qty == null ? 'Tersedia' : `sisa ${st.qty}`}
                           </span>
                         )}
                       </div>

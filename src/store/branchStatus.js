@@ -21,3 +21,9 @@ export function refreshBranchStatus() { _refresh() }
 export function setBranchOpen(open) {
   if (isSupabase()) import('./branchStatus.remote.js').then((w) => w.setBranchOpenRemote(open)).catch(() => {})
 }
+
+// Dipanggil kasir saat ketersediaan menu berubah (matikan menu / stok induk habis).
+// avail = { off:[menuId], sold:[parentId] }
+export function setBranchAvailability(avail) {
+  if (isSupabase()) import('./branchStatus.remote.js').then((w) => w.setBranchAvailabilityRemote(avail)).catch(() => {})
+}
