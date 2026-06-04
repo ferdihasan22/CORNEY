@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { fmtRp } from '../data/menu.js'
 import { getOrder, markPaid, cancelOrder, refreshMyOrder } from '../store/orders.js'
+import { clearCart } from '../store/cart.js'
 import { isSupabase } from '../lib/backend.js'
 import { supabase } from '../lib/supabase.js'
 
@@ -40,6 +41,10 @@ export default function CustomerQris() {
     const t = setInterval(() => setSecs((s) => s - 1), 1000)
     return () => clearInterval(t)
   }, [secs])
+
+  // Order sudah dibuat → bersihkan keranjang di sini (dipindah dari checkout untuk
+  // cegah race guard "cart kosong → pilih cabang" yang menyalip navigasi ke QRIS).
+  useEffect(() => { if (order) clearCart() }, [order?.id])
 
   // Charge QRIS once on mount (ref guard survives StrictMode double-invoke).
   useEffect(() => {

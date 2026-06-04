@@ -3,7 +3,6 @@ import { useNavigate, Navigate } from 'react-router-dom'
 import { BRANCHES, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
-import { clearCart } from '../store/cart.js'
 import { createOrder } from '../store/orders.js'
 import { menuForBranch } from '../store/master.js'
 
@@ -119,7 +118,8 @@ export default function CustomerCheckout() {
         address: method === 'maxim' ? address.trim() : '',
         promoCode: cart.promoCode || '',
       })
-      clearCart()
+      // JANGAN clearCart() di sini — mengosongkan keranjang memicu guard "cart kosong
+      // → /app/cabang" yang menyalip navigasi. Keranjang dibersihkan di layar QRIS.
       navigate(`/app/qris/${order.id}`)
     } catch (e) {
       setSubmitting(false)
