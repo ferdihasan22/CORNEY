@@ -9,6 +9,7 @@ import { useExpense } from '../../store/useExpense.js'
 import { aggregateByBranch, aggregateTotals, aggregatePeriod, topVariant, bottomVariant, lowStockList, peakHour, anomaliCount } from '../../store/aggregate.js'
 import { useStockDaily } from '../../store/useStockDaily.js'
 import { useFreezerCorrections } from '../../store/useFreezerCorrections.js'
+import { useBranchLive } from '../../store/useBranchLive.js'
 
 // Step 1B.1 — OWN-01 Dashboard Kokpit. UI ported from Stitch
 // "owner_cockpit_mobile_dashboard", made responsive (mobile → desktop grid).
@@ -24,6 +25,14 @@ export default function OwnerDashboard() {
   const navigate = useNavigate()
   const freezerKoreksiPending = (useFreezerCorrections() || []).filter((c) => c.status === 'pending').length
   const [period, setPeriod] = useState('Hari ini')
+  const [liveDetail, setLiveDetail] = useState(null) // cabang yang dibuka rincian live-nya
+
+  // Omzet BERJALAN (live, sementara) per cabang — TERPISAH dari Master Laporan.
+  const live = useBranchLive()
+  const liveTodayISO = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
+  const liveOf = (id) => { const r = live[id]; return r && r.bizDate === liveTodayISO ? r : null }
+  const liveBranches = BRANCHES.filter((b) => b.active !== false).map((b) => ({ b, row: liveOf(b.id) }))
+  const liveTotal = liveBranches.reduce((s, x) => s + (x.row?.omzet || 0), 0)
 
   // Local wiring: pending stock-correction approvals from the open kasir day.
   const day = getState()
@@ -72,6 +81,30 @@ export default function OwnerDashboard() {
 
       <main className="px-4 mt-6 pb-12 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
         <p className="lg:col-span-3 text-[12px] text-on-surface-variant -mb-1">Menampilkan: <b>{period}</b> · <span className="italic">data contoh (Fase 1 — agregat nyata menyusul saat backend siap)</span></p>
+
+        {/* 0. OMZET BERJALAN (LIVE) per cabang — REALTIME, terpisah dari Master Laporan */}
+        <Card className="lg:col-span-3 border-2 border-green-200">
+          <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+            <h3 className="font-label-lg text-on-surface flex items-center gap-2"><Icon name="bolt" className="text-[20px] text-green-600" /> Omzet Berjalan Hari Ini · per Cabang</h3>
+            <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2.5 py-1 rounded-full flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> LIVE</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {liveBranches.map(({ b, row }) => (
+              <button key={b.id} onClick={() => row && setLiveDetail(b.id)} disabled={!row} className={`text-left p-4 rounded-2xl border transition-all ${row ? 'border-green-300 bg-green-50/50 hover:border-green-500 active:scale-[.98]' : 'border-outline-variant bg-surface-container-low opacity-70 cursor-not-allowed'}`}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-label-lg leading-tight">{b.name.replace('CORNEY ', '')}</span>
+                  {row ? <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0" /> : <span className="text-[10px] text-on-surface-variant shrink-0">tutup</span>}
+                </div>
+                <p className="font-display-md text-display-md text-primary leading-none">{fmtRp(row?.omzet || 0)}</p>
+                <p className="text-[11px] text-on-surface-variant mt-1">{row ? `${row.trx} transaksi · ketuk untuk rincian` : 'kasir belum buka hari ini'}</p>
+              </button>
+            ))}
+          </div>
+          <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
+            <p className="text-[11px] text-on-surface-variant/70 italic">Omzet berjalan (sementara, kotor) · angka final ada di Laporan setelah tutup toko.</p>
+            <p className="font-label-lg text-on-surface">Total live: <span className="font-headline-md text-primary">{fmtRp(liveTotal)}</span></p>
+          </div>
+        </Card>
 
         {/* 1. Omzet hero → Laporan Keuangan */}
         <button onClick={() => navigate('/ops/owner/laporan')} className="lg:col-span-2 text-left bg-white p-padding-card rounded-2xl shadow-[0_4px_16px_0_rgba(26,26,26,0.08)] border border-outline-variant flex flex-col gap-2 hover:border-primary active:scale-[.99] transition-all">
@@ -277,6 +310,65 @@ export default function OwnerDashboard() {
           </div>
         </section>
       </main>
+
+      {/* Rincian omzet berjalan per cabang — metode bayar & sumber (online/maxim/ambil) */}
+      {liveDetail && (() => {
+        const b = BRANCHES.find((x) => x.id === liveDetail)
+        const row = liveOf(liveDetail)
+        const bm = row?.breakdown?.byMethod || {}
+        const bs = row?.breakdown?.bySource || {}
+        const omzet = row?.omzet || 0
+        const pct = (v) => (omzet > 0 ? Math.round((v / omzet) * 100) : 0)
+        const METHODS = [['tunai', 'Tunai', 'payments'], ['qris_midtrans', 'QRIS Midtrans (online & walk-in)', 'qr_code_2'], ['qris_gopay', 'QRIS GoPay', 'qr_code_scanner'], ['gofood', 'GoFood', 'delivery_dining'], ['grabfood', 'GrabFood', 'moped']]
+        const SOURCES = [['walkin', 'Walk-in', 'storefront'], ['online_ambil', 'Online · Ambil sendiri', 'shopping_bag'], ['online_maxim', 'Online · Maxim', 'two_wheeler']]
+        return (
+          <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setLiveDetail(null)}>
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md bg-surface rounded-3xl shadow-2xl max-h-[85vh] flex flex-col overflow-hidden">
+              <div className="bg-primary text-on-primary p-5 shrink-0">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-wider opacity-80 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse" /> Omzet berjalan · LIVE</p>
+                    <h3 className="font-headline-md text-headline-md">{b?.name}</h3>
+                  </div>
+                  <button onClick={() => setLiveDetail(null)} className="w-9 h-9 rounded-full hover:bg-white/15 flex items-center justify-center active:scale-95 shrink-0"><Icon name="close" /></button>
+                </div>
+                <p className="font-display-md text-display-md mt-2 leading-none">{fmtRp(omzet)}</p>
+                <p className="text-[12px] opacity-80 mt-1">{row?.trx || 0} transaksi hari ini</p>
+              </div>
+              <div className="p-5 overflow-y-auto space-y-5">
+                <div>
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">Per Metode Bayar</p>
+                  <div className="space-y-2">
+                    {METHODS.filter(([k]) => (bm[k] || 0) > 0).map(([k, label, icon]) => (
+                      <div key={k} className="flex items-center gap-3">
+                        <Icon name={icon} className="!text-[18px] text-on-surface-variant shrink-0" />
+                        <span className="flex-1 text-sm">{label}</span>
+                        <span className="text-[11px] text-on-surface-variant tabular-nums">{pct(bm[k])}%</span>
+                        <span className="font-bold tabular-nums w-24 text-right">{fmtRp(bm[k])}</span>
+                      </div>
+                    ))}
+                    {METHODS.every(([k]) => (bm[k] || 0) === 0) && <p className="text-sm text-on-surface-variant italic">Belum ada transaksi.</p>}
+                  </div>
+                </div>
+                <div className="border-t border-outline-variant pt-4">
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">Per Sumber</p>
+                  <div className="space-y-2">
+                    {SOURCES.map(([k, label, icon]) => (
+                      <div key={k} className="flex items-center gap-3">
+                        <Icon name={icon} className="!text-[18px] text-on-surface-variant shrink-0" />
+                        <span className="flex-1 text-sm">{label}</span>
+                        <span className="text-[11px] text-on-surface-variant tabular-nums">{pct(bs[k] || 0)}%</span>
+                        <span className="font-bold tabular-nums w-24 text-right">{fmtRp(bs[k] || 0)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-[11px] text-on-surface-variant/70 italic leading-snug">Angka sementara (kotor) & belum dikurangi refund/koreksi. Laporan resmi (omzet bersih & laba) ada setelah kasir tutup toko.</p>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }

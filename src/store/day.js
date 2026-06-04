@@ -16,6 +16,8 @@
 import { MENUS } from '../data/menu.js'
 import { getOrders, subscribeOrders } from './orders.js'
 import { setBranchOpen, setBranchAvailability } from './branchStatus.js'
+import { pushBranchLive } from './branchLive.js'
+import { debounce } from '../lib/util.js'
 
 const KEY = 'corney_day'
 
@@ -54,6 +56,7 @@ function commit(next) {
   else localStorage.removeItem(KEY)
   subscribers.forEach((fn) => fn())
   pushAvailabilityIfChanged()
+  pushLiveDebounced() // omzet berjalan → Owner dashboard (didebounce, on-change)
 }
 
 // Dorong ketersediaan menu ke server (mode supabase) HANYA saat berubah → customer
@@ -70,6 +73,35 @@ function pushAvailabilityIfChanged() {
   _lastAvail = k
   setBranchAvailability({ off, sold })
 }
+
+// Dorong OMZET BERJALAN (live, SEMENTARA) ke server → Owner dashboard. HANYA saat
+// SELLING & saat berubah. byMethod = channelTotals (walk-in + online), bySource =
+// pisah walk-in / online-ambil / online-maxim. TERPISAH dari sales_daily (MASTER
+// LAPORAN) — jangan dipakai laporan resmi. Read-only (tak mengubah state penjualan).
+let _lastLive = ''
+function pushLiveIfChanged() {
+  if (!state || state.phase !== PHASE.SELLING) { _lastLive = ''; return }
+  const ch = channelTotals() // { total:{...}, count:{...} } walk-in + online
+  const byMethod = ch.total
+  const omzet = Object.values(byMethod).reduce((a, b) => a + (b || 0), 0)
+  const trx = Object.values(ch.count).reduce((a, b) => a + (b || 0), 0)
+  let walkin = 0
+  ;(state.sales || []).forEach((s) => { if (s.paid) walkin += s.total || 0 })
+  let onAmbil = 0, onMaxim = 0
+  ;(getOrders() || []).forEach((o) => {
+    if (!o.paid || o.branchId !== state.branchId) return
+    if (new Date(o.createdAt).getTime() < (state.startedAt || 0)) return
+    if (o.method === 'maxim') onMaxim += o.total || 0
+    else onAmbil += o.total || 0
+  })
+  const breakdown = { byMethod, bySource: { walkin, online_ambil: onAmbil, online_maxim: onMaxim } }
+  const bizDate = dayDateISO()
+  const k = JSON.stringify({ omzet, trx, breakdown, bizDate })
+  if (k === _lastLive) return
+  _lastLive = k
+  pushBranchLive({ omzet, trx, bizDate, breakdown })
+}
+const pushLiveDebounced = debounce(pushLiveIfChanged, 8000)
 
 // ── Phases ──────────────────────────────────────────────
 export const PHASE = {
