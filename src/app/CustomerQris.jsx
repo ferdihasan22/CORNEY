@@ -33,6 +33,7 @@ export default function CustomerQris() {
   const [checking, setChecking] = useState(false)
   const [statusMsg, setStatusMsg] = useState('')
   const [copied, setCopied] = useState(false)
+  const [saving, setSaving] = useState(false)
   const charged = useRef(false)
 
   // Countdown
@@ -131,6 +132,25 @@ export default function CustomerQris() {
     try { await navigator.clipboard.writeText(qrUrl); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch { /* clipboard blocked */ }
   }
 
+  // Unduh gambar QR ke galeri → customer bayar lewat aplikasi m-banking / e-wallet
+  // lain (scan dari galeri). Kalau CORS blokir fetch, buka di tab baru (simpan manual).
+  const downloadQr = async () => {
+    if (!qrUrl) return
+    setSaving(true)
+    try {
+      const res = await fetch(qrUrl)
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `QRIS-CORNEY-${String(order.no || '').padStart(3, '0')}.png`
+      document.body.appendChild(a); a.click(); a.remove()
+      setTimeout(() => URL.revokeObjectURL(url), 4000)
+    } catch {
+      window.open(qrUrl, '_blank', 'noopener') // CORS → buka tab, user simpan manual
+    } finally { setSaving(false) }
+  }
+
   const cekStatus = () => { mode === 'live' ? pollStatus(false) : finishPaid() }
   const batal = () => { cancelOrder(order.id); navigate(`/app/katalog/${order.branchId}`) }
 
@@ -165,6 +185,25 @@ export default function CustomerQris() {
             <span className="text-sm">{mode === 'live' ? 'Sandbox Midtrans' : 'diproses oleh Midtrans'}</span>
           </div>
         </div>
+
+        {/* Bayar pakai aplikasi lain — unduh / screenshot QR lalu scan dari galeri */}
+        {qrUrl && (
+          <div className="bg-surface-container-lowest rounded-2xl p-4 mb-4 shadow-[0_2px_8px_rgba(26,26,26,0.06)] space-y-3">
+            <div className="flex items-start gap-2">
+              <Icon name="account_balance_wallet" className="text-primary !text-[20px] shrink-0 mt-0.5" />
+              <p className="text-[13px] text-on-surface leading-snug">
+                <strong>Mau bayar lewat aplikasi lain?</strong> <strong>Screenshot</strong> layar ini atau <strong>unduh</strong> QR di bawah, lalu buka <strong>m-banking / e-wallet</strong> (DANA, OVO, GoPay, ShopeePay, BCA, dll) → menu <strong>Scan / QRIS</strong> → pilih <strong>“dari galeri”</strong>.
+              </p>
+            </div>
+            <button onClick={downloadQr} disabled={saving} className="w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-60">
+              <Icon name="download" className="!text-[20px]" /> {saving ? 'Menyimpan…' : 'Unduh QRIS'}
+            </button>
+            <div className="flex items-start gap-1.5 text-on-surface-variant">
+              <Icon name="photo_camera" className="!text-[16px] shrink-0 mt-0.5" />
+              <p className="text-[11px] leading-snug">Tips: kamu juga bisa <strong>screenshot</strong> halaman ini — hasilnya sama, tinggal scan dari galeri. Setelah bayar, status di sini akan otomatis jadi <strong>LUNAS</strong>.</p>
+            </div>
+          </div>
+        )}
 
         {/* Live testing helpers — copy qr_string + open simulator */}
         {mode === 'live' && (

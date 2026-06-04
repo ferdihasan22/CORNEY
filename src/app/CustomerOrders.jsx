@@ -18,6 +18,9 @@ const STATUS = {
   selesai: { label: 'Selesai', cls: 'bg-green-600 text-white' },
 }
 
+// Nomor WA Pusat (Customer Service) untuk komplain — bukan WA kasir cabang.
+const COMPLAINT_WA = '62895341869458' // 0895341869458 → format internasional
+
 export default function CustomerOrders() {
   const navigate = useNavigate()
   const master = useMaster()
@@ -27,6 +30,21 @@ export default function CustomerOrders() {
   const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name?.replace('CORNEY ', '') || id
   const fmtDate = (iso) => {
     try { return new Date(iso).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) } catch { return '' }
+  }
+
+  // Teks komplain otomatis berisi detail pesanan → terkirim ke WA Pusat.
+  const complaintHref = (o) => {
+    const items = (o.lines || []).map((l) => `- ${l.qty}x ${menuById(l.menuId)?.name || l.menuId}`).join('\n')
+    const text =
+      `Halo CORNEY, saya ingin komplain pesanan:\n\n` +
+      `No. Pesanan: #${String(o.no).padStart(3, '0')}\n` +
+      `PIN: ${o.pin}\n` +
+      `Cabang: ${branchName(o.branchId)}\n` +
+      `Item:\n${items}\n` +
+      `Total: ${fmtRp(o.total)}\n` +
+      `Tanggal: ${fmtDate(o.createdAt)}\n\n` +
+      `Keluhan saya:\n`
+    return `https://wa.me/${COMPLAINT_WA}?text=${encodeURIComponent(text)}`
   }
 
   return (
@@ -53,24 +71,30 @@ export default function CustomerOrders() {
               const more = (o.lines?.length || 0) - 1
               const st = STATUS[o.status] || STATUS.baru
               return (
-                <button key={o.id} onClick={() => navigate(`/app/lacak/${o.id}`)} className="bg-surface-container-lowest p-4 rounded-2xl shadow-[0_4px_16px_rgba(26,26,26,0.08)] flex items-center gap-4 border border-surface-variant/20 active:scale-[0.99] transition-transform text-left">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-surface-container">
-                    {first?.img ? <img src={first.img} alt={first.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Icon name="lunch_dining" className="text-on-surface-variant" /></div>}
-                  </div>
-                  <div className="flex-grow min-w-0">
-                    <div className="flex justify-between items-start gap-2">
-                      <div className="min-w-0">
-                        <p className="font-headline-md text-[17px] truncate">{first?.name || 'Pesanan'}{more > 0 ? ` +${more} lainnya` : ''}</p>
-                        <p className="font-label-md text-label-md text-on-surface-variant truncate">#{String(o.no).padStart(3, '0')} · {branchName(o.branchId)} · PIN {o.pin}</p>
+                <div key={o.id} className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_16px_rgba(26,26,26,0.08)] border border-surface-variant/20 overflow-hidden">
+                  <button onClick={() => navigate(`/app/lacak/${o.id}`)} className="w-full p-4 flex items-center gap-4 text-left active:scale-[0.99] transition-transform">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+                      {first?.img ? <img src={first.img} alt={first.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Icon name="lunch_dining" className="text-on-surface-variant" /></div>}
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="min-w-0">
+                          <p className="font-headline-md text-[17px] truncate">{first?.name || 'Pesanan'}{more > 0 ? ` +${more} lainnya` : ''}</p>
+                          <p className="font-label-md text-label-md text-on-surface-variant truncate">#{String(o.no).padStart(3, '0')} · {branchName(o.branchId)} · PIN {o.pin}</p>
+                        </div>
+                        <span className={`shrink-0 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider ${st.cls}`}>{st.label}</span>
                       </div>
-                      <span className={`shrink-0 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider ${st.cls}`}>{st.label}</span>
+                      <div className="flex justify-between items-end mt-2">
+                        <p className="font-label-md text-label-md text-on-surface-variant">{fmtDate(o.createdAt)}</p>
+                        <p className="font-headline-md text-headline-md text-primary">{fmtRp(o.total)}</p>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-end mt-2">
-                      <p className="font-label-md text-label-md text-on-surface-variant">{fmtDate(o.createdAt)}</p>
-                      <p className="font-headline-md text-headline-md text-primary">{fmtRp(o.total)}</p>
-                    </div>
-                  </div>
-                </button>
+                  </button>
+                  {/* Komplain pesanan ini → teks otomatis berisi detail, kirim ke WA Pusat */}
+                  <a href={complaintHref(o)} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-2.5 border-t border-surface-variant/30 text-error text-[13px] font-label-md active:scale-95 transition-transform">
+                    <Icon name="report_problem" className="!text-[18px]" /> Komplain pesanan ini
+                  </a>
+                </div>
               )
             })}
           </div>

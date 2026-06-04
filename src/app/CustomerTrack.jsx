@@ -20,6 +20,9 @@ const STEPS = [
   { key: 'selesai', label: 'Selesai', desc: 'Pesanan selesai' },
 ]
 
+// Nomor WA Pusat (Customer Service) untuk komplain — bukan WA kasir cabang.
+const COMPLAINT_WA = '62895341869458' // 0895341869458 → format internasional
+
 export default function CustomerTrack() {
   const { orderId } = useParams()
   const navigate = useNavigate()
@@ -44,6 +47,21 @@ export default function CustomerTrack() {
   const menuName = (id) => (master?.menus || []).find((m) => m.id === id)?.name || id
   const cur = ORDER_FLOW.indexOf(order.status)
   const itemsLabel = order.lines.map((l) => `${l.qty}x ${menuName(l.menuId)}`).join(', ')
+
+  // Teks komplain otomatis berisi detail pesanan → terkirim ke WA Pusat.
+  const complaintHref = () => {
+    const items = order.lines.map((l) => `- ${l.qty}x ${menuName(l.menuId)}`).join('\n')
+    const text =
+      `Halo CORNEY, saya ingin komplain pesanan:\n\n` +
+      `No. Pesanan: #${String(order.no).padStart(3, '0')}\n` +
+      `PIN: ${order.pin}\n` +
+      `Cabang: ${branch?.name || '-'}\n` +
+      `Metode: ${order.method === 'maxim' ? 'Maxim' : 'Ambil sendiri'}\n` +
+      `Item:\n${items}\n` +
+      `Total: ${fmtRp(order.total)}\n\n` +
+      `Keluhan saya:\n`
+    return `https://wa.me/${COMPLAINT_WA}?text=${encodeURIComponent(text)}`
+  }
 
   return (
     <div className="bg-surface text-on-surface min-h-screen pb-40">
@@ -104,6 +122,11 @@ export default function CustomerTrack() {
 
         <a href={`https://wa.me/${branch?.wa || ''}?text=${encodeURIComponent(`Halo, mau tanya pesanan #${String(order.no).padStart(3, '0')} (PIN ${order.pin})`)}`} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 text-white font-label-lg shadow-lg active:scale-[0.98]" style={{ backgroundColor: '#25D366' }}>
           <Icon name="chat" /> Hubungi Kasir via WhatsApp
+        </a>
+
+        {/* Komplain pesanan ini → teks otomatis berisi detail, terkirim ke WA Pusat */}
+        <a href={complaintHref()} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 font-label-lg border-2 border-error text-error active:scale-[0.98] transition-all">
+          <Icon name="report_problem" /> Komplain Pesanan Ini
         </a>
 
         {import.meta.env.DEV && !isSupabase() && order.status !== 'selesai' && (
