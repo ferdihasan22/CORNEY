@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROLE_META, credOf, setRoleSession, lockInfo, recordFail, clearLock } from './roleAuth.js'
 import { isSupabase } from '../lib/backend.js'
-import { signInRole } from './supabaseAuth.js'
+import { signInRole, signInAuto } from './supabaseAuth.js'
 
 // CORNEY — Layar login bersama untuk role tetap (Owner/Operasional/Produksi/Auditor).
 // Username + password (dari Manajemen User), "Ingat Login", dan kunci 3x→10 menit.
@@ -11,47 +11,62 @@ const mmss = (ms) => { const s = Math.ceil(ms / 1000); return `${String(Math.flo
 
 export default function RoleLogin({ role: fixedRole, roles }) {
   const navigate = useNavigate()
-  // Mode "kantor": banyak peran berbagi 1 halaman login → tampilkan pemilih peran.
-  const pickable = Array.isArray(roles) && roles.length > 1
-  const [role, setRole] = useState(pickable ? roles[0] : fixedRole)
-  const meta = ROLE_META[role] || { label: role, home: '/', icon: 'lock' }
+  // KANTOR: banyak peran berbagi 1 halaman → SATU login, peran DIDETEKSI OTOMATIS dari akun.
+  const auto = Array.isArray(roles) && roles.length > 1
+  const lockKey = auto ? 'kantor' : fixedRole
+  const meta = auto
+    ? { label: 'Kantor', home: '/', icon: 'corporate_fare' }
+    : (ROLE_META[fixedRole] || { label: fixedRole, home: '/', icon: 'lock' })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
   const [remember, setRemember] = useState(true)
   const [error, setError] = useState('')
-  const [lock, setLock] = useState(() => lockInfo(role))
-
-  // Ganti peran → reset error/lock/password (status kunci per-peran).
-  useEffect(() => { setLock(lockInfo(role)); setError(''); setPassword('') }, [role])
+  const [lock, setLock] = useState(() => lockInfo(lockKey))
 
   // Hitung mundur saat terkunci.
   useEffect(() => {
     if (!lock.locked) return
-    const t = setInterval(() => { const i = lockInfo(role); setLock(i); if (!i.locked) { clearInterval(t); setError('') } }, 1000)
+    const t = setInterval(() => { const i = lockInfo(lockKey); setLock(i); if (!i.locked) { clearInterval(t); setError('') } }, 1000)
     return () => clearInterval(t)
-  }, [lock.locked, role])
+  }, [lock.locked, lockKey])
 
   async function handleSubmit(e) {
     e.preventDefault()
-    const li = lockInfo(role)
+    const li = lockInfo(lockKey)
     if (li.locked) { setLock(li); return }
+
+    if (auto) {
+      // KANTOR — deteksi peran otomatis (tanpa pilih peran).
+      let detected = null, errMsg = 'Username atau password salah.'
+      if (isSupabase()) {
+        const res = await signInAuto(password, roles)
+        if (res.ok) detected = res.role; else errMsg = res.error || errMsg
+      } else {
+        detected = roles.find((r) => { const c = credOf(r); return username.trim().toLowerCase() === (c.username || '').toLowerCase() && password === c.password }) || null
+      }
+      if (detected) { clearLock(lockKey); setRoleSession(detected, remember); navigate(ROLE_META[detected]?.home || '/', { replace: true }); return }
+      const after = recordFail(lockKey); setLock(after)
+      setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : errMsg); setPassword('')
+      return
+    }
+
+    // Peran tetap (route login spesifik per-peran).
     if (isSupabase()) {
-      // Mode Supabase: email sintetis per-role; field username diabaikan.
-      const res = await signInRole(role, password)
-      if (res.ok) { clearLock(role); setRoleSession(role, remember); navigate(meta.home, { replace: true }) }
+      const res = await signInRole(fixedRole, password)
+      if (res.ok) { clearLock(lockKey); setRoleSession(fixedRole, remember); navigate(meta.home, { replace: true }) }
       else {
-        const after = recordFail(role); setLock(after)
+        const after = recordFail(lockKey); setLock(after)
         setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : (res.error || 'Username atau password salah.'))
         setPassword('')
       }
       return
     }
-    const c = credOf(role)
+    const c = credOf(fixedRole)
     if (username.trim().toLowerCase() === (c.username || '').toLowerCase() && password === c.password) {
-      clearLock(role); setRoleSession(role, remember); navigate(meta.home, { replace: true })
+      clearLock(lockKey); setRoleSession(fixedRole, remember); navigate(meta.home, { replace: true })
     } else {
-      const after = recordFail(role); setLock(after)
+      const after = recordFail(lockKey); setLock(after)
       setError(after.locked ? 'Salah 3 kali. Coba lagi nanti.' : 'Username atau password salah.')
       setPassword('')
     }
@@ -70,24 +85,7 @@ export default function RoleLogin({ role: fixedRole, roles }) {
       <main className="w-full max-w-[420px]">
         <div className="bg-surface-container-lowest border border-surface-container-high rounded-xl p-8 shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
           <h2 className="font-headline-md text-headline-md text-on-surface mb-1 text-center flex items-center justify-center gap-2"><Icon name={meta.icon} /> Masuk {meta.label}</h2>
-          <p className="text-center text-label-md text-on-surface-variant mb-5">Akun {meta.label} CORNEY</p>
-
-          {pickable && (
-            <div className="mb-6">
-              <p className="text-center text-label-md text-on-surface-variant mb-2">Pilih peran kamu</p>
-              <div className="grid grid-cols-2 gap-2">
-                {roles.map((r) => {
-                  const m = ROLE_META[r] || { label: r, icon: 'lock' }
-                  const active = r === role
-                  return (
-                    <button key={r} type="button" onClick={() => setRole(r)} className={`flex items-center justify-center gap-1.5 h-11 rounded-xl border font-label-md transition-all active:scale-95 ${active ? 'bg-primary-container text-on-primary border-primary-container shadow' : 'border-outline-variant text-on-surface-variant hover:border-primary'}`}>
-                      <Icon name={m.icon} className="!text-[18px]" /> {m.label}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )}
+          <p className="text-center text-label-md text-on-surface-variant mb-7">{auto ? 'Owner · Operasional · Produksi · Auditor — peran terdeteksi otomatis' : `Akun ${meta.label} CORNEY`}</p>
 
           {lock.locked && (
             <div className="mb-5 bg-error-container/40 border border-error/40 rounded-xl p-3 text-center text-error">

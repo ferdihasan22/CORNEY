@@ -49,6 +49,24 @@ async function signInExpectRole(email, password, expectedRole, expectedBranch) {
 export function signInRole(role, password) {
   return signInExpectRole(roleEmail(role), password, role, null)
 }
+
+// KANTOR (back-office): SATU login tanpa pilih peran → deteksi otomatis. Coba password
+// ke tiap email peran yang diizinkan; yang berhasil auth → role diambil dari `profiles`
+// (otoritatif). Tiap peran punya password beda → tepat satu yang cocok.
+export async function signInAuto(password, allowedRoles) {
+  if (!supabase) return { ok: false, error: 'Backend Supabase belum siap.' }
+  let lastErr = 'Username atau password salah.'
+  for (const role of allowedRoles) {
+    const { data, error } = await supabase.auth.signInWithPassword({ email: roleEmail(role), password })
+    if (error) { lastErr = mapAuthError(error); continue } // bukan peran ini → coba berikutnya
+    const { data: prof } = await supabase.from('profiles').select('role, active').eq('id', data.user.id).maybeSingle()
+    if (!prof) { await supabase.auth.signOut(); continue }
+    if (prof.active === false) { await supabase.auth.signOut(); return { ok: false, error: 'Akun dinonaktifkan Owner.' } }
+    if (!allowedRoles.includes(prof.role)) { await supabase.auth.signOut(); continue }
+    return { ok: true, role: prof.role }
+  }
+  return { ok: false, error: lastErr }
+}
 export function signInKasir(branchId, password) {
   return signInExpectRole(kasirEmail(branchId), password, 'kasir', branchId)
 }
