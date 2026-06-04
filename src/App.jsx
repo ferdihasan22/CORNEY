@@ -100,8 +100,23 @@ function Placeholder({ title, note }) {
   )
 }
 
+// Routing per-SUBDOMAIN produksi: tiap domain langsung ke app-nya, tak lewat pemilih.
+// corney.pages.dev / localhost → 'all' (pemilih lengkap untuk dev/preview).
+const HOST_APP = {
+  'corney.id': 'customer', 'www.corney.id': 'customer',
+  'dapur.corney.id': 'kasir', 'gudang.corney.id': 'supplier',
+  'kantor.corney.id': 'kantor',
+}
+function hostApp() {
+  return (typeof window !== 'undefined' && HOST_APP[window.location.hostname]) || 'all'
+}
+
 function Home() {
-  const apps = [
+  const host = hostApp()
+  if (host === 'customer') return <Navigate to="/app" replace />
+  if (host === 'kasir') return <Navigate to="/ops/kasir/login" replace />
+  if (host === 'supplier') return <Navigate to="/supplier" replace />
+  const allApps = [
     { to: '/ops/kasir/login', label: 'CORNEY Ops — Kasir', desc: 'Login → Buka Toko → Jualan → Closing (P0)' },
     { to: '/ops/owner', label: 'CORNEY Ops — Owner', desc: 'Dashboard & laporan (P0)' },
     { to: '/ops/operasional', label: 'CORNEY Ops — Operasional', desc: 'Ambil setoran tunai, isi stok ke standar' },
@@ -110,6 +125,10 @@ function Home() {
     { to: '/app', label: 'CORNEY App — Customer', desc: 'Katalog menu & struk digital' },
     { to: '/supplier', label: 'CORNEY Supplier', desc: 'Standalone (P1)' },
   ]
+  // kantor.corney.id → hanya 4 role back-office (owner/operasional/produksi/auditor).
+  const apps = host === 'kantor'
+    ? allApps.filter((a) => a.to.startsWith('/ops/') && a.to !== '/ops/kasir/login')
+    : allApps
   return (
     <div className="min-h-full p-6 max-w-md mx-auto">
       <div className="text-center pt-8">
