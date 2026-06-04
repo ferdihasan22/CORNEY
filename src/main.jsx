@@ -6,6 +6,8 @@ import './index.css'
 // Muat master di awal: menyinkronkan daftar cabang tersimpan (master.branches)
 // ke konstanta BRANCHES yang dipakai seluruh app, sebelum layar apa pun render.
 import './store/master.js'
+// Tangkap event install PWA sedini mungkin (untuk tombol "Instal Aplikasi").
+import './lib/pwaInstall.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -4,6 +4,7 @@ import { getSupplierSession, setSupplierSession } from './session.js'
 import { credOf, lockInfo, recordFail, clearLock } from '../auth/roleAuth.js'
 import { isSupabase } from '../lib/backend.js'
 import { signInSupplier } from '../auth/supabaseAuth.js'
+import InstallPwaButton from '../components/InstallPwaButton.jsx'
 
 // 3.1 — SUP-01 Login Portal Supplier. Username+password diatur Owner (Manajemen User).
 // "Ingat Login" → sesi permanen (localStorage). Kunci 3x salah → tunggu 10 menit.
@@ -88,6 +89,9 @@ export default function SupplierLogin() {
           <Icon name="login" /> Masuk
         </button>
         <p className="text-[12px] text-on-surface-variant text-center">Username & password diatur Owner. Hubungi CORNEY jika butuh akses.</p>
+        <div className="pt-3 border-t border-outline-variant/50">
+          <InstallPwaButton label="Instal Aplikasi" />
+        </div>
       </div>
     </div>
   )
