@@ -168,6 +168,7 @@ function Splash() {
 }
 
 import SyncStatus from './components/SyncStatus.jsx'
+import KasirAlerts from './ops/kasir/KasirAlerts.jsx'
 
 export default function App() {
   return (
@@ -263,6 +264,7 @@ export default function App() {
     </Routes>
     </AuthGate>
     <SyncStatus />
+    <KasirAlerts />
     </Suspense>
   )
 }

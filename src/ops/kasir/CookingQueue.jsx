@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { MENUS, BRANCHES } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
@@ -33,16 +33,6 @@ const mmss = (ms) => {
   return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0')
 }
 
-function beep() {
-  try {
-    const Ctx = window.AudioContext || window.webkitAudioContext
-    const ctx = new Ctx()
-    const o = ctx.createOscillator(); const g = ctx.createGain()
-    o.connect(g); g.connect(ctx.destination)
-    o.frequency.value = 880; g.gain.value = 0.18
-    o.start(); o.stop(ctx.currentTime + 0.35)
-  } catch { /* autoplay may block until interaction; non-critical */ }
-}
 
 export default function CookingQueue() {
   const day = useDay()
@@ -51,7 +41,6 @@ export default function CookingQueue() {
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
   const [now, setNow] = useState(() => Date.now())
   const [payFor, setPayFor] = useState(null) // pending order being paid at handover
-  const prevDone = useRef(new Set())
 
   function selesai(s) {
     if (s.online) finishFryingOrder(s.id) // online sudah LUNAS (QRIS) → cukup angkat
@@ -90,11 +79,8 @@ export default function CookingQueue() {
     .sort((a, b) => a.rank - b.rank || a.s.no - b.s.no)
 
   const fryingNow = active.filter((a) => a.s.cook.status === 'frying' && !a.done).length
-  const doneIds = active.filter((a) => a.done).map((a) => a.s.id)
-
-  // Alarm: beep when an order newly becomes done.
-  doneIds.forEach((id) => { if (!prevDone.current.has(id)) beep() })
-  prevDone.current = new Set(doneIds)
+  // Alarm "gorengan matang" kini ditangani global oleh <KasirAlerts/> (berbunyi di
+  // layar kasir mana pun, pakai suara sudah-goreng.mp3) → tak perlu beep di sini.
 
   return (
     <div className="bg-background text-on-surface h-screen flex flex-col overflow-hidden">
