@@ -7,6 +7,8 @@ import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
 import { adminResetPasswordKasir, adminCreateKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
+import { useBranchStatus } from '../../store/useBranchStatus.js'
+import { setBranchOpenFor } from '../../store/branchStatus.js'
 
 // 2.3 — §3 Multi-cabang · Kelola Cabang. Ported from Stitch
 // "manage_branches_desktop", made responsive (card grid + drawer). The left
@@ -23,7 +25,9 @@ export default function OwnerBranches() {
   const navigate = useNavigate()
   const master = useMaster()
   useParStock() // langganan stok standar
+  const bstatus = useBranchStatus() // status buka Toko Online (realtime, lintas perangkat)
   const branches = master?.branches || []
+  const todayISO = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
 
   const [editing, setEditing] = useState(null) // null | {} new | {id,...} edit
   const [form, setForm] = useState(EMPTY)
@@ -101,10 +105,27 @@ export default function OwnerBranches() {
                 <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="two_wheeler" className="text-[18px] shrink-0" /><p className="text-label-md">Maxim: <strong>{b.maximName || b.name}</strong></p></div>
                 <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="savings" className="text-[18px] shrink-0" /><p className="text-label-md">Kembalian: <strong>{fmtRp(b.kembalian ?? 0)}</strong></p></div>
               </div>
-              <div className={`flex flex-wrap gap-2 mb-4 ${b.active ? '' : 'opacity-50 grayscale'}`}>
+              <div className={`flex flex-wrap gap-2 mb-3 ${b.active ? '' : 'opacity-50 grayscale'}`}>
                 <div className="bg-primary/5 text-primary border border-primary/20 px-3 py-2 rounded-xl flex items-center gap-2"><Icon name="timer" className="text-[18px]" /><span className="text-label-md">Stop Online <strong>{b.stopOnline}</strong></span></div>
                 <div className="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-2 rounded-xl flex items-center gap-2"><Icon name="store" className="text-[18px]" /><span className="text-label-md">Tutup Booth <strong>{b.closeBooth}</strong></span></div>
               </div>
+
+              {/* Saklar manual Toko Online (override kasir) — langsung ke customer realtime */}
+              {isSupabase() && (() => {
+                const st = bstatus[b.id]
+                const isOpen = !!st?.open && st.openDate === todayISO
+                return (
+                  <div className="flex items-center justify-between gap-2 mb-4 px-3 py-2.5 rounded-xl border border-outline-variant/60 bg-surface">
+                    <span className="text-label-md flex items-center gap-2">
+                      <span className={`w-2.5 h-2.5 rounded-full ${isOpen ? 'bg-green-500 animate-pulse' : 'bg-error'}`} />
+                      Toko Online: <strong className={isOpen ? 'text-green-700' : 'text-error'}>{isOpen ? 'BUKA' : 'TUTUP'}</strong>
+                    </span>
+                    <button onClick={() => setBranchOpenFor(b.id, !isOpen)} className={`px-4 h-9 rounded-lg font-bold text-[13px] active:scale-95 transition-transform shrink-0 ${isOpen ? 'bg-error text-on-error' : 'bg-green-600 text-white'}`}>
+                      {isOpen ? 'Tutup' : 'Buka'}
+                    </button>
+                  </div>
+                )
+              })()}
               <div className="flex gap-2">
                 <button onClick={() => openEdit(b)} className="flex-grow bg-surface-variant text-on-surface py-3 rounded-xl font-label-lg hover:bg-outline-variant transition-colors flex items-center justify-center gap-2"><Icon name="edit" className="text-[20px]" /> Edit</button>
                 <button onClick={() => toggleBranchActive(b.id)} title={b.active ? 'Nonaktifkan' : 'Aktifkan'} className={`w-[52px] h-[52px] border rounded-xl flex items-center justify-center transition-colors ${b.active ? 'border-outline text-error hover:bg-error-container/30' : 'border-green-500 text-green-600 hover:bg-green-50'}`}>

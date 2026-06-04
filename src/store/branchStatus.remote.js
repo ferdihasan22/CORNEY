@@ -11,6 +11,11 @@ export function setBranchOpenRemote(open) {
   enqueue({ kind: 'rpc', fn: 'kasir_set_open', args: { p_open: !!open }, key: 'kasir_set_open' })
 }
 
+// Owner buka/tutup Toko Online cabang TERTENTU (override). Lewat outbox, dedup per cabang.
+export function setBranchOpenOwnerRemote(branchId, open) {
+  enqueue({ kind: 'rpc', fn: 'owner_set_open', args: { p_branch: branchId, p_open: !!open }, key: `owner_set_open:${branchId}` })
+}
+
 // Kasir set ketersediaan menu cabang sendiri: { off:[menuId], sold:[parentId] }.
 export function setBranchAvailabilityRemote(avail) {
   enqueue({ kind: 'rpc', fn: 'kasir_set_availability', args: { p_avail: avail || {} }, key: 'kasir_set_availability' })

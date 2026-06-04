@@ -22,6 +22,16 @@ export function setBranchOpen(open) {
   if (isSupabase()) import('./branchStatus.remote.js').then((w) => w.setBranchOpenRemote(open)).catch(() => {})
 }
 
+// Owner: buka/tutup Toko Online cabang TERTENTU (override kasir). Optimistik di lokal
+// lalu dorong ke server (realtime menyusul) → tombol langsung terasa responsif.
+export function setBranchOpenFor(branchId, open) {
+  if (!branchId) return
+  const cur = state[branchId] || {}
+  const today = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
+  commit({ ...state, [branchId]: { ...cur, open: !!open, openDate: open ? today : null } })
+  if (isSupabase()) import('./branchStatus.remote.js').then((w) => w.setBranchOpenOwnerRemote(branchId, open)).catch(() => {})
+}
+
 // Dipanggil kasir saat ketersediaan menu berubah (matikan menu / stok induk habis).
 // avail = { off:[menuId], sold:[parentId] }
 export function setBranchAvailability(avail) {
