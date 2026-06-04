@@ -4,6 +4,7 @@
 const FILES = {
   done: '/sfx/sudah-goreng.mp3', // alarm gorengan selesai
   neworder: '/sfx/orderan-masuk.mp3', // notif order online masuk
+  qris: '/sfx/qris-masuk.mp3', // notif QRIS masuk (dibunyikan BERSAMAAN dgn neworder)
 }
 
 let unlocked = false

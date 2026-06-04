@@ -27,7 +27,7 @@ export default function KasirAlerts() {
     let adaBaru = false
     ids.forEach((id) => { if (!knownIds.current.has(id)) adaBaru = true })
     knownIds.current = ids
-    if (adaBaru) playSfx('neworder', 2)
+    if (adaBaru) { playSfx('neworder', 2); playSfx('qris', 1) } // dua suara bunyi bersamaan
   }, [orders, day])
 
   // ── Gorengan matang → alarm (cek tiap detik; pakai getState/getOrders agar selalu terkini) ──
