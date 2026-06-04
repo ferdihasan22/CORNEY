@@ -62,6 +62,23 @@ export default function WalkinSale() {
     return () => clearInterval(t)
   }, [])
 
+  // Bubble "order online masuk nih" yang keluar dari tombol Online. Auto-hilang 5 dtk,
+  // TAK menumpuk (satu bubble; order baru beruntun cuma me-reset timernya).
+  const [orderBubble, setOrderBubble] = useState(false)
+  const prevOnlineNew = useRef(null)
+  const bubbleTimer = useRef(null)
+  useEffect(() => {
+    if (prevOnlineNew.current === null) { prevOnlineNew.current = onlineNew; return } // baseline: jangan munculkan saat buka
+    if (onlineNew > prevOnlineNew.current) {
+      setOrderBubble(true)
+      clearTimeout(bubbleTimer.current)
+      bubbleTimer.current = setTimeout(() => setOrderBubble(false), 5000)
+    }
+    prevOnlineNew.current = onlineNew
+  }, [onlineNew])
+  useEffect(() => () => clearTimeout(bubbleTimer.current), [])
+  const dismissBubble = () => { clearTimeout(bubbleTimer.current); setOrderBubble(false) }
+
   const cart = day?.cart ?? []
   const cook = cookingCounts() // {queued, frying} untuk badge Antrean Masak
   const masakRef = useRef(null)
@@ -183,10 +200,32 @@ export default function WalkinSale() {
           <button className="h-full flex items-center px-2 sm:px-4 text-secondary-container font-bold border-b-4 border-secondary-container pb-1 active:scale-95 transition-all whitespace-nowrap">
             Walk-in
           </button>
-          <button onClick={() => navigate('/ops/kasir/online')} className="relative h-full flex items-center px-2 sm:px-4 text-on-primary/80 font-medium hover:bg-primary-container/20 active:scale-95 transition-all whitespace-nowrap">
-            <span className="hidden sm:inline">Order&nbsp;</span>Online
-            {onlineNew > 0 && <span className="absolute -top-1 -right-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold h-5 min-w-5 px-1 flex items-center justify-center rounded-full border-2 border-primary">{onlineNew}</span>}
-          </button>
+          <div className="relative h-full">
+            <button onClick={() => { dismissBubble(); navigate('/ops/kasir/online') }} className="relative h-full flex items-center px-2 sm:px-4 text-on-primary/80 font-medium hover:bg-primary-container/20 active:scale-95 transition-all whitespace-nowrap">
+              <span className="hidden sm:inline">Order&nbsp;</span>Online
+              {onlineNew > 0 && <span className="absolute -top-1 -right-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold h-5 min-w-5 px-1 flex items-center justify-center rounded-full border-2 border-primary">{onlineNew}</span>}
+            </button>
+            {orderBubble && (
+              <>
+                <style>{`@keyframes orderBubbleIn{from{opacity:0;transform:translateY(-6px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
+                <div className="absolute top-full right-0 mt-2.5 z-[60] w-[230px] max-w-[78vw]" style={{ animation: 'orderBubbleIn .2s ease-out' }}>
+                  {/* panah kecil menunjuk ke tombol Online */}
+                  <div className="absolute -top-1.5 right-5 w-3 h-3 bg-surface rotate-45 border-l border-t border-outline-variant/50" />
+                  <div className="relative bg-surface text-on-surface rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.18)] border border-outline-variant/50 p-3.5">
+                    <button onClick={() => { dismissBubble(); navigate('/ops/kasir/online') }} className="w-full text-left active:scale-[0.99] transition-transform">
+                      <div className="flex items-start gap-2">
+                        <span className="text-xl leading-none">🛵</span>
+                        <p className="text-[13px] font-bold leading-snug flex-1 text-on-surface">Ada order online masuk nih, cek yukk!</p>
+                      </div>
+                    </button>
+                    <div className="flex justify-end mt-2.5">
+                      <button onClick={dismissBubble} className="px-5 h-8 rounded-lg bg-primary text-on-primary text-[13px] font-bold active:scale-95 transition-transform">OK</button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </nav>
         <div className="flex items-center gap-1 sm:gap-6 shrink-0">
           <button
