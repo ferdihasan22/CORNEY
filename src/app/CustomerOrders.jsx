@@ -19,7 +19,7 @@ const STATUS = {
 }
 
 // Nomor WA Pusat (Customer Service) untuk komplain — bukan WA kasir cabang.
-const COMPLAINT_WA = '62895341869458' // 0895341869458 → format internasional
+const COMPLAINT_WA = '6285174200152' // 0851-7420-0152 → format internasional
 
 export default function CustomerOrders() {
   const navigate = useNavigate()
@@ -90,10 +90,16 @@ export default function CustomerOrders() {
                       </div>
                     </div>
                   </button>
-                  {/* Komplain pesanan ini → teks otomatis berisi detail, kirim ke WA Pusat */}
-                  <a href={complaintHref(o)} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-2.5 border-t border-surface-variant/30 text-error text-[13px] font-label-md active:scale-95 transition-transform">
-                    <Icon name="report_problem" className="!text-[18px]" /> Komplain pesanan ini
-                  </a>
+                  {/* Komplain → hanya aktif setelah SELESAI. Teks otomatis berisi detail, kirim ke WA Pusat */}
+                  {o.status === 'selesai' ? (
+                    <a href={complaintHref(o)} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-2.5 border-t border-surface-variant/30 text-error text-[13px] font-label-md active:scale-95 transition-transform">
+                      <Icon name="report_problem" className="!text-[18px]" /> Komplain pesanan ini
+                    </a>
+                  ) : (
+                    <div className="flex items-center justify-center gap-2 py-2.5 border-t border-surface-variant/30 text-on-surface-variant/40 text-[13px] font-label-md cursor-not-allowed select-none">
+                      <Icon name="report_problem" className="!text-[18px]" /> Komplain (setelah selesai)
+                    </div>
+                  )}
                 </div>
               )
             })}

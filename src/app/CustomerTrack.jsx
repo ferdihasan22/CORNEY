@@ -21,7 +21,7 @@ const STEPS = [
 ]
 
 // Nomor WA Pusat (Customer Service) untuk komplain — bukan WA kasir cabang.
-const COMPLAINT_WA = '62895341869458' // 0895341869458 → format internasional
+const COMPLAINT_WA = '6285174200152' // 0851-7420-0152 → format internasional
 
 export default function CustomerTrack() {
   const { orderId } = useParams()
@@ -124,10 +124,18 @@ export default function CustomerTrack() {
           <Icon name="chat" /> Hubungi Kasir via WhatsApp
         </a>
 
-        {/* Komplain pesanan ini → teks otomatis berisi detail, terkirim ke WA Pusat */}
-        <a href={complaintHref()} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 font-label-lg border-2 border-error text-error active:scale-[0.98] transition-all">
-          <Icon name="report_problem" /> Komplain Pesanan Ini
-        </a>
+        {/* Komplain pesanan ini → hanya aktif setelah pesanan SELESAI. Teks otomatis
+            berisi detail, terkirim ke WA Pusat. */}
+        {order.status === 'selesai' ? (
+          <a href={complaintHref()} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 font-label-lg border-2 border-error text-error active:scale-[0.98] transition-all">
+            <Icon name="report_problem" /> Komplain Pesanan Ini
+          </a>
+        ) : (
+          <div className="w-full min-h-[52px] rounded-xl flex flex-col items-center justify-center gap-0.5 font-label-lg border-2 border-surface-variant text-on-surface-variant/50 cursor-not-allowed select-none">
+            <span className="flex items-center gap-3"><Icon name="report_problem" /> Komplain Pesanan Ini</span>
+            <span className="text-[11px] font-label-md normal-case">Tersedia setelah pesanan selesai</span>
+          </div>
+        )}
 
         {import.meta.env.DEV && !isSupabase() && order.status !== 'selesai' && (
           <button onClick={() => advanceOrder(order.id)} className="w-full py-3 rounded-xl border border-dashed border-outline text-on-surface-variant text-sm flex items-center justify-center gap-2 active:scale-95">
