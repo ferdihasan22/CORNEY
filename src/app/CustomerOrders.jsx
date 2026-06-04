@@ -5,6 +5,7 @@ import { useMaster } from '../store/useMaster.js'
 import { useOrders } from '../store/useOrders.js'
 import { sweepExpiredUnpaid } from '../store/orders.js'
 import { useAppConfig } from '../store/useAppConfig.js'
+import { onlineNo } from '../lib/util.js'
 
 // 2.1 — CUS-04 Riwayat Pesanan. Ported from Stitch "riwayat_pesanan_corney_app"
 // but stripped of the decorative sidebar / bottom-nav (Menu/Promo/Profile aren't
@@ -49,7 +50,7 @@ export default function CustomerOrders() {
     const items = (o.lines || []).map((l) => `- ${l.qty}x ${menuById(l.menuId)?.name || l.menuId}`).join('\n')
     const text =
       `Halo CORNEY, saya ingin komplain pesanan:\n\n` +
-      `No. Pesanan: #${String(o.no).padStart(3, '0')}\n` +
+      `No. Pesanan: ${onlineNo(o.no)}\n` +
       `PIN: ${o.pin}\n` +
       `Cabang: ${branchName(o.branchId)}\n` +
       `Item:\n${items}\n` +
@@ -93,7 +94,7 @@ export default function CustomerOrders() {
                       <div className="flex justify-between items-start gap-2">
                         <div className="min-w-0">
                           <p className="font-headline-md text-[17px] truncate">{first?.name || 'Pesanan'}{more > 0 ? ` +${more} lainnya` : ''}</p>
-                          <p className="font-label-md text-label-md text-on-surface-variant truncate">#{String(o.no).padStart(3, '0')} · {branchName(o.branchId)} · PIN {o.pin}</p>
+                          <p className="font-label-md text-label-md text-on-surface-variant truncate">{onlineNo(o.no)} · {branchName(o.branchId)} · PIN {o.pin}</p>
                         </div>
                         <span className={`shrink-0 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider ${st.cls}`}>{st.label}</span>
                       </div>

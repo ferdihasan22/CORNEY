@@ -3,6 +3,7 @@ import { BRANCHES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useOrders } from '../store/useOrders.js'
 import { getOrder, markOrderContacted } from '../store/orders.js'
+import { onlineNo } from '../lib/util.js'
 
 // 2.1 — CUS-03 Payment Success + PIN (redesigned). The WhatsApp button is the
 // mandatory hero: Lacak Pesanan & Kembali ke Menu only appear once the customer
@@ -34,7 +35,7 @@ export default function CustomerSuccess() {
 
   const waText = encodeURIComponent(
     `Halo CORNEY ${branch?.name?.replace('CORNEY ', '') || ''}! Pesanan online saya:\n` +
-    `No #${String(order.no).padStart(3, '0')} · PIN ${order.pin}\n` +
+    `No ${onlineNo(order.no)} · PIN ${order.pin}\n` +
     order.lines.map((l) => `- ${l.qty}x ${menuName(l.menuId)}`).join('\n') +
     `\nTotal ${fmtRp(order.total)} (LUNAS via QRIS)\n` +
     `${order.method === 'maxim' ? `Diambil Maxim ke: ${order.address || '(alamat belum diisi)'}` : `Ambil sendiri jam ${order.schedule}`}. Terima kasih!`
@@ -87,7 +88,7 @@ export default function CustomerSuccess() {
         <section className="bg-surface-container-lowest rounded-[22px] p-5 mb-7 shadow-[0_10px_28px_-14px_rgba(26,26,26,0.18)] border border-surface-container-highest">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <span className="text-[12px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded-md">#{String(order.no).padStart(3, '0')}</span>
+              <span className="text-[12px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded-md">{onlineNo(order.no)}</span>
               <h2 className="font-headline-md mt-1.5">{branch?.name}</h2>
             </div>
             <div className="text-right text-on-surface-variant">

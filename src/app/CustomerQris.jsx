@@ -4,6 +4,7 @@ import { fmtRp } from '../data/menu.js'
 import { getOrder, markPaid, cancelOrder, refreshMyOrder, extendPayDeadline } from '../store/orders.js'
 import { clearCart } from '../store/cart.js'
 import { isSupabase } from '../lib/backend.js'
+import { onlineNo } from '../lib/util.js'
 import { supabase } from '../lib/supabase.js'
 
 // 2.1 — CUS-03 Pembayaran QRIS. Now wired to REAL Midtrans (sandbox) via the Vite
@@ -170,7 +171,7 @@ export default function CustomerQris() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `QRIS-CORNEY-${String(order.no || '').padStart(3, '0')}.png`
+      a.download = `QRIS-CORNEY-${onlineNo(order.no)}.png`
       document.body.appendChild(a); a.click(); a.remove()
       setTimeout(() => URL.revokeObjectURL(url), 4000)
     } catch {

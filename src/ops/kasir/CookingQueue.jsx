@@ -6,6 +6,7 @@ import { useOrders } from '../../store/useOrders.js'
 import { PHASE, startFrying, finishCooking, payPending } from '../../store/day.js'
 import { startFryingOrder, finishFryingOrder } from '../../store/orders.js'
 import PaymentModal from './PaymentModal.jsx'
+import { onlineNo } from '../../lib/util.js'
 
 // Step 1A.7 — MSK-01/02/04 Antrean Masak. UI ported from Stitch
 // "cooking_queue_corney_kitchen", stripped of non-PRD decoration (kitchen
@@ -25,7 +26,8 @@ function sourceBadge(sale) {
   return { label: 'Walk-in', cls: 'bg-secondary-container text-on-secondary-container' }
 }
 const itemsLabel = (sale) => sale.lines.map((l) => `${l.qty}x ${MENUS.find((m) => m.id === l.menuId)?.name ?? l.menuId}`).join(', ')
-const code = (sale) => '#' + String(sale.no).padStart(3, '0')
+// Online → "O-003", walk-in → "#003": deret nomor terpisah, ini cegah bentrok saat panggil.
+const code = (sale) => (sale.online ? onlineNo(sale.no) : '#' + String(sale.no).padStart(3, '0'))
 const mmss = (ms) => {
   const s = Math.max(0, Math.ceil(ms / 1000))
   return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0')

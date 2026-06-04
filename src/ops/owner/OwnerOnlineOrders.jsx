@@ -5,6 +5,7 @@ import { useOrders } from '../../store/useOrders.js'
 import { useSalesDaily } from '../../store/useSalesDaily.js'
 import { salesInPeriod } from '../../store/aggregate.js'
 import { useMaster } from '../../store/useMaster.js'
+import { onlineNo } from '../../lib/util.js'
 
 // OWN Penjualan Online & Walk-in — KPI, grafik tren, perbandingan, analisa, +
 // daftar pesanan online ringkas. Omzet split walk-in/online dari Master Laporan
@@ -185,7 +186,7 @@ export default function OwnerOnlineOrders() {
             <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 divide-y divide-outline-variant/30 overflow-hidden">
               {(showAll ? oRows : oRows.slice(0, 12)).map((o) => (
                 <div key={o.id} className="px-3 py-2 flex items-center gap-2 text-label-md">
-                  <span className="font-bold w-10 shrink-0">#{String(o.no).padStart(3, '0')}</span>
+                  <span className="font-bold w-12 shrink-0">{onlineNo(o.no)}</span>
                   <Icon name={o.method === 'maxim' ? 'two_wheeler' : 'storefront'} className={`!text-[16px] shrink-0 ${o.method === 'maxim' ? 'text-secondary' : 'text-tertiary'}`} />
                   <span className="flex-1 min-w-0 truncate">{o.name || 'Pelanggan'} <span className="text-on-surface-variant">· {nameOf(o.branchId)}</span></span>
                   <span className="font-bold shrink-0">{fmtRp(o.total)}</span>

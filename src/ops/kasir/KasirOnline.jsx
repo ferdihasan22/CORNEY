@@ -8,6 +8,7 @@ import { clearKasirBranch } from './kasirSession.js'
 import { useMaster } from '../../store/useMaster.js'
 import { useOrders } from '../../store/useOrders.js'
 import { advanceOrder } from '../../store/orders.js'
+import { onlineNo } from '../../lib/util.js'
 
 // 2.2 — §6.5 Tab Order Online (POS). Ported from Stitch "online_orders_corney_pos"
 // but adapted to the kasir TABLET (portrait-first, 1 col → responsive grid) and
@@ -131,7 +132,7 @@ export default function KasirOnline() {
   const cook = cookingCounts() // {queued, frying} untuk badge tombol Antrean Masak
 
   const stageAction = (o) => {
-    const noFmt = `#${String(o.no).padStart(3, '0')}`
+    const noFmt = onlineNo(o.no)
     // Tutorial pesan Maxim yang ramah + arahan PIN di catatan kurir.
     const maximTutorial =
       `Halo ${o.name || 'kak'}! 🌽🎉 Pesanan ${noFmt} kamu sudah SIAP & masih anget!\n\n` +
@@ -272,7 +273,7 @@ export default function KasirOnline() {
                   {/* Head: no + PIN, method + time */}
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="font-headline-md text-headline-md text-on-surface">#{String(o.no).padStart(3, '0')}</h3>
+                      <h3 className="font-headline-md text-headline-md text-on-surface">{onlineNo(o.no)}</h3>
                       <div className="mt-1 inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-md font-bold">PIN {o.pin}</div>
                     </div>
                     <div className="flex flex-col items-end gap-1">

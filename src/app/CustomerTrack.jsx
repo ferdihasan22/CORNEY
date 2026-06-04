@@ -6,6 +6,7 @@ import { useOrders } from '../store/useOrders.js'
 import { getOrder, advanceOrder, refreshMyOrder, ORDER_FLOW } from '../store/orders.js'
 import { isSupabase } from '../lib/backend.js'
 import { useAppConfig } from '../store/useAppConfig.js'
+import { onlineNo } from '../lib/util.js'
 
 // 2.1 — CUS Lacak Pesanan. Ported from Stitch "lacak_pesanan_status_diproses".
 // Status comes from the orders store; in Fase 1 the kasir's live updates are
@@ -56,7 +57,7 @@ export default function CustomerTrack() {
     const items = order.lines.map((l) => `- ${l.qty}x ${menuName(l.menuId)}`).join('\n')
     const text =
       `Halo CORNEY, saya ingin komplain pesanan:\n\n` +
-      `No. Pesanan: #${String(order.no).padStart(3, '0')}\n` +
+      `No. Pesanan: ${onlineNo(order.no)}\n` +
       `PIN: ${order.pin}\n` +
       `Cabang: ${branch?.name || '-'}\n` +
       `Metode: ${order.method === 'maxim' ? 'Maxim' : 'Ambil sendiri'}\n` +
@@ -83,7 +84,7 @@ export default function CustomerTrack() {
             <p className="text-[10px] uppercase opacity-80">Kode PIN</p>
             <p className="font-headline-md leading-none">{order.pin}</p>
           </div>
-          <span className="text-on-surface-variant font-label-md">Order #{String(order.no).padStart(3, '0')}</span>
+          <span className="text-on-surface-variant font-label-md">Order {onlineNo(order.no)}</span>
           <h2 className="font-headline-md text-primary-container">{branch?.name}</h2>
           <div className="flex items-center gap-2 text-on-surface-variant pt-2"><Icon name="schedule" className="!text-[18px]" /><p className="font-label-md">{order.method === 'maxim' ? 'Maxim' : `Ambil · ${order.schedule}`}</p></div>
         </section>
@@ -137,7 +138,7 @@ export default function CustomerTrack() {
           </section>
         ))}
 
-        <a href={`https://wa.me/${branch?.wa || ''}?text=${encodeURIComponent(`Halo, mau tanya pesanan #${String(order.no).padStart(3, '0')} (PIN ${order.pin})`)}`} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 text-white font-label-lg shadow-lg active:scale-[0.98]" style={{ backgroundColor: '#25D366' }}>
+        <a href={`https://wa.me/${branch?.wa || ''}?text=${encodeURIComponent(`Halo, mau tanya pesanan ${onlineNo(order.no)} (PIN ${order.pin})`)}`} target="_blank" rel="noreferrer" className="w-full min-h-[52px] rounded-xl flex items-center justify-center gap-3 text-white font-label-lg shadow-lg active:scale-[0.98]" style={{ backgroundColor: '#25D366' }}>
           <Icon name="chat" /> Hubungi Kasir via WhatsApp
         </a>
 

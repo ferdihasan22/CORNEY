@@ -12,6 +12,10 @@ export function debounce(fn, ms = 500) {
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms) }
 }
 
+// Kode antrian order ONLINE = "O-003" → bedakan dari walk-in ("#003") saat dipanggil
+// di booth (deret nomor online & walk-in terpisah, bisa sama angkanya). 1 sumber → konsisten.
+export const onlineNo = (no) => 'O-' + String(no ?? 0).padStart(3, '0')
+
 // UUID v4 untuk id baris di mode supabase (tabel id uuid). Math.random OK di runtime app.
 export function genUuid() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()
