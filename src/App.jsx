@@ -166,6 +166,8 @@ function Splash() {
   )
 }
 
+import SyncStatus from './components/SyncStatus.jsx'
+
 export default function App() {
   return (
     <Suspense fallback={<Splash />}>
@@ -255,6 +257,7 @@ export default function App() {
       <Route path="*" element={<Placeholder title="404" note="Halaman tidak ditemukan." />} />
     </Routes>
     </AuthGate>
+    <SyncStatus />
     </Suspense>
   )
 }
