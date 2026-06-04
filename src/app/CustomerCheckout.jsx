@@ -5,6 +5,8 @@ import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
 import { createOrder } from '../store/orders.js'
 import { menuForBranch } from '../store/master.js'
+import { useBranchStatus } from '../store/useBranchStatus.js'
+import { isSupabase } from '../lib/backend.js'
 
 // 2.1 — CUS-02 Checkout. No dedicated Stitch ref; designed consistent with the
 // app + PRD §4: pickup method (ambil sendiri / Maxim), schedule (≥15 min), and
@@ -56,6 +58,7 @@ export default function CustomerCheckout() {
   const navigate = useNavigate()
   const master = useMaster()
   const cart = useCart()
+  const status = useBranchStatus() // ketersediaan + status buka cabang (realtime)
   const [method, setMethod] = useState('ambil')
   const [schedule, setSchedule] = useState(() => timeSlots()[0] || defaultPickup())
   const [name, setName] = useState(() => loadContact().name || '')
@@ -85,6 +88,15 @@ export default function CustomerCheckout() {
   }
   const total = subtotal - discount
 
+  // Validasi ketersediaan (mode supabase): menu habis / cabang tutup → cegah buat order.
+  const supa = isSupabase()
+  const avail = supa ? (status[cart.branchId]?.availability || {}) : {}
+  const unavail = (l) => { const m = menuById(l.menuId); if (!m) return true; if (!supa) return false; return (avail.off || []).includes(m.id) || (avail.sold || []).includes(m.parent) }
+  const unavailNames = cart.lines.filter(unavail).map((l) => menuById(l.menuId)?.name || 'item').join(', ')
+  const stCab = supa ? status[cart.branchId] : null
+  const todayISO2 = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
+  const branchClosed = supa ? !(stCab?.open && stCab.openDate === todayISO2) : false
+
   // Jam sekarang (HH:MM) untuk batas bawah jam ambil.
   const now = new Date()
   const nowHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
@@ -93,6 +105,8 @@ export default function CustomerCheckout() {
   // Tapping "Bayar" only validates + opens the confirm popup; the actual order is
   // created in confirmPay() after the customer re-confirms their WA number.
   const pay = () => {
+    if (branchClosed) return setErr('Cabang sudah tutup untuk pesanan online. Coba lagi saat buka ya.')
+    if (unavailNames) return setErr('Maaf, ada menu HABIS: ' + unavailNames + '. Hapus dari keranjang dulu.')
     if (!name.trim()) return setErr('Nama wajib diisi.')
     if (!/^[0-9]{8,15}$/.test(wa.replace(/\D/g, ''))) return setErr('Nomor WhatsApp tidak valid.')
     if (method === 'maxim' && !address.trim()) return setErr('Alamat antar wajib diisi untuk Maxim.')
@@ -103,6 +117,9 @@ export default function CustomerCheckout() {
 
   const confirmPay = async () => {
     if (submitting) return
+    // Re-cek tepat sebelum buat order (status bisa berubah realtime sejak buka checkout).
+    if (branchClosed) { setConfirm(false); return setErr('Cabang sudah tutup untuk pesanan online.') }
+    if (unavailNames) { setConfirm(false); return setErr('Maaf, ada menu HABIS: ' + unavailNames + '. Hapus dari keranjang dulu.') }
     const cleanWa = wa.replace(/\D/g, '')
     if (remember) saveContact({ name: name.trim(), wa: cleanWa, address: address.trim() })
     else saveContact({})

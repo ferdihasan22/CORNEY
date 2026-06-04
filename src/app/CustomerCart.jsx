@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { BRANCHES, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
 import { incLine, decLine, removeLine, setPromoCode, updateLineSauces } from '../store/cart.js'
 import { menuForBranch } from '../store/master.js'
+import { useBranchStatus } from '../store/useBranchStatus.js'
+import { refreshBranchStatus } from '../store/branchStatus.js'
+import { isSupabase } from '../lib/backend.js'
 import SauceSheet from './SauceSheet.jsx'
 
 // 2.1 — CORNEY App Customer · Keranjang. Ported from Stitch "keranjang_corney_app".
@@ -21,6 +24,9 @@ export default function CustomerCart() {
   const [code, setCode] = useState(cart?.promoCode || '')
   const [promoMsg, setPromoMsg] = useState('')
   const [editLine, setEditLine] = useState(null) // savory line whose sauce is being edited
+  const status = useBranchStatus() // ketersediaan menu dari server (realtime)
+  const supa = isSupabase()
+  useEffect(() => { refreshBranchStatus() }, [])
 
   if (!cart || cart.lines.length === 0) {
     return (
@@ -53,6 +59,17 @@ export default function CustomerCart() {
     const paid = (l.sauces || []).reduce((s, sc) => s + (SAUCES.find((x) => x.id === sc.id)?.price || 0), 0)
     return ((m?.price || 0) + paid) * l.qty
   }
+
+  // Ketersediaan per item (mode supabase): habis bila menu dimatikan kasir / induk
+  // stok 0, atau menu dihapus owner. Cegah pesan barang yang tak bisa dibuat.
+  const avail = supa ? (status[cart.branchId]?.availability || {}) : {}
+  const unavail = (l) => {
+    const m = menuById(l.menuId)
+    if (!m) return true
+    if (!supa) return false
+    return (avail.off || []).includes(m.id) || (avail.sold || []).includes(m.parent)
+  }
+  const anyUnavail = cart.lines.some(unavail)
 
   const subtotal = cart.lines.reduce((s, l) => s + lineTotal(l), 0)
 
@@ -96,8 +113,9 @@ export default function CustomerCart() {
           </div>
           {cart.lines.map((l) => {
             const m = menuById(l.menuId)
+            const ub = unavail(l)
             return (
-              <div key={l.sig} className="bg-white rounded-2xl p-3 flex gap-3 shadow-[0_4px_16px_rgba(26,26,26,0.08)]">
+              <div key={l.sig} className={`bg-white rounded-2xl p-3 flex gap-3 shadow-[0_4px_16px_rgba(26,26,26,0.08)] ${ub ? 'ring-2 ring-error/50' : ''}`}>
                 <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-surface-container">
                   {m?.img ? <img src={m.img} alt={m.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Icon name="image" className="text-on-surface-variant" /></div>}
                 </div>
@@ -105,6 +123,7 @@ export default function CustomerCart() {
                   <div className="flex justify-between items-start gap-2">
                     <div className="min-w-0">
                       <h3 className="font-bold text-lg leading-tight truncate">{m?.name || l.menuId}</h3>
+                      {ub && <span className="inline-flex items-center gap-1 mt-0.5 text-[11px] font-black uppercase text-error"><Icon name="error" className="!text-[14px]" /> Habis — hapus dari keranjang</span>}
                       {sauceLabel(l.sauces) && <p className="text-sm text-on-surface-variant leading-tight mt-0.5">{sauceLabel(l.sauces)}</p>}
                       {m?.category !== 'sweet' && (
                         <button onClick={() => setEditLine(l)} className="mt-1 inline-flex items-center gap-1 text-primary text-[13px] font-label-md active:scale-95">
@@ -154,7 +173,8 @@ export default function CustomerCart() {
       </main>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-surface-bright/90 backdrop-blur-md border-t border-outline-variant z-40">
-        <button onClick={() => navigate('/app/checkout')} className="max-w-2xl mx-auto w-full bg-primary text-white py-4 px-6 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        {anyUnavail && <p className="max-w-2xl mx-auto text-center text-[13px] text-error font-bold mb-2 flex items-center justify-center gap-1"><Icon name="error" className="!text-[16px]" /> Ada item HABIS di keranjang. Hapus dulu untuk lanjut.</p>}
+        <button onClick={() => !anyUnavail && navigate('/app/checkout')} disabled={anyUnavail} className="max-w-2xl mx-auto w-full bg-primary text-white py-4 px-6 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:active:scale-100">
           Lanjut ke Checkout <Icon name="chevron_right" />
         </button>
       </div>

@@ -3,6 +3,7 @@
 // baca status semua cabang (anon boleh baca, RLS bs_read=true).
 import { supabase } from '../lib/supabase.js'
 import { enqueue } from './outbox.js'
+import { debounce } from '../lib/util.js'
 
 // Kasir set buka/tutup cabang SENDIRI. Lewat outbox (durable, dedup key sama →
 // open/close beruntun ambil yang terakhir).
@@ -26,5 +27,12 @@ export function initBranchStatusSync(commit) {
     commit(out)
   }
   hydrate() // customer anon bisa baca → picker tampil status terkini saat dibuka
+  // REALTIME: update otomatis saat kasir buka/tutup atau menu habis/dinyalakan
+  // (anon boleh subscribe; RLS bs_read mengizinkan). Poll tetap jadi jaring pengaman.
+  try {
+    supabase.channel('branch_status-rt')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'branch_status' }, debounce(hydrate, 300))
+      .subscribe()
+  } catch { /* realtime tak tersedia → andalkan poll */ }
   return hydrate
 }
