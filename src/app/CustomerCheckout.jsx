@@ -16,6 +16,13 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
+// PENTING: definisikan di level MODUL (bukan di dalam komponen). Kalau di dalam,
+// tiap render = fungsi baru = React bongkar-pasang input → fokus hilang & keyboard
+// nutup tiap ketik 1 huruf.
+const Field = ({ label, children }) => (
+  <div className="space-y-1.5"><label className="font-label-md text-on-surface-variant">{label}</label>{children}</div>
+)
+
 // "now + 15 min" as HH:MM (Date is allowed in app runtime, just not in workflows).
 function defaultPickup() {
   const d = new Date(Date.now() + 15 * 60000)
@@ -120,10 +127,6 @@ export default function CustomerCheckout() {
       setErr('Gagal membuat pesanan: ' + (e?.message || 'periksa koneksi & coba lagi.'))
     }
   }
-
-  const Field = ({ label, children }) => (
-    <div className="space-y-1.5"><label className="font-label-md text-on-surface-variant">{label}</label>{children}</div>
-  )
 
   return (
     <div className="bg-background text-on-surface min-h-screen pb-32">
