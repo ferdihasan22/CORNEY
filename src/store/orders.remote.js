@@ -9,6 +9,7 @@
 
 import { supabase } from '../lib/supabase.js'
 import { enqueue, flush, hasPending } from './outbox.js'
+import { debounce } from '../lib/util.js'
 
 // ── Pemetaan store(camelCase) <-> tabel(snake_case) ──
 function localBizDate(iso) {
@@ -113,7 +114,7 @@ export function initKasirOrdersSync(commit) {
     hydrate()
     if (!channel) {
       channel = supabase.channel('orders-rt')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, hydrate)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, debounce(hydrate, 500))
         .subscribe()
     }
   })

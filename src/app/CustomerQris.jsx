@@ -77,9 +77,14 @@ export default function CustomerQris() {
   // Auto-poll the real transaction status while live & waiting.
   useEffect(() => {
     if (mode !== 'live' || !midId) return
+    let t = null
     const check = () => pollStatus(true)
-    const t = setInterval(check, 4000)
-    return () => clearInterval(t)
+    const start = () => { if (!t) { check(); t = setInterval(check, 8000) } } // 8 dtk
+    const stop = () => { clearInterval(t); t = null }
+    const onVis = () => (document.hidden ? stop() : start()) // jeda saat tab tak aktif; balik → langsung cek
+    if (!document.hidden) start()
+    document.addEventListener('visibilitychange', onVis)
+    return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, midId])
 

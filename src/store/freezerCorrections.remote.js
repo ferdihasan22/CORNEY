@@ -1,6 +1,7 @@
 // Adapter Supabase: freezer_corrections (Produksi ajukan → Owner approve) — FASE 5. Realtime.
 import { supabase } from '../lib/supabase.js'
 import { enqueue, flush, hasPending } from './outbox.js'
+import { debounce } from '../lib/util.js'
 import { BRANCHES, PARENT_FILLINGS } from '../data/menu.js'
 const bn = (id) => BRANCHES.find((b) => b.id === id)?.name || id
 const pn = (id) => PARENT_FILLINGS.find((p) => p.id === id)?.name || id
@@ -17,7 +18,7 @@ export function initFreezerCorrectionsSync(commit) {
   supabase.auth.onAuthStateChange((_e, s) => {
     if (!s) return
     hydrate()
-    if (!ch) ch = supabase.channel('fc-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'freezer_corrections' }, hydrate).subscribe()
+    if (!ch) ch = supabase.channel('fc-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'freezer_corrections' }, debounce(hydrate, 500)).subscribe()
   })
 }
 export async function pushFreezerCorrection(c) {

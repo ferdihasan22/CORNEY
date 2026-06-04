@@ -1,7 +1,7 @@
 // Adapter Supabase: supplier_requests (Operasional → Supplier) — FASE 6. Realtime.
 import { supabase } from '../lib/supabase.js'
 import { enqueue, flush, hasPending } from './outbox.js'
-import { ddToISO, isoToDD } from '../lib/util.js'
+import { ddToISO, isoToDD, debounce } from '../lib/util.js'
 import { BRANCHES } from '../data/menu.js'
 const bn = (id) => BRANCHES.find((b) => b.id === id)?.name || id
 const fromRow = (r) => ({ id: r.id, createdAt: r.created_at, status: r.status, branchId: r.branch_id, branchName: bn(r.branch_id), tgl: r.tgl ? isoToDD(r.tgl) : '', items: r.items || [] })
@@ -18,7 +18,7 @@ export function initSupplierReqSync(commit) {
   supabase.auth.onAuthStateChange((_e, s) => {
     if (!s) return
     hydrate()
-    if (!ch) ch = supabase.channel('sreq-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_requests' }, hydrate).subscribe()
+    if (!ch) ch = supabase.channel('sreq-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_requests' }, debounce(hydrate, 500)).subscribe()
   })
 }
 export async function pushSupplierReq(o) {

@@ -4,6 +4,14 @@
 export const ddToISO = (s) => { const [d, m, y] = (s || '').split('/'); return y ? `${y}-${m}-${d}` : null }
 export const isoToDD = (s) => { const [y, m, d] = (s || '').split('-'); return d ? `${d}/${m}/${y}` : '' }
 
+// Debounce: tunda panggilan fn sampai berhenti dipanggil selama ms. Dipakai untuk
+// menggabung (coalesce) tindakan beruntun (hydrate realtime, flush outbox) → hemat
+// read/write TANPA mengubah hasil (data tetap benar, cuma lebih jarang dipanggil).
+export function debounce(fn, ms = 500) {
+  let t
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms) }
+}
+
 // UUID v4 untuk id baris di mode supabase (tabel id uuid). Math.random OK di runtime app.
 export function genUuid() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID()

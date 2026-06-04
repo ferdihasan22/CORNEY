@@ -2,7 +2,7 @@
 // Field kompleks (rincian, opsAmount, auditor*, dll) disimpan di kolom meta(jsonb).
 // REALTIME (lintas perangkat: kasir buat → ops lihat). id uuid (klien) di supabase.
 import { supabase } from '../lib/supabase.js'
-import { ddToISO, isoToDD } from '../lib/util.js'
+import { ddToISO, isoToDD, debounce } from '../lib/util.js'
 import { enqueue, flush, hasPending } from './outbox.js'
 
 const META = ['branchName', 'kasirName', 'rincian', 'opsAmount', 'opsName', 'selisih', 'forwarded',
@@ -31,7 +31,7 @@ export function initDepositsSync(commit) {
   supabase.auth.onAuthStateChange((_e, s) => {
     if (!s) return
     hydrate()
-    if (!ch) ch = supabase.channel('deposits-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'deposits' }, hydrate).subscribe()
+    if (!ch) ch = supabase.channel('deposits-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'deposits' }, debounce(hydrate, 500)).subscribe()
   })
 }
 export async function pushDeposit(d) {

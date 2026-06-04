@@ -1,6 +1,7 @@
 // Adapter Supabase: freezer (sisa/min/target per cabang×induk) — TAHAP 4 FASE 5. Realtime.
 import { supabase } from '../lib/supabase.js'
 import { enqueue, flush, hasPending } from './outbox.js'
+import { debounce } from '../lib/util.js'
 
 export function initFreezerSync(commit) {
   if (!supabase) return
@@ -16,7 +17,7 @@ export function initFreezerSync(commit) {
   supabase.auth.onAuthStateChange((_e, s) => {
     if (!s) return
     hydrate()
-    if (!ch) ch = supabase.channel('freezer-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'freezer' }, hydrate).subscribe()
+    if (!ch) ch = supabase.channel('freezer-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'freezer' }, debounce(hydrate, 500)).subscribe()
   })
 }
 export async function pushFreezerCell(branchId, parentId, cell) {

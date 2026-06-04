@@ -18,6 +18,7 @@
 // berulang ke baris yang sama TIDAK menumpuk — yang terbaru menggantikan/menggabung.
 
 import { supabase } from '../lib/supabase.js'
+import { debounce } from '../lib/util.js'
 
 const KEY = 'corney_outbox_v1'
 const DEAD_KEY = 'corney_outbox_dead_v1' // op gagal permanen (mis. ditolak RLS) → dikarantina, tak memblokir antrean
@@ -28,6 +29,11 @@ let queue = load(KEY)
 let dead = load(DEAD_KEY)
 let flushing = false
 let forceOffline = false // hanya untuk UJI (dev): paksa app berperilaku offline tanpa memutus internet sungguhan
+
+// Flush yang digabung: banyak enqueue beruntun (mis. ketik angka config) → 1 kirim.
+// Aman: op SUDAH durable di antrean saat enqueue; ini cuma menunda kirim ~400ms.
+// Jalur kritis (online event, interval, ClosingReport) tetap panggil flush() langsung.
+const debouncedFlush = debounce(() => { flush() }, 400)
 
 function load(k) {
   try { const a = JSON.parse(localStorage.getItem(k)); return Array.isArray(a) ? a : [] } catch { return [] }
@@ -52,7 +58,7 @@ export function enqueue(op) {
   }
   saveQueue()
   notify()
-  flush()
+  debouncedFlush() // gabung kirim beruntun (durable sudah aman di atas)
 }
 
 async function runOp(op) {

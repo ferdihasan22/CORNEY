@@ -2,6 +2,7 @@
 import { supabase } from '../lib/supabase.js'
 import { BRANCHES, PARENT_FILLINGS } from '../data/menu.js'
 import { enqueue, flush, hasPending } from './outbox.js'
+import { debounce } from '../lib/util.js'
 const bn = (id) => BRANCHES.find((b) => b.id === id)?.name || id
 const pn = (id) => PARENT_FILLINGS.find((p) => p.id === id)?.name || id
 const fromRow = (r) => ({ id: r.id, branchId: r.branch_id, branchName: bn(r.branch_id), parent: r.parent_id, parentName: pn(r.parent_id), qty: r.qty, status: r.status, selisih: r.selisih, createdAt: r.created_at, confirmedAt: r.confirmed_at })
@@ -19,7 +20,7 @@ export function initShipmentsSync(commit) {
   supabase.auth.onAuthStateChange((_e, s) => {
     if (!s) return
     hydrate()
-    if (!ch) ch = supabase.channel('shipments-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'shipments' }, hydrate).subscribe()
+    if (!ch) ch = supabase.channel('shipments-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'shipments' }, debounce(hydrate, 500)).subscribe()
   })
 }
 export async function pushShipment(s) {

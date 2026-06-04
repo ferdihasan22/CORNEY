@@ -1,6 +1,7 @@
 // Adapter Supabase: supplier_fulfilled (log pemenuhan supplier) — FASE 6. Realtime.
 import { supabase } from '../lib/supabase.js'
 import { enqueue, flush, hasPending } from './outbox.js'
+import { debounce } from '../lib/util.js'
 import { BRANCHES } from '../data/menu.js'
 const bn = (id) => BRANCHES.find((b) => b.id === id)?.name || id
 const fromRow = (r) => ({ id: r.id, at: r.at, tgl: r.tgl, branchId: r.branch_id, branchName: bn(r.branch_id), items: r.items || [] })
@@ -17,7 +18,7 @@ export function initSupplierFulfilledSync(commit) {
   supabase.auth.onAuthStateChange((_e, s) => {
     if (!s) return
     hydrate()
-    if (!ch) ch = supabase.channel('sful-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_fulfilled' }, hydrate).subscribe()
+    if (!ch) ch = supabase.channel('sful-rt').on('postgres_changes', { event: '*', schema: 'public', table: 'supplier_fulfilled' }, debounce(hydrate, 500)).subscribe()
   })
 }
 // tgl di entry kemungkinan 'DD/MM/YYYY' atau ISO atau null → normalisasi ke 'YYYY-MM-DD'.

@@ -30,10 +30,14 @@ export default function CustomerTrack() {
   const orderPin = order?.pin
   useEffect(() => {
     if (!isSupabase() || !orderPin) return
+    let t = null
     const tick = () => refreshMyOrder(orderId, orderPin)
-    tick()
-    const t = setInterval(tick, 4000)
-    return () => clearInterval(t)
+    const start = () => { if (!t) { tick(); t = setInterval(tick, 8000) } } // 8 dtk
+    const stop = () => { clearInterval(t); t = null }
+    const onVis = () => (document.hidden ? stop() : start()) // jeda saat tab tak aktif → hemat
+    if (!document.hidden) start()
+    document.addEventListener('visibilitychange', onVis)
+    return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
   }, [orderId, orderPin])
   if (!order) return <Navigate to="/app/cabang" replace />
   const branch = BRANCHES.find((b) => b.id === order.branchId)
