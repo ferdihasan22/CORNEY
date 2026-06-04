@@ -157,7 +157,7 @@ export default function CustomerCatalog() {
             to a brand band when none are active. */}
         {banners.length > 0 ? (
           <section className="mb-6">
-            <div className="relative w-full aspect-[5/2] rounded-[18px] overflow-hidden">
+            <div className="relative w-full aspect-[2/1] rounded-[18px] overflow-hidden">
               {banners.map((b, i) => (
                 <div key={b.id} className={`absolute inset-0 transition-opacity duration-700 ${i === bIdx % banners.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                   {b.img ? <img src={b.img} alt={b.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-primary-container" />}
@@ -175,7 +175,7 @@ export default function CustomerCatalog() {
             </div>
           </section>
         ) : (
-          <section className="w-full h-36 rounded-[18px] overflow-hidden relative mb-6 bg-primary-container flex items-center px-6">
+          <section className="w-full aspect-[2/1] rounded-[18px] overflow-hidden relative mb-6 bg-primary-container flex items-center px-6">
             <div className="absolute -right-6 -bottom-8 w-40 h-40 bg-primary rounded-full mix-blend-multiply blur-3xl opacity-60" />
             <div className="relative z-10">
               <h2 className="text-on-primary font-headline-lg text-headline-lg leading-tight">Korean Corndog<br />paling juicy</h2>
