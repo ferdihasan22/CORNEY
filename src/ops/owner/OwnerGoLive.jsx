@@ -40,16 +40,16 @@ export default function OwnerGoLive() {
         {/* Langkah 1: hapus data contoh */}
         <section className="bg-surface-container-lowest rounded-2xl p-5 border-2 border-error/30">
           <p className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="mop" className="text-error" /> Langkah 1 — Hapus Data Contoh</p>
-          <p className="text-[13px] text-on-surface-variant mt-1 leading-relaxed">Mengosongkan: penjualan, stok harian, belanja, pemakaian uang, setoran, produksi, kiriman, opname, pesanan online, riwayat supplier, buku besar, jejak audit, freezer, bahan baku, harga belanja. <b>Tetap aman:</b> cabang, akun, menu, item belanja, takaran bahan (tinggal kamu sesuaikan).</p>
+          <p className="text-[13px] text-on-surface-variant mt-1 leading-relaxed"><b>Dihapus:</b> penjualan, stok harian, uang belanja, pemakaian uang, setoran, produksi, kiriman, opname, koreksi & audit stok, pesanan online, permintaan/pengiriman supplier, jejak audit, dan <b>kunci bulan</b>. <b>Freezer rumah:</b> jumlah (sisa) di-nol-kan — Min/Target tetap. <b>Tetap aman:</b> cabang, akun staff, menu, item belanja, takaran bahan, stok standar (par), setting investor, dan <b>harga belanja supplier</b>.</p>
           {!confirm ? (
             <button onClick={() => setConfirm(true)} className="w-full mt-3 h-12 rounded-xl bg-error text-on-error font-bold flex items-center justify-center gap-2 active:scale-[0.98]"><Icon name="delete_sweep" /> Hapus Semua Data Contoh</button>
           ) : (
             <div className="mt-3 bg-error-container/30 border border-error/40 rounded-xl p-3 space-y-2">
-              <p className="text-[13px] font-bold text-error">Yakin? Tindakan ini tidak bisa dibatalkan. Ketik <b>MULAI</b> untuk konfirmasi.</p>
-              <input value={typed} onChange={(e) => setTyped(e.target.value.toUpperCase())} placeholder="Ketik MULAI" className="w-full h-11 px-3 rounded-lg border border-error/50 focus:border-error outline-none font-bold text-center bg-surface" />
+              <p className="text-[13px] font-bold text-error">Yakin? Tindakan ini <b>tidak bisa dibatalkan</b> & menghapus seluruh riwayat transaksi (termasuk kunci bulan). Ketik <b>MULAI BERSIH</b> untuk konfirmasi.</p>
+              <input value={typed} onChange={(e) => setTyped(e.target.value.toUpperCase())} placeholder="Ketik MULAI BERSIH" className="w-full h-11 px-3 rounded-lg border border-error/50 focus:border-error outline-none font-bold text-center bg-surface" />
               <div className="flex gap-2">
                 <button onClick={() => { setConfirm(false); setTyped('') }} className="flex-1 h-11 rounded-xl border border-outline text-on-surface-variant font-bold">Batal</button>
-                <button onClick={resetGoLive} disabled={typed !== 'MULAI'} className="flex-1 h-11 rounded-xl bg-error text-on-error font-bold disabled:opacity-40 flex items-center justify-center gap-1.5"><Icon name="check" /> Hapus & Mulai</button>
+                <button onClick={resetGoLive} disabled={typed !== 'MULAI BERSIH'} className="flex-1 h-11 rounded-xl bg-error text-on-error font-bold disabled:opacity-40 flex items-center justify-center gap-1.5"><Icon name="check" /> Hapus & Mulai</button>
               </div>
             </div>
           )}
