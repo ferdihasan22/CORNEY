@@ -18,9 +18,17 @@
 //                             recipes dari cache lokal saat hidrasi.
 
 import { supabase } from '../lib/supabase.js'
+import { flush, hasPending } from './outbox.js'
+
+const MASTER_TABLES = ['menus', 'parents', 'branches', 'promos', 'banners', 'branch_overrides', 'sauces']
 
 export async function fetchMasterFromSupabase() {
   if (!supabase) throw new Error('Supabase client belum dikonfigurasi (env kosong)')
+
+  // Anti-clobber: kirim dulu edit master yang tertunda. Bila masih ada yang belum
+  // naik (offline), JANGAN refetch — lempar agar master.js pertahankan cache lokal.
+  await flush()
+  if (MASTER_TABLES.some(hasPending)) throw new Error('outbox master pending — pertahankan cache lokal')
 
   const [branches, parents, menus, sauces, promos, banners, overrides] = await Promise.all([
     supabase.from('branches').select('*').order('id'),

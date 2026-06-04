@@ -1,9 +1,11 @@
 // Adapter Supabase: supplier_prices (harga versi supplier) — FASE 6.
 import { supabase } from '../lib/supabase.js'
+import { enqueue, flush, hasPending } from './outbox.js'
 
 export function initSupplierPricesSync(commit) {
   if (!supabase) return
   const hydrate = async () => {
+    await flush(); if (hasPending('supplier_prices')) return
     const { data, error } = await supabase.from('supplier_prices').select('*')
     if (error || !data) return
     const out = {}
@@ -14,6 +16,5 @@ export function initSupplierPricesSync(commit) {
 }
 export async function pushSupplierPrice(itemId, entry) {
   if (!supabase || !itemId) return
-  const { error } = await supabase.from('supplier_prices').upsert({ item_id: itemId, price: entry.price || 0, prev: entry.prev ?? null })
-  if (error) console.warn('[sprice.write]', error.message || error)
+  enqueue({ kind: 'upsert', table: 'supplier_prices', key: `supplier_prices:${itemId}`, row: { item_id: itemId, price: entry.price || 0, prev: entry.prev ?? null } })
 }

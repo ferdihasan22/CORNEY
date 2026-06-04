@@ -60,6 +60,7 @@ async function runOp(op) {
   let res
   if (op.kind === 'upsert') res = await supabase.from(op.table).upsert(op.row, op.onConflict ? { onConflict: op.onConflict } : undefined)
   else if (op.kind === 'update') res = await supabase.from(op.table).update(op.patch).eq('id', op.matchId)
+  else if (op.kind === 'delete') res = await (op.match ? supabase.from(op.table).delete().match(op.match) : supabase.from(op.table).delete().eq(op.col || 'id', op.matchId))
   else if (op.kind === 'rpc') res = await supabase.rpc(op.fn, op.args)
   else throw new Error('kind tak dikenal: ' + op.kind)
   if (res && res.error) throw res.error

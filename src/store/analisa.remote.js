@@ -2,10 +2,12 @@
 // Tabel analisa(ingredient_id, per_unit) ; store: { materialId: batas(number) }.
 // RLS staf (owner/auditor/operasional baca; owner tulis) → hidrasi on-auth.
 import { supabase } from '../lib/supabase.js'
+import { enqueue, flush, hasPending } from './outbox.js'
 
 export function initAnalisaSync(commit, getMap) {
   if (!supabase) return
   const hydrate = async () => {
+    await flush(); if (hasPending('analisa')) return
     const { data, error } = await supabase.from('analisa').select('ingredient_id, per_unit')
     if (error || !data) return
     const next = { ...getMap() }
@@ -16,6 +18,5 @@ export function initAnalisaSync(commit, getMap) {
 }
 export async function pushAnalisa(id, batas) {
   if (!supabase) return
-  const { error } = await supabase.from('analisa').upsert({ ingredient_id: id, per_unit: Math.max(0, Number(batas) || 0) })
-  if (error) console.warn('[analisa.write] upsert ' + id + ':', error.message || error)
+  enqueue({ kind: 'upsert', table: 'analisa', key: `analisa:${id}`, row: { ingredient_id: id, per_unit: Math.max(0, Number(batas) || 0) } })
 }
