@@ -2,6 +2,7 @@
 // tgl store 'DD/MM/YYYY' <-> kolom date. Upsert by (tgl,branch_id). RLS kasir own + staf.
 import { supabase } from '../lib/supabase.js'
 import { ddToISO, isoToDD } from '../lib/util.js'
+import { enqueue, flush, hasPending } from './outbox.js'
 
 const fromRow = (r) => ({
   id: r.id, tgl: isoToDD(r.tgl), branchId: r.branch_id,
@@ -19,6 +20,8 @@ const toRow = (r) => ({
 export function initSalesSync(commit) {
   if (!supabase) return
   const hydrate = async () => {
+    await flush() // kirim dulu yang tertunda
+    if (hasPending('sales_daily')) return // masih ada yg belum naik → JANGAN timpa lokal
     const { data, error } = await supabase.from('sales_daily').select('*')
     if (error || !data) return
     commit(data.map(fromRow))
@@ -27,6 +30,5 @@ export function initSalesSync(commit) {
 }
 export async function pushSalesRow(row) {
   if (!supabase || !row?.tgl || !row?.branchId) return
-  const { error } = await supabase.from('sales_daily').upsert(toRow(row), { onConflict: 'tgl,branch_id' })
-  if (error) console.warn('[sales.write] upsert:', error.message || error)
+  enqueue({ kind: 'upsert', table: 'sales_daily', row: toRow(row), onConflict: 'tgl,branch_id', key: `sales_daily:${ddToISO(row.tgl)}:${row.branchId}` })
 }

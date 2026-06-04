@@ -3,6 +3,7 @@
 // REALTIME (lintas perangkat: kasir buat → ops lihat). id uuid (klien) di supabase.
 import { supabase } from '../lib/supabase.js'
 import { ddToISO, isoToDD } from '../lib/util.js'
+import { enqueue, flush, hasPending } from './outbox.js'
 
 const META = ['branchName', 'kasirName', 'rincian', 'opsAmount', 'opsName', 'selisih', 'forwarded',
   'confirmedAt', 'auditorAmount', 'auditorSelisih', 'auditorStatus', 'auditorNote', 'auditedAt']
@@ -21,6 +22,8 @@ export function initDepositsSync(commit) {
   if (!supabase) return
   let ch = null
   const hydrate = async () => {
+    await flush()
+    if (hasPending('deposits')) return // jangan timpa setoran lokal yg belum naik
     const { data, error } = await supabase.from('deposits').select('*').order('created_at', { ascending: false })
     if (error || !data) return
     commit(data.map(fromRow))
@@ -33,6 +36,5 @@ export function initDepositsSync(commit) {
 }
 export async function pushDeposit(d) {
   if (!supabase || !d?.id) return
-  const { error } = await supabase.from('deposits').upsert(toRow(d))
-  if (error) console.warn('[deposits.write] upsert:', error.message || error)
+  enqueue({ kind: 'upsert', table: 'deposits', row: toRow(d), key: `deposits:${d.id}` })
 }

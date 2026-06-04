@@ -8,6 +8,7 @@
 //     update order langsung. Customer JANGAN buka channel (batas koneksi).
 
 import { supabase } from '../lib/supabase.js'
+import { enqueue, flush, hasPending } from './outbox.js'
 
 // ── Pemetaan store(camelCase) <-> tabel(snake_case) ──
 function localBizDate(iso) {
@@ -92,8 +93,8 @@ export async function updateOrderRemote(id, patch) {
   if ('contacted' in patch) row.contacted = patch.contacted
   if ('cook' in patch) row.cooking = patch.cook
   if ('payMethod' in patch) row.pay_method = patch.payMethod
-  const { error } = await supabase.from('orders').update(row).eq('id', id)
-  if (error) console.warn('[orders.write] update ' + id + ' gagal:', error.message || error)
+  // Lewat outbox: gabung patch per order (key sama) → tahan offline, anti-hilang kolom.
+  enqueue({ kind: 'update', table: 'orders', matchId: id, patch: row, key: `orders:${id}` })
 }
 
 // Hidrasi + realtime — dipicu saat ADA sesi staf. commit() disuntik dari orders.js.
@@ -101,6 +102,8 @@ export function initKasirOrdersSync(commit) {
   if (!supabase) return
   let channel = null
   const hydrate = async () => {
+    await flush() // dorong dulu update kasir yg tertunda → baca-balik tak menimpa
+    if (hasPending('orders')) return
     const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
     if (error || !data) return
     commit(data.map(fromRow))
