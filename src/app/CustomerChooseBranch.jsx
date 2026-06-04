@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BRANCHES } from '../data/menu.js'
 import { useDay } from '../store/useDay.js'
@@ -28,11 +28,17 @@ export default function CustomerChooseBranch() {
   const day = useDay()
   useMaster() // re-render saat Owner tambah/edit/nonaktifkan cabang (sumber tunggal)
   const status = useBranchStatus() // status buka cabang dari SERVER (lintas perangkat)
-  const [, tick] = useState(0)
   useEffect(() => {
-    refreshBranchStatus() // ambil status terkini saat halaman dibuka
-    const t = setInterval(() => tick((n) => n + 1), 60000) // re-cek jam tutup online tiap menit
-    return () => clearInterval(t)
+    // Poll RINGAN: hanya saat di halaman ini, tiap 30 dtk, BERHENTI saat tab tak
+    // aktif → customer lihat cabang buka tanpa refresh, tanpa koneksi realtime.
+    // (re-fetch sekaligus me-refresh gate jam tutup online.)
+    let t = null
+    const start = () => { if (!t) { refreshBranchStatus(); t = setInterval(refreshBranchStatus, 30000) } }
+    const stop = () => { clearInterval(t); t = null }
+    const onVis = () => (document.hidden ? stop() : start())
+    if (!document.hidden) start()
+    document.addEventListener('visibilitychange', onVis)
+    return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
   }, [])
   const near = BRANCHES.find((b) => STATUS[b.id]?.near)
   const now = new Date()
