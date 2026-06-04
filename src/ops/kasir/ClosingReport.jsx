@@ -9,6 +9,7 @@ import { upsertSalesDay } from '../../store/salesdaily.js'
 import { getOrders } from '../../store/orders.js'
 import { clearKasirBranch } from './kasirSession.js'
 import { flush, pendingCount, subscribe as subscribeOutbox } from '../../store/outbox.js'
+import { isSupabase } from '../../lib/backend.js'
 
 // Tanggal: input <date> pakai YYYY-MM-DD; laporan disimpan DD/MM/YYYY.
 const pad = (n) => String(n).padStart(2, '0')
@@ -46,15 +47,21 @@ export default function ClosingReport() {
     const off = subscribeOutbox(() => setPending(pendingCount()))
     return () => { window.removeEventListener('online', upd); window.removeEventListener('offline', upd); off() }
   }, [])
-  // Saat 'syncing': beri jeda agar enqueue (dynamic import) mendarat, lalu dorong;
-  // tandai 'done' begitu antrean BENAR-BENAR kosong (laporan sampai server).
+  // Saat 'syncing': "Terkirim" HANYA bila benar-benar ONLINE & antrean kosong
+  // (sampai server). Selagi offline → tetap menunggu, walau antrean sempat kosong.
   useEffect(() => {
     if (phase2 !== 'syncing') return
     let settled = false
-    const finish = () => { if (!settled && pendingCount() === 0) { settled = true; setPhase2('done') } }
+    const finish = () => {
+      if (!settled && pendingCount() === 0 && (typeof navigator === 'undefined' || navigator.onLine)) {
+        settled = true; setPhase2('done')
+      }
+    }
     const off = subscribeOutbox(finish)
+    const onl = () => { flush().finally(finish) } // internet balik → dorong lalu cek
+    window.addEventListener('online', onl)
     const t = setTimeout(() => { flush().finally(finish) }, 700)
-    return () => { off(); clearTimeout(t) }
+    return () => { off(); window.removeEventListener('online', onl); clearTimeout(t) }
   }, [phase2])
   // Langkah 5 — tanggal laporan. Default hari ini; izinkan hari ini & kemarin
   // (untuk closing lewat tengah malam), tolak masa depan & tanggal yang sudah ada.
@@ -137,7 +144,9 @@ export default function ClosingReport() {
     if (setoran > 0) {
       createDeposit({ branchId: day.branchId, branchName: branch.name, amount: setoran, tgl: tglDDMM, rincian: { tunai: tunaiSales, urgent: urgentT, refund: refundT, gaji: gajiT, urgentItems: (day.closing.urgent?.items || []).map((it) => ({ amount: it.amount, reason: it.reason })) } })
     }
-    setPhase2('syncing')
+    // Lokal (tanpa Supabase): tak ada server → langsung beres, tanpa "menunggu
+    // jaringan" palsu. Supabase: 'syncing' → outbox yang menentukan kapan benar terkirim.
+    setPhase2(isSupabase() ? 'syncing' : 'done')
   }
   function selesai() {
     endDay()
