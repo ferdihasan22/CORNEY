@@ -173,7 +173,7 @@ export default function CustomerCatalog() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto pt-5 pb-10 md:max-w-4xl mx-auto w-full px-4">
+      <main className="flex-1 pt-5 pb-10 md:max-w-4xl mx-auto w-full px-4">
         {/* Banner carousel (CUS-06) — active banners from the Owner; falls back
             to a brand band when none are active. */}
         {banners.length > 0 ? (
