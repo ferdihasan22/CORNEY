@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { MENUS, BRANCHES } from '../../data/menu.js'
+import { MENUS, BRANCHES, SAUCES, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
 import { useOrders } from '../../store/useOrders.js'
 import { PHASE, startFrying, finishCooking, payPending } from '../../store/day.js'
@@ -41,6 +41,7 @@ export default function CookingQueue() {
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
   const [now, setNow] = useState(() => Date.now())
   const [payFor, setPayFor] = useState(null) // pending order being paid at handover
+  const [detail, setDetail] = useState(null) // order yang dibuka detailnya (klik kartu)
 
   function selesai(s) {
     if (s.online) finishFryingOrder(s.id) // online sudah LUNAS (QRIS) → cukup angkat
@@ -106,7 +107,7 @@ export default function CookingQueue() {
       <div className="bg-[#FFFBEB] px-4 sm:px-margin-page py-3 border-b border-[#FEF3C7] flex items-start sm:items-center gap-3 shrink-0">
         <Icon name="info" className="text-[#B45309]" />
         <p className="font-label-lg text-label-lg text-[#92400E]">
-          Adonan tipis → <span className="font-bold">6 menit</span> · Adonan tebal → <span className="font-bold">8 menit</span> · Pastikan suhu minyak maksimal <span className="font-bold">170°C</span>
+          Adonan tipis → <span className="font-bold">6 menit</span> · Adonan tebal → <span className="font-bold">8 menit</span> · Suhu minyak maks <span className="font-bold">170°C</span> · <span className="font-bold">Ketuk kartu</span> untuk lihat detail pesanan
         </p>
       </div>
 
@@ -124,7 +125,7 @@ export default function CookingQueue() {
               const badge = sourceBadge(s)
               if (done) {
                 return (
-                  <div key={s.id} className="bg-[#DC2626] rounded-[14px] p-4 sm:p-6 shadow-xl border-2 border-red-700 animate-flash flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div key={s.id} onClick={() => setDetail(s)} className="bg-[#DC2626] rounded-[14px] p-4 sm:p-6 shadow-xl border-2 border-red-700 animate-flash flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 cursor-pointer">
                     <div className="flex items-center gap-4">
                       <div className="bg-white text-red-600 w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center shadow-inner shrink-0">
                         <Icon name="notifications_active" fill className="!text-3xl sm:!text-[40px]" />
@@ -139,7 +140,7 @@ export default function CookingQueue() {
                         <p className="text-white/90 font-headline-md text-base sm:text-headline-md mt-1">{itemsLabel(s)}</p>
                       </div>
                     </div>
-                    <button onClick={() => selesai(s)} className="w-full sm:w-auto bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-xl hover:bg-gray-100 active:scale-95 transition-all shadow-lg shrink-0">
+                    <button onClick={(e) => { e.stopPropagation(); selesai(s) }} className="w-full sm:w-auto bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-xl hover:bg-gray-100 active:scale-95 transition-all shadow-lg shrink-0">
                       {s.paid ? 'SELESAI' : 'BAYAR & SELESAI'}
                     </button>
                   </div>
@@ -148,7 +149,7 @@ export default function CookingQueue() {
               if (s.cook.status === 'frying') {
                 const offset = RING * (1 - Math.max(0, remaining) / total)
                 return (
-                  <div key={s.id} className="bg-white rounded-[14px] p-4 sm:p-6 shadow-sm border border-outline-variant flex items-center gap-4 relative overflow-hidden">
+                  <div key={s.id} onClick={() => setDetail(s)} className="bg-white rounded-[14px] p-4 sm:p-6 shadow-sm border border-outline-variant flex items-center gap-4 relative overflow-hidden cursor-pointer active:bg-surface-container-low">
                     <div className="absolute left-0 top-0 w-2 h-full bg-blue-500" />
                     <div className="relative w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center shrink-0 ml-1">
                       <svg className="w-full h-full" style={{ transform: 'rotate(-90deg)' }} viewBox="0 0 96 96">
@@ -172,7 +173,7 @@ export default function CookingQueue() {
               }
               // queued
               return (
-                <div key={s.id} className="bg-white rounded-[14px] p-4 sm:p-6 shadow-sm border border-outline-variant flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden">
+                <div key={s.id} onClick={() => setDetail(s)} className="bg-white rounded-[14px] p-4 sm:p-6 shadow-sm border border-outline-variant flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative overflow-hidden cursor-pointer active:bg-surface-container-low">
                   <div className="absolute left-0 top-0 w-2 h-full bg-green-500" />
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 sm:w-24 sm:h-24 bg-surface-container rounded-full flex items-center justify-center text-on-surface-variant border-2 border-dashed border-outline shrink-0 ml-1">
@@ -191,10 +192,10 @@ export default function CookingQueue() {
                   <div className="w-full sm:w-auto shrink-0">
                     <p className="font-label-md text-center text-on-surface-variant mb-1">Pilih Durasi:</p>
                     <div className="flex gap-2">
-                      <button onClick={() => beginFry(s, 6)} className="flex-1 sm:flex-none bg-primary text-on-primary px-6 py-3 rounded-xl font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex flex-col items-center">
+                      <button onClick={(e) => { e.stopPropagation(); beginFry(s, 6) }} className="flex-1 sm:flex-none bg-primary text-on-primary px-6 py-3 rounded-xl font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex flex-col items-center">
                         <span>GORENG</span><span className="text-[10px] opacity-80">6 Menit</span>
                       </button>
-                      <button onClick={() => beginFry(s, 8)} className="flex-1 sm:flex-none bg-on-primary-container text-primary px-6 py-3 rounded-xl font-bold border-2 border-primary active:scale-95 transition-all flex flex-col items-center">
+                      <button onClick={(e) => { e.stopPropagation(); beginFry(s, 8) }} className="flex-1 sm:flex-none bg-on-primary-container text-primary px-6 py-3 rounded-xl font-bold border-2 border-primary active:scale-95 transition-all flex flex-col items-center">
                         <span>GORENG</span><span className="text-[10px] opacity-80">8 Menit</span>
                       </button>
                     </div>
@@ -205,6 +206,63 @@ export default function CookingQueue() {
           </div>
         )}
       </main>
+
+      {/* Detail pesanan — klik kartu antrean → rincian item, saus, customer, total */}
+      {detail && (() => {
+        const s = detail
+        const badge = sourceBadge(s)
+        const lineName = (l) => MENUS.find((m) => m.id === l.menuId)?.name || l.menuId
+        const sauceNames = (l) => (l.sauces || []).map((sc) => SAUCES.find((x) => x.id === sc.id)?.name || sc.id)
+        return (
+          <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setDetail(null)}>
+            <style>{`@keyframes detIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md bg-surface rounded-3xl shadow-2xl max-h-[85vh] flex flex-col overflow-hidden" style={{ animation: 'detIn .22s ease-out' }}>
+              <div className="bg-primary text-on-primary p-5 shrink-0">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`${badge.cls} px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider`}>{badge.label}</span>
+                    <span className="font-headline-md text-headline-md">{code(s)}</span>
+                    {!s.paid && <span className="bg-white text-red-700 px-2 py-0.5 rounded text-[10px] font-black uppercase">Belum bayar</span>}
+                  </div>
+                  <button onClick={() => setDetail(null)} className="w-9 h-9 rounded-full hover:bg-white/15 flex items-center justify-center active:scale-95 shrink-0"><Icon name="close" /></button>
+                </div>
+              </div>
+              <div className="p-5 overflow-y-auto space-y-4">
+                {s.online && (
+                  <div className="space-y-2 text-sm">
+                    {s.name && <div className="flex items-center gap-2"><Icon name="person" className="!text-[18px] text-on-surface-variant" /><span className="font-bold">{s.name}</span></div>}
+                    {s.wa && <div className="flex items-center gap-2"><Icon name="call" className="!text-[18px] text-on-surface-variant" /><a href={`https://wa.me/${String(s.wa).replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="text-green-700 font-bold">{s.wa}</a></div>}
+                    <div className="flex items-center gap-2"><Icon name={s.method === 'maxim' ? 'two_wheeler' : 'storefront'} className="!text-[18px] text-on-surface-variant" />{s.method === 'maxim' ? 'Maxim / Ojek' : 'Ambil sendiri'}{s.schedule ? ` · ${s.schedule}` : ''}</div>
+                    {s.method === 'maxim' && s.address && <div className="flex items-start gap-2"><Icon name="location_on" className="!text-[18px] text-on-surface-variant" /><span>{s.address}</span></div>}
+                    {s.pin && <div className="flex items-center gap-2"><Icon name="key" className="!text-[18px] text-on-surface-variant" />PIN <span className="font-mono font-bold">{s.pin}</span></div>}
+                  </div>
+                )}
+                <div className={`${s.online ? 'border-t border-outline-variant pt-3 ' : ''}space-y-3`}>
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-on-surface-variant">Rincian Pesanan</p>
+                  {(s.lines || []).map((l, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <span className="text-primary font-bold shrink-0">{l.qty}×</span>
+                      <div className="min-w-0">
+                        <p className="font-label-lg leading-tight">{lineName(l)}</p>
+                        {sauceNames(l).length > 0 && <p className="text-[12px] text-on-surface-variant">Saus: {sauceNames(l).join(', ')}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {s.total != null && (
+                  <div className="border-t border-outline-variant pt-3 flex justify-between items-center">
+                    <span className="font-bold">Total</span>
+                    <span className="font-display-md text-display-md text-primary">{fmtRp(s.total)}</span>
+                  </div>
+                )}
+              </div>
+              <div className="p-4 pt-0 shrink-0">
+                <button onClick={() => setDetail(null)} className="w-full h-12 rounded-xl bg-surface-container text-on-surface font-label-lg active:scale-[0.98]">Tutup</button>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {payFor && (
         <PaymentModal
