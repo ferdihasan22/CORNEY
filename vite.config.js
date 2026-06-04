@@ -79,13 +79,15 @@ export default defineConfig(({ mode }) => {
         name: 'CORNEY',
         short_name: 'CORNEY',
         description: 'Ekosistem aplikasi CORNEY — #CeritanyaBersamaCorney',
-        theme_color: '#C8102E',
-        background_color: '#ffffff',
+        theme_color: '#b50303',
+        background_color: '#fcf9f8',
         display: 'standalone',
         start_url: '/',
+        // SVG dipakai langsung sebagai ikon (Android Chrome mendukung) → PWA bisa
+        // di-install (sebelumnya menunjuk icon-192/512.png yang tak ada → install rusak).
         icons: [
-          { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
         ],
       },
       workbox: {
