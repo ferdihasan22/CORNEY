@@ -10,6 +10,7 @@ import { aggregateByBranch, aggregateTotals, aggregatePeriod, topVariant, bottom
 import { useStockDaily } from '../../store/useStockDaily.js'
 import { useFreezerCorrections } from '../../store/useFreezerCorrections.js'
 import { useBranchLive } from '../../store/useBranchLive.js'
+import { useMaster } from '../../store/useMaster.js'
 
 // Step 1B.1 — OWN-01 Dashboard Kokpit. UI ported from Stitch
 // "owner_cockpit_mobile_dashboard", made responsive (mobile → desktop grid).
@@ -27,6 +28,7 @@ export default function OwnerDashboard() {
   const [period, setPeriod] = useState('Hari ini')
   const [liveDetail, setLiveDetail] = useState(null) // cabang yang dibuka rincian live-nya
 
+  useMaster() // re-render saat Owner tambah/edit/nonaktif cabang → kartu live ikut bertambah
   // Omzet BERJALAN (live, sementara) per cabang — TERPISAH dari Master Laporan.
   const live = useBranchLive()
   const liveTodayISO = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
