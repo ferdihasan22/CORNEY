@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { BRANCHES, SAUCES, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
-import { PHASE, cookingCounts } from '../../store/day.js'
+import { PHASE, cookingCounts, applyOnlineToStock } from '../../store/day.js'
 import { flyBall, pulse } from './flyBall.js'
 import { clearKasirBranch } from './kasirSession.js'
 import { useMaster } from '../../store/useMaster.js'
@@ -102,6 +102,13 @@ export default function KasirOnline() {
     return `${Math.floor(m / 60)} jam lalu`
   }
   const itemsText = (o) => o.lines.map((l) => `${l.qty}x ${menuName(l.menuId)}`).join(', ')
+  // Apakah ada item di pesanan online yang kini HABIS (menu dimatikan / stok induk 0)
+  // → ingatkan kasir untuk hubungi pelanggan (tukar/refund) sebelum proses.
+  const lineHabis = (l) => {
+    const parent = (master?.menus || []).find((m) => m.id === l.menuId)?.parent
+    return (day.menuOff || []).includes(l.menuId) || (!!day.stock && parent != null && (day.stock[parent] ?? 0) <= 0)
+  }
+  const orderHasHabis = (o) => (o.lines || []).some(lineHabis)
 
   function handleLogout() {
     // JANGAN endDay() — sesi hari harus bertahan; login lagi = lanjut, bukan ulang
@@ -166,6 +173,9 @@ export default function KasirOnline() {
       window.open(url, '_blank', 'noopener')
     }
     advanceOrder(o.id)
+    // Online dibuat (baru → diproses): kurangi stok hidup → ketersediaan ke customer
+    // akurat (induk bisa HABIS karena online juga, bukan cuma walk-in). 1x per order.
+    if (o.status === 'baru') applyOnlineToStock(o.lines)
   }
 
   const shown = mine
@@ -293,6 +303,12 @@ export default function KasirOnline() {
                   {isProc && <div className="mb-4 flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg border border-blue-200"><Icon name="restaurant" className="!text-[18px]" /><span className="text-label-md font-bold">Diproses</span></div>}
                   {isReady && <div className="mb-4 flex items-center gap-2 px-3 py-2 bg-green-50 text-green-700 rounded-lg border border-green-200"><Icon name="check_circle" className="!text-[18px]" /><span className="text-label-md font-bold">Siap diambil / antar</span></div>}
                   {isDone && <div className="mb-4 flex items-center gap-2 px-3 py-2 bg-surface-container text-on-surface-variant rounded-lg border border-outline-variant"><Icon name="task_alt" className="!text-[18px]" /><span className="text-label-md font-bold">Selesai</span></div>}
+                  {!isDone && orderHasHabis(o) && (
+                    <div className="mb-4 flex items-start gap-2 px-3 py-2 bg-error-container border border-error/40 rounded-lg text-on-error-container">
+                      <Icon name="warning" fill className="!text-[18px] text-error shrink-0 mt-0.5" />
+                      <span className="text-label-md font-bold leading-snug">Ada item HABIS di pesanan ini — hubungi pelanggan untuk tukar menu / refund sebelum diproses.</span>
+                    </div>
+                  )}
 
                   <div className="space-y-3 flex-1">
                     {/* Customer WA + salin nomor */}

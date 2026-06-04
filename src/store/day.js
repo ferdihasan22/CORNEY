@@ -159,13 +159,43 @@ export function isMenuOff(menuId) {
   return (state?.menuOff || []).includes(menuId)
 }
 
-// Quantity sold per parent filling across the day (1:1 from sale lines).
+// Quantity sold per parent filling across the day (1:1 from sale lines). WALK-IN saja.
 export function soldByParent() {
   const sold = {}
   ;(state?.sales || []).forEach((sale) => {
     sale.lines.forEach((l) => { sold[l.parent] = (sold[l.parent] || 0) + l.qty })
   })
   return sold
+}
+
+// Terjual per induk TOTAL = walk-in + ONLINE (paid, sesi ini). Dipakai rekonsiliasi
+// Closing supaya konsumsi online TIDAK salah dihitung sebagai "hilang" (potong gaji
+// kasir tak adil). Induk dari line.parent atau dipetakan dari MENUS.
+export function soldByParentAll() {
+  const out = { ...soldByParent() }
+  ;(getOrders() || []).forEach((o) => {
+    if (!state || o.branchId !== state.branchId || !o.paid) return
+    if (new Date(o.createdAt).getTime() < (state.startedAt || 0)) return
+    ;(o.lines || []).forEach((l) => {
+      const parent = l.parent || MENUS.find((m) => m.id === l.menuId)?.parent
+      if (parent != null) out[parent] = (out[parent] || 0) + (l.qty || 0)
+    })
+  })
+  return out
+}
+
+// Kurangi stok hidup karena order ONLINE dibuat (dipanggil saat kasir konfirmasi/
+// proses) → ketersediaan ke customer akurat (bukan cuma walk-in). Clamp di 0.
+// TIDAK memengaruhi rekonsiliasi (recon pakai openingStock + soldByParentAll +
+// sisa fisik, bukan stok hidup) → tak ada dobel-hitung.
+export function applyOnlineToStock(lines) {
+  if (!state || !state.stock) return
+  const stock = { ...state.stock }
+  ;(lines || []).forEach((l) => {
+    const parent = l.parent || MENUS.find((m) => m.id === l.menuId)?.parent
+    if (parent != null) stock[parent] = Math.max(0, (stock[parent] ?? 0) - (l.qty || 0))
+  })
+  commit({ ...state, stock })
 }
 
 // OPN-01 — lock today's opening stock.

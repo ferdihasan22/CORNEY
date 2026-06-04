@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { PARENT_FILLINGS, BRANCHES, DUMMY_DAILY_WAGE, lowestVariantPrice, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
-import { PHASE, soldByParent, saveReconStock, breakageByParent } from '../../store/day.js'
+import { PHASE, soldByParentAll, saveReconStock, breakageByParent } from '../../store/day.js'
 
 // Step 1A.9 — CLS-02 Rekonsiliasi Stok (v56, URUTAN WAJIB). Per isian induk,
 // record explained reductions IN ORDER: (1) Patah → (2) Garansi → (3) Promo →
@@ -29,7 +29,7 @@ export default function ClosingRecon() {
   const day = useDay()
   const navigate = useNavigate()
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
-  const sold = soldByParent()
+  const sold = soldByParentAll() // walk-in + online → "terjual" akurat (online bukan "hilang")
   const [vals, setVals] = useState(() => {
     const logged = breakageByParent() // patah tercatat saat jualan → prefill
     return PARENT_FILLINGS.reduce((a, p) => {
