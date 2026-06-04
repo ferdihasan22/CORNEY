@@ -64,7 +64,7 @@ export default function OwnerBanners() {
         <section className="space-y-4">
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <h2 className="font-headline-md text-headline-md text-on-surface-variant flex items-center gap-2"><Icon name="visibility" /> Live Preview</h2>
-            <span className="text-[11px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1"><Icon name="crop" className="!text-[14px]" /> Rekomendasi 1280×640 px · rasio 2:1</span>
+            <span className="text-[11px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1"><Icon name="crop" className="!text-[14px]" /> Rekomendasi 1280×720 px · rasio 16:9</span>
           </div>
           <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant flex justify-center">
             <div className="w-[260px] h-[520px] bg-black rounded-[40px] p-3 shadow-2xl relative border-[6px] border-neutral-800">
@@ -77,7 +77,7 @@ export default function OwnerBanners() {
                   <span className="flex items-center gap-1 text-[9px] font-bold text-green-600"><span className="w-1.5 h-1.5 rounded-full bg-green-600" />LIVE</span>
                 </div>
                 <div className="px-3 mt-3">
-                  <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden">
+                  <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
                     {heroBanner ? (
                       <>
                         <img src={heroBanner.img} alt={heroBanner.title} className="w-full h-full object-cover" />
@@ -175,8 +175,8 @@ export default function OwnerBanners() {
             <form onSubmit={save} className="p-5 space-y-5 flex-1">
               {/* Preview — same 5:2 crop as the customer carousel */}
               <div>
-                <div className="w-full aspect-[2/1] rounded-xl overflow-hidden bg-surface-container relative">
-                  {form.img ? <img src={form.img} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant gap-1"><Icon name="add_photo_alternate" className="!text-4xl" /><span className="text-[11px]">Pratinjau crop 2:1</span></div>}
+                <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-surface-container relative">
+                  {form.img ? <img src={form.img} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant gap-1"><Icon name="add_photo_alternate" className="!text-4xl" /><span className="text-[11px]">Pratinjau crop 16:9</span></div>}
                   {form.title && <><div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" /><p className="absolute bottom-2 left-3 right-3 text-white font-bold leading-tight">{form.title}</p></>}
                 </div>
                 <p className="text-[11px] text-on-surface-variant mt-1.5 text-center">Beginilah banner tampil & terpotong di app customer.</p>
@@ -189,7 +189,7 @@ export default function OwnerBanners() {
                 <label className="font-label-md text-on-surface-variant">URL Gambar</label>
                 <input value={form.img} onChange={(e) => setForm((f) => ({ ...f, img: e.target.value }))} placeholder="https://…" type="url" className="w-full h-[52px] px-4 rounded-xl border border-outline focus:border-primary outline-none bg-surface-container-lowest text-sm" />
                 <ImageUploadButton value={form.img} onChange={(url) => setForm((f) => ({ ...f, img: url }))} />
-                <p className="text-xs text-on-surface-variant italic">Ukuran ideal <strong>1280×640 px (rasio 2:1)</strong>, min lebar 1000px. Gambar otomatis dipotong rata tengah (object-cover) — bagian penting taruh di tengah. Banner baru langsung Aktif & tampil paling bawah carousel.</p>
+                <p className="text-xs text-on-surface-variant italic">Ukuran ideal <strong>1280×720 px (rasio 16:9)</strong>, min lebar 1000px. Gambar otomatis dipotong rata tengah (object-cover) — bagian penting taruh di tengah. Banner baru langsung Aktif & tampil paling bawah carousel.</p>
               </div>
             </form>
             <div className="p-5 border-t border-outline-variant grid grid-cols-2 gap-4 sticky bottom-0 bg-surface">
