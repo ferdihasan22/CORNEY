@@ -113,7 +113,7 @@ export default function CustomerQris() {
     if (expired) { pollStatus(true); return } // habis → cek sekali lagi lalu berhenti
     let t = null
     const check = () => pollStatus(true)
-    const start = () => { if (!t) { check(); t = setInterval(check, 8000) } } // 8 dtk
+    const start = () => { if (!t) { check(); t = setInterval(check, 3000) } } // 3 dtk (responsif)
     const stop = () => { clearInterval(t); t = null }
     const onVis = () => (document.hidden ? stop() : start()) // jeda saat tab tak aktif; balik → langsung cek
     if (!document.hidden) start()
@@ -132,13 +132,19 @@ export default function CustomerQris() {
     if (!midId) return
     if (!silent) { setChecking(true); setStatusMsg('') }
 
-    // Mode supabase: cek field `paid` dari DB via get_my_order (webhook yang meng-update-nya).
-    // Tak perlu hit Midtrans API dari klien; lebih aman & webhook sudah otoritatif.
-    // Mode local: poll /api/midtrans/status seperti biasa.
-    if (isSupabase() && order?.pin) {
-      refreshMyOrder(order.id, order.pin)
-        .then((o) => {
-          if (o?.paid) finishPaid()
+    // Mode supabase: cek DUA sumber PARALEL supaya cepat (tak nunggu webhook + 8 dtk):
+    //  (a) midtrans-status langsung ke Midtrans (sama seperti kasir) → settlement seketika.
+    //  (b) paid DB via get_my_order (di-set webhook) → jaring pengaman bila (a) gagal.
+    // Sukses bila salah satu konfirmasi LUNAS. paid DB tetap otoritatif (di-set webhook)
+    // untuk catatan & kasir; customer hanya melihat layar sukses lebih cepat.
+    if (isSupabase() && supabase) {
+      Promise.all([
+        supabase.functions.invoke('midtrans-status', { body: { orderId: midId } })
+          .then(({ data, error }) => (error ? null : data)).catch(() => null),
+        order?.pin ? refreshMyOrder(order.id, order.pin).catch(() => null) : Promise.resolve(null),
+      ])
+        .then(([mid, o]) => {
+          if ((mid && PAID_STATUSES.includes(mid.transaction_status)) || o?.paid) finishPaid()
           else if (!silent) setStatusMsg('Belum lunas. Bayar dulu via QRIS ya.')
         })
         .catch(() => { if (!silent) setStatusMsg('Gagal cek status. Coba lagi.') })
