@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { PARENT_FILLINGS, DUMMY_STOCK, DUMMY_SHIPMENT, BRANCHES } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
-import { confirmOpeningStock, PHASE } from '../../store/day.js'
+import { confirmOpeningStock, PHASE, todayDD } from '../../store/day.js'
 import { useParStock } from '../../store/useParStock.js'
 import { parOf } from '../../store/parstock.js'
 import { useStockDaily } from '../../store/useStockDaily.js'
+import { useSalesDaily } from '../../store/useSalesDaily.js'
+import { hasSalesDay } from '../../store/salesdaily.js'
 import { useShipments } from '../../store/useShipments.js'
 import { arrivalByBranch, confirmShipmentsReceived } from '../../store/shipments.js'
 import { latestSisaByBranch } from '../../store/aggregate.js'
@@ -32,7 +34,9 @@ export default function OpeningStock() {
   const navigate = useNavigate()
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
   useParStock() // Stok Standar (diatur Owner) — ikut update
-  useStockDaily(); useShipments() // sumber: Master Laporan (sisa kemarin) + kiriman Operasional
+  useStockDaily(); useShipments(); useSalesDaily() // sumber: Master Laporan (sisa kemarin) + kiriman Operasional
+  // Sudah pernah closing untuk HARI INI? → peringatkan closing dobel akan menimpa laporan.
+  const closedToday = day?.branchId ? hasSalesDay(todayDD(), day.branchId) : false
   // Sisa kemarin = Sisa Aktual closing terakhir di MASTER LAPORAN.
   // Belum ada closing (hari pertama pakai PWA) → kosong (0), bukan angka palsu.
   const masterSisa = latestSisaByBranch(day?.branchId)
@@ -122,6 +126,12 @@ export default function OpeningStock() {
             <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-start gap-2 text-blue-900">
               <Icon name="rocket_launch" className="!text-[20px] shrink-0 mt-0.5" />
               <p className="text-label-lg leading-snug"><b>Hari pertama pakai aplikasi.</b> Belum ada data kemarin — wajar. Cukup <b>hitung stok yang ADA SEKARANG</b> di kulkas dan isi di "Sisa kemarin di kulkas". <b>Barang datang = 0</b> (belum ada kiriman). Mulai besok, data sudah otomatis terisi.</p>
+            </div>
+          )}
+          {closedToday && (
+            <div className="mt-3 bg-amber-50 border-2 border-amber-300 rounded-xl p-3 flex items-start gap-2 text-amber-900">
+              <Icon name="warning" className="!text-[20px] shrink-0 mt-0.5" />
+              <p className="text-label-lg leading-snug"><b>Hari ini ({todayDD()}) sudah pernah di-Closing.</b> Kalau kamu buka & Closing lagi, laporan hari ini akan <b>ditimpa</b> (angka closing sebelumnya hilang). Lanjutkan hanya bila memang perlu mengulang.</p>
             </div>
           )}
         </section>

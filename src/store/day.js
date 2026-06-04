@@ -78,6 +78,22 @@ export function subscribe(fn) {
   return () => subscribers.delete(fn)
 }
 
+// ── Batas hari (cegah "lupa closing lalu hari berganti") ──────────────────
+const ddOf = (d) => `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
+const isoOf = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+export function todayDD() { return ddOf(new Date()) }
+// Tanggal usaha sesi yang sedang berjalan (dari startedAt), 'DD/MM/YYYY' / ISO.
+export function dayDateDD() { return state?.startedAt ? ddOf(new Date(state.startedAt)) : null }
+export function dayDateISO() { return state?.startedAt ? isoOf(new Date(state.startedAt)) : null }
+// Jumlah transaksi yang sudah masuk hari ini (untuk pesan & keputusan).
+export function daySalesCount() { return (state?.sales || []).length }
+// Hari BASI: sesi masih terbuka (belum CLOSED) tapi tanggalnya bukan hari ini.
+// Artinya kasir lupa Closing dan hari sudah berganti.
+export function isStaleDay() {
+  if (!state || state.phase === PHASE.CLOSED) return false
+  return dayDateDD() !== ddOf(new Date())
+}
+
 // Start (or resume) the day for a branch. Never wipe an in-progress day.
 export function startDay(branchId) {
   if (state && state.branchId === branchId && state.phase !== PHASE.CLOSED) return
