@@ -27,6 +27,7 @@ const subscribers = new Set()
 let queue = load(KEY)
 let dead = load(DEAD_KEY)
 let flushing = false
+let forceOffline = false // hanya untuk UJI (dev): paksa app berperilaku offline tanpa memutus internet sungguhan
 
 function load(k) {
   try { const a = JSON.parse(localStorage.getItem(k)); return Array.isArray(a) ? a : [] } catch { return [] }
@@ -68,6 +69,7 @@ async function runOp(op) {
 // Berhenti di kegagalan pertama (kemungkinan offline) — sisanya dicoba lagi nanti.
 export async function flush() {
   if (flushing || !supabase) return queue.length === 0
+  if (forceOffline) return false // mode uji: anggap offline
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return false
   flushing = true
   try {
@@ -101,8 +103,21 @@ export function pendingCount() { return queue.length }
 export function deadCount() { return dead.length }
 export function subscribe(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
+// UJI (dev only): paksa app seolah offline tanpa memutus internet sungguhan —
+// supaya bisa diuji extension/console sambil koneksi tetap nyala. Mati → flush.
+export function setForceOffline(v) { forceOffline = !!v; notify(); if (!v) flush() }
+
 // Pemicu otomatis: saat internet balik + jaring pengaman tiap 20 dtk.
 if (typeof window !== 'undefined') {
   window.addEventListener('online', () => flush())
   setInterval(() => { if (queue.length) flush() }, 20000)
+}
+
+// Alat UJI khusus DEV (tak ikut ke build produksi/APK). Panggil dari console /
+// extension Chrome:
+//   corneyOutbox.offline(true)   → app berperilaku offline (tulisan masuk antrean)
+//   corneyOutbox.pending()       → jumlah data belum tersinkron
+//   corneyOutbox.offline(false)  → online lagi → antrean otomatis terkirim
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  window.corneyOutbox = { offline: setForceOffline, pending: pendingCount, dead: deadCount, flush }
 }
