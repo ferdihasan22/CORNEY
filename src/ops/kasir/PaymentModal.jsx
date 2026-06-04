@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { fmtRp } from '../../data/menu.js'
+import { isSupabase } from '../../lib/backend.js'
+import { supabase } from '../../lib/supabase.js'
 
 // Step 1A.6 — WLK-03 "Bayar Sekarang" + §6.7 lima channel pembayaran.
-// UI ported from Stitch "payment_modal_corney_pos". Modal over the Walk-in
-// screen. Channels: Tunai (kembalian), QRIS Midtrans (utama/auto), QRIS GoPay
-// (cadangan/manual), GoFood, GrabFood (dicatat saja).
+// QRIS Midtrans = DINAMIS ASLI (charge server-side via Edge midtrans-charge →
+// QR asli → auto-cek status via Edge midtrans-status → lunas → selesai otomatis).
+// Sandbox: tombol salin URL QR + buka Simulator. Tunai/GoPay/GoFood/Grab = seperti
+// semula (GoPay manual, GoFood/Grab dicatat saja).
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
@@ -17,12 +20,79 @@ const CHANNELS = [
   { id: 'grabfood', label: 'GrabFood', icon: 'moped', note: 'Dicatat saja' },
 ]
 
+const SIMULATOR_URL = 'https://simulator.sandbox.midtrans.com/v2/qris/index'
+const PAID_STATUSES = ['settlement', 'capture']
+
 export default function PaymentModal({ total, onClose, onComplete }) {
   const [method, setMethod] = useState('tunai')
   const [cash, setCash] = useState(0)
+  // QRIS Midtrans dinamis
+  const [qmode, setQmode] = useState('idle') // idle | loading | live | dummy
+  const [qrUrl, setQrUrl] = useState('')
+  const [midId, setMidId] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [checking, setChecking] = useState(false)
+  const [statusMsg, setStatusMsg] = useState('')
+  const [paid, setPaid] = useState(false)
+  const charged = useRef(false)
+  const done = useRef(false)
 
   const change = cash - total
   const cashOk = method !== 'tunai' || cash >= total
+
+  // Charge SEKALI saat kasir pilih QRIS Midtrans.
+  useEffect(() => {
+    if (method !== 'qris_midtrans' || charged.current) return
+    charged.current = true
+    const mid = `KASIR-${Date.now().toString(36)}-${Math.floor(Math.random() * 1e4)}`
+    setMidId(mid)
+    setQmode('loading')
+    const p = isSupabase() && supabase
+      ? supabase.functions.invoke('midtrans-charge', { body: { orderId: mid, gross: total } }).then(({ data, error }) => { if (error) throw error; return data })
+      : fetch('/api/midtrans/charge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId: mid, gross: total }) }).then((r) => r.json())
+    p.then((d) => {
+      const qrAction = (d.actions || []).find((a) => a.name === 'generate-qr-code')
+      if (qrAction) { setQrUrl(qrAction.url); setQmode('live') }
+      else { setStatusMsg(d.error || d.status_message || 'QR gagal dibuat — pakai manual.'); setQmode('dummy') }
+    }).catch(() => setQmode('dummy'))
+  }, [method, total])
+
+  // Auto-poll status saat QR live (jeda saat tab tak aktif).
+  useEffect(() => {
+    if (qmode !== 'live' || !midId || paid) return
+    let t = null
+    const start = () => { if (!t) t = setInterval(() => pollStatus(true), 8000) }
+    const stop = () => { clearInterval(t); t = null }
+    const onVis = () => (document.hidden ? stop() : start())
+    if (!document.hidden) start()
+    document.addEventListener('visibilitychange', onVis)
+    return () => { stop(); document.removeEventListener('visibilitychange', onVis) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qmode, midId, paid])
+
+  function finishPaid() {
+    if (done.current) return
+    done.current = true
+    setPaid(true)
+    onComplete({ method: 'qris_midtrans', cashReceived: null })
+  }
+
+  function pollStatus(silent) {
+    if (!midId) return
+    if (!silent) { setChecking(true); setStatusMsg('') }
+    const p = isSupabase() && supabase
+      ? supabase.functions.invoke('midtrans-status', { body: { orderId: midId } }).then(({ data, error }) => { if (error) throw error; return data })
+      : fetch(`/api/midtrans/status?order_id=${encodeURIComponent(midId)}`).then((r) => r.json())
+    p.then((d) => {
+      if (PAID_STATUSES.includes(d.transaction_status)) finishPaid()
+      else if (!silent) setStatusMsg(`Status: ${d.transaction_status || 'pending'} — belum lunas. Bayar dulu di simulator ya.`)
+    }).catch(() => { if (!silent) setStatusMsg('Gagal cek status. Coba lagi.') })
+      .finally(() => { if (!silent) setChecking(false) })
+  }
+
+  const copyQr = async () => {
+    try { await navigator.clipboard.writeText(qrUrl); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch { /* clipboard blocked */ }
+  }
 
   function complete() {
     if (!cashOk) return
@@ -71,7 +141,7 @@ export default function PaymentModal({ total, onClose, onComplete }) {
             })}
           </div>
 
-          {/* Context per channel */}
+          {/* Tunai */}
           {method === 'tunai' && (
             <div className="space-y-4">
               <div className="flex flex-col gap-2">
@@ -111,16 +181,49 @@ export default function PaymentModal({ total, onClose, onComplete }) {
             </div>
           )}
 
-          {(method === 'qris_midtrans' || method === 'qris_gopay') && (
+          {/* QRIS Midtrans — DINAMIS ASLI */}
+          {method === 'qris_midtrans' && (
+            <div className="flex flex-col items-center gap-3 py-1">
+              <div className="w-48 h-48 rounded-xl bg-white border border-outline-variant flex items-center justify-center overflow-hidden p-2 relative">
+                {qmode === 'live' && qrUrl ? (
+                  <img src={qrUrl} alt="QRIS Midtrans" className="w-full h-full object-contain" />
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-on-surface-variant">
+                    <Icon name="qr_code_2" className="!text-[100px]" />
+                    <span className="text-[11px]">{qmode === 'loading' ? 'Membuat QR…' : qmode === 'dummy' ? 'QR gagal — pakai manual' : ''}</span>
+                  </div>
+                )}
+              </div>
+              <p className="font-body-md text-on-surface-variant text-center text-[13px]">QR dinamis Midtrans (sandbox) — pelanggan scan &amp; bayar, lunas terdeteksi otomatis.</p>
+
+              {qmode === 'live' && (
+                <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-2">
+                  <p className="text-[12px] text-amber-900 leading-snug"><b>Mode uji (sandbox):</b> salin <b>URL QR</b>, buka Simulator, tempel, Submit. Status update otomatis.</p>
+                  <div className="flex gap-2">
+                    <button onClick={copyQr} className="flex-1 h-10 rounded-lg bg-amber-500 text-white text-[13px] font-bold flex items-center justify-center gap-1.5 active:scale-95"><Icon name={copied ? 'check' : 'content_copy'} className="!text-[16px]" /> {copied ? 'Tersalin' : 'Salin URL QR'}</button>
+                    <a href={SIMULATOR_URL} target="_blank" rel="noreferrer" className="flex-1 h-10 rounded-lg border border-amber-500 text-amber-700 text-[13px] font-bold flex items-center justify-center gap-1.5 active:scale-95"><Icon name="open_in_new" className="!text-[16px]" /> Simulator</a>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 text-on-surface-variant">
+                {paid ? (
+                  <span className="text-green-700 font-bold flex items-center gap-1.5"><Icon name="check_circle" fill /> Lunas! Menyelesaikan…</span>
+                ) : qmode === 'live' ? (
+                  <span className="flex items-center gap-2 text-[13px]"><span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" /> Menunggu pembayaran…</span>
+                ) : null}
+              </div>
+              {statusMsg && <p className="text-[12px] text-center text-on-surface-variant px-2">{statusMsg}</p>}
+            </div>
+          )}
+
+          {/* QRIS GoPay — statis/manual (seperti semula) */}
+          {method === 'qris_gopay' && (
             <div className="flex flex-col items-center gap-3 py-2">
               <div className="w-44 h-44 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-center">
                 <Icon name="qr_code_2" className="!text-[120px] text-on-surface" />
               </div>
-              <p className="font-body-md text-on-surface-variant text-center">
-                {method === 'qris_midtrans'
-                  ? 'QR dinamis Midtrans — verifikasi otomatis saat pelanggan bayar.'
-                  : 'QR statis GoPay — pelanggan scan, lalu kasir tandai sudah bayar (manual).'}
-              </p>
+              <p className="font-body-md text-on-surface-variant text-center">QR statis GoPay — pelanggan scan, lalu kasir tandai sudah bayar (manual).</p>
             </div>
           )}
 
@@ -136,13 +239,31 @@ export default function PaymentModal({ total, onClose, onComplete }) {
 
         {/* Footer */}
         <div className="p-margin-page pt-0 flex flex-col gap-3">
-          <button
-            onClick={complete}
-            disabled={!cashOk}
-            className="w-full h-min-tap-target bg-primary-container text-white font-headline-md rounded-xl shadow-[0_8px_16px_rgba(218,41,28,0.25)] hover:bg-primary transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-40"
-          >
-            <Icon name="check_circle" fill /> {completeLabel}
-          </button>
+          {method === 'qris_midtrans' ? (
+            <>
+              <button
+                onClick={() => pollStatus(false)}
+                disabled={qmode !== 'live' || checking || paid}
+                className="w-full h-min-tap-target bg-primary-container text-white font-headline-md rounded-xl shadow-[0_8px_16px_rgba(218,41,28,0.25)] hover:bg-primary transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-40"
+              >
+                <Icon name={paid ? 'check_circle' : 'sync'} fill={paid} /> {paid ? 'Lunas ✓' : checking ? 'Mengecek…' : 'Sudah bayar? Cek status'}
+              </button>
+              {qmode === 'dummy' && (
+                <button onClick={() => onComplete({ method: 'qris_midtrans', cashReceived: null })} className="w-full py-3 rounded-xl border border-outline text-on-surface-variant font-label-lg active:scale-95">Tandai Lunas (manual)</button>
+              )}
+              {import.meta.env.DEV && qmode === 'live' && !paid && (
+                <button onClick={finishPaid} className="w-full py-2.5 rounded-xl border border-dashed border-primary text-primary text-sm flex items-center justify-center gap-2 active:scale-95"><Icon name="bolt" className="!text-[18px]" /> Simulasi Lunas (uji)</button>
+              )}
+            </>
+          ) : (
+            <button
+              onClick={complete}
+              disabled={!cashOk}
+              className="w-full h-min-tap-target bg-primary-container text-white font-headline-md rounded-xl shadow-[0_8px_16px_rgba(218,41,28,0.25)] hover:bg-primary transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-40"
+            >
+              <Icon name="check_circle" fill /> {completeLabel}
+            </button>
+          )}
           <button onClick={onClose} className="w-full py-3 text-on-surface-variant font-label-lg hover:text-on-surface transition-colors">Batal</button>
         </div>
       </div>
