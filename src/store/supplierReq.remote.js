@@ -33,6 +33,7 @@ export async function supplierSetRequestRemote(o) {
   enqueue({ kind: 'rpc', fn: 'supplier_set_request', args: { p_id: o.id, p_items: o.items || [], p_status: o.status || null }, key: `supplier_set_req:${o.id}` })
 }
 export async function removeSupplierReqRemote(id) {
-  if (!supabase) return
-  enqueue({ kind: 'delete', table: 'supplier_requests', matchId: id, key: `supplier_requests_del:${id}` })
+  if (!supabase || !id) return
+  // Supplier tak boleh delete tabel langsung (RLS) → lewat RPC ber-gate supplier.
+  enqueue({ kind: 'rpc', fn: 'supplier_remove_request', args: { p_id: id }, key: `supplier_remove_req:${id}` })
 }
