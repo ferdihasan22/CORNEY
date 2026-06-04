@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { fmtRp } from '../data/menu.js'
-import { getOrder, markPaid, cancelOrder, refreshMyOrder } from '../store/orders.js'
+import { getOrder, markPaid, cancelOrder, refreshMyOrder, extendPayDeadline } from '../store/orders.js'
 import { clearCart } from '../store/cart.js'
 import { isSupabase } from '../lib/backend.js'
 import { supabase } from '../lib/supabase.js'
@@ -52,6 +52,7 @@ export default function CustomerQris() {
   // Buat (atau buat-ulang) transaksi QRIS. order_id Midtrans unik tiap charge → QR baru.
   const runCharge = () => {
     if (!order) return
+    extendPayDeadline(order.id) // tiap buat/buat-ulang QR → perpanjang tenggat 15 mnt (cegah ke-sweep saat aktif)
     const mid = `${order.id}-${Date.now().toString(36)}`
     setMidId(mid)
     setMode('loading'); setStatusMsg('')
@@ -90,8 +91,16 @@ export default function CustomerQris() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order])
 
-  // "Buat QR Baru" setelah waktu habis → charge ulang + reset hitung mundur.
+  // Batalkan transaksi QRIS lama di Midtrans (best-effort) → QR lama (mis. screenshot)
+  // tak bisa dibayar lagi setelah buat yang baru (cegah dobel bayar, G3).
+  const cancelOldCharge = (mid) => {
+    if (!mid || !isSupabase() || !supabase) return
+    supabase.functions.invoke('midtrans-cancel', { body: { orderId: mid } }).catch(() => {})
+  }
+
+  // "Buat QR Baru" setelah waktu habis → batalkan QR lama, charge ulang + reset mundur.
   const buatQrBaru = () => {
+    cancelOldCharge(midId)
     setQrUrl(''); setQrString('')
     setExpired(false); setSecs(QR_TTL)
     runCharge()

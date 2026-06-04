@@ -10,6 +10,10 @@ import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_orders'
 export const ORDER_FLOW = ['baru', 'diproses', 'siap', 'selesai']
+// Masa bayar = umur QRIS (custom_expiry Midtrans 15 menit). Lewat ini & belum bayar
+// → order kedaluwarsa → auto-cancel (G2). payDeadline LOKAL saja (tak masuk DB);
+// "Buat QR Baru" memperpanjangnya supaya tak ke-sweep saat customer masih aktif.
+const PAY_WINDOW_MS = 15 * 60 * 1000
 
 const subscribers = new Set()
 let list = load()
@@ -91,14 +95,14 @@ export async function createOrder(payload) {
     // dari trigger). Jika insert gagal → throw → checkout TIDAK lanjut ke bayar.
     const base = { id: genUuid(), no: null, pin, status: 'baru', paid: false, payMethod: 'qris', createdAt, ...payload }
     const { insertOrder } = await import('./orders.remote.js')
-    const order = await insertOrder(base)
+    const order = { ...(await insertOrder(base)), payDeadline: Date.now() + PAY_WINDOW_MS }
     applyOrder(order) // cache lokal utk layar QRIS/Sukses (perangkat yang sama)
     return order
   }
   // Lokal (lama): nomor antrian dihitung di klien, reset per cabang per hari.
   const today = localDate()
   const no = list.filter((o) => o.branchId === payload.branchId && localDate(o.createdAt) === today).length + 1
-  const order = { id: 'ORD-' + Date.now(), no, pin, status: 'baru', paid: false, payMethod: 'qris', createdAt, ...payload }
+  const order = { id: 'ORD-' + Date.now(), no, pin, status: 'baru', paid: false, payMethod: 'qris', createdAt, payDeadline: Date.now() + PAY_WINDOW_MS, ...payload }
   commit([order, ...list])
   return order
 }
@@ -140,6 +144,28 @@ export function cancelOrder(id) {
   const o = list.find((x) => x.id === id)
   commit(list.filter((x) => x.id !== id))
   if (o) remote((r) => r.rpcCancel(id, o.pin))
+}
+
+// ── Masa bayar / auto-cancel (G2) ───────────────────────────────────────────
+// Perpanjang tenggat bayar (dipanggil tiap buat/buat-ulang QR). LOKAL saja.
+export function extendPayDeadline(id, ms = PAY_WINDOW_MS) {
+  let found = false
+  const next = list.map((o) => { if (o.id !== id || o.paid) return o; found = true; return { ...o, payDeadline: Date.now() + ms } })
+  if (found) commit(next)
+}
+function payDeadlineOf(o) {
+  return o?.payDeadline || (o?.createdAt ? new Date(o.createdAt).getTime() + PAY_WINDOW_MS : 0)
+}
+// Order belum bayar yang sudah lewat tenggat (QR-nya pasti sudah expired di Midtrans).
+export function isUnpaidExpired(o) {
+  return !!o && !o.paid && Date.now() > payDeadlineOf(o)
+}
+// Bersihkan order belum-bayar yang kedaluwarsa (RPC hanya hapus paid=false → aman
+// walau cache lokal sempat basi; order yang ternyata sudah dibayar TIDAK terhapus).
+export function sweepExpiredUnpaid() {
+  const expired = list.filter(isUnpaidExpired)
+  expired.forEach((o) => cancelOrder(o.id))
+  return expired.length
 }
 
 // ── Cooking (MSK-01) ─────────────────────────────────────────

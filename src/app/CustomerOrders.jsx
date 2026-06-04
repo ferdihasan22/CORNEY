@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BRANCHES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useOrders } from '../store/useOrders.js'
+import { sweepExpiredUnpaid } from '../store/orders.js'
 import { useAppConfig } from '../store/useAppConfig.js'
 
 // 2.1 — CUS-04 Riwayat Pesanan. Ported from Stitch "riwayat_pesanan_corney_app"
@@ -27,6 +29,14 @@ export default function CustomerOrders() {
   const master = useMaster()
   const appCfg = useAppConfig()
   const orders = useOrders() || []
+
+  // Auto-cancel order belum-bayar yang kedaluwarsa (>15 mnt) → daftar tetap bersih.
+  // Saat dibuka + tiap 30 dtk selama layar terbuka (kalau ada yang lewat tenggat).
+  useEffect(() => {
+    sweepExpiredUnpaid()
+    const t = setInterval(sweepExpiredUnpaid, 30000)
+    return () => clearInterval(t)
+  }, [])
 
   const menuById = (id) => (master?.menus || []).find((m) => m.id === id)
   const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name?.replace('CORNEY ', '') || id
