@@ -254,7 +254,10 @@ export default function App() {
       <Route path="/supplier/request" element={<SupplierRequest />} />
       <Route path="/supplier/harga" element={<SupplierPrices />} />
       <Route path="/supplier/riwayat" element={<SupplierHistory />} />
-      <Route path="*" element={<Placeholder title="404" note="Halaman tidak ditemukan." />} />
+      {/* Path tak dikenal (mis. callback login Cloudflare Access /authorized?...) →
+          PULIH ke beranda, yang lalu arahkan ke login sesuai subdomain. Cegah
+          terjebak di 404 setelah login Access. */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     </AuthGate>
     <SyncStatus />
