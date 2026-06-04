@@ -126,8 +126,14 @@ function Home() {
   if (host === 'customer') return <Navigate to="/app" replace />
   if (host === 'kasir') return <Navigate to="/ops/kasir/login" replace />
   if (host === 'supplier') return <Navigate to="/supplier" replace />
-  // kantor.corney.id → LANGSUNG halaman login (pemilih peran 4 back-office), bukan launcher.
-  if (host === 'kantor') return <RoleLogin roles={['owner', 'operasional', 'produksi', 'auditor']} />
+  // kantor.corney.id (root) → BLANK (tanpa form login) demi keamanan: orang iseng yg
+  // buka domain tak menemukan pintu login. Staf masuk lewat link langsung per-peran
+  // (/ops/owner/login, /ops/operasional/login, /ops/produksi/login, /ops/auditor/login).
+  if (host === 'kantor') return (
+    <div className="min-h-screen bg-background flex items-center justify-center select-none">
+      <div className="corney-swirl text-white font-extrabold text-2xl px-5 py-2.5 rounded-xl shadow-lg opacity-30">CORNEY</div>
+    </div>
+  )
   const allApps = [
     { to: '/ops/kasir/login', label: 'CORNEY Ops — Kasir', desc: 'Login → Buka Toko → Jualan → Closing (P0)' },
     { to: '/ops/owner', label: 'CORNEY Ops — Owner', desc: 'Dashboard & laporan (P0)' },
