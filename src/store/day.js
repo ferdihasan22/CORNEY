@@ -15,6 +15,7 @@
 
 import { MENUS } from '../data/menu.js'
 import { getOrders } from './orders.js'
+import { setBranchOpen } from './branchStatus.js'
 
 const KEY = 'corney_day'
 
@@ -189,6 +190,7 @@ export function setBelanjaDatang(received) {
 export function finishReminder() {
   if (!state) return
   commit({ ...state, phase: PHASE.SELLING })
+  setBranchOpen(true) // mode supabase: kabari customer cabang BUKA untuk online (lintas perangkat)
 }
 
 // ── Walk-in cart (WLK-01/02) ────────────────────────────
@@ -531,4 +533,5 @@ export function finalizeClosing(report) {
 // Finalize / reset the local session (Closing → tomorrow's Opening).
 export function endDay() {
   commit(null)
+  setBranchOpen(false) // mode supabase: kabari customer cabang TUTUP untuk online
 }

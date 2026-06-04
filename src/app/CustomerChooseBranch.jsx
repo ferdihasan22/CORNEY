@@ -1,8 +1,12 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BRANCHES } from '../data/menu.js'
 import { useDay } from '../store/useDay.js'
 import { PHASE } from '../store/day.js'
 import { useMaster } from '../store/useMaster.js'
+import { useBranchStatus } from '../store/useBranchStatus.js'
+import { refreshBranchStatus } from '../store/branchStatus.js'
+import { isSupabase } from '../lib/backend.js'
 
 // 1C.2 — CORNEY App Customer · Pilih Cabang (PRD §4.4). Ported from Stitch
 // "choose_branch_corney_app". Booth photos aren't available, so each card uses a
@@ -23,9 +27,29 @@ export default function CustomerChooseBranch() {
   const navigate = useNavigate()
   const day = useDay()
   useMaster() // re-render saat Owner tambah/edit/nonaktifkan cabang (sumber tunggal)
+  const status = useBranchStatus() // status buka cabang dari SERVER (lintas perangkat)
+  const [, tick] = useState(0)
+  useEffect(() => {
+    refreshBranchStatus() // ambil status terkini saat halaman dibuka
+    const t = setInterval(() => tick((n) => n + 1), 60000) // re-cek jam tutup online tiap menit
+    return () => clearInterval(t)
+  }, [])
   const near = BRANCHES.find((b) => STATUS[b.id]?.near)
-  // Cabang BUKA untuk customer = kasir cabang itu sudah selesai Opening Day (fase jualan).
-  const isOpen = (id) => !!day && day.branchId === id && day.phase === PHASE.SELLING
+  const now = new Date()
+  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  const nowHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+  // Cabang BUKA untuk online:
+  //  - mode supabase → status SERVER: kasir buka HARI INI & belum lewat jam tutup
+  //    online (terlihat lintas perangkat).
+  //  - mode local → sesi day.js lokal (perangkat sama).
+  const isOpen = (id) => {
+    if (isSupabase()) {
+      const st = status[id]
+      const stop = BRANCHES.find((b) => b.id === id)?.stopOnline || '21:30'
+      return !!st?.open && st.openDate === todayISO && nowHHMM <= stop
+    }
+    return !!day && day.branchId === id && day.phase === PHASE.SELLING
+  }
 
   return (
     <div className="bg-background text-on-surface min-h-screen flex flex-col">
