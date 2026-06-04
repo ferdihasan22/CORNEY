@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { fmtRp } from '../../data/menu.js'
 import { isSupabase } from '../../lib/backend.js'
 import { supabase } from '../../lib/supabase.js'
+import { playSfx } from '../../lib/sfx.js'
 
 // Step 1A.6 — WLK-03 "Bayar Sekarang" + §6.7 lima channel pembayaran.
 // QRIS Midtrans = DINAMIS ASLI (charge server-side via Edge midtrans-charge →
@@ -74,6 +75,7 @@ export default function PaymentModal({ total, onClose, onComplete }) {
     if (done.current) return
     done.current = true
     setPaid(true)
+    playSfx('qris', 1) // QRIS Midtrans walk-in LUNAS → suara "qris masuk"
     onComplete({ method: 'qris_midtrans', cashReceived: null })
   }
 
