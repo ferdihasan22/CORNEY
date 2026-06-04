@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { BRANCHES, SAUCES, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
-import { PHASE, endDay, cookingCounts } from '../../store/day.js'
+import { PHASE, cookingCounts } from '../../store/day.js'
 import { flyBall, pulse } from './flyBall.js'
 import { clearKasirBranch } from './kasirSession.js'
 import { useMaster } from '../../store/useMaster.js'
@@ -104,7 +104,8 @@ export default function KasirOnline() {
   const itemsText = (o) => o.lines.map((l) => `${l.qty}x ${menuName(l.menuId)}`).join(', ')
 
   function handleLogout() {
-    endDay()
+    // JANGAN endDay() — sesi hari harus bertahan; login lagi = lanjut, bukan ulang
+    // Opening. Hari hanya berakhir lewat Closing (ClosingReport).
     clearKasirBranch()
     navigate('/ops/kasir/login', { replace: true })
   }

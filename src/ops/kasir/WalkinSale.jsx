@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { PARENT_FILLINGS, MENUS, BRANCHES, LOW_STOCK_THRESHOLD, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
 import { useOrders } from '../../store/useOrders.js'
-import { PHASE, parentAvailable, addToCart, incLine, decLine, removeLine, clearCart, endDay, commitSale, createPending, toggleMenu, cookingCounts } from '../../store/day.js'
+import { PHASE, parentAvailable, addToCart, incLine, decLine, removeLine, clearCart, commitSale, createPending, toggleMenu, cookingCounts } from '../../store/day.js'
 import { flyBall, pulse } from './flyBall.js'
 import { clearKasirBranch } from './kasirSession.js'
 import NetworkIndicator from './NetworkIndicator.jsx'
@@ -88,7 +88,9 @@ export default function WalkinSale() {
     else addToCart(menu.id, [])
   }
   function handleLogout() {
-    endDay()
+    // JANGAN endDay() di sini — sesi hari (Opening, stok, penjualan) WAJIB bertahan
+    // supaya saat login lagi di cabang sama, kasir LANJUT jualan, bukan ulang
+    // Opening langkah 1-4. Hari hanya berakhir lewat Closing (ClosingReport).
     clearKasirBranch()
     navigate('/ops/kasir/login', { replace: true })
   }
