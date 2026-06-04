@@ -169,6 +169,7 @@ function Splash() {
 
 import SyncStatus from './components/SyncStatus.jsx'
 import KasirAlerts from './ops/kasir/KasirAlerts.jsx'
+import PwaAutoUpdate from './components/PwaAutoUpdate.jsx' // ⚠️ SEMENTARA (testing) — hapus nanti
 
 export default function App() {
   return (
@@ -265,6 +266,7 @@ export default function App() {
     </AuthGate>
     <SyncStatus />
     <KasirAlerts />
+    <PwaAutoUpdate />
     </Suspense>
   )
 }
