@@ -564,3 +564,50 @@ export function moveBanner(id, dir) {
   commit({ ...state, banners: arr })
   remoteWrite((w) => w.pushBanners(arr))
 }
+
+// ── Sauces (savory toppings) — Owner-managed, harga global per saus ──────────
+// SAUCES (const yg dipakai customer & kasir) disinkron in-place dari state.sauces
+// (lihat syncSaucesConst). Edit di sini → otomatis berlaku di seluruh app saat
+// master di-refresh (buka app / tab kembali aktif) tanpa reinstall.
+function normSauce({ name, price }) {
+  return { name: (name || '').trim(), price: Math.max(0, Math.round(Number(price) || 0)) }
+}
+
+export function addSauce(data) {
+  if (!state) return null
+  const s = normSauce(data)
+  if (!s.name) return null
+  const base = s.name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'saus'
+  let id = base
+  let n = 2
+  while ((state.sauces || []).some((x) => x.id === id)) id = `${base}_${n++}`
+  const sauce = { id, ...s }
+  commit({ ...state, sauces: [...(state.sauces || []), sauce] })
+  remoteWrite((w) => w.pushSauce(sauce))
+  return sauce
+}
+
+export function updateSauce(id, data) {
+  if (!state) return null
+  let found = null
+  const sauces = (state.sauces || []).map((x) => {
+    if (x.id !== id) return x
+    const patch = {}
+    if (data.name != null) patch.name = data.name.trim()
+    if (data.price != null) patch.price = Math.max(0, Math.round(Number(data.price) || 0))
+    found = { ...x, ...patch }
+    return found
+  })
+  if (!found) return null
+  commit({ ...state, sauces })
+  remoteWrite((w) => w.pushSauce(found))
+  return found
+}
+
+// Saus tak menyimpan histori transaksi langsung (order menyimpan SNAPSHOT nama
+// saus) → aman dihapus permanen seperti banner. (Menu/isian tetap dinonaktifkan.)
+export function deleteSauce(id) {
+  if (!state) return null
+  commit({ ...state, sauces: (state.sauces || []).filter((x) => x.id !== id) })
+  remoteWrite((w) => w.removeSauce(id))
+}

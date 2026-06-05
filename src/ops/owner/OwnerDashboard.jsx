@@ -177,6 +177,11 @@ export default function OwnerDashboard() {
               <span className="font-label-lg leading-tight">Stok Isian & Menu</span>
               <span className="text-[11px] text-on-surface-variant">Isian induk + menu/varian jadi satu</span>
             </button>
+            <button onClick={() => navigate('/ops/owner/master/saus')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
+              <Icon name="water_drop" className="text-primary text-2xl" />
+              <span className="font-label-lg leading-tight">Kelola Saus</span>
+              <span className="text-[11px] text-on-surface-variant">Nama & harga saus (Customer & Kasir)</span>
+            </button>
             <button onClick={() => navigate('/ops/owner/koreksi')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
               <Icon name="rule" className="text-primary text-2xl" />
               <span className="font-label-lg leading-tight">Koreksi Stok</span>

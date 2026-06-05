@@ -30,6 +30,7 @@ const OwnerFinancialReports = lazy(() => import('./ops/owner/OwnerFinancialRepor
 const OwnerBranches = lazy(() => import('./ops/owner/OwnerBranches.jsx'))
 const OwnerPromos = lazy(() => import('./ops/owner/OwnerPromos.jsx'))
 const OwnerBanners = lazy(() => import('./ops/owner/OwnerBanners.jsx'))
+const OwnerSauces = lazy(() => import('./ops/owner/OwnerSauces.jsx'))
 const CustomerLanding = lazy(() => import('./app/CustomerLanding.jsx'))
 const CustomerChooseBranch = lazy(() => import('./app/CustomerChooseBranch.jsx'))
 const CustomerCatalog = lazy(() => import('./app/CustomerCatalog.jsx'))
@@ -219,6 +220,7 @@ export default function App() {
       <Route path="/ops/owner/master/isian" element={<OwnerCatalog />} />
       <Route path="/ops/owner/master/menu" element={<OwnerCatalog />} />
       <Route path="/ops/owner/master/resep" element={<OwnerRecipes />} />
+      <Route path="/ops/owner/master/saus" element={<OwnerSauces />} />
       <Route path="/ops/owner/laporan" element={<OwnerFinancialReports />} />
       <Route path="/ops/owner/cabang" element={<OwnerBranches />} />
       <Route path="/ops/owner/promo" element={<OwnerPromos />} />

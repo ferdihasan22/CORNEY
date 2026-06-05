@@ -76,6 +76,20 @@ export async function removeBanner(id) {
   enqueue({ kind: 'delete', table: 'banners', matchId: id, key: `banners_del:${id}` })
 }
 
+// ── Sauces (store: {id,name,price}) ──
+export async function pushSauce(s) {
+  if (!s?.id) return
+  enqueue({ kind: 'upsert', table: 'sauces', key: `sauces:${s.id}`, row: {
+    id: s.id,
+    name: s.name || '',
+    price: Math.max(0, Math.round(Number(s.price) || 0)),
+  } })
+}
+export async function removeSauce(id) {
+  if (!id) return
+  enqueue({ kind: 'delete', table: 'sauces', matchId: id, key: `sauces_del:${id}` })
+}
+
 // ── Branch overrides (upsert bila ada patch; DELETE bila override dilepas) ──
 export async function pushOverride(branchId, menuId, patch) {
   if (!branchId || !menuId) return
