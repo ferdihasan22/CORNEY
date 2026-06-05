@@ -58,7 +58,7 @@ function Tutorial({ mode }) {
   if (mode === 'inapp-ios') {
     return (
       <div className={box}>
-        <div className="flex items-center gap-3 mb-3"><Logo /><div><p className="font-bold leading-tight">Buka di Browser dulu</p><p className="text-[12px] text-on-surface-variant">Kamu sedang di dalam aplikasi (mis. Instagram)</p></div></div>
+        <div className="flex items-center gap-3 mb-3"><Logo /><div><p className="font-bold leading-tight">Membuka Safari…</p><p className="text-[12px] text-on-surface-variant">Kalau Safari tak terbuka otomatis, lakukan ini:</p></div></div>
         <div className="flex flex-col gap-2">
           <p className={step}><Icon name="more_horiz" className="!text-[18px] text-primary shrink-0" /><span>1. Ketuk <b>•••</b> di kanan atas.</span></p>
           <p className={step}><Icon name="open_in_browser" className="!text-[18px] text-primary shrink-0" /><span>2. Pilih <b>"Buka di Browser Eksternal"</b> (Safari).</span></p>

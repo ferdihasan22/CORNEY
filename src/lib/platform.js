@@ -51,6 +51,18 @@ export function openInDefaultBrowser(url) {
       return true
     } catch { /* fallback */ }
     try { window.open(url, '_blank'); return true } catch { /* noop */ }
+    return false
   }
+  if (isIOS()) {
+    // Best-effort iOS: skema `x-web-search://` membuka SAFARI (smart-search Safari
+    // umumnya langsung mendarat ke URL-nya). TAK dijamin Apple — bisa diblokir di
+    // app/iOS tertentu. Kita tetap return false supaya instruksi •••→Buka di
+    // Browser tampil sebagai cadangan bila skema diabaikan.
+    try { window.location.href = 'x-web-search://?' + url } catch { /* noop */ }
+    // Cadangan kedua: sebagian webview menghormati window.open untuk keluar.
+    try { window.open(url, '_blank') } catch { /* noop */ }
+    return false
+  }
+  try { window.open(url, '_blank'); return true } catch { /* noop */ }
   return false
 }
