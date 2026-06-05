@@ -8,6 +8,7 @@ import { lockInfo, recordFail, clearLock } from '../../auth/roleAuth.js'
 import { isSupabase, BACKEND } from '../../lib/backend.js'
 import { signInKasir } from '../../auth/supabaseAuth.js'
 import { BUILD_ID, BUILD_TIME } from '../../lib/build.js'
+import InstallPwaButton from '../../components/InstallPwaButton.jsx'
 
 const mmss = (ms) => { const s = Math.ceil(ms / 1000); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` }
 
@@ -152,6 +153,7 @@ export default function KasirLogin() {
               Hubungi Owner jika lupa password
             </p>
           </form>
+          <div className="mt-5"><InstallPwaButton label="Instal Aplikasi" /></div>
         </div>
       </main>
 

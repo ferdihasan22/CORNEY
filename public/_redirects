@@ -1,0 +1,4 @@
+# Cloudflare Pages — SPA fallback. Semua rute non-file dikembalikan ke index.html
+# (status 200, URL tetap) supaya React Router menangani path-nya. Tanpa ini,
+# refresh di URL dalam seperti /ops/owner/login balik ke root / 404.
+/*    /index.html   200

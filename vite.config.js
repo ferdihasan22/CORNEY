@@ -92,6 +92,12 @@ export default defineConfig(({ mode }) => {
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,mp3}'],
+        // SPA fallback untuk PWA TERINSTAL & offline: navigasi (refresh/buka URL
+        // dalam mis. /ops/owner/login) dilayani index.html → React Router yang
+        // menangani rutenya. Tanpa ini, refresh di app terinstal balik ke root /
+        // gagal dibuka. Denylist: jangan intersep aset & file khusus.
+        navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/api\//, /\/[^/?]+\.[^/]+$/],
       },
     }),
   ],
