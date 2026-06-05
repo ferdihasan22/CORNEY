@@ -31,6 +31,10 @@ function parseCoord(c) {
   return Number.isFinite(la) && Number.isFinite(ln) ? { lat: la, lng: ln } : null
 }
 const fmtKm = (km) => (km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`)
+// Penanda: customer sudah pernah mengizinkan lokasi → jangan tampilkan popup lagi
+// saat navigasi back-forward (remount). Lebih andal daripada Permissions API yang
+// kadang telat update state di sebagian browser HP.
+const GEO_FLAG = 'corney_geo_ok'
 
 export default function CustomerChooseBranch() {
   const navigate = useNavigate()
@@ -57,7 +61,7 @@ export default function CustomerChooseBranch() {
   const askLocation = (fromButton) => {
     if (!navigator.geolocation) return
     navigator.geolocation.getCurrentPosition(
-      (pos) => { setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setShowGeo(false); setGeoHint('') },
+      (pos) => { try { localStorage.setItem(GEO_FLAG, '1') } catch { /* abaikan */ } setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setShowGeo(false); setGeoHint('') },
       (err) => {
         if (fromButton && err.code === err.PERMISSION_DENIED) setGeoHint('Izin lokasi sedang diblokir. Aktifkan lewat ikon 🔒/ⓘ di address bar → Izinkan Lokasi.')
       },
@@ -65,22 +69,39 @@ export default function CustomerChooseBranch() {
     )
   }
 
-  // Cek izin saat masuk: sudah diizinkan → ambil diam-diam (TANPA popup); belum →
-  // munculkan ajakan (akan tampil lagi tiap masuk halaman ini selama belum diizinkan).
+  // Cek izin saat masuk. Logika:
+  //  - Kalau pernah granted di sesi ini (flag localStorage) → ambil diam-diam, TANPA popup.
+  //  - Kalau Permissions API bilang 'granted' → sama, tanpa popup + simpan flag.
+  //  - Kalau 'denied'/'prompt'/API tak ada → tampilkan popup ajakan.
+  // Flag disimpan di localStorage (GEO_FLAG) supaya navigasi back-forward
+  // (remount) tidak memunculkan popup lagi setelah user sudah mengizinkan.
   useEffect(() => {
     if (!navigator.geolocation) return
     let cancelled = false
-    const decide = (state) => {
+
+    const grantedNow = () => {
       if (cancelled) return
-      if (state === 'granted') { setShowGeo(false); askLocation(false) }
-      else setShowGeo(true)
+      try { localStorage.setItem(GEO_FLAG, '1') } catch { /* abaikan */ }
+      setShowGeo(false)
+      askLocation(false)
     }
+
+    // Sudah pernah diizinkan (flag tersimpan) → langsung ambil, tak perlu Permissions API.
+    if (localStorage.getItem(GEO_FLAG)) { grantedNow(); return () => { cancelled = true } }
+
     if (navigator.permissions?.query) {
       navigator.permissions.query({ name: 'geolocation' })
-        .then((res) => { decide(res.state); res.onchange = () => decide(res.state) })
-        .catch(() => setShowGeo(true))
+        .then((res) => {
+          if (cancelled) return
+          if (res.state === 'granted') { grantedNow(); return }
+          setShowGeo(true)
+          // Dengarkan perubahan izin (user baru saja klik "Izinkan" di prompt browser).
+          const onChange = () => { if (res.state === 'granted') grantedNow() }
+          res.addEventListener('change', onChange)
+        })
+        .catch(() => { if (!cancelled) setShowGeo(true) })
     } else {
-      setShowGeo(true) // Permissions API tak ada → ajakan (aman)
+      setShowGeo(true) // Permissions API tak tersedia → tampilkan ajakan
     }
     return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
