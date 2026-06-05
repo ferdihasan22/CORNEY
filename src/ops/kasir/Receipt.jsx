@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { MENUS, fmtRp } from '../../data/menu.js'
 import { useBtPrinter } from './useBtPrinter.js'
-import { btSupported, btConnected, btConnect, btDeviceName, btPrintReceipt, btTestPrint } from './btprinter.js'
+import { btSupported, btConnected, btConnect, btDeviceName, btPrintReceipt, btTestPrint, isNativePrinter } from './btprinter.js'
+import { openPrinterPicker } from './printerPickerStore.js'
 
 // Step 1A.15 — STR-01 Struk Ringkas (thermal/digital). Concise: CORNEY + branch,
 // order no + date/time, items, total, method, change, footer
@@ -25,6 +26,7 @@ export default function Receipt({ sale, branch, onClose, reprint = false }) {
     } else { window.print() }
   }
   const hubungkan = async () => {
+    if (isNativePrinter) { openPrinterPicker(); return } // APK: pemilih printer Bluetooth Classic
     try { setBusy(true); setMsg(''); const n = await btConnect(); setMsg('✓ Terhubung: ' + n) }
     catch (e) { setMsg(e.message || 'Dibatalkan / gagal konek.') } finally { setBusy(false) }
   }

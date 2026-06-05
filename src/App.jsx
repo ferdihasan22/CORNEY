@@ -182,6 +182,7 @@ function Splash() {
 
 import SyncStatus from './components/SyncStatus.jsx'
 import KasirAlerts from './ops/kasir/KasirAlerts.jsx'
+import PrinterPicker from './ops/kasir/PrinterPicker.jsx'
 import PwaAutoUpdate from './components/PwaAutoUpdate.jsx' // ⚠️ SEMENTARA (testing) — hapus nanti
 
 export default function App() {
@@ -281,6 +282,7 @@ export default function App() {
     </AuthGate>
     <SyncStatus />
     <KasirAlerts />
+    <PrinterPicker />
     <PwaAutoUpdate />
     </Suspense>
   )

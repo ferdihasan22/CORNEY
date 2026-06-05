@@ -8,7 +8,8 @@ import { flyBall, pulse } from './flyBall.js'
 import { clearKasirBranch } from './kasirSession.js'
 import NetworkIndicator from './NetworkIndicator.jsx'
 import { useBtPrinter } from './useBtPrinter.js'
-import { btSupported, btConnect, btDisconnect, btDeviceName, btAutoReconnect } from './btprinter.js'
+import { btSupported, btConnect, btDisconnect, btDeviceName, btAutoReconnect, isNativePrinter } from './btprinter.js'
+import { openPrinterPicker } from './printerPickerStore.js'
 import AddSauceModal from './AddSauceModal.jsx'
 import PaymentModal from './PaymentModal.jsx'
 import Receipt from './Receipt.jsx'
@@ -85,8 +86,11 @@ export default function WalkinSale() {
   const printerOn = useBtPrinter()
   useEffect(() => { btAutoReconnect() }, []) // sambung otomatis ke printer terakhir (tanpa dialog)
   const togglePrinter = async () => {
-    if (!btSupported()) { alert('Web Bluetooth perlu HTTPS & Android Chrome. Kalau pakai printer Classic, gunakan RawBT.'); return }
-    try { printerOn ? btDisconnect() : await btConnect() } catch (e) { alert(e.message || 'Gagal menghubungkan printer.') }
+    if (printerOn) { btDisconnect(); return }
+    // Native (APK): buka pemilih printer (scan Bluetooth Classic). Web: pemilih sistem Web Bluetooth.
+    if (isNativePrinter) { openPrinterPicker(); return }
+    if (!btSupported()) { alert('Web Bluetooth perlu HTTPS & Android Chrome. Untuk printer Classic, pakai APK CORNEY Kasir.'); return }
+    try { await btConnect() } catch (e) { alert(e.message || 'Gagal menghubungkan printer.') }
   }
   const flyToMasak = (x, y) => { if (masakRef.current) { flyBall(x ?? window.innerWidth / 2, y ?? window.innerHeight * 0.55, masakRef.current, { color: '#b50303' }); pulse(masakRef.current) } }
   const subtotal = useMemo(() => cart.reduce((s, l) => s + baseOf(l) * l.qty, 0), [cart])
