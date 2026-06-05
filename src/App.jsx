@@ -129,14 +129,22 @@ function Home() {
   if (host === 'customer') return <Navigate to="/app" replace />
   if (host === 'kasir') return <Navigate to="/ops/kasir/login" replace />
   if (host === 'supplier') return <Navigate to="/supplier" replace />
-  // kantor.corney.id (root) → BLANK (tanpa form login) demi keamanan: orang iseng yg
-  // buka domain tak menemukan pintu login. Staf masuk lewat link langsung per-peran
-  // (/ops/owner/login, /ops/operasional/login, /ops/produksi/login, /ops/auditor/login).
-  if (host === 'kantor') return (
-    <div className="min-h-screen bg-background flex items-center justify-center select-none">
-      <div className="corney-swirl text-white font-extrabold text-2xl px-5 py-2.5 rounded-xl shadow-lg opacity-30">CORNEY</div>
-    </div>
-  )
+  // kantor.corney.id (root). PWA terinstal (start_url '/') mendarat di sini → bila
+  // perangkat ini PERNAH membuka login peran tertentu, redirect ke login itu (mis.
+  // PWA dipasang dari login owner → buka login owner). Perangkat asing tanpa
+  // riwayat → tetap BLANK demi keamanan (orang iseng tak menemukan pintu login).
+  if (host === 'kantor') {
+    let role = ''
+    try { role = localStorage.getItem('corney_kantor_role') || '' } catch { /* noop */ }
+    if (['owner', 'operasional', 'produksi', 'auditor'].includes(role)) {
+      return <Navigate to={`/ops/${role}/login`} replace />
+    }
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center select-none">
+        <div className="corney-swirl text-white font-extrabold text-2xl px-5 py-2.5 rounded-xl shadow-lg opacity-30">CORNEY</div>
+      </div>
+    )
+  }
   const allApps = [
     { to: '/ops/kasir/login', label: 'CORNEY Ops — Kasir', desc: 'Login → Buka Toko → Jualan → Closing (P0)' },
     { to: '/ops/owner', label: 'CORNEY Ops — Owner', desc: 'Dashboard & laporan (P0)' },
