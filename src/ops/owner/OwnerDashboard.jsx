@@ -205,7 +205,17 @@ export default function OwnerDashboard() {
             <button onClick={() => navigate('/ops/owner/banner')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
               <Icon name="ad_units" className="text-primary text-2xl" />
               <span className="font-label-lg leading-tight">Kelola Banner</span>
-              <span className="text-[11px] text-on-surface-variant">Carousel app customer</span>
+              <span className="text-[11px] text-on-surface-variant">Carousel di katalog</span>
+            </button>
+            <button onClick={() => navigate('/ops/owner/landing')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
+              <Icon name="wallpaper" className="text-primary text-2xl" />
+              <span className="font-label-lg leading-tight">Gambar Landing</span>
+              <span className="text-[11px] text-on-surface-variant">Kartu hero halaman depan (beda dari banner)</span>
+            </button>
+            <button onClick={() => navigate('/ops/owner/daftar-belanja')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
+              <Icon name="checklist" className="text-primary text-2xl" />
+              <span className="font-label-lg leading-tight">Daftar Belanja</span>
+              <span className="text-[11px] text-on-surface-variant">Checklist item belanja (Kasir/Operasional/Supplier)</span>
             </button>
             <button onClick={() => navigate('/ops/owner/notifikasi')} className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-outline-variant bg-surface-container-low hover:border-primary active:scale-[.98] transition-all text-left">
               <Icon name="notifications" className="text-primary text-2xl" />

@@ -13,6 +13,17 @@ export function initShoppingSync(commit) {
     commit(data.filter((r) => r.active !== false).map((r) => ({ id: r.id, name: r.name })))
   }
   supabase.auth.onAuthStateChange((_e, s) => { if (s) hydrate() })
+  // Realtime: Owner ubah daftar belanja → langsung ter-update di Operasional &
+  // Supplier (selain hidrasi saat login). Debounce 400ms agar banyak baris = 1 fetch.
+  try {
+    let t = null
+    supabase.channel('shopping_items-rt')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping_items' }, () => {
+        if (t) clearTimeout(t)
+        t = setTimeout(hydrate, 400)
+      })
+      .subscribe()
+  } catch { /* abaikan */ }
 }
 export async function pushShoppingItem(item) {
   if (!supabase || !item?.id) return

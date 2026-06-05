@@ -155,6 +155,9 @@ function seed() {
     // Per-branch SAUCE overrides: { [branchId]: { [sauceId]: { price, off } } }.
     // price null = pakai harga global; off true = saus tak ditawarkan di cabang itu.
     branchSauceOverrides: {},
+    // Gambar CARD di landing Customer (hero linktree) — TERPISAH dari banner
+    // katalog. Owner-managed; { id, title, img, active }. Kosong → fallback.
+    landingCards: [],
   }
 }
 
@@ -171,6 +174,7 @@ function load() {
     if (!Array.isArray(s.banners)) s.banners = fresh.banners
     if (!s.branchOverrides || typeof s.branchOverrides !== 'object') s.branchOverrides = fresh.branchOverrides
     if (!s.branchSauceOverrides || typeof s.branchSauceOverrides !== 'object') s.branchSauceOverrides = fresh.branchSauceOverrides
+    if (!Array.isArray(s.landingCards)) s.landingCards = fresh.landingCards
     if (!Array.isArray(s.sauces)) s.sauces = fresh.sauces
     return s
   } catch {
@@ -662,4 +666,66 @@ export function resolveSaucesForBranch(master, branchId, sauceOffList = []) {
       habis: offSet.has(s.id),
     }
   })
+}
+
+// ── Gambar CARD landing Customer (hero) — TERPISAH dari banner katalog ────────
+// Pola sama banners (full-sync ke server). { id, title, img, active }.
+export function activeLandingCards() {
+  return (state?.landingCards || []).filter((c) => c.active && c.img)
+}
+export function addLandingCard({ title, img, active = true }) {
+  if (!state) return null
+  const t = (title || '').trim()
+  let id = 'LND-' + (t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'card')
+  let n = 2
+  while ((state.landingCards || []).some((x) => x.id === id)) id = `${id}-${n++}`
+  const card = { id, title: t, img: (img || '').trim(), active }
+  commit({ ...state, landingCards: [...(state.landingCards || []), card] })
+  remoteWrite((w) => w.pushLandingCards(state.landingCards))
+  return card
+}
+export function updateLandingCard(id, { title, img }) {
+  if (!state) return null
+  let found = null, oldImg = null
+  const landingCards = (state.landingCards || []).map((x) => {
+    if (x.id !== id) return x
+    oldImg = x.img
+    found = { ...x, ...(title != null ? { title: title.trim() } : {}), ...(img != null ? { img: img.trim() } : {}) }
+    return found
+  })
+  if (!found) return null
+  commit({ ...state, landingCards })
+  remoteWrite((w) => w.pushLandingCards(state.landingCards))
+  if (oldImg && oldImg !== found.img) deleteImageByUrl(oldImg)
+  return found
+}
+export function toggleLandingCardActive(id) {
+  if (!state) return null
+  let found = null
+  const landingCards = (state.landingCards || []).map((x) => {
+    if (x.id !== id) return x
+    found = { ...x, active: !x.active }
+    return found
+  })
+  if (!found) return null
+  commit({ ...state, landingCards })
+  remoteWrite((w) => w.pushLandingCards(state.landingCards))
+  return found
+}
+export function deleteLandingCard(id) {
+  if (!state) return null
+  const old = (state.landingCards || []).find((x) => x.id === id)
+  commit({ ...state, landingCards: (state.landingCards || []).filter((x) => x.id !== id) })
+  remoteWrite((w) => w.removeLandingCard(id))
+  if (old?.img) deleteImageByUrl(old.img)
+}
+export function moveLandingCard(id, dir) {
+  if (!state) return null
+  const arr = [...(state.landingCards || [])]
+  const i = arr.findIndex((x) => x.id === id)
+  const j = i + (dir === 'up' ? -1 : 1)
+  if (i < 0 || j < 0 || j >= arr.length) return null
+  ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  commit({ ...state, landingCards: arr })
+  remoteWrite((w) => w.pushLandingCards(arr))
 }

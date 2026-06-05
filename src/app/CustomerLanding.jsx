@@ -15,9 +15,11 @@ export default function CustomerLanding() {
   const navigate = useNavigate()
   const master = useMaster()
 
-  // Hero = tumpukan kartu banner (dari Owner › Kelola Banner). Swipe otomatis + manual.
+  // Hero = tumpukan kartu "Gambar Landing" (Owner › Gambar Landing) — TERPISAH dari
+  // banner katalog. Fallback: banner aktif → foto menu. Swipe otomatis + manual.
+  const landing = (master?.landingCards || []).filter((c) => c.active && c.img)
   const banners = (master?.banners || []).filter((b) => b.active && b.img)
-  const cards = banners.length ? banners : (HERO ? [{ id: 'hero', title: '', img: HERO }] : [])
+  const cards = landing.length ? landing : (banners.length ? banners : (HERO ? [{ id: 'hero', title: '', img: HERO }] : []))
   const n = cards.length
   const [idx, setIdx] = useState(0)
   const touchX = useRef(null)

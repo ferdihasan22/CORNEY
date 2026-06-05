@@ -32,6 +32,7 @@ const OwnerFinancialReports = lazy(() => import('./ops/owner/OwnerFinancialRepor
 const OwnerBranches = lazy(() => import('./ops/owner/OwnerBranches.jsx'))
 const OwnerPromos = lazy(() => import('./ops/owner/OwnerPromos.jsx'))
 const OwnerBanners = lazy(() => import('./ops/owner/OwnerBanners.jsx'))
+const OwnerLandingCards = lazy(() => import('./ops/owner/OwnerLandingCards.jsx'))
 const OwnerSauces = lazy(() => import('./ops/owner/OwnerSauces.jsx'))
 const CustomerLanding = lazy(() => import('./app/CustomerLanding.jsx'))
 const CustomerInstall = lazy(() => import('./app/CustomerInstall.jsx'))
@@ -77,6 +78,7 @@ const OwnerStockReport = lazy(() => import('./ops/owner/OwnerStockReport.jsx'))
 const OwnerParStock = lazy(() => import('./ops/owner/OwnerParStock.jsx'))
 const OwnerCatalog = lazy(() => import('./ops/owner/OwnerCatalog.jsx'))
 const OwnerBelanja = lazy(() => import('./ops/owner/OwnerBelanja.jsx'))
+const OwnerShoppingItems = lazy(() => import('./ops/owner/OwnerShoppingItems.jsx'))
 const OwnerOnlineOrders = lazy(() => import('./ops/owner/OwnerOnlineOrders.jsx'))
 const OwnerFreezerApproval = lazy(() => import('./ops/owner/OwnerFreezerApproval.jsx'))
 const OwnerStockTrace = lazy(() => import('./ops/owner/OwnerStockTrace.jsx'))
@@ -234,6 +236,7 @@ export default function App() {
       <Route path="/ops/owner/cabang" element={<OwnerBranches />} />
       <Route path="/ops/owner/promo" element={<OwnerPromos />} />
       <Route path="/ops/owner/banner" element={<OwnerBanners />} />
+      <Route path="/ops/owner/landing" element={<OwnerLandingCards />} />
       <Route path="/app" element={<CustomerLanding />} />
       <Route path="/install" element={<CustomerInstall />} />
       <Route path="/app/cabang" element={<CustomerChooseBranch />} />
@@ -273,6 +276,7 @@ export default function App() {
       <Route path="/ops/owner/agregat" element={<OwnerCrossBranch />} />
       <Route path="/ops/owner/laporan-stok" element={<OwnerStockReport />} />
       <Route path="/ops/owner/belanja" element={<OwnerBelanja />} />
+      <Route path="/ops/owner/daftar-belanja" element={<OwnerShoppingItems />} />
       <Route path="/ops/owner/pesanan-online" element={<OwnerOnlineOrders />} />
       <Route path="/ops/owner/koreksi-freezer" element={<OwnerFreezerApproval />} />
       <Route path="/ops/owner/pelacakan-stok" element={<OwnerStockTrace />} />

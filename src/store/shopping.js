@@ -46,6 +46,13 @@ export function addShoppingItem(name) {
   commit([...list, item])
   if (isSupabase()) import('./shopping.remote.js').then((w) => w.pushShoppingItem(item)).catch(() => {})
 }
+export function updateShoppingItem(id, name) {
+  const nm = (name || '').trim()
+  if (!nm) return
+  let item = null
+  commit(list.map((i) => (i.id === id ? (item = { ...i, name: nm }) : i)))
+  if (item && isSupabase()) import('./shopping.remote.js').then((w) => w.pushShoppingItem(item)).catch(() => {})
+}
 export function removeShoppingItem(id) {
   commit(list.filter((i) => i.id !== id))
   if (isSupabase()) import('./shopping.remote.js').then((w) => w.removeShoppingItemRemote(id)).catch(() => {})

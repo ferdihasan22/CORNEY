@@ -103,6 +103,22 @@ export async function pushSauceOverride(branchId, sauceId, patch) {
   }
 }
 
+// ── Gambar card landing (full-sync: sort = urutan array) ──
+export async function pushLandingCards(cards) {
+  if (!Array.isArray(cards) || !cards.length) return
+  const rows = cards.map((c, i) => ({
+    id: c.id,
+    active: c.active !== false,
+    sort: i,
+    data: { title: c.title || '', img: c.img || '' },
+  }))
+  enqueue({ kind: 'upsert', table: 'landing_cards', key: 'landing_cards:all', row: rows })
+}
+export async function removeLandingCard(id) {
+  if (!id) return
+  enqueue({ kind: 'delete', table: 'landing_cards', matchId: id, key: `landing_cards_del:${id}` })
+}
+
 // ── Branch overrides (upsert bila ada patch; DELETE bila override dilepas) ──
 export async function pushOverride(branchId, menuId, patch) {
   if (!branchId || !menuId) return

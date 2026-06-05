@@ -20,7 +20,7 @@
 import { supabase } from '../lib/supabase.js'
 import { flush, hasPending } from './outbox.js'
 
-const MASTER_TABLES = ['menus', 'parents', 'branches', 'promos', 'banners', 'branch_overrides', 'sauces', 'branch_sauce_overrides']
+const MASTER_TABLES = ['menus', 'parents', 'branches', 'promos', 'banners', 'branch_overrides', 'sauces', 'branch_sauce_overrides', 'landing_cards']
 
 export async function fetchMasterFromSupabase() {
   if (!supabase) throw new Error('Supabase client belum dikonfigurasi (env kosong)')
@@ -30,7 +30,7 @@ export async function fetchMasterFromSupabase() {
   await flush()
   if (MASTER_TABLES.some(hasPending)) throw new Error('outbox master pending — pertahankan cache lokal')
 
-  const [branches, parents, menus, sauces, promos, banners, overrides, sauceOv] = await Promise.all([
+  const [branches, parents, menus, sauces, promos, banners, overrides, sauceOv, landing] = await Promise.all([
     supabase.from('branches').select('*').order('id'),
     supabase.from('parents').select('*').order('sort'),
     supabase.from('menus').select('*').order('sort'),
@@ -39,9 +39,10 @@ export async function fetchMasterFromSupabase() {
     supabase.from('banners').select('*').order('sort'),
     supabase.from('branch_overrides').select('*'),
     supabase.from('branch_sauce_overrides').select('*'),
+    supabase.from('landing_cards').select('*').order('sort'),
   ])
 
-  for (const r of [branches, parents, menus, sauces, promos, banners, overrides, sauceOv]) {
+  for (const r of [branches, parents, menus, sauces, promos, banners, overrides, sauceOv, landing]) {
     if (r.error) throw r.error
   }
 
@@ -54,6 +55,7 @@ export async function fetchMasterFromSupabase() {
     banners: (banners.data || []).map(mapBanner),
     branchOverrides: groupOverrides(overrides.data || []),
     branchSauceOverrides: groupSauceOverrides(sauceOv.data || []),
+    landingCards: (landing.data || []).map(mapBanner), // bentuk sama: {id,active,title,img}
   }
 }
 
