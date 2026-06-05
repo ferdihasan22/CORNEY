@@ -10,6 +10,11 @@ import './store/master.js'
 import './lib/pwaInstall.js'
 // Splash screen native (hanya aktif di APK Capacitor; no-op di web/PWA).
 import { hideSplashWhenReady } from './lib/nativeSplash.js'
+// Perbaikan reflow WebView saat rotasi layar (cegah header meluber di portrait
+// setelah dari landscape).
+import { installOrientationReflow } from './lib/orientationReflow.js'
+
+installOrientationReflow()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
