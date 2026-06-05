@@ -11,8 +11,12 @@ import './lib/pwaInstall.js'
 // Manifest dinamis: start_url = halaman saat ini → PWA instal dari /ops/owner/login
 // membuka /ops/owner/login (berlaku semua halaman).
 import { applyDynamicManifest } from './lib/dynamicManifest.js'
+// Sinkronkan flag sesi lokal dgn sesi Supabase nyata (cegah "login tapi rusak"
+// + bersihkan token sisa). Hanya aktif di mode Supabase.
+import { installSessionSync } from './auth/sessionSync.js'
 
 applyDynamicManifest()
+installSessionSync()
 // Splash screen native (hanya aktif di APK Capacitor; no-op di web/PWA).
 import { hideSplashWhenReady } from './lib/nativeSplash.js'
 // Perbaikan reflow WebView saat rotasi layar (cegah header meluber di portrait
