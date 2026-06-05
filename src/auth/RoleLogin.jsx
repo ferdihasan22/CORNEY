@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ROLE_META, credOf, setRoleSession, lockInfo, recordFail, clearLock } from './roleAuth.js'
 import { isSupabase } from '../lib/backend.js'
 import { signInRole, signInAuto } from './supabaseAuth.js'
-import InstallPwaButton from '../components/InstallPwaButton.jsx'
+import InstallPrompt from '../components/InstallPrompt.jsx'
 
 // CORNEY — Layar login bersama untuk role tetap (Owner/Operasional/Produksi/Auditor).
 // Username + password (dari Manajemen User), "Ingat Login", dan kunci 3x→10 menit.
@@ -119,7 +119,7 @@ export default function RoleLogin({ role: fixedRole, roles }) {
           </form>
 
           <div className="mt-5 pt-4 border-t border-outline-variant/50">
-            <InstallPwaButton label="Instal Aplikasi" />
+            <InstallPrompt label="Instal Aplikasi" />
           </div>
         </div>
       </main>
