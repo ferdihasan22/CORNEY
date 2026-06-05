@@ -4,7 +4,9 @@ import { BRANCHES, SAUCES, FREE_SAUCE_MAX, DUMMY_STOCK, LOW_STOCK_THRESHOLD, fmt
 import { useMaster } from '../store/useMaster.js'
 import { useDay } from '../store/useDay.js'
 import { addItem } from '../store/cart.js'
-import { menuForBranch } from '../store/master.js'
+import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
+import { useBranchStatus } from '../store/useBranchStatus.js'
+import { isSupabase } from '../lib/backend.js'
 
 // 1C.4 — CORNEY App Customer · Detail Produk (CUS-01). Ported from Stitch
 // "product_detail_mozza_ori_refined" (savory) + the sweet variant. Sweet = glaze,
@@ -34,6 +36,7 @@ export default function CustomerProductDetail() {
   const navigate = useNavigate()
   const master = useMaster()
   const day = useDay()
+  const status = useBranchStatus()
   const [qty, setQty] = useState(1)
   const [picked, setPicked] = useState([]) // sauce ids (savory only)
 
@@ -52,8 +55,15 @@ export default function CustomerProductDetail() {
   const low = !habis && qtyStock <= threshold
 
   const isSweet = menu.category === 'sweet'
-  const freeUsed = picked.filter((id) => (SAUCES.find((s) => s.id === id)?.price || 0) === 0).length
+  // Saus efektif per cabang: harga override + sembunyikan owner-off + tandai habis
+  // (kasir, hari ini). sauceOff dari server (supabase) atau day lokal.
+  const supa = isSupabase()
+  const sauceOffList = supa ? (status[branchId]?.availability?.sauceOff || []) : (isLive ? (day?.sauceOff || []) : [])
+  const branchSauces = resolveSaucesForBranch(master, branchId, sauceOffList).filter((s) => !s.ownerOff)
+  const priceOf = (id) => branchSauces.find((s) => s.id === id)?.price || 0
+  const freeUsed = picked.filter((id) => priceOf(id) === 0).length
   const toggleSauce = (s) => {
+    if (s.habis) return // saus habis → tak bisa dipilih
     setPicked((cur) => {
       if (cur.includes(s.id)) return cur.filter((x) => x !== s.id)
       // enforce free-max cap only for free (price 0) sauces
@@ -61,7 +71,7 @@ export default function CustomerProductDetail() {
       return [...cur, s.id]
     })
   }
-  const saucePaid = picked.reduce((sum, id) => sum + (SAUCES.find((s) => s.id === id)?.price || 0), 0)
+  const saucePaid = picked.reduce((sum, id) => sum + priceOf(id), 0)
   const total = (menu.price + saucePaid) * qty
 
   return (
@@ -108,17 +118,18 @@ export default function CustomerProductDetail() {
               <span className="bg-surface-container-high px-3 py-1 rounded-lg font-label-md text-label-md text-primary">Gratis {freeUsed}/{FREE_SAUCE_MAX}</span>
             </div>
             <div className="flex flex-col gap-3">
-              {SAUCES.map((s) => {
+              {branchSauces.map((s) => {
                 const checked = picked.includes(s.id)
                 const isFree = s.price === 0
                 const capped = isFree && !checked && freeUsed >= FREE_SAUCE_MAX
+                const disabled = capped || s.habis
                 return (
-                  <button key={s.id} onClick={() => toggleSauce(s)} disabled={capped} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border transition-all text-left ${checked ? 'border-primary ring-2 ring-primary/40' : 'border-surface-container-high'} ${capped ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
+                  <button key={s.id} onClick={() => toggleSauce(s)} disabled={disabled} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border transition-all text-left ${checked ? 'border-primary ring-2 ring-primary/40' : 'border-surface-container-high'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
                     <div className="flex items-center gap-4">
                       <span className={`w-6 h-6 rounded-md border flex items-center justify-center ${checked ? 'bg-primary border-primary text-white' : 'border-outline'}`}>{checked && <Icon name="check" className="!text-[18px]" />}</span>
                       <span className="font-label-lg text-label-lg">{s.name}</span>
                     </div>
-                    <span className={`font-label-md text-label-md ${isFree ? 'text-green-700' : 'text-amber-700'}`}>{isFree ? 'Gratis' : `+${fmtRp(s.price)}`}</span>
+                    <span className={`font-label-md text-label-md ${s.habis ? 'text-on-surface-variant' : isFree ? 'text-green-700' : 'text-amber-700'}`}>{s.habis ? 'Habis' : isFree ? 'Gratis' : `+${fmtRp(s.price)}`}</span>
                   </button>
                 )
               })}

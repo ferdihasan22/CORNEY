@@ -10,15 +10,22 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-export default function SauceSheet({ title, subtitle, initial = [], confirmLabel = 'Tambah', onCancel, onConfirm }) {
+export default function SauceSheet({ title, subtitle, initial = [], confirmLabel = 'Tambah', onCancel, onConfirm, sauces }) {
+  // `sauces` = daftar ter-resolve per cabang [{id,name,price,ownerOff,habis}].
+  // Tanpa prop → fallback global (mode lama). owner-off disembunyikan; habis disable.
+  const list = (Array.isArray(sauces) ? sauces : SAUCES).filter((s) => !s.ownerOff)
   const [picked, setPicked] = useState(initial)
-  const freeUsed = picked.filter((id) => (SAUCES.find((s) => s.id === id)?.price || 0) === 0).length
-  const toggle = (s) => setPicked((cur) => {
-    if (cur.includes(s.id)) return cur.filter((x) => x !== s.id)
-    if (s.price === 0 && freeUsed >= FREE_SAUCE_MAX) return cur // free cap
-    return [...cur, s.id]
-  })
-  const paid = picked.reduce((sum, id) => sum + (SAUCES.find((s) => s.id === id)?.price || 0), 0)
+  const priceOf = (id) => list.find((s) => s.id === id)?.price || 0
+  const freeUsed = picked.filter((id) => priceOf(id) === 0).length
+  const toggle = (s) => {
+    if (s.habis) return // saus habis → tak bisa dipilih
+    setPicked((cur) => {
+      if (cur.includes(s.id)) return cur.filter((x) => x !== s.id)
+      if (s.price === 0 && freeUsed >= FREE_SAUCE_MAX) return cur // free cap
+      return [...cur, s.id]
+    })
+  }
+  const paid = picked.reduce((sum, id) => sum + priceOf(id), 0)
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/50 backdrop-blur-sm" onClick={onCancel}>
@@ -34,17 +41,18 @@ export default function SauceSheet({ title, subtitle, initial = [], confirmLabel
         </div>
 
         <div className="flex flex-col gap-2.5 max-h-[42vh] overflow-y-auto">
-          {SAUCES.map((s) => {
+          {list.map((s) => {
             const checked = picked.includes(s.id)
             const isFree = s.price === 0
             const capped = isFree && !checked && freeUsed >= FREE_SAUCE_MAX
+            const disabled = capped || s.habis
             return (
-              <button key={s.id} onClick={() => toggle(s)} disabled={capped} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border transition-all text-left ${checked ? 'border-primary ring-2 ring-primary/40' : 'border-surface-container-high'} ${capped ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
+              <button key={s.id} onClick={() => toggle(s)} disabled={disabled} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border transition-all text-left ${checked ? 'border-primary ring-2 ring-primary/40' : 'border-surface-container-high'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
                 <div className="flex items-center gap-4">
                   <span className={`w-6 h-6 rounded-md border flex items-center justify-center ${checked ? 'bg-primary border-primary text-white' : 'border-outline'}`}>{checked && <Icon name="check" className="!text-[18px]" />}</span>
                   <span className="font-label-lg text-label-lg">{s.name}</span>
                 </div>
-                <span className={`font-label-md text-label-md ${isFree ? 'text-green-700' : 'text-amber-700'}`}>{isFree ? 'Gratis' : `+${fmtRp(s.price)}`}</span>
+                <span className={`font-label-md text-label-md ${s.habis ? 'text-on-surface-variant' : isFree ? 'text-green-700' : 'text-amber-700'}`}>{s.habis ? 'Habis' : isFree ? 'Gratis' : `+${fmtRp(s.price)}`}</span>
               </button>
             )
           })}

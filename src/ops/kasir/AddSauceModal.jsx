@@ -1,30 +1,38 @@
 import { useState } from 'react'
-import { SAUCES, FREE_SAUCE_MAX, fmtRp } from '../../data/menu.js'
+import { FREE_SAUCE_MAX, fmtRp } from '../../data/menu.js'
+import { useMaster } from '../../store/useMaster.js'
+import { useDay } from '../../store/useDay.js'
+import { resolveSaucesForBranch } from '../../store/master.js'
 
-// Step 1A.5 — WLK-02 Tambah Saus. Ref Stitch: "Add Sauce Modal - CORNEY POS".
-// Rules: only for SAVORY (sweet/glaze never reaches here). Free sauces (price 0)
-// capped at Owner setting (FREE_SAUCE_MAX); paid sauces add to total, no cap.
+// Step 1A.5 — WLK-02 Tambah Saus. Hanya SAVORY. Saus gratis (harga 0) dibatasi
+// FREE_SAUCE_MAX; berbayar menambah total. Daftar saus & harga mengikut CABANG
+// (override Owner) — saus yang Owner-OFF disembunyikan, yang HABIS (kasir) tak
+// bisa dipilih.
 export default function AddSauceModal({ menu, onConfirm, onClose }) {
+  const master = useMaster()
+  const day = useDay()
+  const sauces = resolveSaucesForBranch(master, day?.branchId || '', day?.sauceOff || []).filter((s) => !s.ownerOff)
   const [picked, setPicked] = useState([]) // sauce ids
 
-  const freePicked = picked.filter((id) => (SAUCES.find((s) => s.id === id)?.price ?? 0) === 0)
-  const extra = picked.reduce((sum, id) => sum + (SAUCES.find((s) => s.id === id)?.price ?? 0), 0)
+  const priceOf = (id) => sauces.find((s) => s.id === id)?.price ?? 0
+  const freePicked = picked.filter((id) => priceOf(id) === 0)
+  const extra = picked.reduce((sum, id) => sum + priceOf(id), 0)
 
   function toggle(s) {
+    if (s.habis) return // saus habis → tak bisa dipilih
     setPicked((p) => {
       if (p.includes(s.id)) return p.filter((x) => x !== s.id)
-      // Block selecting more free sauces than the Owner-set cap.
       if (s.price === 0 && freePicked.length >= FREE_SAUCE_MAX) return p
       return [...p, s.id]
     })
   }
 
   function confirm() {
-    const sauces = picked.map((id) => {
-      const s = SAUCES.find((x) => x.id === id)
+    const out = picked.map((id) => {
+      const s = sauces.find((x) => x.id === id)
       return { id: s.id, name: s.name, price: s.price }
     })
-    onConfirm(sauces)
+    onConfirm(out)
   }
 
   return (
@@ -46,21 +54,24 @@ export default function AddSauceModal({ menu, onConfirm, onClose }) {
         </p>
 
         <div className="mt-3 space-y-2">
-          {SAUCES.map((s) => {
+          {sauces.map((s) => {
             const on = picked.includes(s.id)
             const freeFull = s.price === 0 && !on && freePicked.length >= FREE_SAUCE_MAX
+            const disabled = s.habis || freeFull
             return (
               <button
                 key={s.id}
                 onClick={() => toggle(s)}
-                disabled={freeFull}
+                disabled={disabled}
                 className={`w-full flex items-center justify-between rounded-xl border px-4 py-3 text-left transition ${
                   on ? 'border-corney bg-corney-light' : 'border-gray-200 bg-white'
-                } ${freeFull ? 'opacity-40' : 'active:scale-[.99]'}`}
+                } ${disabled ? 'opacity-40' : 'active:scale-[.99]'}`}
               >
                 <span className="font-medium text-corney-ink">
                   {s.name}
-                  <span className="ml-2 text-xs text-gray-500">{s.price === 0 ? 'gratis' : '+' + fmtRp(s.price)}</span>
+                  <span className="ml-2 text-xs text-gray-500">
+                    {s.habis ? 'habis' : s.price === 0 ? 'gratis' : '+' + fmtRp(s.price)}
+                  </span>
                 </span>
                 <span
                   className={`h-5 w-5 rounded-md border-2 flex items-center justify-center ${

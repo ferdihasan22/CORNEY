@@ -90,6 +90,19 @@ export async function removeSauce(id) {
   enqueue({ kind: 'delete', table: 'sauces', matchId: id, key: `sauces_del:${id}` })
 }
 
+// ── Override saus per cabang (upsert bila ada price/off; DELETE bila kosong) ──
+export async function pushSauceOverride(branchId, sauceId, patch) {
+  if (!branchId || !sauceId) return
+  if (patch && (patch.price != null || patch.off)) {
+    enqueue({ kind: 'upsert', table: 'branch_sauce_overrides', onConflict: 'branch_id,sauce_id',
+      key: `bso:${branchId}:${sauceId}`,
+      row: { branch_id: branchId, sauce_id: sauceId, price: patch.price ?? null, off: !!patch.off } })
+  } else {
+    enqueue({ kind: 'delete', table: 'branch_sauce_overrides', match: { branch_id: branchId, sauce_id: sauceId },
+      key: `bso_del:${branchId}:${sauceId}` })
+  }
+}
+
 // ── Branch overrides (upsert bila ada patch; DELETE bila override dilepas) ──
 export async function pushOverride(branchId, menuId, patch) {
   if (!branchId || !menuId) return

@@ -5,7 +5,7 @@ import { useMaster } from '../store/useMaster.js'
 import { useDay } from '../store/useDay.js'
 import { useCart } from '../store/useCart.js'
 import { cartCount, addItem } from '../store/cart.js'
-import { menuForBranch } from '../store/master.js'
+import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { refreshBranchStatus } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
@@ -113,6 +113,10 @@ export default function CustomerCatalog() {
   const banners = (master?.banners || []).filter((b) => b.active)
   // Apply per-branch override (§2.3): effective price + hide menus turned off here.
   const menus = (master?.menus || []).filter((m) => m.active).map((m) => menuForBranch(branchId, m)).filter((m) => !m.off)
+  // Saus efektif per cabang: harga override + sembunyikan owner-off + tandai habis
+  // (kasir, hari ini). sauceOff dari server (supabase) atau day lokal.
+  const sauceOffList = supa ? (avail?.sauceOff || []) : (isLive ? (day?.sauceOff || []) : [])
+  const branchSauces = resolveSaucesForBranch(master, branchId, sauceOffList)
 
   // Cart summary for this branch (sticky bar + header badge).
   const count = cartCount(branchId)
@@ -307,6 +311,7 @@ export default function CustomerCatalog() {
           title={sheetMenu.name}
           confirmLabel="Tambah"
           initial={[]}
+          sauces={branchSauces}
           onCancel={() => setSheetMenu(null)}
           onConfirm={confirmSheet}
         />

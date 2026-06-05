@@ -16,6 +16,7 @@ const CookingQueue = lazy(() => import('./ops/kasir/CookingQueue.jsx'))
 const RequestStockCorrection = lazy(() => import('./ops/kasir/RequestStockCorrection.jsx'))
 const RiwayatTransaksi = lazy(() => import('./ops/kasir/RiwayatTransaksi.jsx'))
 const KasirOnline = lazy(() => import('./ops/kasir/KasirOnline.jsx'))
+const KasirSauces = lazy(() => import('./ops/kasir/KasirSauces.jsx'))
 const ClosingShopping = lazy(() => import('./ops/kasir/ClosingShopping.jsx'))
 const AuditHariIni = lazy(() => import('./ops/kasir/AuditHariIni.jsx'))
 const ClosingRecon = lazy(() => import('./ops/kasir/ClosingRecon.jsx'))
@@ -214,6 +215,7 @@ export default function App() {
       <Route path="/ops/kasir/online" element={<KasirOnline />} />
       <Route path="/ops/kasir/masak" element={<CookingQueue />} />
       <Route path="/ops/kasir/koreksi" element={<RequestStockCorrection />} />
+      <Route path="/ops/kasir/saus" element={<KasirSauces />} />
       <Route path="/ops/kasir/riwayat" element={<RiwayatTransaksi />} />
       <Route path="/ops/kasir/audit" element={<AuditHariIni />} />
       <Route path="/ops/kasir/closing/belanja" element={<ClosingShopping />} />

@@ -42,6 +42,7 @@ function load() {
     }
     if (!Array.isArray(s.corrections)) s.corrections = []
     if (!Array.isArray(s.menuOff)) s.menuOff = []
+    if (!Array.isArray(s.sauceOff)) s.sauceOff = []
     if (!Array.isArray(s.breakageLog)) s.breakageLog = []
     if (!Array.isArray(s.appliedStock)) s.appliedStock = [] // id order online yg stoknya sudah dikurangi
     return s
@@ -66,12 +67,13 @@ let _lastAvail = ''
 function pushAvailabilityIfChanged() {
   if (!state || state.phase !== PHASE.SELLING) { _lastAvail = ''; return }
   const off = state.menuOff || []
+  const sauceOff = state.sauceOff || []
   const stock = state.stock || {}
   const sold = Object.keys(stock).filter((p) => (stock[p] ?? 0) <= 0)
-  const k = JSON.stringify({ off: [...off].sort(), sold: [...sold].sort() })
+  const k = JSON.stringify({ off: [...off].sort(), sold: [...sold].sort(), sauceOff: [...sauceOff].sort() })
   if (k === _lastAvail) return
   _lastAvail = k
-  setBranchAvailability({ off, sold })
+  setBranchAvailability({ off, sold, sauceOff })
 }
 
 // Dorong OMZET BERJALAN (live, SEMENTARA) ke server → Owner dashboard. HANYA saat
@@ -161,6 +163,7 @@ export function startDay(branchId) {
     corrections: [], // stock-correction requests proposed by kasir (BHN-06)
     closing: null, // Closing Day working data (CLS-02..06)
     menuOff: [], // menu ids turned OFF (e.g. coating habis) — WLK-01 toggle
+    sauceOff: [], // sauce ids ditandai HABIS hari ini (per cabang) → customer tak bisa pilih
     breakageLog: [], // patah recorded during the day (reduces stock as it happens)
     appliedStock: [], // id order online yg stoknya SUDAH dikurangi (anti dobel-kurang)
   })
@@ -191,6 +194,18 @@ export function toggleMenu(menuId) {
 }
 export function isMenuOff(menuId) {
   return (state?.menuOff || []).includes(menuId)
+}
+
+// Tandai saus HABIS / aktif kembali (per cabang, harian). OFF → customer cabang
+// ini tak bisa pilih saus itu (lewat branch_status.availability.sauceOff).
+export function toggleSauce(sauceId) {
+  if (!state) return
+  const off = state.sauceOff || []
+  const sauceOff = off.includes(sauceId) ? off.filter((x) => x !== sauceId) : [...off, sauceId]
+  commit({ ...state, sauceOff })
+}
+export function isSauceOff(sauceId) {
+  return (state?.sauceOff || []).includes(sauceId)
 }
 
 // Quantity sold per parent filling across the day (1:1 from sale lines). WALK-IN saja.

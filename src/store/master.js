@@ -152,6 +152,9 @@ function seed() {
     // { price, off } } }. price = local price (null = pakai harga master); off =
     // sembunyikan menu di cabang itu. Owner-managed.
     branchOverrides: {},
+    // Per-branch SAUCE overrides: { [branchId]: { [sauceId]: { price, off } } }.
+    // price null = pakai harga global; off true = saus tak ditawarkan di cabang itu.
+    branchSauceOverrides: {},
   }
 }
 
@@ -167,6 +170,7 @@ function load() {
     if (!Array.isArray(s.promos)) s.promos = fresh.promos
     if (!Array.isArray(s.banners)) s.banners = fresh.banners
     if (!s.branchOverrides || typeof s.branchOverrides !== 'object') s.branchOverrides = fresh.branchOverrides
+    if (!s.branchSauceOverrides || typeof s.branchSauceOverrides !== 'object') s.branchSauceOverrides = fresh.branchSauceOverrides
     if (!Array.isArray(s.sauces)) s.sauces = fresh.sauces
     return s
   } catch {
@@ -623,4 +627,39 @@ export function deleteSauce(id) {
   if (!state) return null
   commit({ ...state, sauces: (state.sauces || []).filter((x) => x.id !== id) })
   remoteWrite((w) => w.removeSauce(id))
+}
+
+// ── Override saus PER CABANG (Owner) ─────────────────────
+// patch: { price?: number|null, off?: boolean }. price '' / null = pakai global.
+export function setSauceOverride(branchId, sauceId, patch) {
+  if (!state || !branchId || !sauceId) return
+  const all = state.branchSauceOverrides || {}
+  const branch = { ...(all[branchId] || {}) }
+  const cur = { ...(branch[sauceId] || {}) }
+  if ('price' in patch) cur.price = patch.price === '' || patch.price == null ? null : Math.max(0, Math.round(Number(patch.price) || 0))
+  if ('off' in patch) cur.off = !!patch.off
+  if ((cur.price == null) && !cur.off) delete branch[sauceId] // tak ada override → hapus baris
+  else branch[sauceId] = cur
+  commit({ ...state, branchSauceOverrides: { ...all, [branchId]: branch } })
+  remoteWrite((w) => w.pushSauceOverride(branchId, sauceId, branch[sauceId]))
+}
+
+// Resolusi saus efektif untuk satu cabang. `sauceOffList` = saus yang ditandai
+// HABIS kasir hari ini (dari branch_status.availability.sauceOff). Mengembalikan
+// [{id,name,price,ownerOff,habis}] — caller sembunyikan ownerOff & disable habis.
+// Pure: terima `master` (dari useMaster) agar reaktif di komponen.
+export function resolveSaucesForBranch(master, branchId, sauceOffList = []) {
+  const sauces = (master && master.sauces) || []
+  const ov = ((master && master.branchSauceOverrides) || {})[branchId] || {}
+  const offSet = new Set(sauceOffList || [])
+  return sauces.map((s) => {
+    const o = ov[s.id] || {}
+    return {
+      id: s.id,
+      name: s.name,
+      price: o.price != null ? o.price : (s.price ?? 0),
+      ownerOff: !!o.off,
+      habis: offSet.has(s.id),
+    }
+  })
 }

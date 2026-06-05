@@ -4,7 +4,7 @@ import { BRANCHES, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
 import { incLine, decLine, removeLine, setPromoCode, updateLineSauces } from '../store/cart.js'
-import { menuForBranch } from '../store/master.js'
+import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { refreshBranchStatus } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
@@ -63,6 +63,7 @@ export default function CustomerCart() {
   // Ketersediaan per item (mode supabase): habis bila menu dimatikan kasir / induk
   // stok 0, atau menu dihapus owner. Cegah pesan barang yang tak bisa dibuat.
   const avail = supa ? (status[cart.branchId]?.availability || {}) : {}
+  const branchSauces = resolveSaucesForBranch(master, cart.branchId, avail.sauceOff || [])
   const unavail = (l) => {
     const m = menuById(l.menuId)
     if (!m) return true
@@ -185,6 +186,7 @@ export default function CustomerCart() {
           title={menuById(editLine.menuId)?.name || 'Ubah Saus'}
           confirmLabel="Simpan"
           initial={(editLine.sauces || []).map((s) => s.id)}
+          sauces={branchSauces}
           onCancel={() => setEditLine(null)}
           onConfirm={(picked) => { updateLineSauces(editLine.sig, picked.map((id) => ({ id }))); setEditLine(null) }}
         />

@@ -20,7 +20,7 @@
 import { supabase } from '../lib/supabase.js'
 import { flush, hasPending } from './outbox.js'
 
-const MASTER_TABLES = ['menus', 'parents', 'branches', 'promos', 'banners', 'branch_overrides', 'sauces']
+const MASTER_TABLES = ['menus', 'parents', 'branches', 'promos', 'banners', 'branch_overrides', 'sauces', 'branch_sauce_overrides']
 
 export async function fetchMasterFromSupabase() {
   if (!supabase) throw new Error('Supabase client belum dikonfigurasi (env kosong)')
@@ -30,7 +30,7 @@ export async function fetchMasterFromSupabase() {
   await flush()
   if (MASTER_TABLES.some(hasPending)) throw new Error('outbox master pending — pertahankan cache lokal')
 
-  const [branches, parents, menus, sauces, promos, banners, overrides] = await Promise.all([
+  const [branches, parents, menus, sauces, promos, banners, overrides, sauceOv] = await Promise.all([
     supabase.from('branches').select('*').order('id'),
     supabase.from('parents').select('*').order('sort'),
     supabase.from('menus').select('*').order('sort'),
@@ -38,9 +38,10 @@ export async function fetchMasterFromSupabase() {
     supabase.from('promos').select('*'),
     supabase.from('banners').select('*').order('sort'),
     supabase.from('branch_overrides').select('*'),
+    supabase.from('branch_sauce_overrides').select('*'),
   ])
 
-  for (const r of [branches, parents, menus, sauces, promos, banners, overrides]) {
+  for (const r of [branches, parents, menus, sauces, promos, banners, overrides, sauceOv]) {
     if (r.error) throw r.error
   }
 
@@ -52,7 +53,18 @@ export async function fetchMasterFromSupabase() {
     promos: (promos.data || []).map(mapPromo),
     banners: (banners.data || []).map(mapBanner),
     branchOverrides: groupOverrides(overrides.data || []),
+    branchSauceOverrides: groupSauceOverrides(sauceOv.data || []),
   }
+}
+
+// branch_sauce_overrides → { [branchId]: { [sauceId]: { price, off } } }
+function groupSauceOverrides(rows) {
+  const out = {}
+  for (const r of rows) {
+    if (!out[r.branch_id]) out[r.branch_id] = {}
+    out[r.branch_id][r.sauce_id] = { price: r.price ?? null, off: !!r.off }
+  }
+  return out
 }
 
 // Realtime: dengarkan perubahan tabel master di server (mis. Owner edit saus/menu
