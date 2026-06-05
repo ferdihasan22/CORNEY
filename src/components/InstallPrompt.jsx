@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import { canInstall, subscribeInstall, promptInstall } from '../lib/pwaInstall.js'
 import { isStandalone, isIOS, iosBrowser, isInAppBrowser, openInDefaultBrowser } from '../lib/platform.js'
 
@@ -79,8 +79,17 @@ function Tutorial({ mode }) {
 export default function InstallPrompt({ label = 'Instal Aplikasi', sublabel = '', className = '' }) {
   const installable = useSyncExternalStore(subscribeInstall, canInstall, canInstall)
   const [open, setOpen] = useState(false)
+  const [installed, setInstalled] = useState(false)
 
-  if (isStandalone()) return null // sudah terinstal → sembunyi
+  // Sembunyikan tombol setelah install berhasil (di tab browser yang sama,
+  // display-mode belum 'standalone' → andalkan event appinstalled).
+  useEffect(() => {
+    const onInstalled = () => setInstalled(true)
+    window.addEventListener('appinstalled', onInstalled)
+    return () => window.removeEventListener('appinstalled', onInstalled)
+  }, [])
+
+  if (installed || isStandalone()) return null // sudah terinstal → sembunyi
 
   const inApp = isInAppBrowser()
   const ios = isIOS()

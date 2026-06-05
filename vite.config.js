@@ -74,20 +74,24 @@ export default defineConfig(({ mode }) => {
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'maskable-512.png'],
       manifest: {
         name: 'CORNEY',
         short_name: 'CORNEY',
         description: 'Ekosistem aplikasi CORNEY — #CeritanyaBersamaCorney',
+        lang: 'id',
         theme_color: '#b50303',
         background_color: '#fcf9f8',
         display: 'standalone',
         start_url: '/',
-        // SVG dipakai langsung sebagai ikon (Android Chrome mendukung) → PWA bisa
-        // di-install (sebelumnya menunjuk icon-192/512.png yang tak ada → install rusak).
+        // PNG 192/512 + maskable (full-bleed, safe-zone) → installability kuat &
+        // ikon tak ke-crop di Android. SVG tetap untuk browser. iOS pakai
+        // apple-touch-icon.png (PNG; iOS abaikan SVG) — lihat index.html.
         icons: [
           { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
+          { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
