@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MENUS } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
+import InstallPrompt from '../components/InstallPrompt.jsx'
 
 // 1C.1 — CORNEY App Customer · Landing (PRD §4). Linktree-style: one hero +
 // cara pesan. "Order Sekarang" → pilih cabang → katalog. Tombol "Instal Aplikasi"
@@ -13,9 +14,6 @@ const HERO = MENUS.find((m) => m.id === 'mozza_ori')?.img
 export default function CustomerLanding() {
   const navigate = useNavigate()
   const master = useMaster()
-  const [deferred, setDeferred] = useState(null)
-  const [installed, setInstalled] = useState(false)
-  const [hint, setHint] = useState(false)
 
   // Hero = tumpukan kartu banner (dari Owner › Kelola Banner). Swipe otomatis + manual.
   const banners = (master?.banners || []).filter((b) => b.active && b.img)
@@ -28,24 +26,6 @@ export default function CustomerLanding() {
   const go = (d) => setIdx((i) => (i + d + n) % n)
   const onTouchStart = (e) => { touchX.current = e.touches[0].clientX }
   const onTouchEnd = (e) => { if (touchX.current == null) return; const dx = e.changedTouches[0].clientX - touchX.current; if (dx < -40) go(1); else if (dx > 40) go(-1); touchX.current = null }
-
-  useEffect(() => {
-    const onPrompt = (e) => { e.preventDefault(); setDeferred(e) }
-    const onInstalled = () => { setInstalled(true); setDeferred(null) }
-    window.addEventListener('beforeinstallprompt', onPrompt)
-    window.addEventListener('appinstalled', onInstalled)
-    return () => { window.removeEventListener('beforeinstallprompt', onPrompt); window.removeEventListener('appinstalled', onInstalled) }
-  }, [])
-
-  const install = async () => {
-    if (deferred) {
-      deferred.prompt()
-      await deferred.userChoice
-      setDeferred(null)
-    } else {
-      setHint(true) // iOS / sudah terpasang / belum siap → tampilkan petunjuk manual
-    }
-  }
 
   return (
     <div className="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col">
@@ -105,22 +85,14 @@ export default function CustomerLanding() {
               <span className="text-xs text-on-primary/90 text-center leading-snug">Bisa pesan sekarang, ambil nanti · hemat &amp; cepat pakai MAXIM</span>
             </button>
 
-            {/* Instal aplikasi (menonjol, bukan di bawah) */}
-            {!installed && (
-              <button onClick={install} className="relative overflow-hidden w-full bg-secondary-container text-on-secondary-container rounded-[16px] p-4 flex items-center justify-center gap-3 shadow-sm active:scale-[0.98] transition-all min-h-[64px]">
-                <span className="absolute top-1.5 right-1.5 bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full">Klik ini</span>
-                <Icon name="install_mobile" className="text-[26px]" />
-                <span className="text-left leading-tight">
-                  <span className="block font-label-lg text-label-lg font-bold">Instal Aplikasi Ini</span>
-                  <span className="block text-[11px] opacity-80">Ukuran kecil, cuma 3 MB — biar pesan lebih mudah</span>
-                </span>
-              </button>
-            )}
-            {hint && !installed && (
-              <p className="text-[12px] text-on-surface-variant bg-surface-container-low border border-surface-variant rounded-xl p-3 text-center leading-snug">
-                Buka menu browser (⋮ / Share) lalu pilih <strong>"Instal aplikasi"</strong> atau <strong>"Tambahkan ke Layar Utama"</strong>.
-              </p>
-            )}
+            {/* Instal aplikasi (menonjol) — tombol SADAR-PLATFORM: install langsung
+                (Android/Desktop Chrome), tutorial iOS (Safari/Chrome), atau "Buka di
+                Browser" untuk webview in-app (Instagram dll). Sembunyi bila terinstal. */}
+            <InstallPrompt
+              label="Instal Aplikasi Ini"
+              sublabel="Ukuran kecil, cuma 3 MB — biar pesan lebih mudah"
+              className="relative overflow-hidden w-full bg-secondary-container text-on-secondary-container rounded-[16px] p-4 flex items-center justify-center gap-3 shadow-sm active:scale-[0.98] transition-all min-h-[64px]"
+            />
 
             <a href="https://gofood.co.id" target="_blank" rel="noreferrer" className="w-full bg-surface-container-lowest border-2 border-primary text-primary rounded-[16px] p-4 flex items-center justify-center gap-2 active:bg-primary-container/10 transition-colors min-h-[52px]">
               <span className="font-label-lg text-label-lg">Pesan di GoFood</span><Icon name="open_in_new" className="text-[18px]" />
