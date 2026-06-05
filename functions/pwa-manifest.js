@@ -11,9 +11,14 @@ export function onRequest(context) {
   if (typeof u !== 'string' || !u.startsWith('/') || u.startsWith('//')) u = '/'
   const origin = url.origin
 
+  // Ikon per host: KASIR (dapur.corney.id) pakai ikon "KASIR CORNEY"; selain itu
+  // (corney.id customer, kantor, gudang) pakai ikon CORNEY (iconcorneypwa).
+  const isKasir = url.hostname.startsWith('dapur.')
+  const p = isKasir ? 'kasir-' : ''
+
   const manifest = {
-    name: 'CORNEY',
-    short_name: 'CORNEY',
+    name: isKasir ? 'CORNEY Kasir' : 'CORNEY',
+    short_name: isKasir ? 'Kasir' : 'CORNEY',
     lang: 'id',
     description: 'Ekosistem aplikasi CORNEY — #CeritanyaBersamaCorney',
     theme_color: '#b50303',
@@ -22,10 +27,9 @@ export function onRequest(context) {
     scope: origin + '/',
     start_url: origin + u,
     icons: [
-      { src: origin + '/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-      { src: origin + '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: origin + '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: origin + '/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      { src: `${origin}/${p}icon-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: `${origin}/${p}icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: `${origin}/${p}maskable-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
   }
 
