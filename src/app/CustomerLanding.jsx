@@ -15,19 +15,30 @@ export default function CustomerLanding() {
   const navigate = useNavigate()
   const master = useMaster()
 
-  // Hero = tumpukan kartu "Gambar Landing" (Owner › Gambar Landing) — TERPISAH dari
-  // banner katalog. Fallback: banner aktif → foto menu. Swipe otomatis + manual.
+  // Hero = TUMPUKAN kartu "Gambar Landing" (Owner › Gambar Landing). TERPISAH dari
+  // banner (banner TIDAK dipakai di sini). Kosong → fallback foto menu. Tumpukan
+  // terlihat di belakang, kartu depan "terbang" ke samping saat next, auto tiap 4 dtk.
   const landing = (master?.landingCards || []).filter((c) => c.active && c.img)
-  const banners = (master?.banners || []).filter((b) => b.active && b.img)
-  const cards = landing.length ? landing : (banners.length ? banners : (HERO ? [{ id: 'hero', title: '', img: HERO }] : []))
+  const cards = landing.length ? landing : (HERO ? [{ id: 'hero', title: '', img: HERO }] : [])
   const n = cards.length
   const [idx, setIdx] = useState(0)
+  const [exit, setExit] = useState(0) // 0 diam · -1 kartu depan terbang ke kiri (next) · +1 ke kanan (prev)
+  const busy = useRef(false)
   const touchX = useRef(null)
-  useEffect(() => { if (n <= 1) return; const t = setInterval(() => setIdx((i) => (i + 1) % n), 4000); return () => clearInterval(t) }, [n])
+
+  // Maju: kartu depan terbang ke kiri (380ms) lalu tumpukan geser maju 1 slot.
+  const next = () => {
+    if (busy.current || n <= 1) return
+    busy.current = true
+    setExit(-1)
+    setTimeout(() => { setIdx((i) => (i + 1) % n); setExit(0); busy.current = false }, 380)
+  }
+  const prev = () => { if (busy.current || n <= 1) return; setIdx((i) => (i - 1 + n) % n) } // mundur halus (morph)
+
+  useEffect(() => { if (n <= 1) return; const t = setInterval(next, 4000); return () => clearInterval(t) }, [n]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (idx >= n) setIdx(0) }, [n, idx])
-  const go = (d) => setIdx((i) => (i + d + n) % n)
   const onTouchStart = (e) => { touchX.current = e.touches[0].clientX }
-  const onTouchEnd = (e) => { if (touchX.current == null) return; const dx = e.changedTouches[0].clientX - touchX.current; if (dx < -40) go(1); else if (dx > 40) go(-1); touchX.current = null }
+  const onTouchEnd = (e) => { if (touchX.current == null) return; const dx = e.changedTouches[0].clientX - touchX.current; if (dx < -40) next(); else if (dx > 40) prev(); touchX.current = null }
 
   return (
     <div className="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col">
@@ -48,8 +59,17 @@ export default function CustomerLanding() {
             {cards.slice(0, Math.min(3, n)).map((_, k) => {
               const card = cards[(idx + k) % n]
               const front = k === 0
+              // Kartu depan saat exit → terbang ke samping (130%) + miring + pudar.
+              // Kartu belakang saat exit → geser MAJU 1 slot (kk = k-1) → terasa "berpindah".
+              let tx, ty, sc, rot, op
+              if (exit !== 0 && front) {
+                tx = `${exit * 130}%`; ty = '0px'; sc = 1; rot = `${exit * 12}deg`; op = 0
+              } else {
+                const kk = exit !== 0 ? k - 1 : k // saat exit, tumpukan maju selapis
+                tx = `${kk * 16}px`; ty = `${kk * 14}px`; sc = 1 - kk * 0.055; rot = `${kk === 0 ? -2 : 0}deg`; op = 1 - kk * 0.16
+              }
               return (
-                <div key={card.id + '-' + k} className="absolute inset-0 rounded-[24px] overflow-hidden shadow-2xl transition-all duration-500 ease-out bg-surface-container" style={{ zIndex: 30 - k, transform: `translate(${k * 12}px, ${k * 10}px) scale(${1 - k * 0.05}) rotate(${front ? -2 : 0}deg)`, opacity: 1 - k * 0.18 }}>
+                <div key={card.id + '-' + k} className="absolute inset-0 rounded-[24px] overflow-hidden shadow-2xl ease-out bg-surface-container" style={{ zIndex: front ? 40 : 30 - k, transform: `translate(${tx}, ${ty}) scale(${sc}) rotate(${rot})`, opacity: op, transition: 'transform 0.4s ease-out, opacity 0.4s ease-out' }}>
                   <img src={card.img} alt={card.title || 'CORNEY'} className="w-full h-full object-cover" draggable="false" />
                   {front && card.title && <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pt-8 pb-3"><p className="text-white font-bold text-sm leading-tight drop-shadow">{card.title}</p></div>}
                 </div>
