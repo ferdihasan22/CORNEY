@@ -8,6 +8,8 @@ import './index.css'
 import './store/master.js'
 // Tangkap event install PWA sedini mungkin (untuk tombol "Instal Aplikasi").
 import './lib/pwaInstall.js'
+// Splash screen native (hanya aktif di APK Capacitor; no-op di web/PWA).
+import { hideSplashWhenReady } from './lib/nativeSplash.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -16,3 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </React.StrictMode>,
 )
+
+// Sembunyikan splash native setelah app render. Pengaman native (launchAutoHide)
+// tetap menutup splash sendiri walau baris ini gagal — app tak pernah terkunci.
+hideSplashWhenReady()
