@@ -119,3 +119,14 @@ export async function btPrintReceipt(sale, branch, menus, reprint = false) {
 export async function btTestPrint() {
   await write(buildTestReceipt())
 }
+
+// Apakah pernah ada printer di-set (untuk memutuskan auto-print perlu antre/skip).
+export function isPrinterConfigured() {
+  try { return !!localStorage.getItem(LAST_ID_KEY) } catch { return false }
+}
+
+// Segarkan koneksi (mis. saat app kembali ke depan). BLE dikelola event gatt →
+// cukup coba reconnect senyap bila terputus.
+export async function refreshConnection() {
+  try { if (!btConnected()) await btAutoReconnect() } catch { /* noop */ }
+}

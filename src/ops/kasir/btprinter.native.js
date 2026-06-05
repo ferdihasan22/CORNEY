@@ -115,3 +115,19 @@ export async function btTestPrint() {
   if (!connected) throw new Error('Printer belum terhubung.')
   await CapacitorThermalPrinter.begin().raw(buildTestReceipt()).write()
 }
+
+// Apakah pernah ada printer di-set (alamat tersimpan) → untuk auto-print.
+export function isPrinterConfigured() { return !!readAddr() }
+
+// Segarkan status koneksi nyata dari plugin (mis. saat app kembali ke depan);
+// bila terputus, reconnect senyap ke printer tersimpan. Penting agar printer
+// tetap "tersambung" setelah buka-tutup aplikasi.
+export async function refreshConnection() {
+  await ensureListeners()
+  try {
+    const ok = await CapacitorThermalPrinter.isConnected()
+    connected = !!ok
+    notify()
+  } catch { /* noop */ }
+  if (!connected) { try { await btAutoReconnect() } catch { /* noop */ } }
+}

@@ -22,3 +22,5 @@ export const btAutoReconnect = impl.btAutoReconnect
 export const btDisconnect = impl.btDisconnect
 export const btPrintReceipt = impl.btPrintReceipt
 export const btTestPrint = impl.btTestPrint
+export const refreshConnection = impl.refreshConnection
+export const isPrinterConfigured = impl.isPrinterConfigured

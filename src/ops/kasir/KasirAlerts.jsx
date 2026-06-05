@@ -6,6 +6,8 @@ import { getOrders } from '../../store/orders.js'
 import { playSfx } from '../../lib/sfx.js'
 import { syncCookingNotifs, ensureNotifPermission } from '../../lib/localNotif.js'
 import { registerPush } from '../../lib/pushNotif.js'
+import { autoPrint, orderToSale } from './autoprint.js'
+import { BRANCHES } from '../../data/menu.js'
 
 // Di APK native, alarm "matang" memakai NOTIFIKASI LOKAL (berbunyi di foreground
 // & background, tahan app ditutup). Maka SFX in-app 'done' dimatikan khusus
@@ -33,10 +35,13 @@ export default function KasirAlerts() {
     )
     const ids = new Set(mine.map((o) => o.id))
     if (knownIds.current === null) { knownIds.current = ids; return } // baseline pertama: jangan bunyi
-    let adaBaru = false
-    ids.forEach((id) => { if (!knownIds.current.has(id)) adaBaru = true })
+    const fresh = mine.filter((o) => !knownIds.current.has(o.id))
     knownIds.current = ids
-    if (adaBaru) { playSfx('neworder', 2); playSfx('qris', 1) } // dua suara bunyi bersamaan
+    if (fresh.length) {
+      playSfx('neworder', 2); playSfx('qris', 1) // dua suara bunyi bersamaan
+      const b = BRANCHES.find((x) => x.id === day.branchId) || { name: day.branchId, address: '' }
+      fresh.forEach((o) => autoPrint(orderToSale(o), b)) // auto-cetak struk order online (antre bila printer mati)
+    }
   }, [orders, day])
 
   // Saat sesi kasir aktif (native): minta izin notif lokal + daftarkan token push

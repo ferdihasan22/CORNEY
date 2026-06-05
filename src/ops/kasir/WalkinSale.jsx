@@ -10,6 +10,7 @@ import NetworkIndicator from './NetworkIndicator.jsx'
 import { useBtPrinter } from './useBtPrinter.js'
 import { btSupported, btConnect, btDisconnect, btDeviceName, btAutoReconnect, isNativePrinter } from './btprinter.js'
 import { openPrinterPicker } from './printerPickerStore.js'
+import { autoPrint } from './autoprint.js'
 import AddSauceModal from './AddSauceModal.jsx'
 import PaymentModal from './PaymentModal.jsx'
 import Receipt from './Receipt.jsx'
@@ -501,7 +502,7 @@ export default function WalkinSale() {
           onComplete={({ method, cashReceived }) => {
             const sale = commitSale({ method, cashReceived })
             setPayOpen(false)
-            if (sale) { setLastSale(sale); flyToMasak() }
+            if (sale) { setLastSale(sale); flyToMasak(); autoPrint(sale, branch) } // struk auto-cetak (antre bila printer mati)
           }}
         />
       )}
