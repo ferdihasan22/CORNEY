@@ -101,7 +101,7 @@ export default defineConfig(({ mode }) => {
         // menangani rutenya. Tanpa ini, refresh di app terinstal balik ke root /
         // gagal dibuka. Denylist: jangan intersep aset & file khusus.
         navigateFallback: 'index.html',
-        navigateFallbackDenylist: [/^\/api\//, /\/[^/?]+\.[^/]+$/],
+        navigateFallbackDenylist: [/^\/api\//, /^\/pwa-manifest/, /\/[^/?]+\.[^/]+$/],
       },
     }),
   ],
