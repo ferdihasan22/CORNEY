@@ -4,6 +4,15 @@ import { useDay } from '../../store/useDay.js'
 import { getState, PHASE } from '../../store/day.js'
 import { getOrders } from '../../store/orders.js'
 import { playSfx } from '../../lib/sfx.js'
+import { syncCookingNotifs, ensureNotifPermission } from '../../lib/localNotif.js'
+import { registerPush } from '../../lib/pushNotif.js'
+
+// Di APK native, alarm "matang" memakai NOTIFIKASI LOKAL (berbunyi di foreground
+// & background, tahan app ditutup). Maka SFX in-app 'done' dimatikan khusus
+// native agar tak bunyi dua kali. Di web/PWA (tak ada notif lokal) → tetap SFX.
+const IS_NATIVE = (() => {
+  try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) } catch { return false }
+})()
 
 // Watcher SUARA kasir — dipasang GLOBAL (App) supaya berbunyi di layar kasir mana pun
 // (home/jualan/online), bukan cuma di Antrean Masak. No-op total bila bukan sesi kasir
@@ -30,6 +39,15 @@ export default function KasirAlerts() {
     if (adaBaru) { playSfx('neworder', 2); playSfx('qris', 1) } // dua suara bunyi bersamaan
   }, [orders, day])
 
+  // Saat sesi kasir aktif (native): minta izin notif lokal + daftarkan token push
+  // FCM untuk order online. Keduanya no-op di web/PWA & inert bila Firebase belum
+  // disiapkan (push) — tak mengganggu apa pun.
+  useEffect(() => {
+    if (!day) return
+    ensureNotifPermission()
+    registerPush()
+  }, [!!day])
+
   // ── Gorengan matang → alarm (cek tiap detik; pakai getState/getOrders agar selalu terkini) ──
   useEffect(() => {
     if (!day) return
@@ -47,12 +65,16 @@ export default function KasirAlerts() {
           fryers.push({ id: 'o-' + o.id, end: o.cook.startAt + (o.cook.durationMin || 0) * 60000 })
       })
       const liveIds = new Set(fryers.map((f) => f.id))
+      // Native: jadwalkan/batalkan notifikasi lokal sesuai gorengan yang aktif
+      // (alarm tetap bunyi walau app di-background/ditutup). No-op di web.
+      if (IS_NATIVE) syncCookingNotifs(fryers)
       // Bersihkan penanda untuk yang sudah tak menggoreng (boleh dialarmkan lagi nanti).
       alarmedDone.current.forEach((id) => { if (!liveIds.has(id)) alarmedDone.current.delete(id) })
       fryers.forEach((f) => {
         if (now >= f.end && !alarmedDone.current.has(f.id)) {
           alarmedDone.current.add(f.id)
-          playSfx('done', 1)
+          // Web/PWA → SFX in-app. Native → notif lokal yang berbunyi (anti-dobel).
+          if (!IS_NATIVE) playSfx('done', 1)
         }
       })
     }
