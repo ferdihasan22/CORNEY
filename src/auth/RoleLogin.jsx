@@ -12,15 +12,6 @@ const mmss = (ms) => { const s = Math.ceil(ms / 1000); return `${String(Math.flo
 
 export default function RoleLogin({ role: fixedRole, roles }) {
   const navigate = useNavigate()
-  // Ingat peran terakhir yang dibuka di perangkat ini. Root kantor.corney.id
-  // (PWA terinstal start_url '/') redirect ke /ops/<peran>/login ini → PWA yang
-  // dipasang dari login owner membuka login owner, bukan halaman blank.
-  useEffect(() => {
-    const KANTOR = ['owner', 'operasional', 'produksi', 'auditor']
-    if (fixedRole && KANTOR.includes(fixedRole)) {
-      try { localStorage.setItem('corney_kantor_role', fixedRole) } catch { /* noop */ }
-    }
-  }, [fixedRole])
   // KANTOR: banyak peran berbagi 1 halaman → SATU login, peran DIDETEKSI OTOMATIS dari akun.
   const auto = Array.isArray(roles) && roles.length > 1
   const lockKey = auto ? 'kantor' : fixedRole

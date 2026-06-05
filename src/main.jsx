@@ -8,6 +8,11 @@ import './index.css'
 import './store/master.js'
 // Tangkap event install PWA sedini mungkin (untuk tombol "Instal Aplikasi").
 import './lib/pwaInstall.js'
+// Manifest dinamis: start_url = halaman saat ini → PWA instal dari /ops/owner/login
+// membuka /ops/owner/login (berlaku semua halaman).
+import { applyDynamicManifest } from './lib/dynamicManifest.js'
+
+applyDynamicManifest()
 // Splash screen native (hanya aktif di APK Capacitor; no-op di web/PWA).
 import { hideSplashWhenReady } from './lib/nativeSplash.js'
 // Perbaikan reflow WebView saat rotasi layar (cegah header meluber di portrait
