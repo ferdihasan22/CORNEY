@@ -51,6 +51,19 @@ export function refreshMaster() {
 }
 if (isSupabase()) refreshMaster()
 
+// Realtime master: perubahan saus/menu/banner/dll oleh Owner (dari perangkat lain)
+// langsung men-trigger refetch di SEMUA klien yang sedang terbuka — tanpa menunggu
+// app dibuka/difokus ulang. Debounce 400ms agar banyak baris berubah = 1 fetch.
+if (typeof window !== 'undefined' && isSupabase()) {
+  import('./master.remote.js').then(({ subscribeMasterRealtime }) => {
+    let t = null
+    subscribeMasterRealtime(() => {
+      if (t) clearTimeout(t)
+      t = setTimeout(refreshMaster, 400)
+    })
+  }).catch((e) => console.warn('[master] realtime gagal dipasang:', e?.message || e))
+}
+
 // #2 Gambar/menu terbaru "langsung": segarkan master saat tab KEMBALI aktif (mis.
 // owner ganti banner → customer buka lagi app → lihat banner baru tanpa reload).
 // Throttle 10 dtk supaya tak refetch beruntun; tak ada poll terus-menerus (hemat).

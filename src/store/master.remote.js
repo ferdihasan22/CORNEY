@@ -55,6 +55,20 @@ export async function fetchMasterFromSupabase() {
   }
 }
 
+// Realtime: dengarkan perubahan tabel master di server (mis. Owner edit saus/menu
+// dari perangkat lain) → panggil onChange agar master di-fetch ulang SEGERA, tanpa
+// menunggu app dibuka/difokus ulang. RLS read_all tiap tabel → semua klien boleh
+// menerima event. Mengembalikan fungsi unsubscribe.
+export function subscribeMasterRealtime(onChange) {
+  if (!supabase) return () => {}
+  let ch = supabase.channel('master-rt')
+  for (const t of MASTER_TABLES) {
+    ch = ch.on('postgres_changes', { event: '*', schema: 'public', table: t }, onChange)
+  }
+  ch.subscribe()
+  return () => { try { supabase.removeChannel(ch) } catch { /* noop */ } }
+}
+
 function mapSauce(s) {
   return { id: s.id, name: s.name || '', price: s.price ?? 0 }
 }
