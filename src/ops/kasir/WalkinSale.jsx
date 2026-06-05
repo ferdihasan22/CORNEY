@@ -191,18 +191,18 @@ export default function WalkinSale() {
   return (
     <div className="bg-background text-on-surface overflow-hidden">
       {/* TopAppBar */}
-      <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center gap-2 px-3 sm:px-margin-page h-min-tap-target bg-primary shadow-md text-on-primary">
+      <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center gap-2 px-3 lg:px-margin-page h-min-tap-target bg-primary shadow-md text-on-primary">
         <div className="flex flex-col justify-center shrink-0 min-w-0 leading-none">
           <span className="font-display-md text-sm sm:text-base font-black tracking-tighter">CORNEY</span>
           <span className="text-[10px] sm:text-[11px] font-bold text-on-primary/90 truncate -mt-0.5">{branch.name.replace('CORNEY ', '')}</span>
         </div>
-        <nav className="flex gap-1 sm:gap-6 h-full shrink-0">
-          <button className="h-full flex items-center px-2 sm:px-4 text-secondary-container font-bold border-b-4 border-secondary-container pb-1 active:scale-95 transition-all whitespace-nowrap">
+        <nav className="flex gap-1 lg:gap-6 h-full shrink-0">
+          <button className="h-full flex items-center px-2 lg:px-4 text-secondary-container font-bold border-b-4 border-secondary-container pb-1 active:scale-95 transition-all whitespace-nowrap">
             Walk-in
           </button>
           <div className="relative h-full">
-            <button onClick={() => { dismissBubble(); navigate('/ops/kasir/online') }} className="relative h-full flex items-center px-2 sm:px-4 text-on-primary/80 font-medium hover:bg-primary-container/20 active:scale-95 transition-all whitespace-nowrap">
-              <span className="hidden sm:inline">Order&nbsp;</span>Online
+            <button onClick={() => { dismissBubble(); navigate('/ops/kasir/online') }} className="relative h-full flex items-center px-2 lg:px-4 text-on-primary/80 font-medium hover:bg-primary-container/20 active:scale-95 transition-all whitespace-nowrap">
+              <span className="hidden lg:inline">Order&nbsp;</span>Online
               {onlineNew > 0 && <span className="absolute -top-1 -right-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold h-5 min-w-5 px-1 flex items-center justify-center rounded-full border-2 border-primary">{onlineNew}</span>}
             </button>
             {orderBubble && (
@@ -227,13 +227,13 @@ export default function WalkinSale() {
             )}
           </div>
         </nav>
-        <div className="flex items-center gap-1 sm:gap-6 shrink-0">
+        <div className="flex items-center gap-1 lg:gap-6 shrink-0">
           <button
             ref={masakRef}
             onClick={() => navigate('/ops/kasir/masak')}
             className="flex items-center gap-2 bg-on-primary/10 hover:bg-on-primary/20 px-4 py-2 rounded-xl font-label-lg transition-colors"
           >
-            <Icon name="outdoor_grill" /> <span className="hidden sm:inline">Antrean Masak</span>
+            <Icon name="outdoor_grill" /> <span className="hidden lg:inline">Antrean Masak</span>
             {(cook.frying > 0 || cook.queued > 0) && (
               <span className="flex items-center gap-1">
                 {cook.frying > 0 && <span className="inline-flex items-center gap-0.5 bg-orange-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"><Icon name="local_fire_department" className="!text-[12px]" />{cook.frying}</span>}
@@ -244,11 +244,11 @@ export default function WalkinSale() {
           {/* Setting / status Printer Bluetooth */}
           <button onClick={togglePrinter} title={printerOn ? btDeviceName() : 'Hubungkan printer Bluetooth'} className={`flex items-center gap-1.5 px-3 py-2 rounded-xl font-label-md transition-colors ${printerOn ? 'bg-green-500/90 text-white' : 'bg-on-primary/10 hover:bg-on-primary/20'}`}>
             <Icon name={printerOn ? 'bluetooth_connected' : 'print'} />
-            <span className="hidden md:inline">{printerOn ? 'Printer Terhubung' : 'Setting Printer'}</span>
+            <span className="hidden lg:inline">{printerOn ? 'Printer Terhubung' : 'Setting Printer'}</span>
           </button>
           {/* Indikator jaringan */}
           <NetworkIndicator />
-          <div className="text-right hidden sm:block">
+          <div className="text-right hidden lg:block">
             <p className="font-headline-md text-headline-md leading-none">
               {clock.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
             </p>
