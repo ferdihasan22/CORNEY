@@ -527,13 +527,16 @@ export function activeBanners() {
 export function addBanner({ title, img, active = true }) {
   if (!state) return null
   const t = (title || '').trim()
-  if (!t) return null
-  let id = 'BNR-' + (t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'banner')
+  const im = (img || '').trim()
+  if (!im) return null // WAJIB gambar; judul OPSIONAL (boleh banyak banner tanpa judul)
+  const slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'banner'
+  let id = 'BNR-' + slug
   let n = 2
-  while (state.banners.some((x) => x.id === id)) id = `${id}-${n++}`
-  const banner = { id, title: t, img: (img || '').trim(), active }
-  commit({ ...state, banners: [...state.banners, banner] })
-  remoteWrite((w) => w.pushBanners(state.banners))
+  while (state.banners.some((x) => x.id === id)) id = `BNR-${slug}-${n++}`
+  const banner = { id, title: t, img: im, active }
+  const next = [...state.banners, banner] // pakai array baru EKSPLISIT (anti stale state)
+  commit({ ...state, banners: next })
+  remoteWrite((w) => w.pushBanners(next))
   return banner
 }
 

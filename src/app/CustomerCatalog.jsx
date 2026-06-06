@@ -40,6 +40,7 @@ export default function CustomerCatalog() {
 
   // Scroll kategori ke samping (panah muncul hanya bila ada yang bisa digeser).
   const catRef = useRef(null)
+  const bTouchX = useRef(null) // posisi awal sentuh utk swipe banner
   const [catArrow, setCatArrow] = useState({ l: false, r: false })
   const updateCatArrow = () => {
     const el = catRef.current
@@ -182,7 +183,16 @@ export default function CustomerCatalog() {
             to a brand band when none are active. */}
         {banners.length > 0 ? (
           <section className="mb-6">
-            <div className="relative w-full aspect-[16/9] rounded-[18px] overflow-hidden">
+            <div
+              className="relative w-full aspect-[16/9] rounded-[18px] overflow-hidden"
+              onTouchStart={(e) => { bTouchX.current = e.touches[0].clientX }}
+              onTouchEnd={(e) => {
+                if (bTouchX.current == null || banners.length <= 1) return
+                const dx = e.changedTouches[0].clientX - bTouchX.current
+                bTouchX.current = null
+                if (Math.abs(dx) > 40) setBIdx((i) => (i + (dx < 0 ? 1 : -1) + banners.length) % banners.length)
+              }}
+            >
               {banners.map((b, i) => (
                 <div key={b.id} className={`absolute inset-0 transition-opacity duration-700 ${i === bIdx % banners.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                   {b.img ? <img src={b.img} alt={b.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-primary-container" />}
