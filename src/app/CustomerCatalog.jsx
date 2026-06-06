@@ -186,8 +186,7 @@ export default function CustomerCatalog() {
               {banners.map((b, i) => (
                 <div key={b.id} className={`absolute inset-0 transition-opacity duration-700 ${i === bIdx % banners.length ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                   {b.img ? <img src={b.img} alt={b.title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-primary-container" />}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <p className="absolute bottom-4 left-5 right-5 text-white font-headline-lg text-headline-lg leading-tight">{b.title}</p>
+                  {b.title && <><div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" /><p className="absolute bottom-4 left-5 right-5 text-white font-headline-lg text-headline-lg leading-tight">{b.title}</p></>}
                 </div>
               ))}
               {banners.length > 1 && (

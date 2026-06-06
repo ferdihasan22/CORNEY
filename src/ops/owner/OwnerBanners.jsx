@@ -35,7 +35,7 @@ export default function OwnerBanners() {
   const close = () => setEditing(null)
   const save = (e) => {
     e.preventDefault()
-    if (!form.title.trim()) return
+    if (!form.img.trim()) return // WAJIB gambar; judul OPSIONAL (kosong = gambar full)
     if (editing?.id) updateBanner(editing.id, form)
     else addBanner(form)
     close()
@@ -81,8 +81,7 @@ export default function OwnerBanners() {
                     {heroBanner ? (
                       <>
                         <img src={heroBanner.img} alt={heroBanner.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <p className="absolute bottom-2 left-3 right-3 text-white font-bold text-[13px] leading-tight">{heroBanner.title}</p>
+                        {heroBanner.title && <><div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" /><p className="absolute bottom-2 left-3 right-3 text-white font-bold text-[13px] leading-tight">{heroBanner.title}</p></>}
                         {live.length > 1 && (
                           <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1">
                             {live.map((b, i) => <span key={b.id} className={`h-1.5 rounded-full ${i === preview ? 'w-3.5 bg-white' : 'w-1.5 bg-white/50'}`} />)}
@@ -138,7 +137,7 @@ export default function OwnerBanners() {
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-label-lg text-on-surface truncate">{b.title}</h3>
+                      <h3 className="font-label-lg text-on-surface truncate">{b.title || <span className="text-on-surface-variant/60 italic font-normal">(tanpa judul)</span>}</h3>
                       <span className="bg-tertiary-fixed text-[10px] font-bold px-1.5 py-0.5 rounded text-on-tertiary-fixed-variant uppercase tracking-wider">Global</span>
                     </div>
                     <button onClick={() => toggleBannerActive(b.id)} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[12px] font-bold ${b.active ? 'bg-green-100 text-green-700' : 'bg-surface-variant text-on-surface-variant'}`}>
@@ -182,8 +181,8 @@ export default function OwnerBanners() {
                 <p className="text-[11px] text-on-surface-variant mt-1.5 text-center">Beginilah banner tampil & terpotong di app customer.</p>
               </div>
               <div className="space-y-2">
-                <label className="font-label-md text-on-surface-variant">Judul Banner</label>
-                <input autoFocus value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="Contoh: Promo Beli 2 Gratis 1" className="w-full h-[52px] px-4 rounded-xl border border-outline focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest" />
+                <label className="font-label-md text-on-surface-variant">Judul Banner <span className="text-on-surface-variant/60">(opsional — kosong = gambar full)</span></label>
+                <input autoFocus value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="Kosongkan untuk tampilkan gambar penuh" className="w-full h-[52px] px-4 rounded-xl border border-outline focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest" />
               </div>
               <div className="space-y-2">
                 <label className="font-label-md text-on-surface-variant">URL Gambar</label>
@@ -194,7 +193,7 @@ export default function OwnerBanners() {
             </form>
             <div className="p-5 border-t border-outline-variant grid grid-cols-2 gap-4 sticky bottom-0 bg-surface">
               <button type="button" onClick={close} className="h-[52px] border border-outline text-on-surface-variant rounded-xl font-label-lg hover:bg-surface-variant transition-colors">Batal</button>
-              <button onClick={save} className="h-[52px] bg-primary text-on-primary rounded-xl font-label-lg shadow-lg active:scale-95 transition-all">Simpan</button>
+              <button onClick={save} disabled={!form.img.trim()} className="h-[52px] bg-primary text-on-primary rounded-xl font-label-lg shadow-lg active:scale-95 transition-all disabled:opacity-40">Simpan</button>
             </div>
           </div>
         </div>
