@@ -8,6 +8,7 @@ import { useCart } from '../store/useCart.js'
 import { createOrder } from '../store/orders.js'
 import { menuForBranch } from '../store/master.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
+import { getBranchStatus, refreshBranchStatusAsync } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
 
 // 2.1 — CUS-02 Checkout. No dedicated Stitch ref; designed consistent with the
@@ -101,6 +102,16 @@ export default function CustomerCheckout() {
   const todayISO2 = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
   const branchClosed = supa ? !(stCab?.open && stCab.openDate === todayISO2) : false
 
+  // Bila cache lokal bilang cabang TUTUP, JANGAN langsung tolak — re-cek status
+  // segar ke server dulu. Cegah blok palsu saat cabang BARU buka & sinkron realtime
+  // ke HP customer belum sampai (customer langsung checkout begitu cabang buka).
+  const ensureBranchOpen = async () => {
+    if (!supa || !branchClosed) return true
+    await refreshBranchStatusAsync()
+    const fresh = getBranchStatus()[cart.branchId]
+    return !!(fresh?.open && fresh.openDate === todayISO2)
+  }
+
   // Jam sekarang (HH:MM) untuk batas bawah jam ambil.
   const now = new Date()
   const nowHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
@@ -108,8 +119,8 @@ export default function CustomerCheckout() {
 
   // Tapping "Bayar" only validates + opens the confirm popup; the actual order is
   // created in confirmPay() after the customer re-confirms their WA number.
-  const pay = () => {
-    if (branchClosed) return setErr('Cabang sudah tutup untuk pesanan online. Coba lagi saat buka ya.')
+  const pay = async () => {
+    if (!(await ensureBranchOpen())) return setErr('Cabang sedang tutup untuk pesanan online. Coba lagi saat buka ya.')
     if (unavailNames) return setErr('Maaf, ada menu HABIS: ' + unavailNames + '. Hapus dari keranjang dulu.')
     if (!name.trim()) return setErr('Nama wajib diisi.')
     if (!/^[0-9]{8,15}$/.test(wa.replace(/\D/g, ''))) return setErr('Nomor WhatsApp tidak valid.')
@@ -123,7 +134,8 @@ export default function CustomerCheckout() {
   const confirmPay = async () => {
     if (submitting) return
     // Re-cek tepat sebelum buat order (status bisa berubah realtime sejak buka checkout).
-    if (branchClosed) { setConfirm(false); return setErr('Cabang sudah tutup untuk pesanan online.') }
+    // ensureBranchOpen re-cek SEGAR ke server bila cache bilang tutup (anti blok palsu).
+    if (!(await ensureBranchOpen())) { setConfirm(false); return setErr('Cabang sedang tutup untuk pesanan online.') }
     if (unavailNames) { setConfirm(false); return setErr('Maaf, ada menu HABIS: ' + unavailNames + '. Hapus dari keranjang dulu.') }
     const cleanWa = wa.replace(/\D/g, '')
     if (remember) saveContact({ name: name.trim(), wa: cleanWa, address: address.trim() })

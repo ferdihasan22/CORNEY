@@ -16,6 +16,10 @@ if (isSupabase()) {
 export function getBranchStatus() { return state }
 export function subscribeBranchStatus(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 export function refreshBranchStatus() { _refresh() }
+// Versi awaitable: tunggu hidrasi selesai lalu baca getBranchStatus() yang segar.
+// Dipakai saat butuh kepastian status terkini (mis. customer checkout tepat saat
+// cabang baru buka, sebelum realtime sempat sampai ke perangkatnya).
+export async function refreshBranchStatusAsync() { try { await _refresh() } catch { /* noop */ } }
 
 // Dipanggil kasir saat buka (Opening selesai) / tutup (Closing).
 export function setBranchOpen(open) {
