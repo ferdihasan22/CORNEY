@@ -35,6 +35,8 @@ export default function CustomerQris() {
   const [checking, setChecking] = useState(false)
   const [statusMsg, setStatusMsg] = useState('')
   const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState('') // notif kecil hasil unduh QR
+  const showToast = (m) => { setToast(m); setTimeout(() => setToast(''), 3800) }
   const [regenReady, setRegenReady] = useState(false) // token Turnstile siap utk "Buat QR Baru"
   const charged = useRef(false)
 
@@ -163,22 +165,42 @@ export default function CustomerQris() {
       .finally(() => { if (!silent) setChecking(false) })
   }
 
-  // Unduh gambar QR ke galeri → customer bayar lewat aplikasi m-banking / e-wallet
-  // lain (scan dari galeri). Kalau CORS blokir fetch, buka di tab baru (simpan manual).
+  // Unduh/simpan gambar QR ke galeri → customer bayar lewat m-banking / e-wallet
+  // lain (scan dari galeri). Strategi berlapis biar JALAN di webview & iOS:
+  //   1) Web Share file → share sheet "Simpan Gambar" (paling andal di HP/webview)
+  //   2) Unduh blob (browser desktop & sebagian webview Android)
+  //   3) CORS/gagal → buka gambar di tab baru, user tahan & "Simpan" manual
   const downloadQr = async () => {
     if (!qrUrl) return
     setSaving(true)
+    const fileName = `QRIS-CORNEY-${onlineNo(order.no)}.png`
     try {
       const res = await fetch(qrUrl)
       const blob = await res.blob()
+      const file = new File([blob], fileName, { type: blob.type || 'image/png' })
+
+      // 1) Web Share (HP modern & banyak in-app browser) → "Simpan ke Galeri/Foto".
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: 'QRIS CORNEY' })
+          showToast('Pilih "Simpan Gambar / Save Image" untuk menyimpan ke galeri ✅')
+          return
+        } catch (e) {
+          if (e?.name === 'AbortError') { return } // user batal → jangan unduh ganda
+        }
+      }
+
+      // 2) Unduh blob.
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `QRIS-CORNEY-${onlineNo(order.no)}.png`
+      a.download = fileName
       document.body.appendChild(a); a.click(); a.remove()
       setTimeout(() => URL.revokeObjectURL(url), 4000)
+      showToast('QRIS tersimpan ke galeri/unduhan ✅')
     } catch {
-      window.open(qrUrl, '_blank', 'noopener') // CORS → buka tab, user simpan manual
+      window.open(qrUrl, '_blank', 'noopener') // CORS → buka tab, simpan manual
+      showToast('QR dibuka di tab baru — tahan gambar lalu "Simpan ke Foto" 📷')
     } finally { setSaving(false) }
   }
 
@@ -291,6 +313,16 @@ export default function CustomerQris() {
           <p className="text-[12px] text-tertiary leading-tight">Pembayaran diproses aman oleh <strong>Midtrans</strong>. CORNEY tidak menyimpan data e-wallet kamu.</p>
         </div>
       </main>
+
+      {/* Toast kecil: hasil unduh/simpan QR */}
+      {toast && (
+        <div className="fixed inset-x-0 bottom-5 z-[60] flex justify-center px-4 pointer-events-none">
+          <div className="max-w-sm w-fit bg-on-surface text-surface text-[13px] font-medium px-4 py-3 rounded-2xl shadow-lg flex items-center gap-2 animate-[fadeIn_.2s_ease-out]">
+            <Icon name="check_circle" className="!text-[18px] text-green-400 shrink-0" />
+            <span className="leading-snug">{toast}</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
