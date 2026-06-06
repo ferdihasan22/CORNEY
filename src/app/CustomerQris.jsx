@@ -5,6 +5,7 @@ import { getOrder, markPaid, cancelOrder, refreshMyOrder, extendPayDeadline } fr
 import { clearCart } from '../store/cart.js'
 import { isSupabase } from '../lib/backend.js'
 import { onlineNo } from '../lib/util.js'
+import { isIOS } from '../lib/platform.js'
 import TurnstileWidget from '../components/TurnstileWidget.jsx'
 import { turnstileEnabled, takeTurnstileToken, setTurnstileToken } from '../lib/turnstile.js'
 import { supabase } from '../lib/supabase.js'
@@ -37,6 +38,7 @@ export default function CustomerQris() {
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState('') // notif kecil hasil unduh QR
   const showToast = (m) => { setToast(m); setTimeout(() => setToast(''), 3800) }
+  const ios = isIOS() // iPhone: unduh tak andal → pakai bubble "tahan & simpan gambar"
   const [regenReady, setRegenReady] = useState(false) // token Turnstile siap utk "Buat QR Baru"
   const charged = useRef(false)
 
@@ -230,6 +232,19 @@ export default function CustomerQris() {
 
         {/* QR card */}
         <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-[0_4px_16px_rgba(26,26,26,0.08)] flex flex-col items-center mb-4">
+          {/* iPhone: tak ada tombol unduh (tak andal) → bubble "tahan & simpan" di atas QR */}
+          {ios && mode === 'live' && qrUrl && !expired && (
+            <div className="w-full flex flex-col items-center mb-2">
+              <div className="qr-save-bubble relative bg-primary text-on-primary rounded-2xl px-4 py-2.5 shadow-lg max-w-[290px]">
+                <p className="text-[13px] font-bold leading-snug text-center flex items-center justify-center gap-1.5">
+                  <Icon name="touch_app" className="!text-[18px] shrink-0" />
+                  <span>Tahan gambar QR lalu pilih <span className="underline underline-offset-2">“Simpan ke Foto”</span></span>
+                </p>
+                {/* ekor bubble menunjuk ke QR */}
+                <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-primary rotate-45 rounded-[2px]" />
+              </div>
+            </div>
+          )}
           <div className="w-full aspect-square bg-white p-4 rounded-xl border border-surface-variant mb-4 flex items-center justify-center relative overflow-hidden">
             {mode === 'live' && qrUrl ? (
               <img src={qrUrl} alt="QRIS" className={`w-full h-full object-contain transition ${expired ? 'blur-[3px] opacity-40' : ''}`} />
@@ -252,8 +267,9 @@ export default function CustomerQris() {
           </div>
         </div>
 
-        {/* Bayar pakai aplikasi lain — unduh / screenshot QR lalu scan dari galeri */}
-        {qrUrl && !expired && (
+        {/* Bayar pakai aplikasi lain — unduh / screenshot QR lalu scan dari galeri.
+            iPhone: disembunyikan (pakai bubble "tahan & simpan gambar" di atas QR). */}
+        {qrUrl && !expired && !ios && (
           <div className="bg-surface-container-lowest rounded-2xl p-4 mb-4 shadow-[0_2px_8px_rgba(26,26,26,0.06)] space-y-3">
             <div className="flex items-start gap-2">
               <Icon name="account_balance_wallet" className="text-primary !text-[20px] shrink-0 mt-0.5" />

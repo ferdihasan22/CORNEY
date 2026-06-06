@@ -78,6 +78,23 @@ body {
   50% { background-color: rgba(186, 26, 26, 0.5); }
 }
 
+/* Bubble "tahan & simpan QR" (iPhone) — muncul halus lalu mengambang lembut. */
+@keyframes qrHintIn {
+  0% { opacity: 0; transform: translateY(10px) scale(0.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes qrHintFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.qr-save-bubble {
+  animation: qrHintIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both,
+             qrHintFloat 2.8s ease-in-out 0.45s infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .qr-save-bubble { animation: qrHintIn 0.3s ease-out both; }
+}
+
 /* Cetak Data Laporan (PDF arsip) — tampilkan hanya area laporan, full & landscape.
    Terpisah dari cetak struk (.receipt-area). */
 .print-only { display: none; }
