@@ -29,6 +29,20 @@ export default function OwnerSettings() {
     setSaved(true); setTimeout(() => setSaved(false), 2500)
   }
 
+  // Link tombol GoFood / GrabFood di landing Customer. Kosong = tombol disembunyikan.
+  const [gofood, setGofood] = useState('')
+  const [grabfood, setGrabfood] = useState('')
+  const [savedLink, setSavedLink] = useState(false)
+  useEffect(() => { setGofood(cfg.gofood_url ?? '') }, [cfg.gofood_url])
+  useEffect(() => { setGrabfood(cfg.grabfood_url ?? '') }, [cfg.grabfood_url])
+  const linkDirty = gofood.trim() !== (cfg.gofood_url ?? '') || grabfood.trim() !== (cfg.grabfood_url ?? '')
+  const saveLinks = () => {
+    if (!linkDirty) return
+    setAppConfigField('gofood_url', gofood.trim())
+    setAppConfigField('grabfood_url', grabfood.trim())
+    setSavedLink(true); setTimeout(() => setSavedLink(false), 2500)
+  }
+
   // Tampilan nomor enak dibaca: 62 851-7420-0152
   const pretty = (d) => {
     if (!d) return '—'
@@ -77,6 +91,30 @@ export default function OwnerSettings() {
             <Icon name={saved ? 'check_circle' : 'save'} className="!text-[20px]" /> {saved ? 'Tersimpan!' : dirty ? 'Simpan Nomor' : 'Tersimpan'}
           </button>
           {dirty && valid && <p className="text-[11px] text-amber-700 mt-2 flex items-center gap-1"><Icon name="info" className="!text-[14px]" /> Ada perubahan belum disimpan.</p>}
+        </section>
+
+        {/* Link GoFood / GrabFood di landing */}
+        <section className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/40 shadow-sm">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0"><Icon name="link" /></div>
+            <div>
+              <h2 className="font-label-lg text-on-surface">Link GoFood &amp; GrabFood</h2>
+              <p className="text-[12px] text-on-surface-variant leading-snug">Tujuan tombol <b>“Pesan di GoFood/GrabFood”</b> di halaman depan Customer. <b>Kosongkan</b> untuk menyembunyikan tombolnya.</p>
+            </div>
+          </div>
+
+          <label className="text-[11px] font-bold text-on-surface-variant uppercase">Link GoFood</label>
+          <input type="url" inputMode="url" value={gofood} onChange={(e) => setGofood(e.target.value)} placeholder="https://gofood.co.id/…"
+            className="w-full h-12 px-3 mt-1 rounded-xl border border-outline focus:border-primary outline-none bg-surface text-sm" />
+
+          <label className="text-[11px] font-bold text-on-surface-variant uppercase mt-3 block">Link GrabFood</label>
+          <input type="url" inputMode="url" value={grabfood} onChange={(e) => setGrabfood(e.target.value)} placeholder="https://food.grab.com/…"
+            className="w-full h-12 px-3 mt-1 rounded-xl border border-outline focus:border-primary outline-none bg-surface text-sm" />
+
+          <button onClick={saveLinks} disabled={!linkDirty}
+            className="mt-4 w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-40">
+            <Icon name={savedLink ? 'check_circle' : 'save'} className="!text-[20px]" /> {savedLink ? 'Tersimpan!' : linkDirty ? 'Simpan Link' : 'Tersimpan'}
+          </button>
         </section>
 
         <p className="text-[12px] text-on-surface-variant/70 leading-relaxed px-1">Perubahan langsung berlaku ke semua app customer (tersimpan di server &amp; ter-update otomatis tanpa mereka perlu refresh).</p>

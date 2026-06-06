@@ -7,7 +7,12 @@ import { isSupabase } from '../lib/backend.js'
 const KEY = 'corney_app_cfg_v1'
 const subscribers = new Set()
 // Default aman kalau server belum sempat hidrasi (mis. customer baru buka app).
-const DEFAULTS = { complaint_wa: '6285174200152' }
+const DEFAULTS = {
+  complaint_wa: '6285174200152',
+  // Link tombol di landing Customer. Kosongkan ('') → tombol disembunyikan.
+  gofood_url: 'https://gofood.co.id',
+  grabfood_url: 'https://food.grab.com',
+}
 
 function load() {
   try { const s = JSON.parse(localStorage.getItem(KEY)); return s && typeof s === 'object' && !Array.isArray(s) ? { ...DEFAULTS, ...s } : { ...DEFAULTS } }

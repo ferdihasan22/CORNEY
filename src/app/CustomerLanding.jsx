@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MENUS } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
+import { useAppConfig } from '../store/useAppConfig.js'
 import InstallPrompt from '../components/InstallPrompt.jsx'
 
 // 1C.1 — CORNEY App Customer · Landing (PRD §4). Linktree-style: one hero +
@@ -14,6 +15,9 @@ const HERO = MENUS.find((m) => m.id === 'mozza_ori')?.img
 export default function CustomerLanding() {
   const navigate = useNavigate()
   const master = useMaster()
+  const cfg = useAppConfig()
+  const gofoodUrl = (cfg.gofood_url || '').trim()
+  const grabfoodUrl = (cfg.grabfood_url || '').trim()
 
   // Hero = TUMPUKAN kartu "Gambar Landing" (Owner › Gambar Landing). TERPISAH dari
   // banner (banner TIDAK dipakai di sini). Kosong → fallback foto menu. Tumpukan
@@ -116,12 +120,17 @@ export default function CustomerLanding() {
               className="relative overflow-hidden w-full bg-secondary-container text-on-secondary-container rounded-[16px] p-4 flex items-center justify-center gap-3 shadow-sm active:scale-[0.98] transition-all min-h-[64px]"
             />
 
-            <a href="https://gofood.co.id" target="_blank" rel="noreferrer" className="w-full bg-surface-container-lowest border-2 border-primary text-primary rounded-[16px] p-4 flex items-center justify-center gap-2 active:bg-primary-container/10 transition-colors min-h-[52px]">
-              <span className="font-label-lg text-label-lg">Pesan di GoFood</span><Icon name="open_in_new" className="text-[18px]" />
-            </a>
-            <a href="https://food.grab.com" target="_blank" rel="noreferrer" className="w-full bg-surface-container-lowest border-2 border-primary text-primary rounded-[16px] p-4 flex items-center justify-center gap-2 active:bg-primary-container/10 transition-colors min-h-[52px]">
-              <span className="font-label-lg text-label-lg">Pesan di GrabFood</span><Icon name="open_in_new" className="text-[18px]" />
-            </a>
+            {/* Link GoFood/GrabFood diatur Owner › Pengaturan. Kosong → sembunyi. */}
+            {gofoodUrl && (
+              <a href={gofoodUrl} target="_blank" rel="noreferrer" className="w-full bg-surface-container-lowest border-2 border-primary text-primary rounded-[16px] p-4 flex items-center justify-center gap-2 active:bg-primary-container/10 transition-colors min-h-[52px]">
+                <span className="font-label-lg text-label-lg">Pesan di GoFood</span><Icon name="open_in_new" className="text-[18px]" />
+              </a>
+            )}
+            {grabfoodUrl && (
+              <a href={grabfoodUrl} target="_blank" rel="noreferrer" className="w-full bg-surface-container-lowest border-2 border-primary text-primary rounded-[16px] p-4 flex items-center justify-center gap-2 active:bg-primary-container/10 transition-colors min-h-[52px]">
+                <span className="font-label-lg text-label-lg">Pesan di GrabFood</span><Icon name="open_in_new" className="text-[18px]" />
+              </a>
+            )}
 
             <button onClick={() => navigate('/app/riwayat')} className="w-full mt-1 text-on-surface-variant rounded-[16px] py-3 flex items-center justify-center gap-2 active:scale-[0.98] transition-all min-h-[52px]">
               <Icon name="receipt_long" className="text-[20px] text-primary" />
