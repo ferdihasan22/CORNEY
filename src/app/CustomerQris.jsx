@@ -248,7 +248,7 @@ export default function CustomerQris() {
           </div>
           <div className="flex items-center gap-2 text-on-surface-variant">
             <span className="font-bold text-sm">QRIS</span><span className="opacity-40">·</span>
-            <span className="text-sm">{mode === 'live' ? 'Sandbox Midtrans' : 'diproses oleh Midtrans'}</span>
+            <span className="text-sm">diproses oleh Midtrans</span>
           </div>
         </div>
 
