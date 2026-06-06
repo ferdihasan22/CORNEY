@@ -53,13 +53,10 @@ export function openInDefaultBrowser(url) {
     try { window.open(url, '_blank'); return true } catch { /* noop */ }
     return false
   }
-  if (isIOS()) {
-    // iOS: buka Safari LANGSUNG ke URL pakai skema `x-safari-https://` (navigasi
-    // ke halaman, BUKAN pencarian — beda dari x-web-search yang malah cari di
-    // Google). Tak dijamin semua iOS; gagal → instruksi •••→Buka di Browser tampil.
-    try { window.location.href = url.replace(/^https?:\/\//, 'x-safari-https://') } catch { /* noop */ }
-    return false
-  }
+  // iOS: Apple mengunci webview in-app — TAK ADA skema andal untuk paksa buka URL
+  // (x-web-search malah cari di Google; x-safari-https diblokir). Caller menangani
+  // iOS dengan SALIN link + instruksi manual. Return false.
+  if (isIOS()) return false
   try { window.open(url, '_blank'); return true } catch { /* noop */ }
   return false
 }

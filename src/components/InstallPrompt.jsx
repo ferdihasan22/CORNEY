@@ -1,6 +1,6 @@
 import { useState, useEffect, useSyncExternalStore } from 'react'
 import { canInstall, subscribeInstall, promptInstall } from '../lib/pwaInstall.js'
-import { isStandalone, isIOS, iosBrowser, isInAppBrowser, openInDefaultBrowser } from '../lib/platform.js'
+import { isStandalone, isIOS, isAndroid, iosBrowser, isInAppBrowser, openInDefaultBrowser } from '../lib/platform.js'
 
 // Tombol instal PWA SADAR-PLATFORM untuk Customer.
 //   • Android/Desktop Chromium (prompt siap) → install LANGSUNG (1 klik).
@@ -58,11 +58,12 @@ function Tutorial({ mode }) {
   if (mode === 'inapp-ios') {
     return (
       <div className={box}>
-        <div className="flex items-center gap-3 mb-3"><Logo /><div><p className="font-bold leading-tight">Membuka Safari…</p><p className="text-[12px] text-on-surface-variant">Kalau Safari tak terbuka otomatis, lakukan ini:</p></div></div>
+        <div className="flex items-center gap-3 mb-3"><Logo /><div><p className="font-bold leading-tight">Buka di Safari untuk instal</p><p className="text-[12px] text-green-700 font-bold flex items-center gap-1"><Icon name="check_circle" className="!text-[15px]" /> Link sudah disalin</p></div></div>
+        <p className="text-[12px] text-on-surface-variant mb-2">iPhone mengunci browser dalam-app, jadi buka Safari dengan salah satu cara ini:</p>
         <div className="flex flex-col gap-2">
-          <p className={step}><Icon name="more_horiz" className="!text-[18px] text-primary shrink-0" /><span>1. Ketuk <b>•••</b> di kanan atas.</span></p>
-          <p className={step}><Icon name="open_in_browser" className="!text-[18px] text-primary shrink-0" /><span>2. Pilih <b>"Buka di Browser Eksternal"</b> (Safari).</span></p>
-          <p className={step}><Icon name="install_mobile" className="!text-[18px] text-primary shrink-0" /><span>3. Di Safari, ketuk <b>Bagikan → Tambah ke Layar Utama</b>.</span></p>
+          <p className={step}><Icon name="content_paste" className="!text-[18px] text-primary shrink-0" /><span><b>Cara cepat:</b> buka <b>Safari</b> → ketuk bar alamat → <b>Tempel</b> (link sudah disalin) → Buka.</span></p>
+          <p className={step}><Icon name="more_horiz" className="!text-[18px] text-primary shrink-0" /><span><b>Atau:</b> ketuk <b>•••</b> / ikon <b>Aa</b> di pojok → <b>"Buka di Safari" / "Open in External Browser"</b>.</span></p>
+          <p className={step}><Icon name="install_mobile" className="!text-[18px] text-primary shrink-0" /><span>Di Safari → <b>Bagikan ⎙ → Tambah ke Layar Utama</b>.</span></p>
         </div>
       </div>
     )
@@ -102,15 +103,18 @@ export default function InstallPrompt({ label = 'Instal Aplikasi', sublabel = ''
   else if (ios) { tutorialMode = iosBrowser() === 'safari' ? 'ios-safari' : iosBrowser() === 'chrome' ? 'ios-chrome' : 'ios-other' }
 
   const onClick = () => {
-    // 1) Webview in-app → coba buka browser default; gagal (iOS) → tutorial.
+    // 1) Webview in-app:
     if (inApp) {
-      const opened = openInDefaultBrowser(INSTALL_URL)
-      if (!opened) setOpen((s) => !s)
+      if (isAndroid()) { openInDefaultBrowser(INSTALL_URL); return } // Android: paksa browser (intent) — andal
+      // iOS: skema custom diblokir Apple → SALIN link + tampilkan instruksi manual
+      // (buka via menu app, atau tempel di Safari). Paling jujur & pasti.
+      try { if (navigator.clipboard) navigator.clipboard.writeText(INSTALL_URL) } catch { /* noop */ }
+      setOpen(true)
       return
     }
     // 2) Chromium siap → install langsung.
     if (installable) { promptInstall(); return }
-    // 3) iOS / belum siap → buka/tutup tutorial.
+    // 3) iOS biasa / belum siap → buka/tutup tutorial.
     setOpen((s) => !s)
   }
 
