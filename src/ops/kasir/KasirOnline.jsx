@@ -126,9 +126,20 @@ export default function KasirOnline() {
       `Silakan ambil di booth ${branch.name} & sebutkan *PIN ${o.pin}* ya. Sampai jumpa! 🧡` +
       (branchMaps ? `\n\n📍 Lokasi booth: ${branchMaps}` : '')
     if (o.status === 'baru') {
+      // Pesan "diterima & sedang dibuat" — RAMAH + cegah customer bergerak kepagian.
+      // Maxim: jangan pesan Maxim dulu (driver datang sebelum corndog jadi → dingin).
+      // Ambil: belum perlu ke booth. Tutorial/instruksi ambil menyusul di "Pesanan Siap".
+      const baruMaxim =
+        `Hai ${o.name || 'kak'}! 🌽🧡 Pesanan ${noFmt} kamu sudah kami TERIMA & lagi kami buatkan fresh ya~\n\n` +
+        `Sambil kami goreng, *mohon jangan pesan Maxim dulu ya* 🙏 Nanti kami kabari lagi begitu pesanan SIAP — baru deh kamu pesan Maxim-nya, biar corndog-nya sampai masih anget & kriuk. 🛵💨\n\n` +
+        `Makasih banyak udah sabar nunggu yaa, ditunggu kabar berikutnya! 😊🧡 #CeritanyaBersamaCorney`
+      const baruAmbil =
+        `Hai ${o.name || 'kak'}! 🌽🧡 Pesanan ${noFmt} kamu sudah kami TERIMA & lagi kami buatkan fresh ya~\n\n` +
+        `Sambil kami goreng, *belum perlu ke booth dulu ya* 🙏 Nanti kami kabari lagi begitu pesanan SIAP & tinggal diambil, biar pas datang corndog-nya masih anget & kriuk. 🤤\n\n` +
+        `Makasih banyak udah sabar nunggu yaa, ditunggu kabar berikutnya! 😊🧡 #CeritanyaBersamaCorney`
       return {
         label: 'Konfirmasi Terima', color: 'bg-primary', wa: true,
-        text: `Halo ${o.name || 'kak'}! Pesanan ${noFmt} (PIN ${o.pin}) sudah kami TERIMA & sedang dibuat. Terima kasih sudah pesan di ${branch.name}! 🧡`,
+        text: o.method === 'maxim' ? baruMaxim : baruAmbil,
       }
     }
     if (o.status === 'diproses') {
