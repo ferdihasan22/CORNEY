@@ -47,7 +47,10 @@ export default function WalkinSale() {
   const orders = useOrders()
   const navigate = useNavigate()
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
-  const onlineNew = (orders || []).filter((o) => o.branchId === day?.branchId && o.paid && o.status === 'baru').length
+  // Badge HARUS sama persis dgn daftar di KasirOnline: paid + status 'baru' + sesi
+  // hari ini (createdAt ≥ startedAt). Tanpa filter sesi, order 'baru' hari-hari lalu
+  // yang belum diproses ikut terhitung → badge nunjukin angka tapi daftar kosong.
+  const onlineNew = (orders || []).filter((o) => o.branchId === day?.branchId && o.paid && o.status === 'baru' && (!day?.startedAt || new Date(o.createdAt).getTime() >= day.startedAt)).length
   const [filter, setFilter] = useState('all') // 'all' | parentId
   const [query, setQuery] = useState('')
   const [sauceFor, setSauceFor] = useState(null)
@@ -284,8 +287,8 @@ export default function WalkinSale() {
 
       <div className="flex pt-min-tap-target h-screen">
         {/* SideNav */}
-        <aside className="hidden lg:flex fixed left-0 top-0 h-full w-[240px] flex-col py-6 border-r border-outline-variant bg-surface-container-low z-40 pt-24">
-          <div className="flex flex-col gap-1 px-2">
+        <aside className="hidden lg:flex fixed left-0 top-0 h-full w-[240px] flex-col py-6 border-r border-outline-variant bg-surface-container-low z-40 pt-24 overflow-y-auto">
+          <div className="flex flex-col gap-1 px-2 shrink-0">
             {cats.map((c) => {
               const active = filter === c.id
               return (
@@ -302,7 +305,7 @@ export default function WalkinSale() {
               )
             })}
           </div>
-          <div className="mt-auto px-4 pb-8">
+          <div className="mt-auto px-4 pb-8 shrink-0">
             <button
               onClick={() => navigate('/ops/kasir/closing/belanja')}
               className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 mb-2"
