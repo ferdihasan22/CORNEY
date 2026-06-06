@@ -334,6 +334,13 @@ export default function WalkinSale() {
               <span className="font-label-lg text-label-lg">Catat Patah</span>
             </button>
             <button
+              onClick={() => navigate('/ops/kasir/saus')}
+              className="flex items-center gap-4 text-on-surface-variant p-4 w-full hover:bg-surface-variant rounded-xl transition-all duration-200"
+            >
+              <Icon name="water_drop" />
+              <span className="font-label-lg text-label-lg">Saus Habis</span>
+            </button>
+            <button
               onClick={() => navigate('/ops/kasir/koreksi')}
               className="flex items-center gap-4 text-on-surface-variant p-4 w-full hover:bg-surface-variant rounded-xl transition-all duration-200"
             >
