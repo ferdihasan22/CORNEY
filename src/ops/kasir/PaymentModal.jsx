@@ -23,7 +23,6 @@ const CHANNELS = [
   { id: 'grabfood', label: 'GrabFood', icon: 'moped', note: 'Dicatat saja' },
 ]
 
-const SIMULATOR_URL = 'https://simulator.sandbox.midtrans.com/v2/qris/index'
 const PAID_STATUSES = ['settlement', 'capture']
 
 export default function PaymentModal({ total, onClose, onComplete }) {
@@ -37,7 +36,6 @@ export default function PaymentModal({ total, onClose, onComplete }) {
   const [qmode, setQmode] = useState('idle') // idle | loading | live | dummy
   const [qrUrl, setQrUrl] = useState('')
   const [midId, setMidId] = useState('')
-  const [copied, setCopied] = useState(false)
   const [checking, setChecking] = useState(false)
   const [statusMsg, setStatusMsg] = useState('')
   const [paid, setPaid] = useState(false)
@@ -98,9 +96,6 @@ export default function PaymentModal({ total, onClose, onComplete }) {
       .finally(() => { if (!silent) setChecking(false) })
   }
 
-  const copyQr = async () => {
-    try { await navigator.clipboard.writeText(qrUrl); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch { /* clipboard blocked */ }
-  }
 
   function complete() {
     if (!cashOk) return
@@ -204,15 +199,6 @@ export default function PaymentModal({ total, onClose, onComplete }) {
               </div>
               <p className="font-body-md text-on-surface-variant text-center text-[13px]">QR dinamis Midtrans — pelanggan scan &amp; bayar, lunas terdeteksi otomatis.</p>
 
-              {import.meta.env.DEV && qmode === 'live' && (
-                <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-2">
-                  <p className="text-[12px] text-amber-900 leading-snug"><b>Mode uji (sandbox):</b> salin <b>URL QR</b>, buka Simulator, tempel, Submit. Status update otomatis.</p>
-                  <div className="flex gap-2">
-                    <button onClick={copyQr} className="flex-1 h-10 rounded-lg bg-amber-500 text-white text-[13px] font-bold flex items-center justify-center gap-1.5 active:scale-95"><Icon name={copied ? 'check' : 'content_copy'} className="!text-[16px]" /> {copied ? 'Tersalin' : 'Salin URL QR'}</button>
-                    <a href={SIMULATOR_URL} target="_blank" rel="noreferrer" className="flex-1 h-10 rounded-lg border border-amber-500 text-amber-700 text-[13px] font-bold flex items-center justify-center gap-1.5 active:scale-95"><Icon name="open_in_new" className="!text-[16px]" /> Simulator</a>
-                  </div>
-                </div>
-              )}
 
               <div className="flex items-center gap-2 text-on-surface-variant">
                 {paid ? (
@@ -265,9 +251,6 @@ export default function PaymentModal({ total, onClose, onComplete }) {
               </button>
               {qmode === 'dummy' && (
                 <button onClick={() => onComplete({ method: 'qris_midtrans', cashReceived: null })} className="w-full py-3 rounded-xl border border-outline text-on-surface-variant font-label-lg active:scale-95">Tandai Lunas (manual)</button>
-              )}
-              {import.meta.env.DEV && qmode === 'live' && !paid && (
-                <button onClick={finishPaid} className="w-full py-2.5 rounded-xl border border-dashed border-primary text-primary text-sm flex items-center justify-center gap-2 active:scale-95"><Icon name="bolt" className="!text-[18px]" /> Simulasi Lunas (uji)</button>
               )}
             </>
           ) : (

@@ -19,9 +19,6 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-// The Midtrans QRIS simulator expects the QR-code IMAGE URL (generate-qr-code
-// action), NOT the raw qr_string — pasting qr_string gives "QR inputted unparsable".
-const SIMULATOR_URL = 'https://simulator.sandbox.midtrans.com/v2/qris/index'
 const PAID_STATUSES = ['settlement', 'capture']
 
 export default function CustomerQris() {
@@ -37,7 +34,6 @@ export default function CustomerQris() {
   const [midId, setMidId] = useState('') // midtrans order_id (unique per charge)
   const [checking, setChecking] = useState(false)
   const [statusMsg, setStatusMsg] = useState('')
-  const [copied, setCopied] = useState(false)
   const [saving, setSaving] = useState(false)
   const [regenReady, setRegenReady] = useState(false) // token Turnstile siap utk "Buat QR Baru"
   const charged = useRef(false)
@@ -167,10 +163,6 @@ export default function CustomerQris() {
       .finally(() => { if (!silent) setChecking(false) })
   }
 
-  const copyQr = async () => {
-    try { await navigator.clipboard.writeText(qrUrl); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch { /* clipboard blocked */ }
-  }
-
   // Unduh gambar QR ke galeri → customer bayar lewat aplikasi m-banking / e-wallet
   // lain (scan dari galeri). Kalau CORS blokir fetch, buka di tab baru (simpan manual).
   const downloadQr = async () => {
@@ -257,31 +249,6 @@ export default function CustomerQris() {
           </div>
         )}
 
-        {/* Live testing helpers — copy qr_string + open simulator. HANYA DEV (sandbox);
-            di produksi disembunyikan supaya customer tak melihat UI testing. */}
-        {import.meta.env.DEV && mode === 'live' && !expired && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 space-y-3">
-            <div className="flex items-start gap-2">
-              <Icon name="science" className="text-amber-600 !text-[18px] shrink-0 mt-0.5" />
-              <p className="text-[13px] text-amber-900 leading-snug"><strong>Mode testing (sandbox):</strong> salin <strong>URL QR</strong> di bawah, buka Simulator, tempel di kolomnya, lalu Submit. Status update otomatis. (Jangan tempel qr_string — itu yang bikin "unparsable".)</p>
-            </div>
-            {qrUrl && (
-              <div className="bg-white rounded-lg border border-amber-200 p-2">
-                <p className="text-[10px] uppercase tracking-wider text-on-surface-variant mb-1">URL QR (untuk simulator)</p>
-                <p className="text-[11px] font-mono break-all leading-snug text-on-surface max-h-20 overflow-y-auto">{qrUrl}</p>
-              </div>
-            )}
-            <div className="flex gap-2">
-              <button onClick={copyQr} className="flex-1 h-11 rounded-lg bg-amber-500 text-white font-label-lg flex items-center justify-center gap-2 active:scale-95">
-                <Icon name={copied ? 'check' : 'content_copy'} className="!text-[18px]" /> {copied ? 'Tersalin!' : 'Salin URL QR'}
-              </button>
-              <a href={SIMULATOR_URL} target="_blank" rel="noreferrer" className="flex-1 h-11 rounded-lg border border-amber-500 text-amber-700 font-label-lg flex items-center justify-center gap-2 active:scale-95">
-                <Icon name="open_in_new" className="!text-[18px]" /> Simulator
-              </a>
-            </div>
-          </div>
-        )}
-
         {/* Status row — menunggu vs waktu habis */}
         {expired ? (
           <div className="bg-error-container/40 border border-error/40 rounded-2xl px-5 py-4 flex items-start gap-3 shadow-sm mb-4">
@@ -317,11 +284,6 @@ export default function CustomerQris() {
             </button>
           )}
           <button onClick={batal} className="w-full h-[52px] bg-surface-container text-on-surface-variant font-label-lg rounded-xl active:scale-[0.98] transition-all">Batalkan Pesanan</button>
-          {import.meta.env.DEV && !expired && (
-            <button onClick={finishPaid} className="w-full py-3 rounded-xl border border-dashed border-primary text-primary text-sm flex items-center justify-center gap-2 active:scale-95">
-              <Icon name="bolt" className="!text-[18px]" /> Simulasi Bayar (testing) — tandai LUNAS
-            </button>
-          )}
         </div>
 
         <div className="flex items-center justify-center gap-2 mt-5 text-center px-4">
