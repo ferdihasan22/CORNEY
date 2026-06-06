@@ -22,6 +22,7 @@ export async function pushMenu(m) {
     price: Math.max(0, Math.round(Number(m.price) || 0)),
     label: m.label || '',
     img: m.img || '',
+    desc: m.desc || '',
     active: m.active !== false,
   } })
 }

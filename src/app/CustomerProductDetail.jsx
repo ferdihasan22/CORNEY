@@ -99,7 +99,7 @@ export default function CustomerProductDetail() {
             <span className={`px-3 py-1 rounded-full font-label-md text-label-md ${isSweet ? 'bg-pink-100 text-pink-700' : 'bg-primary-fixed text-on-primary-fixed-variant'}`}>{isSweet ? 'Sweet' : 'Savory'}</span>
             {menu.label && <span className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-label-md">{menu.label}</span>}
           </div>
-          <p className="font-body-md text-on-surface-variant leading-relaxed mt-1">{describe(menu)}</p>
+          <p className="font-body-md text-on-surface-variant leading-relaxed mt-1 whitespace-pre-line">{menu.desc?.trim() || describe(menu)}</p>
         </section>
 
         {/* Sauce / topping rule */}

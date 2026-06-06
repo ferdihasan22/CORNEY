@@ -34,7 +34,7 @@ const Thumb = ({ src, alt }) => (
   </div>
 )
 
-const EMPTY = { name: '', parent: '', category: 'savory', price: '', label: '', img: '' }
+const EMPTY = { name: '', parent: '', category: 'savory', price: '', label: '', img: '', desc: '' }
 
 export default function OwnerMenus() {
   const navigate = useNavigate()
@@ -46,7 +46,7 @@ export default function OwnerMenus() {
   const [form, setForm] = useState(EMPTY)
 
   const openNew = () => { setForm({ ...EMPTY, parent: parents[0]?.id || '' }); setEditing({}) }
-  const openEdit = (m) => { setForm({ name: m.name, parent: m.parent, category: m.category, price: String(m.price), label: m.label, img: m.img }); setEditing(m) }
+  const openEdit = (m) => { setForm({ name: m.name, parent: m.parent, category: m.category, price: String(m.price), label: m.label, img: m.img, desc: m.desc || '' }); setEditing(m) }
   const close = () => setEditing(null)
 
   const save = (e) => {
@@ -181,6 +181,11 @@ export default function OwnerMenus() {
               <div className="flex flex-col gap-2">
                 <label className="font-label-md text-on-surface-variant">Nama Menu</label>
                 <input autoFocus value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Contoh: Mozza Ori" type="text" className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-surface-container-lowest" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="font-label-md text-on-surface-variant">Deskripsi <span className="text-on-surface-variant/60">(opsional — kosong = deskripsi otomatis)</span></label>
+                <textarea value={form.desc} onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))} rows={3} placeholder="Contoh: Keju mozzarella melimpah yang lumer, dibalut adonan korean corndog krispi." className="w-full border border-outline rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-surface-container-lowest resize-y" />
               </div>
 
               <div className="flex flex-col gap-2">

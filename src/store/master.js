@@ -266,7 +266,7 @@ export function parentNameById(id) {
 // ── Menus / variants (OWN-02 2-4) ───────────────────────
 // Sweet enforces the topping rule downstream (WalkinSale hides the sauce modal
 // for sweet). category is stored here as the single source of that rule.
-function normMenu({ name, parent, category, price, label, img, active = true }) {
+function normMenu({ name, parent, category, price, label, img, desc, active = true }) {
   return {
     name: (name || '').trim(),
     parent,
@@ -274,6 +274,7 @@ function normMenu({ name, parent, category, price, label, img, active = true }) 
     price: Math.max(0, Math.round(Number(price) || 0)),
     label: (label || '').trim(),
     img: (img || '').trim(),
+    desc: (desc || '').trim(),
     active,
   }
 }
@@ -305,6 +306,7 @@ export function updateMenu(id, data) {
     if (data.price != null) patch.price = Math.max(0, Math.round(Number(data.price) || 0))
     if (data.label != null) patch.label = data.label.trim()
     if (data.img != null) patch.img = data.img.trim()
+    if (data.desc != null) patch.desc = data.desc.trim()
     found = { ...x, ...patch }
     return found
   })

@@ -119,6 +119,7 @@ function mapMenu(m) {
     price: m.price ?? 0,
     label: m.label || '',
     img: m.img || '',
+    desc: m.desc || '',
     active: m.active !== false,
   }
 }

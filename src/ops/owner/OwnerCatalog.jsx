@@ -25,7 +25,7 @@ const CatBadge = ({ category }) => (
     : <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]"><Icon name="lunch_dining" className="!text-[13px]" /> Savory</span>
 )
 const P_EMPTY = { name: '', threshold: '' }
-const M_EMPTY = { name: '', parent: '', category: 'savory', price: '', label: '', img: '' }
+const M_EMPTY = { name: '', parent: '', category: 'savory', price: '', label: '', img: '', desc: '' }
 
 export default function OwnerCatalog() {
   const navigate = useNavigate()
@@ -43,7 +43,7 @@ export default function OwnerCatalog() {
   const savePar = (e) => { e.preventDefault(); if (!pForm.name.trim()) return; if (pEdit?.id) updateParent(pEdit.id, pForm); else addParent(pForm); setPEdit(null) }
 
   const openNewMenu = (parentId) => { setMForm({ ...M_EMPTY, parent: parentId || parents[0]?.id || '' }); setMEdit({}) }
-  const openEditMenu = (m) => { setMForm({ name: m.name, parent: m.parent, category: m.category, price: String(m.price), label: m.label || '', img: m.img || '' }); setMEdit(m) }
+  const openEditMenu = (m) => { setMForm({ name: m.name, parent: m.parent, category: m.category, price: String(m.price), label: m.label || '', img: m.img || '', desc: m.desc || '' }); setMEdit(m) }
   const saveMenu = (e) => { e.preventDefault(); if (!mForm.name.trim() || !mForm.parent) return; if (mEdit?.id) updateMenu(mEdit.id, mForm); else addMenu(mForm); setMEdit(null) }
 
   return (
@@ -145,6 +145,7 @@ export default function OwnerCatalog() {
               {/* Upload foto LANGSUNG dari perangkat (Cloudinary) — tak perlu URL */}
               <ImageUploadButton value={mForm.img} onChange={(url) => setMForm((f) => ({ ...f, img: url }))} label="Upload Foto dari Perangkat" />
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Nama Menu</label><input autoFocus value={mForm.name} onChange={(e) => setMForm((f) => ({ ...f, name: e.target.value }))} placeholder="Contoh: Mozza Ori" className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest" /></div>
+              <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Deskripsi <span className="text-on-surface-variant/60">(opsional — kosong = deskripsi otomatis)</span></label><textarea value={mForm.desc} onChange={(e) => setMForm((f) => ({ ...f, desc: e.target.value }))} rows={3} placeholder="Contoh: Keju mozzarella melimpah yang lumer, dibalut adonan korean corndog krispi." className="w-full border border-outline rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest resize-y" /></div>
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Isian Induk (tertaut 1:1)</label><select value={mForm.parent} onChange={(e) => setMForm((f) => ({ ...f, parent: e.target.value }))} className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest">{parents.length === 0 && <option value="">(tidak ada isian)</option>}{parents.map((p) => <option key={p.id} value={p.id}>{p.name}{p.active ? '' : ' (nonaktif)'}</option>)}</select></div>
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Kategori</label><div className="grid grid-cols-2 gap-2">{[['savory', 'Savory', 'lunch_dining', 'boleh saus'], ['sweet', 'Sweet', 'icecream', 'glaze, tanpa saus']].map(([val, lbl, ic, hint]) => (<button key={val} type="button" onClick={() => setMForm((f) => ({ ...f, category: val }))} className={`flex flex-col items-start gap-0.5 p-3 rounded-xl border-2 ${mForm.category === val ? 'border-primary bg-primary-container/10' : 'border-outline-variant'}`}><span className="flex items-center gap-1.5 font-bold"><Icon name={ic} className="!text-[18px]" /> {lbl}</span><span className="text-[10px] text-on-surface-variant">{hint}</span></button>))}</div></div>
               <div className="grid grid-cols-2 gap-3">
