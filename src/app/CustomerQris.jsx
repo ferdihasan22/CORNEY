@@ -161,7 +161,7 @@ export default function CustomerQris() {
       .then((r) => r.json())
       .then((d) => {
         if (PAID_STATUSES.includes(d.transaction_status)) finishPaid()
-        else if (!silent) setStatusMsg(`Status: ${d.transaction_status || 'pending'} — belum lunas. Bayar dulu di simulator ya.`)
+        else if (!silent) setStatusMsg(`Status: ${d.transaction_status || 'pending'} — belum lunas. Selesaikan pembayaran dulu ya.`)
       })
       .catch(() => { if (!silent) setStatusMsg('Gagal cek status. Coba lagi.') })
       .finally(() => { if (!silent) setChecking(false) })
@@ -257,8 +257,9 @@ export default function CustomerQris() {
           </div>
         )}
 
-        {/* Live testing helpers — copy qr_string + open simulator */}
-        {mode === 'live' && !expired && (
+        {/* Live testing helpers — copy qr_string + open simulator. HANYA DEV (sandbox);
+            di produksi disembunyikan supaya customer tak melihat UI testing. */}
+        {import.meta.env.DEV && mode === 'live' && !expired && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 space-y-3">
             <div className="flex items-start gap-2">
               <Icon name="science" className="text-amber-600 !text-[18px] shrink-0 mt-0.5" />

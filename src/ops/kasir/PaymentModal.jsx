@@ -93,7 +93,7 @@ export default function PaymentModal({ total, onClose, onComplete }) {
       : fetch(`/api/midtrans/status?order_id=${encodeURIComponent(midId)}`).then((r) => r.json())
     p.then((d) => {
       if (PAID_STATUSES.includes(d.transaction_status)) finishPaid()
-      else if (!silent) setStatusMsg(`Status: ${d.transaction_status || 'pending'} — belum lunas. Bayar dulu di simulator ya.`)
+      else if (!silent) setStatusMsg(`Status: ${d.transaction_status || 'pending'} — belum lunas. Pelanggan selesaikan pembayaran dulu ya.`)
     }).catch(() => { if (!silent) setStatusMsg('Gagal cek status. Coba lagi.') })
       .finally(() => { if (!silent) setChecking(false) })
   }
@@ -202,9 +202,9 @@ export default function PaymentModal({ total, onClose, onComplete }) {
                   </div>
                 )}
               </div>
-              <p className="font-body-md text-on-surface-variant text-center text-[13px]">QR dinamis Midtrans (sandbox) — pelanggan scan &amp; bayar, lunas terdeteksi otomatis.</p>
+              <p className="font-body-md text-on-surface-variant text-center text-[13px]">QR dinamis Midtrans — pelanggan scan &amp; bayar, lunas terdeteksi otomatis.</p>
 
-              {qmode === 'live' && (
+              {import.meta.env.DEV && qmode === 'live' && (
                 <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-2">
                   <p className="text-[12px] text-amber-900 leading-snug"><b>Mode uji (sandbox):</b> salin <b>URL QR</b>, buka Simulator, tempel, Submit. Status update otomatis.</p>
                   <div className="flex gap-2">
