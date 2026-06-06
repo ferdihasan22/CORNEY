@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fmtRp } from '../../data/menu.js'
 import { useMaster } from '../../store/useMaster.js'
+import ImageUploadButton from '../../app/ImageUploadButton.jsx'
 import {
   addParent, updateParent, toggleParentActive, linkedMenuCount,
   addMenu, updateMenu, toggleMenuActive,
@@ -139,8 +140,10 @@ export default function OwnerCatalog() {
             <form onSubmit={saveMenu} className="flex-grow flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-16 h-16 rounded-2xl bg-surface-container overflow-hidden shrink-0">{mForm.img ? <img src={mForm.img} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-on-surface-variant"><Icon name="add_a_photo" /></div>}</div>
-                <div className="flex-1"><label className="font-label-md text-on-surface-variant">URL Foto</label><input value={mForm.img} onChange={(e) => setMForm((f) => ({ ...f, img: e.target.value }))} placeholder="https://…" type="url" className="w-full h-[44px] border border-outline rounded-xl px-3 mt-1 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest text-sm" /></div>
+                <div className="flex-1"><label className="font-label-md text-on-surface-variant">URL Foto (opsional)</label><input value={mForm.img} onChange={(e) => setMForm((f) => ({ ...f, img: e.target.value }))} placeholder="https://…" type="url" className="w-full h-[44px] border border-outline rounded-xl px-3 mt-1 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest text-sm" /></div>
               </div>
+              {/* Upload foto LANGSUNG dari perangkat (Cloudinary) — tak perlu URL */}
+              <ImageUploadButton value={mForm.img} onChange={(url) => setMForm((f) => ({ ...f, img: url }))} label="Upload Foto dari Perangkat" />
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Nama Menu</label><input autoFocus value={mForm.name} onChange={(e) => setMForm((f) => ({ ...f, name: e.target.value }))} placeholder="Contoh: Mozza Ori" className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest" /></div>
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Isian Induk (tertaut 1:1)</label><select value={mForm.parent} onChange={(e) => setMForm((f) => ({ ...f, parent: e.target.value }))} className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest">{parents.length === 0 && <option value="">(tidak ada isian)</option>}{parents.map((p) => <option key={p.id} value={p.id}>{p.name}{p.active ? '' : ' (nonaktif)'}</option>)}</select></div>
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Kategori</label><div className="grid grid-cols-2 gap-2">{[['savory', 'Savory', 'lunch_dining', 'boleh saus'], ['sweet', 'Sweet', 'icecream', 'glaze, tanpa saus']].map(([val, lbl, ic, hint]) => (<button key={val} type="button" onClick={() => setMForm((f) => ({ ...f, category: val }))} className={`flex flex-col items-start gap-0.5 p-3 rounded-xl border-2 ${mForm.category === val ? 'border-primary bg-primary-container/10' : 'border-outline-variant'}`}><span className="flex items-center gap-1.5 font-bold"><Icon name={ic} className="!text-[18px]" /> {lbl}</span><span className="text-[10px] text-on-surface-variant">{hint}</span></button>))}</div></div>
