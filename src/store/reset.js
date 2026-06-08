@@ -15,8 +15,11 @@ const EMPTY_ARRAY_KEYS = [
   'corney_orders', 'corney_supplier_req_v2', 'corney_supplier_fulfilled_v1', 'corney_ledger', 'corney_auditlog',
 ]
 // Store map (object) → dikosongkan jadi {}.
+// CATATAN: 'corney_parstock' SENGAJA TIDAK di sini — Stok Standar (par_stock) adalah
+// KONFIG cabang yang dipertahankan saat Mulai Bersih (server pun tak men-truncate-nya),
+// jadi jangan dikosongkan di lokal supaya konsisten (tak balik-balik via hydrate).
 const EMPTY_OBJECT_KEYS = [
-  'corney_opsbelanja_v2', 'corney_supplier_prices_v2', 'corney_freezer', 'corney_investor_cfg_v1', 'corney_parstock',
+  'corney_opsbelanja_v2', 'corney_supplier_prices_v2', 'corney_freezer', 'corney_investor_cfg_v1',
 ]
 // Store sesi → dihapus (tidak ada hari/keranjang aktif saat mulai).
 const REMOVE_KEYS = ['corney_day', 'corney_cart']
