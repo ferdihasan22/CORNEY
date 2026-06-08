@@ -44,3 +44,7 @@ export function adminSetActiveRole(role, active) {
 export function adminListUsers() {
   return invokeAdmin({ action: 'list' })
 }
+// Hapus akun kasir cabang PERMANEN (saat cabang dihapus). Idempoten di server.
+export function adminDeleteKasir(branchId) {
+  return invokeAdmin({ action: 'delete_user', email: kasirEmail(branchId) })
+}

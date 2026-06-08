@@ -54,9 +54,15 @@ export async function pushBranch(b) {
     active: b.active !== false,
   } })
 }
+// Hapus cabang: buang entitas cabang + KONFIG operasionalnya (status buka, override
+// harga/saus per cabang). TIDAK menyentuh data LAPORAN historis (salesdaily/
+// stockdaily/orders) → laporan periode berjalan tetap utuh sampai Owner Reset Bulan.
 export async function removeBranch(id) {
   if (!id) return
   enqueue({ kind: 'delete', table: 'branches', matchId: id, key: `branches_del:${id}` })
+  enqueue({ kind: 'delete', table: 'branch_status', match: { branch_id: id }, key: `branch_status_del:${id}` })
+  enqueue({ kind: 'delete', table: 'branch_overrides', match: { branch_id: id }, key: `branch_overrides_del:${id}` })
+  enqueue({ kind: 'delete', table: 'branch_sauce_overrides', match: { branch_id: id }, key: `branch_sauce_ov_del:${id}` })
 }
 
 // ── Promos (field flat → data jsonb; id+active = kolom) ──

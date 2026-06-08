@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fmtRp, PARENT_FILLINGS } from '../../data/menu.js'
 import { useMaster } from '../../store/useMaster.js'
-import { addBranch, updateBranch, toggleBranchActive } from '../../store/master.js'
+import { addBranch, updateBranch, toggleBranchActive, deleteBranch } from '../../store/master.js'
 import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
-import { adminResetPasswordKasir, adminCreateKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
+import { adminResetPasswordKasir, adminCreateKasir, adminDeleteKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 import { useBranchStatus } from '../../store/useBranchStatus.js'
 import { setBranchOpenFor } from '../../store/branchStatus.js'
 import ImageUploadButton from '../../app/ImageUploadButton.jsx'
@@ -35,6 +35,24 @@ export default function OwnerBranches() {
   const [showPwd, setShowPwd] = useState(false)
   const [busy, setBusy] = useState(false)
   const [saveErr, setSaveErr] = useState('')
+  // Hapus cabang (permanen) — konfirmasi ketik nama.
+  const [delTarget, setDelTarget] = useState(null) // branch yang akan dihapus
+  const [delText, setDelText] = useState('')
+  const [delBusy, setDelBusy] = useState(false)
+  const [delErr, setDelErr] = useState('')
+
+  const doDelete = async () => {
+    if (!delTarget) return
+    setDelErr('')
+    setDelBusy(true)
+    // Hapus akun kasir di server dulu (mode Supabase). Idempoten.
+    if (isSupabase()) {
+      const res = await adminDeleteKasir(delTarget.id)
+      if (!res.ok) { setDelBusy(false); setDelErr('Gagal hapus akun kasir di server: ' + res.error); return }
+    }
+    deleteBranch(delTarget.id) // buang entitas + konfig (laporan historis TETAP)
+    setDelBusy(false); setDelTarget(null); setDelText('')
+  }
 
   const openNew = () => { setForm({ ...EMPTY, par: {} }); setEditing({}) }
   const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', qrisImg: b.qrisImg || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
@@ -129,16 +147,20 @@ export default function OwnerBranches() {
               })()}
               <div className="flex gap-2">
                 <button onClick={() => openEdit(b)} className="flex-grow bg-surface-variant text-on-surface py-3 rounded-xl font-label-lg hover:bg-outline-variant transition-colors flex items-center justify-center gap-2"><Icon name="edit" className="text-[20px]" /> Edit</button>
-                <button onClick={() => toggleBranchActive(b.id)} title={b.active ? 'Nonaktifkan' : 'Aktifkan'} className={`w-[52px] h-[52px] border rounded-xl flex items-center justify-center transition-colors ${b.active ? 'border-outline text-error hover:bg-error-container/30' : 'border-green-500 text-green-600 hover:bg-green-50'}`}>
-                  <Icon name={b.active ? 'block' : 'play_arrow'} />
+                <button onClick={() => toggleBranchActive(b.id)} title={b.active ? 'Nonaktifkan (sembunyikan, data tetap)' : 'Aktifkan'} className={`w-[52px] h-[52px] border rounded-xl flex items-center justify-center transition-colors ${b.active ? 'border-outline text-amber-600 hover:bg-amber-50' : 'border-green-500 text-green-600 hover:bg-green-50'}`}>
+                  <Icon name={b.active ? 'visibility_off' : 'play_arrow'} />
+                </button>
+                <button onClick={() => { setDelTarget(b); setDelText(''); setDelErr('') }} title="Hapus cabang permanen" className="w-[52px] h-[52px] border border-outline text-error hover:bg-error-container/40 rounded-xl flex items-center justify-center transition-colors">
+                  <Icon name="delete" />
                 </button>
               </div>
             </div>
           ))}
         </div>
 
-        <footer className="pt-8 pb-2 text-center">
-          <p className="text-label-md text-on-surface-variant flex items-center justify-center gap-2"><Icon name="info" className="text-[18px]" /> Nonaktif ≠ hapus. Data historis tetap utuh untuk laporan finansial.</p>
+        <footer className="pt-8 pb-2 text-center space-y-1">
+          <p className="text-label-md text-on-surface-variant flex items-center justify-center gap-2"><Icon name="visibility_off" className="text-[18px]" /> <b>Nonaktif</b> = sembunyikan dari operasional, data tetap & bisa diaktifkan lagi.</p>
+          <p className="text-label-md text-on-surface-variant flex items-center justify-center gap-2"><Icon name="delete" className="text-[18px]" /> <b>Hapus</b> = cabang & akun kasir hilang permanen. Laporan/transaksi yang sudah ada <b>tetap tersimpan</b> di Master Laporan sampai kamu <b>Reset Bulan</b>.</p>
         </footer>
       </main>
 
@@ -264,6 +286,38 @@ export default function OwnerBranches() {
               <div className="grid grid-cols-2 gap-4">
                 <button type="button" onClick={close} disabled={busy} className="h-[52px] border border-outline text-on-surface-variant rounded-[14px] font-label-lg hover:bg-surface-variant transition-colors disabled:opacity-50">Batal</button>
                 <button onClick={save} disabled={busy} className="h-[52px] bg-primary text-on-primary rounded-[14px] font-label-lg shadow-lg hover:brightness-110 active:scale-95 transition-all disabled:opacity-50">{busy ? 'Menyimpan…' : 'Simpan'}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Konfirmasi HAPUS cabang — ketik nama persis untuk mencegah salah hapus */}
+      {delTarget && (
+        <div className="fixed inset-0 z-[120] bg-black/50 flex items-center justify-center p-4" onClick={() => !delBusy && setDelTarget(null)}>
+          <div className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="px-5 py-4 bg-error-container/50 flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-error text-on-error flex items-center justify-center shrink-0"><Icon name="delete_forever" /></div>
+              <div>
+                <h2 className="font-headline-md text-error leading-tight">Hapus cabang permanen?</h2>
+                <p className="text-[12px] text-on-surface-variant">{delTarget.name}</p>
+              </div>
+            </div>
+            <div className="p-5 space-y-3">
+              <div className="text-[13px] text-on-surface leading-snug bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-1.5">
+                <p className="flex items-start gap-1.5"><Icon name="warning" className="!text-[16px] text-amber-600 mt-0.5 shrink-0" /> Cabang & <b>akun kasir-nya</b> akan dihapus permanen. Kasir tak bisa login lagi.</p>
+                <p className="flex items-start gap-1.5"><Icon name="check_circle" className="!text-[16px] text-green-600 mt-0.5 shrink-0" /> <b>Laporan & transaksi yang sudah ada TETAP tersimpan</b> di Master Laporan — sampai kamu klik <b>Reset Bulan</b>.</p>
+              </div>
+              <div>
+                <label className="text-[12px] font-bold text-on-surface-variant">Ketik nama cabang untuk konfirmasi:</label>
+                <input value={delText} onChange={(e) => setDelText(e.target.value)} placeholder={delTarget.name} autoCapitalize="none" className="w-full h-[48px] mt-1 px-3 rounded-xl border border-outline focus:border-error focus:ring-1 focus:ring-error outline-none bg-surface-container-lowest text-sm" />
+              </div>
+              {delErr && <p className="text-[12px] text-error flex items-start gap-1.5"><Icon name="error" className="!text-[16px] mt-0.5 shrink-0" /> {delErr}</p>}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <button onClick={() => setDelTarget(null)} disabled={delBusy} className="h-[50px] border border-outline text-on-surface-variant rounded-xl font-label-lg hover:bg-surface-variant disabled:opacity-50">Batal</button>
+                <button onClick={doDelete} disabled={delBusy || delText.trim().toLowerCase() !== (delTarget.name || '').trim().toLowerCase()} className="h-[50px] bg-error text-on-error rounded-xl font-label-lg shadow-lg active:scale-95 transition-all disabled:opacity-40 flex items-center justify-center gap-2">
+                  <Icon name="delete_forever" className="!text-[20px]" /> {delBusy ? 'Menghapus…' : 'Hapus'}
+                </button>
               </div>
             </div>
           </div>

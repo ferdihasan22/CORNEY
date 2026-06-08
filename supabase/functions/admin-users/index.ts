@@ -124,6 +124,15 @@ Deno.serve(async (req: Request) => {
         if (error) throw error
         return json({ ok: true })
       }
+      case "delete_user": {
+        // Hapus akun staf PERMANEN (mis. saat cabang dihapus). Idempoten.
+        const u = await findUserByEmail(String(body.email || ""))
+        if (!u) return json({ ok: true, note: "user sudah tidak ada" })
+        await admin.from("profiles").delete().eq("id", u.id)
+        const { error } = await admin.auth.admin.deleteUser(u.id)
+        if (error) throw error
+        return json({ ok: true })
+      }
       case "set_active": {
         const u = await findUserByEmail(String(body.email || ""))
         if (!u) return json({ error: "user tidak ditemukan" }, 404)

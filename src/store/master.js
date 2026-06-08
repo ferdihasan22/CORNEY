@@ -399,6 +399,17 @@ export function addBranch(data) {
   return branch
 }
 
+// Hapus cabang (permanen) — entitas + konfig operasional. Data laporan historis
+// TIDAK ikut terhapus (lihat removeBranch di master.write). Akun kasir Auth dihapus
+// terpisah oleh pemanggil (adminDeleteKasir) di mode Supabase.
+export function deleteBranch(id) {
+  if (!state) return false
+  if (!state.branches.some((x) => x.id === id)) return false
+  commit({ ...state, branches: state.branches.filter((x) => x.id !== id) })
+  remoteWrite((w) => w.removeBranch(id))
+  return true
+}
+
 export function updateBranch(id, data) {
   if (!state) return null
   let found = null
