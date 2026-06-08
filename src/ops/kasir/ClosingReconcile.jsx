@@ -43,8 +43,10 @@ export default function ClosingReconcile() {
   const kasPenjualanAktual = fisik
   const selisih = fisik - setoran
   const entered = fisik > 0 // kasir sudah hitung & isi?
-  // CLS-05 (v56): cash must be EXACT — no tolerance. Any non-zero selisih needs a reason.
-  const needsReason = entered && selisih !== 0
+  // FLEKSIBEL: selisih DIPERBOLEHKAN — kasir tetap bisa lanjut walau tak pas.
+  // Selisih SELALU dicatat (saveClosingReconcile.selisih) & dilaporkan ke Owner.
+  // Alasan OPSIONAL (disarankan saat ada selisih) — tidak lagi mengunci tombol.
+  const hasSelisih = entered && selisih !== 0
   const gopayPresent = total.qris_gopay > 0
 
   const NON_TUNAI = [
@@ -56,7 +58,7 @@ export default function ClosingReconcile() {
   const shown = NON_TUNAI.filter((c) => total[c.id] > 0)
   const skipped = ['tunai', ...NON_TUNAI.map((c) => c.id)].filter((id) => (count[id] || 0) === 0).length
 
-  const canContinue = entered && (!gopayPresent || gopayOk) && (!needsReason || reason.trim())
+  const canContinue = entered && (!gopayPresent || gopayOk) // selisih tak mengunci
 
   function lanjut() {
     if (!canContinue) return
@@ -138,11 +140,12 @@ export default function ClosingReconcile() {
                 </div>
               </div>
             )}
-            {needsReason && (
+            {hasSelisih && (
               <div className="mt-4">
-                <label className="block text-label-md font-label-md text-primary mb-1">Uang harus pas. Karena ada beda, tulis kenapa ya (nanti dilihat Owner) *</label>
+                <label className="block text-label-md font-label-md text-primary mb-1">Alasan selisih <span className="text-on-surface-variant font-normal">(opsional — sangat disarankan, nanti dilihat Owner)</span></label>
                 <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows="2" placeholder="contoh: salah kasih kembalian / lupa catat uang keluar"
                   className="w-full p-3 bg-surface border border-outline rounded-xl focus:ring-2 focus:ring-primary outline-none resize-none" />
+                <p className="text-[11px] text-on-surface-variant mt-1 flex items-start gap-1"><Icon name="info" className="!text-[14px] shrink-0 mt-0.5" /> Selisih <b>{selisih > 0 ? '+' : ''}{fmtRp(selisih)}</b> tetap tercatat & dilaporkan ke Owner meski alasan dikosongkan.</p>
               </div>
             )}
           </section>
@@ -196,7 +199,7 @@ export default function ClosingReconcile() {
         <div className="flex items-start gap-3 max-w-xl">
           <Icon name="info" className="text-secondary pt-1" />
           <p className="text-label-md font-label-md text-on-surface-variant">
-            Uang harus <b>PAS</b> sampai rupiah terakhir. <span className="text-primary font-bold">Kalau ada beda sedikit pun, tulis alasannya — Owner akan lihat.</span>
+            Usahakan <b>PAS</b>. Kalau ada selisih, <span className="text-primary font-bold">tetap bisa lanjut</span> — selisihnya <b>tercatat & dilaporkan ke Owner</b>. Tulis alasannya kalau tahu (opsional).
           </p>
         </div>
         <button onClick={lanjut} disabled={!canContinue} className="h-[52px] px-8 bg-primary text-on-primary rounded-[14px] font-bold text-label-lg shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-40 shrink-0">
