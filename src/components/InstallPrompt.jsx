@@ -99,7 +99,7 @@ export default function InstallPrompt({ label = 'Instal Aplikasi', sublabel = ''
   let label2 = label
   let icon = 'install_mobile'
   let tutorialMode = 'generic'
-  if (inApp) { label2 = 'Buka di Browser'; icon = 'open_in_browser'; tutorialMode = ios ? 'inapp-ios' : 'generic' }
+  if (inApp) { label2 = 'Instal App di Browser'; icon = 'open_in_browser'; tutorialMode = ios ? 'inapp-ios' : 'generic' }
   else if (ios) { tutorialMode = iosBrowser() === 'safari' ? 'ios-safari' : iosBrowser() === 'chrome' ? 'ios-chrome' : 'ios-other' }
 
   const onClick = () => {
