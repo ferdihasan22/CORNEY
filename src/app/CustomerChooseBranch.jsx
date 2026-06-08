@@ -188,6 +188,14 @@ export default function CustomerChooseBranch() {
                     ) : (
                       <span className="bg-surface-dim text-on-surface-variant text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Belum buka</span>
                     )}
+                    {/* Badge kapabilitas (realtime via useMaster): Ambil Nanti selalu;
+                        Delivery MAXIM hanya bila cabang mengaktifkannya (Owner). */}
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      <span className="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><Icon name="schedule" className="!text-[12px]" /> Bisa Ambil Nanti</span>
+                      {b.maximEnabled !== false && (
+                        <span className="bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><Icon name="two_wheeler" className="!text-[12px]" /> Bisa Delivery MAXIM</span>
+                      )}
+                    </div>
                   </div>
                   <p className="font-label-md text-[12px] text-on-surface-variant italic">{open ? `online sampai ${onlineUntil}` : 'kasir belum buka toko hari ini'}</p>
                 </div>
