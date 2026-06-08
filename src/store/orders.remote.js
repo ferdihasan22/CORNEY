@@ -105,7 +105,14 @@ export function initKasirOrdersSync(commit) {
   const hydrate = async () => {
     await flush() // dorong dulu update kasir yg tertunda → baca-balik tak menimpa
     if (hasPending('orders')) return
-    const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
+    // BATAS RIWAYAT: muat hanya ~45 hari terakhir (BUKAN semua order) supaya store
+    // live tak bertumpuk seiring waktu. Cukup menutupi konsumen terjauh: laporan
+    // Owner "Pesanan Online" (periode maks = BULAN BERJALAN) + operasi kasir hari
+    // ini (KasirOnline/Closing/reconcile pakai sesi hari ini). Order lama TETAP
+    // aman di DB & laporan resmi via sales_daily — hanya tak dimuat ke store live.
+    // 45 hari selalu mencakup bulan berjalan penuh di tanggal berapa pun.
+    const cutoff = new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString()
+    const { data, error } = await supabase.from('orders').select('*').gte('created_at', cutoff).order('created_at', { ascending: false })
     if (error || !data) return
     commit(data.map(fromRow))
   }
