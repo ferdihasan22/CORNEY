@@ -24,6 +24,13 @@ export function rowSisaBersih(row) {
 // Laba Bersih 1 baris = Sisa Bersih − Uang Belanjaan Supplier.
 export function rowLaba(row) { return rowSisaBersih(row) - expenseAmount(row.tgl, row.branchId) }
 
+// Apakah cabang ini punya data laporan di PERIODE BERJALAN (belum di-Reset Bulan)?
+// Dipakai gerbang hapus cabang: kalau masih ada data → sarankan Nonaktif dulu.
+export function branchHasReportData(branchId) {
+  if (!branchId) return false
+  return getSalesDaily().some((r) => r.branchId === branchId) || getStockDaily().some((r) => r.branchId === branchId)
+}
+
 // Agregat per cabang (semua tanggal di salesdaily). branchId → {omzet, sisaBersih, laba, hari}.
 export function aggregateByBranch() {
   const map = {}

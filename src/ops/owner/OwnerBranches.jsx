@@ -9,6 +9,7 @@ import { isSupabase } from '../../lib/backend.js'
 import { adminResetPasswordKasir, adminCreateKasir, adminDeleteKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 import { useBranchStatus } from '../../store/useBranchStatus.js'
 import { setBranchOpenFor } from '../../store/branchStatus.js'
+import { branchHasReportData } from '../../store/aggregate.js'
 import ImageUploadButton from '../../app/ImageUploadButton.jsx'
 
 // 2.3 — §3 Multi-cabang · Kelola Cabang. Ported from Stitch
@@ -40,6 +41,14 @@ export default function OwnerBranches() {
   const [delText, setDelText] = useState('')
   const [delBusy, setDelBusy] = useState(false)
   const [delErr, setDelErr] = useState('')
+
+  const delHasData = delTarget ? branchHasReportData(delTarget.id) : false
+
+  const deactivateInstead = () => {
+    if (!delTarget) return
+    if (delTarget.active !== false) toggleBranchActive(delTarget.id)
+    setDelTarget(null); setDelText('')
+  }
 
   const doDelete = async () => {
     if (!delTarget) return
@@ -304,12 +313,25 @@ export default function OwnerBranches() {
               </div>
             </div>
             <div className="p-5 space-y-3">
+              {/* GERBANG CERDAS: cabang masih punya data laporan periode berjalan */}
+              {delHasData && (
+                <div className="text-[13px] leading-snug bg-error-container/40 border border-error/40 rounded-xl p-3 space-y-2">
+                  <p className="flex items-start gap-1.5 text-error font-bold"><Icon name="report" className="!text-[18px] mt-0.5 shrink-0" /> Cabang ini masih punya <b>data laporan bulan berjalan</b>.</p>
+                  <p className="text-on-surface">Disarankan <b>Nonaktifkan dulu</b> (data & laporan tetap rapi), lalu hapus permanen <b>setelah Reset Bulan</b>. Hapus sekarang tetap menyimpan datanya, tapi nama cabang akan tampil sebagai kode di laporan sisa bulan ini.</p>
+                  {delTarget.active !== false && (
+                    <button onClick={deactivateInstead} disabled={delBusy} className="w-full h-11 rounded-xl bg-amber-500 text-white font-bold flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50">
+                      <Icon name="visibility_off" className="!text-[18px]" /> Nonaktifkan saja (rekomendasi)
+                    </button>
+                  )}
+                </div>
+              )}
+
               <div className="text-[13px] text-on-surface leading-snug bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-1.5">
                 <p className="flex items-start gap-1.5"><Icon name="warning" className="!text-[16px] text-amber-600 mt-0.5 shrink-0" /> Cabang & <b>akun kasir-nya</b> akan dihapus permanen. Kasir tak bisa login lagi.</p>
                 <p className="flex items-start gap-1.5"><Icon name="check_circle" className="!text-[16px] text-green-600 mt-0.5 shrink-0" /> <b>Laporan & transaksi yang sudah ada TETAP tersimpan</b> di Master Laporan — sampai kamu klik <b>Reset Bulan</b>.</p>
               </div>
               <div>
-                <label className="text-[12px] font-bold text-on-surface-variant">Ketik nama cabang untuk konfirmasi:</label>
+                <label className="text-[12px] font-bold text-on-surface-variant">{delHasData ? 'Tetap mau hapus? Ketik nama cabang:' : 'Ketik nama cabang untuk konfirmasi:'}</label>
                 <input value={delText} onChange={(e) => setDelText(e.target.value)} placeholder={delTarget.name} autoCapitalize="none" className="w-full h-[48px] mt-1 px-3 rounded-xl border border-outline focus:border-error focus:ring-1 focus:ring-error outline-none bg-surface-container-lowest text-sm" />
               </div>
               {delErr && <p className="text-[12px] text-error flex items-start gap-1.5"><Icon name="error" className="!text-[16px] mt-0.5 shrink-0" /> {delErr}</p>}
