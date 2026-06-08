@@ -173,15 +173,22 @@ export default function CustomerCheckout() {
         {/* Pickup method */}
         <section className="bg-white rounded-2xl p-4 shadow-[0_4px_16px_rgba(26,26,26,0.08)] space-y-3">
           <h2 className="font-label-lg">Cara Ambil</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {[['ambil', 'Ambil Sendiri', 'storefront', 'Nggak perlu antri/nunggu, datang langsung ambil'], ['maxim', 'Maxim / Ojek', 'two_wheeler', 'ongkir terpisah']].map(([val, lbl, ic, hint]) => (
-              <button key={val} onClick={() => setMethod(val)} className={`p-4 rounded-xl border-2 flex flex-col items-start gap-1 transition-all ${method === val ? 'border-primary bg-primary-fixed' : 'border-outline-variant'}`}>
-                <Icon name={ic} className={method === val ? 'text-primary' : ''} />
-                <span className="font-label-lg">{lbl}</span>
-                <span className="text-[11px] text-on-surface-variant leading-snug text-left">{hint}</span>
-              </button>
-            ))}
-          </div>
+          {(() => {
+            // Opsi Maxim hanya muncul bila cabang mengaktifkannya (Owner › Kelola Cabang).
+            const opts = [['ambil', 'Ambil Sendiri', 'storefront', 'Nggak perlu antri/nunggu, datang langsung ambil']]
+            if (branch.maximEnabled !== false) opts.push(['maxim', 'Maxim / Ojek', 'two_wheeler', 'ongkir terpisah'])
+            return (
+              <div className={`grid ${opts.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
+                {opts.map(([val, lbl, ic, hint]) => (
+                  <button key={val} onClick={() => setMethod(val)} className={`p-4 rounded-xl border-2 flex flex-col items-start gap-1 transition-all ${method === val ? 'border-primary bg-primary-fixed' : 'border-outline-variant'}`}>
+                    <Icon name={ic} className={method === val ? 'text-primary' : ''} />
+                    <span className="font-label-lg">{lbl}</span>
+                    <span className="text-[11px] text-on-surface-variant leading-snug text-left">{hint}</span>
+                  </button>
+                ))}
+              </div>
+            )
+          })()}
           {method === 'maxim' && (
             <>
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 flex items-start gap-2 text-amber-900">

@@ -98,6 +98,7 @@ function mapBranch(b) {
     qrisImg: b.qris_img || '', // gambar QRIS GoPay per cabang
     username: (b.username || 'corney-' + b.id).toLowerCase(), // dari DB; fallback corney-<id>
     maximName: b.maxim_name || b.name,
+    maximEnabled: b.maxim_enabled !== false, // opsi Maxim di checkout (default aktif)
     kembalian: b.kembalian ?? 200000,
     active: b.active !== false,
     stopOnline: b.stop_online || '21:30',

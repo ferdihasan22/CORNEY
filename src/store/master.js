@@ -364,7 +364,7 @@ export function saveRecipe(menuId, rows) {
 }
 
 // ── Branches / outlets (§3) ─────────────────────────────
-function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembalian, stopOnline, closeBooth, username, password, active = true }) {
+function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembalian, stopOnline, closeBooth, username, password, maximEnabled = true, active = true }) {
   const nm = (name || '').trim()
   return {
     name: nm,
@@ -380,6 +380,7 @@ function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembal
     closeBooth: closeBooth || '22:00',
     username: (username || '').trim().toLowerCase(), // login cabang (kasir)
     password: (password == null ? '' : String(password)).trim(), // Fase 2 lokal; aman penuh di TAHAP 4
+    maximEnabled: maximEnabled !== false, // opsi Maxim/Ojek di checkout (default aktif)
     active,
   }
 }
@@ -416,7 +417,7 @@ export function updateBranch(id, data) {
   const branches = state.branches.map((x) => {
     if (x.id !== id) return x
     const patch = {}
-    for (const k of ['name', 'address', 'wa', 'maps', 'coord', 'qrisImg', 'maximName', 'kembalian', 'stopOnline', 'closeBooth', 'username', 'password']) {
+    for (const k of ['name', 'address', 'wa', 'maps', 'coord', 'qrisImg', 'maximName', 'kembalian', 'stopOnline', 'closeBooth', 'username', 'password', 'maximEnabled']) {
       if (data[k] != null) patch[k] = typeof data[k] === 'string' ? data[k].trim() : data[k]
     }
     if (patch.username != null) patch.username = patch.username.toLowerCase() // username login selalu huruf kecil

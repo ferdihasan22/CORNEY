@@ -21,7 +21,7 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', qrisImg: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', par: {} }
+const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', qrisImg: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', maximEnabled: true, par: {} }
 
 export default function OwnerBranches() {
   const navigate = useNavigate()
@@ -64,7 +64,7 @@ export default function OwnerBranches() {
   }
 
   const openNew = () => { setForm({ ...EMPTY, par: {} }); setEditing({}) }
-  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', qrisImg: b.qrisImg || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', par: { ...parOf(b.id) } }); setEditing(b) }
+  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', qrisImg: b.qrisImg || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', maximEnabled: b.maximEnabled !== false, par: { ...parOf(b.id) } }); setEditing(b) }
   const close = () => { setEditing(null); setSaveErr(''); setBusy(false) }
   const setParField = (pid, v) => setForm((f) => ({ ...f, par: { ...f.par, [pid]: Math.max(0, Number(String(v).replace(/\D/g, '')) || 0) } }))
   const applyPar = (id) => PARENT_FILLINGS.forEach((p) => setPar(id, p.id, form.par?.[p.id] || 0))
@@ -130,7 +130,7 @@ export default function OwnerBranches() {
               <div className="space-y-2 mb-4 flex-grow">
                 <div className="flex items-start gap-2 text-on-surface-variant"><Icon name="location_on" className="text-[18px] shrink-0" /><p className="text-label-md">{b.address}</p></div>
                 <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="call" className="text-[18px] shrink-0" /><p className="text-label-md">{b.wa} (WA Business)</p></div>
-                <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="two_wheeler" className="text-[18px] shrink-0" /><p className="text-label-md">Maxim: <strong>{b.maximName || b.name}</strong></p></div>
+                <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="two_wheeler" className="text-[18px] shrink-0" />{b.maximEnabled !== false ? <p className="text-label-md">Maxim: <strong>{b.maximName || b.name}</strong></p> : <p className="text-label-md flex items-center gap-1.5">Maxim: <span className="text-[11px] font-bold bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded-full">Nonaktif</span></p>}</div>
                 <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="savings" className="text-[18px] shrink-0" /><p className="text-label-md">Kembalian: <strong>{fmtRp(b.kembalian ?? 0)}</strong></p></div>
               </div>
               <div className={`flex flex-wrap gap-2 mb-3 ${b.active ? '' : 'opacity-50 grayscale'}`}>
@@ -225,11 +225,28 @@ export default function OwnerBranches() {
                   {form.qrisImg && <img src={form.qrisImg} alt="QRIS GoPay" className="mt-1 w-32 h-32 object-contain rounded-xl border border-outline-variant bg-white p-1" />}
                   <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Muncul di kasir saat metode <strong>QRIS GoPay</strong> dipilih — pelanggan scan gambar ini. Pakai screenshot QR GoPay/QRIS statis cabang.</p>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="two_wheeler" className="!text-[16px]" /> Nama Lokasi di Maxim</label>
-                  <input value={form.maximName} onChange={(e) => setForm((f) => ({ ...f, maximName: e.target.value }))} placeholder="Corney Sepinggan" type="text" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
-                  <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Nama yang diketik customer sebagai <strong>titik penjemputan</strong> di aplikasi Maxim. Kosongkan = pakai nama cabang.</p>
+                {/* Saklar metode Pengantaran Maxim/Ojek di checkout customer */}
+                <div className="rounded-[14px] border border-outline-variant p-3">
+                  <label className="flex items-center justify-between gap-3 cursor-pointer select-none">
+                    <span className="flex items-center gap-2 min-w-0">
+                      <Icon name="two_wheeler" className={form.maximEnabled ? 'text-primary' : 'text-on-surface-variant'} />
+                      <span className="min-w-0">
+                        <span className="text-label-lg font-bold block leading-tight">Pengantaran Maxim / Ojek</span>
+                        <span className="text-[11px] text-on-surface-variant leading-snug">{form.maximEnabled ? 'Aktif — customer cabang ini bisa pilih Maxim saat checkout.' : 'Nonaktif — customer hanya bisa "Ambil Sendiri".'}</span>
+                      </span>
+                    </span>
+                    <button type="button" role="switch" aria-checked={form.maximEnabled} onClick={() => setForm((f) => ({ ...f, maximEnabled: !f.maximEnabled }))} className={`relative w-12 h-7 rounded-full shrink-0 transition-colors ${form.maximEnabled ? 'bg-primary' : 'bg-outline-variant'}`}>
+                      <span className={`absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-white shadow transition-transform ${form.maximEnabled ? 'translate-x-5' : ''}`} />
+                    </button>
+                  </label>
                 </div>
+                {form.maximEnabled && (
+                  <div className="space-y-1">
+                    <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="two_wheeler" className="!text-[16px]" /> Nama Lokasi di Maxim</label>
+                    <input value={form.maximName} onChange={(e) => setForm((f) => ({ ...f, maximName: e.target.value }))} placeholder="Corney Sepinggan" type="text" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
+                    <p className="text-[11px] text-on-surface-variant ml-1 leading-snug">Nama yang diketik customer sebagai <strong>titik penjemputan</strong> di aplikasi Maxim. Kosongkan = pakai nama cabang.</p>
+                  </div>
+                )}
                 <div className="space-y-1">
                   <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="savings" className="!text-[16px]" /> Standar Uang Kembalian (Modal Awal)</label>
                   <div className="relative">

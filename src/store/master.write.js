@@ -51,6 +51,7 @@ export async function pushBranch(b) {
     stop_online: b.stopOnline || '21:30',
     close_booth: b.closeBooth || '22:00',
     username: (b.username || `corney-${b.id}`).trim().toLowerCase(), // username login kasir (persist + realtime)
+    maxim_enabled: b.maximEnabled !== false, // opsi Maxim/Ojek di checkout customer (default aktif)
     active: b.active !== false,
   } })
 }
