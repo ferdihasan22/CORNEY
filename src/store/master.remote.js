@@ -96,7 +96,7 @@ function mapBranch(b) {
     maps: b.maps || '',
     coord: b.coord || '', // "lat,lng" cabang terdekat (customer)
     qrisImg: b.qris_img || '', // gambar QRIS GoPay per cabang
-    username: 'corney-' + b.id, // disintesis (lihat catatan di atas)
+    username: (b.username || 'corney-' + b.id).toLowerCase(), // dari DB; fallback corney-<id>
     maximName: b.maxim_name || b.name,
     kembalian: b.kembalian ?? 200000,
     active: b.active !== false,

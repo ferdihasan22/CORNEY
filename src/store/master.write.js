@@ -35,7 +35,7 @@ export async function pushParent(p) {
   } })
 }
 
-// ── Branches (kolom auth username/password TIDAK ditulis ke tabel ini) ──
+// ── Branches (username login DITULIS; password TIDAK — password asli di Supabase Auth) ──
 export async function pushBranch(b) {
   if (!b?.id) return
   enqueue({ kind: 'upsert', table: 'branches', key: `branches:${b.id}`, row: {
@@ -50,8 +50,13 @@ export async function pushBranch(b) {
     kembalian: Math.max(0, Math.round(Number(b.kembalian) || 0)),
     stop_online: b.stopOnline || '21:30',
     close_booth: b.closeBooth || '22:00',
+    username: (b.username || `corney-${b.id}`).trim().toLowerCase(), // username login kasir (persist + realtime)
     active: b.active !== false,
   } })
+}
+export async function removeBranch(id) {
+  if (!id) return
+  enqueue({ kind: 'delete', table: 'branches', matchId: id, key: `branches_del:${id}` })
 }
 
 // ── Promos (field flat → data jsonb; id+active = kolom) ──

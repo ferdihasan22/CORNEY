@@ -217,11 +217,11 @@ export default function OwnerBranches() {
                   <div className="space-y-1">
                     <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1">Password</label>
                     <div className="relative">
-                      <input value={form.password} onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} type={showPwd ? 'text' : 'password'} autoCapitalize="none" placeholder={editing.id ? 'kosongkan = tidak diubah' : 'minimal 4 karakter'} className="w-full h-[52px] border border-outline pl-4 pr-12 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
+                      <input value={form.password} onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} type={showPwd ? 'text' : 'password'} autoCapitalize="none" placeholder={editing.id ? 'kosongkan = tidak diubah' : `minimal ${MIN_PASSWORD} karakter`} className="w-full h-[52px] border border-outline pl-4 pr-12 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
                       <button type="button" onClick={() => setShowPwd((s) => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high"><Icon name={showPwd ? 'visibility_off' : 'visibility'} /></button>
                     </div>
                   </div>
-                  <p className="text-[11px] text-amber-700 flex items-start gap-1 leading-snug"><Icon name="info" className="!text-[14px] mt-0.5 shrink-0" /> Tersimpan lokal di perangkat (Fase 2) — cukup untuk pemisahan login antar-cabang. Keamanan penuh saat sistem pusat aktif (TAHAP 4).</p>
+                  <p className="text-[11px] text-amber-700 flex items-start gap-1 leading-snug"><Icon name="info" className="!text-[14px] mt-0.5 shrink-0" /> {isSupabase() ? `Password disimpan AMAN di server (Supabase Auth), minimal ${MIN_PASSWORD} karakter. Begitu disimpan, kasir langsung pakai password baru saat login berikutnya.` : 'Tersimpan lokal di perangkat (mode lokal) — cukup untuk pemisahan login antar-cabang.'}</p>
                 </div>
               </div>
 
