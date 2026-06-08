@@ -34,6 +34,7 @@ export default function OwnerFinancialReports() {
   const [period, setPeriod] = useState('Bulan')
   const [branchId, setBranchId] = useState('all') // 'all' | id cabang
   const [labaOpen, setLabaOpen] = useState(false) // rincian Laba Bersih (drill-down)
+  const [reasonPopup, setReasonPopup] = useState(null) // {tgl, branch, selisih, reason} → popup alasan selisih kas
   useSalesDaily(); useUsage(); useExpense(); useSupplierFulfilled() // subscribe → ikut MASTER LAPORAN + acuan supplier
   const bid = branchId === 'all' ? undefined : branchId
 
@@ -50,7 +51,7 @@ export default function OwnerFinancialReports() {
     trend: trendLabel,
   }
   // Ringkasan closing per cabang untuk periode (dari MASTER LAPORAN).
-  const closingCards = salesInPeriod(period, bid).map((r) => ({ id: r.id, branchId: r.branchId, tgl: r.tgl, omzet: rowChannelsTotal(r), selisihKas: rowCashAktual(r) - rowCashSistem(r) }))
+  const closingCards = salesInPeriod(period, bid).map((r) => ({ id: r.id, branchId: r.branchId, tgl: r.tgl, omzet: rowChannelsTotal(r), selisihKas: rowCashAktual(r) - rowCashSistem(r), cashReason: r.cashReason || '' }))
   const channelTotal = Object.values(data.channels || {}).reduce((s, v) => s + v, 0)
   const activeChannels = CHANNELS.filter((c) => (data.channels?.[c.id] || 0) > 0)
 
@@ -312,6 +313,15 @@ export default function OwnerFinancialReports() {
                   <div className="text-right">
                     <p className="text-label-md text-outline">Selisih Kas</p>
                     <p className={`text-body-md font-bold ${c.selisihKas === 0 ? 'text-green-600' : 'text-error'}`}>{c.selisihKas === 0 ? 'Normal' : fmtRp(c.selisihKas)}</p>
+                    {c.selisihKas !== 0 && (
+                      c.cashReason ? (
+                        <button onClick={() => setReasonPopup({ tgl: c.tgl, branch: branchName(c.branchId), selisih: c.selisihKas, reason: c.cashReason })} className="mt-1 inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline active:scale-95">
+                          <Icon name="chat" className="!text-[14px]" /> Lihat Alasan
+                        </button>
+                      ) : (
+                        <span className="mt-1 inline-block text-[11px] text-on-surface-variant/70 italic">tanpa alasan</span>
+                      )
+                    )}
                   </div>
                 </div>
               ))}
@@ -333,6 +343,31 @@ export default function OwnerFinancialReports() {
           <button disabled className="w-full bg-surface-variant text-on-surface-variant/60 h-[52px] rounded-xl font-bold cursor-not-allowed">Segera (Fase 2)</button>
         </section>
       </main>
+
+      {/* Popup kecil: alasan selisih kas (ditulis kasir saat tutup toko) */}
+      {reasonPopup && (
+        <div className="fixed inset-0 z-[120] bg-black/50 flex items-center justify-center p-4" onClick={() => setReasonPopup(null)}>
+          <div className="w-full max-w-sm bg-surface rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="px-5 py-4 bg-error-container/50 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Icon name="chat_info" className="text-error" />
+                <h3 className="font-headline-md text-error leading-tight">Alasan Selisih Kas</h3>
+              </div>
+              <button onClick={() => setReasonPopup(null)} className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center active:scale-95"><Icon name="close" /></button>
+            </div>
+            <div className="p-5 space-y-3">
+              <div className="flex items-center justify-between text-label-md">
+                <span className="text-on-surface-variant">{reasonPopup.branch} · {reasonPopup.tgl}</span>
+                <span className="font-bold text-error">{reasonPopup.selisih > 0 ? '+' : ''}{fmtRp(reasonPopup.selisih)}</span>
+              </div>
+              <div className="bg-surface-container-low rounded-xl p-3 text-on-surface text-body-md leading-snug whitespace-pre-line">
+                {reasonPopup.reason}
+              </div>
+              <p className="text-[11px] text-on-surface-variant/70 italic flex items-start gap-1"><Icon name="info" className="!text-[14px] shrink-0 mt-0.5" /> Ditulis kasir saat tutup toko. Hilang otomatis saat Reset Bulan (satu paket dengan laporan harian ini).</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

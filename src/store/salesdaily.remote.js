@@ -8,13 +8,13 @@ const fromRow = (r) => ({
   id: r.id, tgl: isoToDD(r.tgl), branchId: r.branch_id,
   variants: r.variants || {}, channels: r.channels || {}, source: r.source || {},
   potongan: r.potongan || {}, sauces: r.sauces || {}, belanja: r.belanja || {},
-  kasAktual: r.kas_aktual, trx: r.trx, peakHour: r.peak_hour,
+  kasAktual: r.kas_aktual, trx: r.trx, peakHour: r.peak_hour, cashReason: r.cash_reason || '',
 })
 const toRow = (r) => ({
   tgl: ddToISO(r.tgl), branch_id: r.branchId,
   variants: r.variants || {}, channels: r.channels || {}, source: r.source || {},
   potongan: r.potongan || {}, sauces: r.sauces || {}, belanja: r.belanja || {},
-  kas_aktual: r.kasAktual ?? 0, trx: r.trx ?? 0, peak_hour: r.peakHour || null,
+  kas_aktual: r.kasAktual ?? 0, trx: r.trx ?? 0, peak_hour: r.peakHour || null, cash_reason: r.cashReason || null,
 })
 
 export function initSalesSync(commit) {

@@ -133,7 +133,7 @@ export default function ClosingReport() {
       if (!top) return null
       const h = Number(top[0]); return `${String(h).padStart(2, '0')}:00–${String((h + 1) % 24).padStart(2, '0')}:00`
     })()
-    upsertSalesDay({ tgl: tglDDMM, branchId: day.branchId, variants, channels: { ...total }, source: { online: onlineAmt, walkin: Math.max(0, omzet - onlineAmt) }, potongan: { urgent: urgentT, refund: refundT, gaji: gajiT }, kasAktual: day.closing.reconcile?.kasPenjualanTunai ?? null, trx: txnCount, peakHour, sauces, belanja: day.closing.belanja || [] })
+    upsertSalesDay({ tgl: tglDDMM, branchId: day.branchId, variants, channels: { ...total }, source: { online: onlineAmt, walkin: Math.max(0, omzet - onlineAmt) }, potongan: { urgent: urgentT, refund: refundT, gaji: gajiT }, kasAktual: day.closing.reconcile?.kasPenjualanTunai ?? null, trx: txnCount, peakHour, sauces, belanja: day.closing.belanja || [], cashReason: day.closing.reconcile?.reason || '' })
 
     finalizeClosing({
       ts: day.startedAt, tgl: tglDDMM, omzet, txnCount, channels: total,

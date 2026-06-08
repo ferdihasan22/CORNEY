@@ -103,9 +103,9 @@ export function hasSalesDay(tgl, branchId) { return list.some((r) => r.tgl === t
 export function clearSalesDaily() { commit([]) }
 
 // Tulis/timpa baris penjualan untuk satu tanggal+cabang (dipanggil saat closing kasir).
-export function upsertSalesDay({ tgl, branchId, variants, channels, source, potongan, kasAktual, trx, peakHour, sauces, belanja }) {
+export function upsertSalesDay({ tgl, branchId, variants, channels, source, potongan, kasAktual, trx, peakHour, sauces, belanja, cashReason }) {
   const ex = list.find((r) => r.tgl === tgl && r.branchId === branchId)
-  const extra = { variants, channels, source, potongan, kasAktual, trx, peakHour, sauces, belanja }
+  const extra = { variants, channels, source, potongan, kasAktual, trx, peakHour, sauces, belanja, cashReason: cashReason || '' }
   const row = ex ? { ...ex, ...extra } : { id: 'SD-' + Date.now(), tgl, branchId, ...extra }
   if (ex) commit(list.map((r) => (r === ex ? row : r)))
   else commit([row, ...list])
