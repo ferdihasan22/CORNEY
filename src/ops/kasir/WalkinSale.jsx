@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { PARENT_FILLINGS, MENUS, BRANCHES, LOW_STOCK_THRESHOLD, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
+import { useMaster } from '../../store/useMaster.js'
 import { useOrders } from '../../store/useOrders.js'
 import { PHASE, parentAvailable, addToCart, incLine, decLine, removeLine, clearCart, commitSale, createPending, toggleMenu, cookingCounts } from '../../store/day.js'
 import { flyBall, pulse } from './flyBall.js'
@@ -44,6 +45,7 @@ const sauceOf = (l) => l.sauces.reduce((s, x) => s + (x.price || 0), 0)
 
 export default function WalkinSale() {
   const day = useDay()
+  useMaster() // re-render saat Owner ubah menu/HARGA (MENUS disinkron in-place oleh master.js)
   const orders = useOrders()
   const navigate = useNavigate()
   const branch = BRANCHES.find((b) => b.id === day?.branchId)

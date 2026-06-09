@@ -32,9 +32,19 @@ function syncSaucesConst() {
   SAUCES.length = 0
   state.sauces.forEach((s) => SAUCES.push(s))
 }
+// Sama seperti BRANCHES/SAUCES: MENUS adalah const yang dipakai banyak file (POS
+// kasir WalkinSale, dll) sebagai tabel lookup HARGA & menu. WAJIB disinkronkan
+// in-place dari master.menus, kalau tidak → ganti harga/menu Owner TIDAK terlihat di
+// kasir (POS baca konstanta statik). Ini bug "harga tak berubah di kasir".
+function syncMenusConst() {
+  if (!Array.isArray(state?.menus)) return
+  MENUS.length = 0
+  state.menus.forEach((m) => MENUS.push(m))
+}
 let state = load()
 syncBranchesConst()
 syncSaucesConst()
+syncMenusConst()
 
 // ── Hidrasi Supabase (TAHAP 4, FASE 1 "pindah baca") ────────────────────────
 // localStorage di atas = cache sinkron (BRANCHES langsung terisi untuk ~47 file).
@@ -187,12 +197,13 @@ function commit(next) {
   localStorage.setItem(KEY, JSON.stringify(state))
   syncBranchesConst() // jaga BRANCHES tetap = daftar cabang terbaru
   syncSaucesConst()   // jaga SAUCES tetap = daftar saus terbaru
+  syncMenusConst()    // jaga MENUS tetap = daftar menu/harga terbaru (POS kasir baca ini)
   subscribers.forEach((fn) => fn())
 }
 
 // Sinkron antar-tab: reload saat tab lain menulis (cegah clobber + realtime).
 if (typeof window !== 'undefined') {
-  window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); syncBranchesConst(); syncSaucesConst(); subscribers.forEach((fn) => fn()) } })
+  window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); syncBranchesConst(); syncSaucesConst(); syncMenusConst(); subscribers.forEach((fn) => fn()) } })
 }
 
 export function getMaster() {
