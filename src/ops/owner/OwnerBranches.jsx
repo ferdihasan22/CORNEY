@@ -7,6 +7,7 @@ import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
 import { supabase } from '../../lib/supabase.js'
+import { flush, hasPending } from '../../store/outbox.js'
 import { adminResetPasswordKasir, adminCreateKasir, adminDeleteKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 import { useBranchStatus } from '../../store/useBranchStatus.js'
 import { setBranchOpenFor } from '../../store/branchStatus.js'
@@ -90,13 +91,17 @@ export default function OwnerBranches() {
       if (!data.password) delete data.password // kosong saat edit → password lama tetap
       if (!data.username) delete data.username // kosong → username lama tetap
       updateBranch(editing.id, data); applyPar(editing.id)
-      // Mode Supabase: reset password kasir cabang ini di Supabase Auth.
+      // Mode Supabase: set password kasir. Pakai adminCreateKasir (UPSERT user+profil)
+      // bukan reset-password-saja → SELF-HEALING: kalau akun/profil kasir cabang ini
+      // hilang (mis. korban bug FK lama), edit+password otomatis membuatnya ulang.
+      // Cabang sudah ada di DB (edit) → flush dulu agar perubahan terkirim, lalu upsert.
       if (isSupabase() && form.password) {
         if (form.password.length < MIN_PASSWORD) { setSaveErr(`Password kasir minimal ${MIN_PASSWORD} karakter.`); return }
         setBusy(true)
-        const res = await adminResetPasswordKasir(editing.id, form.password)
+        await flush()
+        const res = await adminCreateKasir(editing.id, form.password, 'Kasir ' + form.name)
         setBusy(false)
-        if (!res.ok) { setSaveErr('Tersimpan lokal, tapi gagal set password di server: ' + res.error); return }
+        if (!res.ok) { setSaveErr('Tersimpan lokal, tapi gagal set akun kasir di server: ' + res.error); return }
       }
     } else {
       const b = addBranch(form)
@@ -107,6 +112,17 @@ export default function OwnerBranches() {
           const pw = form.password || '123456'
           if (pw.length < MIN_PASSWORD) { setSaveErr(`Password kasir minimal ${MIN_PASSWORD} karakter.`); return }
           setBusy(true)
+          // WAJIB: pastikan cabang BENAR-BENAR sudah masuk DB dulu. profiles.branch_id
+          // punya FK → branches(id). addBranch menulis lewat outbox (debounced) →
+          // tanpa ini, Edge bikin profil kasir SEBELUM cabang ada → "violates foreign
+          // key constraint". Poll flush sampai cabang terkirim (atau timeout).
+          let synced = false
+          for (let i = 0; i < 8 && !synced; i++) {
+            await flush()
+            if (!hasPending('branches')) { synced = true; break }
+            await new Promise((r) => setTimeout(r, 400))
+          }
+          if (!synced) { setBusy(false); setSaveErr('Cabang belum tersinkron ke server (cek koneksi / lihat banner "gagal tersimpan"). Coba lagi.'); return }
           const res = await adminCreateKasir(b.id, pw, 'Kasir ' + b.name)
           setBusy(false)
           if (!res.ok) { setSaveErr('Cabang tersimpan, tapi gagal buat akun kasir: ' + res.error); return }
