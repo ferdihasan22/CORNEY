@@ -44,9 +44,16 @@ export function traceStock({ production = [], shipments = [], opname = [], stock
       const name = PARENT_FILLINGS.find((p) => p.id === pk)?.name || pk
 
       // 1) PRODUKSI (+ masuk freezer) — branchId cocok (abaikan batch tanpa cabang).
-      let produksi = 0, susut = 0
+      // susut = total rusak (saat bikin + saat pisah). susutPisah = bagian rusak pada
+      // stok yg SUDAH di freezer (fromFreezer) → sisa sudah dikurangi langsung, jadi
+      // tetap "wajar" (bukan hilang); dipisah agar bisa di-breakdown & dialarmkan.
+      let produksi = 0, susut = 0, susutPisah = 0
       production.forEach((x) => {
-        if (x.branchId === b.id && x.parent === pk && inPeriodISO(x.createdAt, cut)) { produksi += x.jadi || 0; susut += x.susut || 0 }
+        if (x.branchId === b.id && x.parent === pk && inPeriodISO(x.createdAt, cut)) {
+          produksi += x.jadi || 0
+          susut += x.susut || 0
+          if (x.fromFreezer) susutPisah += x.susut || 0
+        }
       })
 
       // 2) KIRIM (− keluar freezer) + Δ Kirim≠Terima (terima − kirim, hanya yg dikonfirmasi).
@@ -89,7 +96,7 @@ export function traceStock({ production = [], shipments = [], opname = [], stock
 
       return {
         parent: pk, name,
-        produksi, susut, kirim, diterima,
+        produksi, susut, susutPisah, kirim, diterima,
         deltaOpname, adaOpname, deltaTransit, adaKonfirmasi,
         terjual, patah, garansi, free, seharusnya, aktual, deltaClosing, adaClosing,
         deltaAudit, adaAudit,
@@ -105,7 +112,9 @@ export function traceStock({ production = [], shipments = [], opname = [], stock
       hilangTransit: t.hilangTransit + p.hilangTransit,
       hilangKasir: t.hilangKasir + p.hilangKasir,
       susut: t.susut + p.susut,
-    }), { hilangProduksi: 0, hilangTransit: 0, hilangKasir: 0, susut: 0 })
+      susutPisah: t.susutPisah + p.susutPisah,
+      produksi: t.produksi + p.produksi,
+    }), { hilangProduksi: 0, hilangTransit: 0, hilangKasir: 0, susut: 0, susutPisah: 0, produksi: 0 })
 
     return { branchId: b.id, branchName: b.name, parents, totals }
   })
@@ -115,7 +124,9 @@ export function traceStock({ production = [], shipments = [], opname = [], stock
     hilangTransit: g.hilangTransit + b.totals.hilangTransit,
     hilangKasir: g.hilangKasir + b.totals.hilangKasir,
     susut: g.susut + b.totals.susut,
-  }), { hilangProduksi: 0, hilangTransit: 0, hilangKasir: 0, susut: 0 })
+    susutPisah: g.susutPisah + b.totals.susutPisah,
+    produksi: g.produksi + b.totals.produksi,
+  }), { hilangProduksi: 0, hilangTransit: 0, hilangKasir: 0, susut: 0, susutPisah: 0, produksi: 0 })
 
   return { branches: out, grand }
 }

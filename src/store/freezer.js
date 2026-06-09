@@ -75,6 +75,22 @@ export function takeFreezer(branchId, parent, qty) {
   return next[branchId][parent]
 }
 
+// Produksi mencatat stok freezer yang RUSAK (mis. pecah saat memisahkan yang nempel)
+// → sisa berkurang LANGSUNG (clamp 0). Karena sisa-sistem & fisik sama-sama turun,
+// opname tetap cocok → TIDAK terbaca "barang hilang". Qty-nya dicatat terpisah sbg
+// susut (lewat addProduction fromFreezer) agar muncul sebagai "susut wajar" di laporan.
+export function damageFreezer(branchId, parent, qty) {
+  const branch = state[branchId] || {}
+  const cur = branch[parent]
+  if (!cur) return null
+  const rusak = Math.max(0, Math.round(Number(qty) || 0))
+  if (rusak <= 0) return cur
+  const next = { ...state, [branchId]: { ...branch, [parent]: { ...cur, sisa: Math.max(0, cur.sisa - rusak) } } }
+  commit(next)
+  pushCell(branchId, parent, next[branchId][parent])
+  return next[branchId][parent]
+}
+
 // Produksi menambah hasil produksi ke freezer cabang (sisa bertambah).
 export function addFreezerStock(branchId, parent, qty) {
   const q = Math.max(0, Math.round(qty || 0))

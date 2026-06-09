@@ -58,6 +58,15 @@ export default function OwnerStockTrace() {
   }))
   masalah.sort((a, b) => b.qty - a.qty)
 
+  // Alarm "rusak saat pisah" berlebihan per cabang (informatif, BUKAN hilang):
+  // menyala bila susutPisah > 10% produksi DAN ≥ 10 pcs → cek proses/penyalahgunaan.
+  const RUSAK_ALARM_RATIO = 0.10
+  const RUSAK_ALARM_MIN = 10
+  const rusakAlarm = rows
+    .map((br) => ({ branch: short(br.branchName), pisah: br.totals.susutPisah, prod: br.totals.produksi, pct: br.totals.produksi > 0 ? Math.round((br.totals.susutPisah / br.totals.produksi) * 100) : 0 }))
+    .filter((x) => x.pisah >= RUSAK_ALARM_MIN && x.prod > 0 && x.pisah / x.prod > RUSAK_ALARM_RATIO)
+    .sort((a, b) => b.pisah - a.pisah)
+
   return (
     <div className="bg-background text-on-surface min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 bg-teal-700 text-white px-5 h-[64px] flex items-center gap-3 shadow-md">
@@ -140,8 +149,22 @@ export default function OwnerStockTrace() {
           </section>
         )}
 
+        {rusakAlarm.length > 0 && (
+          <section className="space-y-2">
+            {rusakAlarm.map((a, i) => (
+              <div key={i} className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 flex items-start gap-3">
+                <div className="w-11 h-11 rounded-full bg-white/70 flex items-center justify-center shrink-0"><Icon name="warning" fill className="text-2xl text-amber-600" /></div>
+                <div className="flex-1">
+                  <p className="font-bold text-amber-900 leading-snug">Rusak saat pisah tinggi di <b>{a.branch}</b>: <span className="text-error">{a.pisah} pcs</span> (≈{a.pct}% dari produksi)</p>
+                  <p className="text-[13px] text-amber-900/80 mt-0.5">Wajar bila sesekali, tapi angka segini perlu dicek — proses pemisahan kurang hati-hati atau perlu ditanyakan ke produksi.</p>
+                </div>
+              </div>
+            ))}
+          </section>
+        )}
+
         {grand.susut > 0 && (
-          <p className="text-[12px] text-on-surface-variant flex items-start gap-1.5 bg-surface-container-low rounded-xl p-3"><Icon name="info" className="!text-[16px] mt-0.5 shrink-0" /> Catatan: ada <b>{grand.susut} pcs</b> susut produksi (rusak/gagal saat bikin) yang <b>sudah dilaporkan</b> — ini wajar, bukan termasuk barang hilang.</p>
+          <p className="text-[12px] text-on-surface-variant flex items-start gap-1.5 bg-surface-container-low rounded-xl p-3"><Icon name="info" className="!text-[16px] mt-0.5 shrink-0" /> Catatan: ada <b>{grand.susut} pcs</b> susut produksi yang <b>sudah dilaporkan</b>{grand.susutPisah > 0 ? <> — termasuk <b>{grand.susutPisah} pcs rusak saat memisahkan stok freezer</b></> : <> (rusak/gagal saat bikin)</>} — ini <b>wajar</b>, bukan termasuk barang hilang.</p>
         )}
 
         {/* Cek kewajaran belanja bahan baku */}

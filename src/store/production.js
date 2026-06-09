@@ -43,7 +43,7 @@ export function subscribeProduction(fn) {
   return () => subscribers.delete(fn)
 }
 
-export function addProduction({ branchId, branchName, parent, parentName, jadi, susut, alasan }) {
+export function addProduction({ branchId, branchName, parent, parentName, jadi, susut, alasan, fromFreezer = false, kategori = '' }) {
   const batch = {
     id: isSupabase() ? genUuid() : 'PRD-' + Date.now(),
     branchId: branchId || null,
@@ -53,6 +53,10 @@ export function addProduction({ branchId, branchName, parent, parentName, jadi, 
     jadi: Math.max(0, Math.round(jadi || 0)),
     susut: Math.max(0, Math.round(susut || 0)),
     alasan: (alasan || '').trim(),
+    // fromFreezer=true → susut ini RUSAK pada stok yang SUDAH di freezer (mis. saat
+    // memisahkan yang nempel), bukan rusak saat bikin. kategori = chip alasan.
+    fromFreezer: !!fromFreezer,
+    kategori: (kategori || '').trim(),
     createdAt: new Date().toISOString(),
   }
   commit([batch, ...list])

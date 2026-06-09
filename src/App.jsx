@@ -58,6 +58,7 @@ const ProduksiLanding = lazy(() => import('./ops/produksi/ProduksiLanding.jsx'))
 const ProduksiProduction = lazy(() => import('./ops/produksi/ProduksiProduction.jsx'))
 const ProduksiFreezer = lazy(() => import('./ops/produksi/ProduksiFreezer.jsx'))
 const ProduksiOpname = lazy(() => import('./ops/produksi/ProduksiOpname.jsx'))
+const ProduksiRusak = lazy(() => import('./ops/produksi/ProduksiRusak.jsx'))
 const OperasionalAnalisa = lazy(() => import('./ops/operasional/OperasionalAnalisa.jsx'))
 const OwnerNotifications = lazy(() => import('./ops/owner/OwnerNotifications.jsx'))
 const OwnerInvestor = lazy(() => import('./ops/owner/OwnerInvestor.jsx'))
@@ -267,6 +268,7 @@ export default function App() {
       <Route path="/ops/produksi/produksi" element={<ProduksiProduction />} />
       <Route path="/ops/produksi/freezer" element={<ProduksiFreezer />} />
       <Route path="/ops/produksi/opname" element={<ProduksiOpname />} />
+      <Route path="/ops/produksi/rusak" element={<ProduksiRusak />} />
       <Route path="/ops/owner/notifikasi" element={<OwnerNotifications />} />
       <Route path="/ops/owner/bagihasil" element={<OwnerInvestor />} />
       <Route path="/ops/owner/users" element={<OwnerUsers />} />

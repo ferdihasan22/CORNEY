@@ -11,11 +11,11 @@ export function initProductionSync(commit) {
     await flush(); if (hasPending('production')) return
     const { data, error } = await supabase.from('production').select('*').order('created_at', { ascending: false })
     if (error || !data) return
-    commit(data.map((r) => ({ id: r.id, branchId: r.branch_id, branchName: bn(r.branch_id), parent: r.parent_id, parentName: pn(r.parent_id), jadi: r.jadi, susut: r.susut, alasan: r.alasan, createdAt: r.created_at })))
+    commit(data.map((r) => ({ id: r.id, branchId: r.branch_id, branchName: bn(r.branch_id), parent: r.parent_id, parentName: pn(r.parent_id), jadi: r.jadi, susut: r.susut, alasan: r.alasan, fromFreezer: !!r.from_freezer, kategori: r.kategori || '', createdAt: r.created_at })))
   }
   supabase.auth.onAuthStateChange((_e, s) => { if (s) hydrate() })
 }
 export async function pushProduction(b) {
   if (!supabase || !b?.id) return
-  enqueue({ kind: 'upsert', table: 'production', key: `production:${b.id}`, row: { id: b.id, branch_id: b.branchId, parent_id: b.parent, jadi: b.jadi, susut: b.susut, alasan: b.alasan } })
+  enqueue({ kind: 'upsert', table: 'production', key: `production:${b.id}`, row: { id: b.id, branch_id: b.branchId, parent_id: b.parent, jadi: b.jadi, susut: b.susut, alasan: b.alasan, from_freezer: !!b.fromFreezer, kategori: b.kategori || null } })
 }

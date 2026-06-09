@@ -19,6 +19,7 @@ export default function ProduksiLanding() {
   const items = [
     { to: '/ops/produksi/produksi', icon: 'factory', label: 'Catat Hasil Produksi', desc: 'Jumlah jadi + susut & alasan per sesi', ready: true },
     { to: '/ops/produksi/freezer', icon: 'ac_unit', label: 'Stok Freezer per Cabang', desc: 'Standar/min per cabang, alarm di bawah minimum', badge: belowMin, ready: true },
+    { to: '/ops/produksi/rusak', icon: 'dangerous', label: 'Catat Rusak Freezer', desc: 'Stok freezer rusak (mis. pecah saat dipisah) → sisa langsung berkurang', ready: true },
     { to: '/ops/produksi/opname', icon: 'inventory_2', label: 'Opname Freezer', desc: 'Hitung ulang berkala (tiap isi / mingguan)', ready: true },
   ]
 
