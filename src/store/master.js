@@ -375,12 +375,24 @@ export function saveRecipe(menuId, rows) {
 }
 
 // ── Branches / outlets (§3) ─────────────────────────────
+// Normalkan nomor WhatsApp ke format wa.me (62…, hanya angka). Apa pun input owner
+// (0812…, +62 812-3456, spasi/strip) → 6281234567890. Nomor dipakai LANGSUNG di
+// `wa.me/<nomor>` (CustomerTrack/CustomerSuccess), jadi format salah = tombol WA
+// customer rusak diam-diam. Normalisasi di sini = sumber tunggal tambah/edit cabang.
+export function normWa(s) {
+  let d = String(s || '').replace(/\D/g, '') // buang +, spasi, strip → angka saja
+  if (!d) return ''
+  if (d.startsWith('620')) d = '62' + d.slice(3) // "62" + "0812…" salah ketik → 62812…
+  else if (d.startsWith('0')) d = '62' + d.slice(1) // 0812… → 62812…
+  else if (!d.startsWith('62')) d = '62' + d // 812… → 62812…
+  return d
+}
 function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembalian, stopOnline, closeBooth, username, password, maximEnabled = true, active = true }) {
   const nm = (name || '').trim()
   return {
     name: nm,
     address: (address || '').trim(),
-    wa: (wa || '').trim(),
+    wa: normWa(wa),
     maps: (maps || '').trim(), // link Google Maps lokasi cabang
     coord: (coord || '').trim(), // "lat,lng" untuk cabang terdekat (customer)
     qrisImg: (qrisImg || '').trim(), // gambar QRIS GoPay (statis) per cabang

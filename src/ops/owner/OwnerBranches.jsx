@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fmtRp, PARENT_FILLINGS } from '../../data/menu.js'
 import { useMaster } from '../../store/useMaster.js'
-import { addBranch, updateBranch, toggleBranchActive, deleteBranch } from '../../store/master.js'
+import { addBranch, updateBranch, toggleBranchActive, deleteBranch, normWa } from '../../store/master.js'
 import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
@@ -222,7 +222,12 @@ export default function OwnerBranches() {
                 </div>
                 <div className="space-y-1">
                   <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1">WA Business</label>
-                  <input value={form.wa} onChange={(e) => setForm((f) => ({ ...f, wa: e.target.value }))} placeholder="628120000000" type="tel" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
+                  <input value={form.wa} onChange={(e) => setForm((f) => ({ ...f, wa: e.target.value }))} placeholder="0812… atau 628120000000" type="tel" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
+                  {form.wa.trim() && (
+                    normWa(form.wa) === form.wa.trim()
+                      ? <p className="text-[11px] text-green-700 ml-1 flex items-center gap-1"><Icon name="check_circle" className="!text-[13px]" /> Format benar</p>
+                      : <p className="text-[11px] text-on-surface-variant ml-1">Tersimpan sebagai: <b className="text-primary">{normWa(form.wa) || '—'}</b> (otomatis dirapikan)</p>
+                  )}
                 </div>
                 <div className="space-y-1">
                   <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1 flex items-center gap-1"><Icon name="location_on" className="!text-[16px]" /> Link Google Maps</label>
