@@ -54,12 +54,12 @@ export default function ProduksiProduction() {
 
   const renderStepper = (id, k, big) => {
     const val = get(id, k)
-    const sz = big ? 'w-9 h-10' : 'w-8 h-9'
-    const f = big ? 'h-10 text-[20px]' : 'h-9 text-[16px]'
+    const sz = big ? 'w-8 h-10' : 'w-7 h-9'
+    const f = big ? 'h-10 text-[18px]' : 'h-9 text-[15px]'
     return (
       <div className="flex items-center gap-1 px-1">
         <button onClick={() => setQty(id, k, val - 1)} className={`${sz} rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center active:scale-90 shrink-0`}><Icon name="remove" className="!text-[18px]" /></button>
-        <input inputMode="numeric" value={val || ''} placeholder="0" onChange={(e) => setQty(id, k, Number(e.target.value.replace(/\D/g, '')) || 0)} className={`flex-1 min-w-0 ${f} text-center rounded-lg border-2 ${big ? 'border-primary' : 'border-outline-variant'} font-bold bg-surface px-1`} size={1} />
+        <input inputMode="numeric" value={val || ''} placeholder="0" onChange={(e) => setQty(id, k, Number(e.target.value.replace(/\D/g, '')) || 0)} className={`flex-1 min-w-0 w-full ${f} text-center rounded-lg border-2 ${big ? 'border-primary' : 'border-outline-variant'} font-bold bg-surface px-0.5`} />
         <button onClick={() => setQty(id, k, val + 1)} className={`${sz} rounded-lg ${big ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface'} flex items-center justify-center active:scale-90 shrink-0`}><Icon name="add" className="!text-[18px]" /></button>
       </div>
     )

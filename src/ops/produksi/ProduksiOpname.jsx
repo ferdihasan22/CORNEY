@@ -44,7 +44,7 @@ export default function ProduksiOpname() {
     return (
       <div className="flex items-center gap-1 px-1">
         <button onClick={() => setF(id, val - 1)} className="w-9 h-10 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center active:scale-90 shrink-0"><Icon name="remove" className="!text-[18px]" /></button>
-        <input inputMode="numeric" value={raw ?? ''} placeholder="0" onChange={(e) => setF(id, e.target.value)} className="flex-1 min-w-0 h-10 text-[20px] text-center rounded-lg border-2 border-primary font-bold bg-surface px-1" size={1} />
+        <input inputMode="numeric" value={raw ?? ''} placeholder="0" onChange={(e) => setF(id, e.target.value)} className="flex-1 min-w-0 w-full h-10 text-[18px] text-center rounded-lg border-2 border-primary font-bold bg-surface px-0.5" />
         <button onClick={() => setF(id, val + 1)} className="w-9 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center active:scale-90 shrink-0"><Icon name="add" className="!text-[18px]" /></button>
       </div>
     )
