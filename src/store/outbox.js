@@ -109,11 +109,13 @@ export async function flush() {
   } finally { flushing = false }
 }
 
-// Apakah masih ada tulisan tabel ini yang belum naik? Dipakai hydrate agar tak menimpa.
-// SERTAKAN `dead` (gagal permanen) → cegah hydrate me-REVERT perubahan lokal yang
-// belum benar-benar tersimpan, sampai user menyelesaikannya (kirim ulang / buang).
+// Apakah masih ada tulisan tabel ini di ANTREAN (belum naik)? Dipakai hydrate agar
+// tak menimpa tulisan yang belum terkirim. CATATAN: TIDAK menghitung `dead` —
+// kalau dihitung, 1 item karantina akan memblokir hydrate/refresh SELURUH tabel itu
+// selamanya (mis. harga/menu berhenti sinkron). Visibilitas kegagalan ditangani
+// OutboxDeadBanner (user kirim-ulang/buang), bukan dengan memblokir sinkronisasi.
 export function hasPending(table) {
-  return queue.some((q) => q.table === table) || dead.some((q) => q.table === table)
+  return queue.some((q) => q.table === table)
 }
 export function pendingCount() { return queue.length }
 export function deadCount() { return dead.length }
