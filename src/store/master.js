@@ -401,13 +401,14 @@ export function addBranch(data) {
 }
 
 // Hapus cabang (permanen) — entitas + konfig operasional. Data laporan historis
-// TIDAK ikut terhapus (lihat removeBranch di master.write). Akun kasir Auth dihapus
-// terpisah oleh pemanggil (adminDeleteKasir) di mode Supabase.
+// Mode Supabase: penghapusan SERVER (cabang + konfig anak, urutan FK benar) dilakukan
+// pemanggil via RPC owner_delete_branch yang DI-AWAIT (lihat OwnerBranches.doDelete) —
+// supaya error (mis. FK karena masih ada data laporan) terlihat & cabang tak "balik".
+// Fungsi ini HANYA update state lokal (server sudah beres saat dipanggil).
 export function deleteBranch(id) {
   if (!state) return false
   if (!state.branches.some((x) => x.id === id)) return false
   commit({ ...state, branches: state.branches.filter((x) => x.id !== id) })
-  remoteWrite((w) => w.removeBranch(id))
   return true
 }
 

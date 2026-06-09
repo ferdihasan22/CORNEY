@@ -6,6 +6,7 @@ import { addBranch, updateBranch, toggleBranchActive, deleteBranch } from '../..
 import { useParStock } from '../../store/useParStock.js'
 import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
+import { supabase } from '../../lib/supabase.js'
 import { adminResetPasswordKasir, adminCreateKasir, adminDeleteKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 import { useBranchStatus } from '../../store/useBranchStatus.js'
 import { setBranchOpenFor } from '../../store/branchStatus.js'
@@ -54,12 +55,24 @@ export default function OwnerBranches() {
     if (!delTarget) return
     setDelErr('')
     setDelBusy(true)
-    // Hapus akun kasir di server dulu (mode Supabase). Idempoten.
+    // Mode Supabase: server DULU + cek error (cegah "kelihatan terhapus padahal tidak").
     if (isSupabase()) {
+      // 1) hapus cabang + konfig anak via RPC (urutan FK benar, ATOMIK, owner-only).
+      //    Gagal (mis. FK karena masih ada data laporan) → STOP, tak ada yg terhapus.
+      const { error } = await (supabase?.rpc('owner_delete_branch', { p_id: delTarget.id }) ?? Promise.resolve({ error: { message: 'Supabase belum siap' } }))
+      if (error) {
+        setDelBusy(false)
+        setDelErr(/foreign key|violates|constraint/i.test(error.message || '')
+          ? 'Cabang ini masih punya data laporan/transaksi → tak bisa dihapus permanen. Nonaktifkan saja (data aman).'
+          : ('Gagal hapus cabang di server: ' + (error.message || error)))
+        return
+      }
+      // 2) cabang sudah terhapus → bersihkan akun kasir (Auth). Idempoten; gagal di sini
+      //    tak fatal (cabang sudah bersih) — cukup catat.
       const res = await adminDeleteKasir(delTarget.id)
-      if (!res.ok) { setDelBusy(false); setDelErr('Gagal hapus akun kasir di server: ' + res.error); return }
+      if (!res.ok) console.warn('[branch] akun kasir tak terhapus (cabang sudah dihapus):', res.error)
     }
-    deleteBranch(delTarget.id) // buang entitas + konfig (laporan historis TETAP)
+    deleteBranch(delTarget.id) // server beres → buang dari state lokal
     setDelBusy(false); setDelTarget(null); setDelText('')
   }
 
