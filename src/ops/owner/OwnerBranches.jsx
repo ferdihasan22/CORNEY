@@ -8,7 +8,7 @@ import { parOf, setPar } from '../../store/parstock.js'
 import { isSupabase } from '../../lib/backend.js'
 import { supabase } from '../../lib/supabase.js'
 import { flush, hasPending } from '../../store/outbox.js'
-import { adminResetPasswordKasir, adminCreateKasir, adminDeleteKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
+import { adminCreateKasir, adminDeleteKasir, MIN_PASSWORD } from '../../auth/adminUsers.js'
 import { useBranchStatus } from '../../store/useBranchStatus.js'
 import { setBranchOpenFor } from '../../store/branchStatus.js'
 import { branchHasReportData } from '../../store/aggregate.js'
@@ -90,42 +90,39 @@ export default function OwnerBranches() {
       const data = { ...form }
       if (!data.password) delete data.password // kosong saat edit → password lama tetap
       if (!data.username) delete data.username // kosong → username lama tetap
-      updateBranch(editing.id, data); applyPar(editing.id)
-      // Mode Supabase: set password kasir. Pakai adminCreateKasir (UPSERT user+profil)
-      // bukan reset-password-saja → SELF-HEALING: kalau akun/profil kasir cabang ini
-      // hilang (mis. korban bug FK lama), edit+password otomatis membuatnya ulang.
-      // Cabang sudah ada di DB (edit) → flush dulu agar perubahan terkirim, lalu upsert.
+      updateBranch(editing.id, data); applyPar(editing.id) // tulisan sinkron di background
+      // Set/repair akun kasir (UPSERT user+profil → SELF-HEALING). Cabang SUDAH ada di
+      // DB (edit) → tak ada race FK → TAK perlu nunggu flush (cepat). Edge langsung.
       if (isSupabase() && form.password) {
         if (form.password.length < MIN_PASSWORD) { setSaveErr(`Password kasir minimal ${MIN_PASSWORD} karakter.`); return }
         setBusy(true)
-        await flush()
         const res = await adminCreateKasir(editing.id, form.password, 'Kasir ' + form.name)
         setBusy(false)
         if (!res.ok) { setSaveErr('Tersimpan lokal, tapi gagal set akun kasir di server: ' + res.error); return }
       }
     } else {
-      const b = addBranch(form)
+      const b = addBranch(form) // enqueue CABANG saja (par_stock ditunda → tak melambatkan)
       if (b) {
-        applyPar(b.id)
-        // Mode Supabase: buat akun kasir cabang baru via Edge admin-users.
         if (isSupabase()) {
           const pw = form.password || '123456'
           if (pw.length < MIN_PASSWORD) { setSaveErr(`Password kasir minimal ${MIN_PASSWORD} karakter.`); return }
           setBusy(true)
-          // WAJIB: pastikan cabang BENAR-BENAR sudah masuk DB dulu. profiles.branch_id
-          // punya FK → branches(id). addBranch menulis lewat outbox (debounced) →
-          // tanpa ini, Edge bikin profil kasir SEBELUM cabang ada → "violates foreign
-          // key constraint". Poll flush sampai cabang terkirim (atau timeout).
+          // Pastikan CABANG (1 tulisan) sudah masuk DB sebelum buat akun kasir
+          // (profiles.branch_id FK → branches). Hanya 1 round-trip → cepat. Sabar utk
+          // jaringan lambat (≤6 dtk) supaya tak "gagal" palsu.
           let synced = false
-          for (let i = 0; i < 8 && !synced; i++) {
+          for (let i = 0; i < 12 && !synced; i++) {
             await flush()
             if (!hasPending('branches')) { synced = true; break }
-            await new Promise((r) => setTimeout(r, 400))
+            await new Promise((r) => setTimeout(r, 500))
           }
-          if (!synced) { setBusy(false); setSaveErr('Cabang belum tersinkron ke server (cek koneksi / lihat banner "gagal tersimpan"). Coba lagi.'); return }
+          if (!synced) { setBusy(false); setSaveErr('Koneksi lambat — cabang belum tersinkron ke server. Tunggu sebentar lalu Simpan lagi.'); return }
           const res = await adminCreateKasir(b.id, pw, 'Kasir ' + b.name)
           setBusy(false)
           if (!res.ok) { setSaveErr('Cabang tersimpan, tapi gagal buat akun kasir: ' + res.error); return }
+          applyPar(b.id) // par_stock SETELAH cabang di DB (FK aman) — sinkron di background
+        } else {
+          applyPar(b.id) // mode lokal
         }
       }
     }
