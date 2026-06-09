@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { PARENT_FILLINGS, MENUS, BRANCHES, LOW_STOCK_THRESHOLD, fmtRp } from '../../data/menu.js'
 import { useDay } from '../../store/useDay.js'
 import { useMaster } from '../../store/useMaster.js'
+import { priceOf } from '../../store/master.js'
 import { useOrders } from '../../store/useOrders.js'
 import { PHASE, parentAvailable, addToCart, incLine, decLine, removeLine, clearCart, commitSale, createPending, toggleMenu, cookingCounts } from '../../store/day.js'
 import { flyBall, pulse } from './flyBall.js'
@@ -40,12 +41,13 @@ function ProductImg({ src, imgClass = '' }) {
   return <img src={src} alt="" onError={() => setFailed(true)} className={`w-full h-full object-cover ${imgClass}`} />
 }
 
-const baseOf = (l) => MENUS.find((m) => m.id === l.menuId)?.price ?? 0
 const sauceOf = (l) => l.sauces.reduce((s, x) => s + (x.price || 0), 0)
 
 export default function WalkinSale() {
   const day = useDay()
   useMaster() // re-render saat Owner ubah menu/HARGA (MENUS disinkron in-place oleh master.js)
+  // Harga efektif per cabang (override Owner bila ada) — bukan harga global statik.
+  const baseOf = (l) => priceOf(day?.branchId, l.menuId)
   const orders = useOrders()
   const navigate = useNavigate()
   const branch = BRANCHES.find((b) => b.id === day?.branchId)
@@ -446,7 +448,7 @@ export default function WalkinSale() {
                         </div>
                         <div className="p-3">
                           <h3 className="font-bold text-sm text-on-surface leading-tight line-clamp-1">{m.name}</h3>
-                          <p className={`font-bold text-base mb-2 ${sellable ? 'text-primary' : 'text-on-surface-variant'}`}>{fmtRp(m.price)}</p>
+                          <p className={`font-bold text-base mb-2 ${sellable ? 'text-primary' : 'text-on-surface-variant'}`}>{fmtRp(priceOf(day?.branchId, m.id))}</p>
                           {off ? (
                             <button onClick={() => toggleMenu(m.id)} className="w-full h-9 bg-surface-variant text-on-surface-variant rounded-lg font-bold text-sm flex items-center justify-center gap-1 active:scale-95">
                               <Icon name="restart_alt" className="!text-base" /> Aktifkan

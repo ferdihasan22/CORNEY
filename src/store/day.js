@@ -14,6 +14,7 @@
 //  - 1:1 — one menu sold deducts its parent filling by one.
 
 import { MENUS } from '../data/menu.js'
+import { priceOf } from './master.js' // harga efektif per-cabang (override-or-global)
 import { getOrders, subscribeOrders } from './orders.js'
 import { setBranchOpen, setBranchAvailability } from './branchStatus.js'
 import { pushBranchLive } from './branchLive.js'
@@ -367,8 +368,8 @@ function cartTotals(cart) {
   let subtotal = 0
   let biaya = 0
   cart.forEach((l) => {
-    const m = MENUS.find((x) => x.id === l.menuId)
-    subtotal += (m?.price ?? 0) * l.qty
+    // Harga efektif per cabang (override Owner bila ada) — bukan harga global.
+    subtotal += priceOf(state?.branchId, l.menuId) * l.qty
     biaya += l.sauces.reduce((s, x) => s + (x.price || 0), 0) * l.qty
   })
   return { subtotal, biaya, total: subtotal + biaya }
@@ -399,7 +400,9 @@ function buildSale(cart, sales, extra) {
     id: 'TRX-' + Date.now() + '-' + sales.length,
     no: sales.length + 1, // FIFO order number for the day
     ts: new Date().toISOString(),
-    lines: cart.map((l) => ({ ...l })),
+    // BEKUKAN harga efektif per-baris (override per-cabang bila ada) saat jual →
+    // struk & riwayat akurat & tahan walau Owner ubah harga setelahnya.
+    lines: cart.map((l) => ({ ...l, price: priceOf(state?.branchId, l.menuId) })),
     subtotal, biaya, total,
     cashReceived: null, change: null, method: null,
     // Cooking queue state (MSK). One timer per order.

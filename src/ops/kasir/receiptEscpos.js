@@ -17,7 +17,7 @@ export function buildReceipt(sale, branch, menus, reprint = false) {
   const nl = (n = 1) => { for (let i = 0; i < n; i++) p(0x0a) }
   const line = () => { t('-'.repeat(W)); nl() }
   const nameOf = (id) => (menus.find((m) => m.id === id)?.name) || id
-  const baseOf = (l) => menus.find((m) => m.id === l.menuId)?.price ?? 0
+  const baseOf = (l) => (l.price != null ? l.price : (menus.find((m) => m.id === l.menuId)?.price ?? 0))
   const dt = new Date(sale.ts)
 
   p(ESC, 0x40) // init

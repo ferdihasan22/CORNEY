@@ -11,7 +11,9 @@ import { openPrinterPicker } from './printerPickerStore.js'
 const Icon = ({ name, className = '' }) => <span className={`material-symbols-outlined ${className}`}>{name}</span>
 
 const METHOD = { tunai: 'Tunai', qris_midtrans: 'QRIS Midtrans', qris_gopay: 'QRIS GoPay', gofood: 'GoFood', grabfood: 'GrabFood' }
-const baseOf = (l) => MENUS.find((m) => m.id === l.menuId)?.price ?? 0
+// Harga beku per-baris (override per-cabang yg ditagih saat jual); fallback ke harga
+// global utk transaksi lama yg belum simpan l.price.
+const baseOf = (l) => (l.price != null ? l.price : (MENUS.find((m) => m.id === l.menuId)?.price ?? 0))
 const sauceOf = (l) => l.sauces.reduce((s, x) => s + (x.price || 0), 0)
 
 export default function Receipt({ sale, branch, onClose, reprint = false }) {

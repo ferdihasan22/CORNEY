@@ -479,6 +479,15 @@ export function menuForBranch(branchId, menu) {
   return { ...menu, price: ov.price != null ? ov.price : menu.price, off: !!ov.off }
 }
 
+// Harga EFEKTIF menu untuk sebuah cabang: override per-cabang bila ada, else global.
+// Dipakai POS Kasir & day.cartTotals supaya kasir menagih harga yang BENAR per cabang
+// (sebelumnya kasir selalu pakai harga global → salah untuk cabang ber-override).
+export function priceOf(branchId, menuId) {
+  const menu = (state?.menus || []).find((m) => m.id === menuId)
+  if (!menu) return 0
+  return menuForBranch(branchId, menu).price ?? 0
+}
+
 // ── Promos (OWN-10) ─────────────────────────────────────
 function normPromo(d) {
   const type = ['diskon', 'voucher', 'beli_dapat', 'happy_hour'].includes(d.type) ? d.type : 'diskon'
