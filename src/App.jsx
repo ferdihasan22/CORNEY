@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom'
 import { applyDynamicManifest } from './lib/dynamicManifest.js'
 import AuthGate from './auth/AuthGate.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 const RoleLogin = lazy(() => import('./auth/RoleLogin.jsx'))
 // Lazy-load tiap halaman → di-pecah jadi chunk terpisah. Kasir hanya mengunduh
 // kode kasir, Owner hanya kode owner, dst. Ringan & cepat di tablet jadul.
@@ -200,6 +201,7 @@ export default function App() {
   const loc = useLocation()
   useEffect(() => { applyDynamicManifest() }, [loc.pathname])
   return (
+    <ErrorBoundary>
     <Suspense fallback={<Splash />}>
     <AuthGate>
     <Routes>
@@ -305,5 +307,6 @@ export default function App() {
     <OutboxDeadBanner />
     <PwaAutoUpdate />
     </Suspense>
+    </ErrorBoundary>
   )
 }
