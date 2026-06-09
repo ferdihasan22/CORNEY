@@ -110,9 +110,23 @@ export async function flush() {
 }
 
 // Apakah masih ada tulisan tabel ini yang belum naik? Dipakai hydrate agar tak menimpa.
-export function hasPending(table) { return queue.some((q) => q.table === table) }
+// SERTAKAN `dead` (gagal permanen) → cegah hydrate me-REVERT perubahan lokal yang
+// belum benar-benar tersimpan, sampai user menyelesaikannya (kirim ulang / buang).
+export function hasPending(table) {
+  return queue.some((q) => q.table === table) || dead.some((q) => q.table === table)
+}
 export function pendingCount() { return queue.length }
 export function deadCount() { return dead.length }
+export function deadItems() { return dead.slice() }
+// User klik "kirim ulang": kembalikan semua item karantina ke antrean (reset tries) + flush.
+export function retryDead() {
+  if (!dead.length) return
+  dead.forEach((op) => { op.tries = 0; queue.push(op) })
+  dead = []
+  saveDead(); saveQueue(); notify(); flush()
+}
+// User klik "buang": hapus item karantina (perubahan itu memang dilepas).
+export function discardDead() { dead = []; saveDead(); notify() }
 export function subscribe(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
 // UJI (dev only): paksa app seolah offline tanpa memutus internet sungguhan —

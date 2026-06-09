@@ -192,6 +192,7 @@ import KasirAlerts from './ops/kasir/KasirAlerts.jsx'
 import PrinterPicker from './ops/kasir/PrinterPicker.jsx'
 import PrintAlerts from './ops/kasir/PrintAlerts.jsx'
 import PwaAutoUpdate from './components/PwaAutoUpdate.jsx' // ⚠️ SEMENTARA (testing) — hapus nanti
+import OutboxDeadBanner from './components/OutboxDeadBanner.jsx'
 
 export default function App() {
   // Perbarui start_url manifest tiap pindah halaman → PWA instal dari halaman
@@ -301,6 +302,7 @@ export default function App() {
     <KasirAlerts />
     <PrinterPicker />
     <PrintAlerts />
+    <OutboxDeadBanner />
     <PwaAutoUpdate />
     </Suspense>
   )
