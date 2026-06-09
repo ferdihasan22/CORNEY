@@ -40,7 +40,7 @@ export default function OwnerGoLive() {
         {/* Langkah 1: hapus data contoh */}
         <section className="bg-surface-container-lowest rounded-2xl p-5 border-2 border-error/30">
           <p className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="mop" className="text-error" /> Langkah 1 — Hapus Data Contoh</p>
-          <p className="text-[13px] text-on-surface-variant mt-1 leading-relaxed"><b>Dihapus:</b> penjualan, stok harian, uang belanja, pemakaian uang, setoran, produksi, kiriman, opname, koreksi & audit stok, pesanan online, permintaan/pengiriman supplier, jejak audit, dan <b>kunci bulan</b>. <b>Freezer rumah:</b> jumlah (sisa) di-nol-kan — Min/Target tetap. <b>Tetap aman:</b> cabang, akun staff, menu, item belanja, takaran bahan, stok standar (par), setting investor, dan <b>harga belanja supplier</b>.</p>
+          <p className="text-[13px] text-on-surface-variant mt-1 leading-relaxed"><b>Dihapus:</b> penjualan, stok harian, uang belanja, pemakaian uang, setoran, produksi, kiriman, opname, koreksi & audit stok, pesanan online, permintaan/pengiriman supplier, jejak audit, kunci bulan, freezer, stok standar (par), dan <b>SEMUA CABANG beserta akun kasir-nya</b> (kamu tambah cabang manual satu per satu setelah ini). <b>Tetap aman:</b> menu & varian, saus, promo, banner, gambar landing, item belanja, takaran bahan, dan akun <b>Owner/Operasional/Produksi/Auditor/Supplier</b>.</p>
           {!confirm ? (
             <button onClick={() => setConfirm(true)} className="w-full mt-3 h-12 rounded-xl bg-error text-on-error font-bold flex items-center justify-center gap-2 active:scale-[0.98]"><Icon name="delete_sweep" /> Hapus Semua Data Contoh</button>
           ) : (

@@ -1,8 +1,9 @@
 // CORNEY — Reset terpusat.
 //  • resetGoLive(): bersihkan SEMUA data contoh & transaksi sebelum usaha live,
 //    supaya laporan mulai dari NOL. Menulis nilai kosong yang VALID (bukan hapus
-//    key) agar seed() dummy TIDAK muncul lagi. KONFIG dipertahankan (cabang, user,
-//    menu, item belanja, takaran bahan) — owner edit lewat layarnya masing-masing.
+//    key) agar seed() dummy TIDAK muncul lagi. JUGA hapus SEMUA CABANG + akun kasir
+//    (owner tambah cabang manual satu per satu). KONFIG NON-cabang dipertahankan
+//    (menu, saus, promo, banner, landing, daftar belanja, takaran bahan).
 //  Dipakai sekali saat onboarding. Setelah tulis, halaman di-reload agar semua
 //  store re-init dari keadaan bersih.
 import { INGREDIENTS } from '../data/menu.js'
@@ -14,12 +15,10 @@ const EMPTY_ARRAY_KEYS = [
   'corney_production', 'corney_shipments', 'corney_opname', 'corney_freezer_corrections_v1', 'corney_audits',
   'corney_orders', 'corney_supplier_req_v2', 'corney_supplier_fulfilled_v1', 'corney_ledger', 'corney_auditlog',
 ]
-// Store map (object) → dikosongkan jadi {}.
-// CATATAN: 'corney_parstock' SENGAJA TIDAK di sini — Stok Standar (par_stock) adalah
-// KONFIG cabang yang dipertahankan saat Mulai Bersih (server pun tak men-truncate-nya),
-// jadi jangan dikosongkan di lokal supaya konsisten (tak balik-balik via hydrate).
+// Store map (object) → dikosongkan jadi {}. 'corney_parstock' ikut: cabang dihapus
+// → Stok Standar per cabang tak relevan (server pun truncate par_stock).
 const EMPTY_OBJECT_KEYS = [
-  'corney_opsbelanja_v2', 'corney_supplier_prices_v2', 'corney_freezer', 'corney_investor_cfg_v1',
+  'corney_opsbelanja_v2', 'corney_supplier_prices_v2', 'corney_freezer', 'corney_investor_cfg_v1', 'corney_parstock',
 ]
 // Store sesi → dihapus (tidak ada hari/keranjang aktif saat mulai).
 const REMOVE_KEYS = ['corney_day', 'corney_cart']
@@ -50,6 +49,15 @@ export async function resetGoLive() {
   INGREDIENTS.forEach((i) => { mat[i.id] = { sisa: 0, threshold: 0, reorderedAt: null } })
   localStorage.setItem('corney_materials', JSON.stringify(mat))
   REMOVE_KEYS.forEach((k) => localStorage.removeItem(k))
+  // Kosongkan CABANG + override per-cabang di cache master → mulai NOL tanpa re-seed
+  // dummy (load() pertahankan branches:[] yg valid). Menu/saus/promo/banner tetap.
+  try {
+    const m = JSON.parse(localStorage.getItem('corney_master')) || {}
+    m.branches = []
+    m.branchOverrides = {}
+    m.branchSauceOverrides = {}
+    localStorage.setItem('corney_master', JSON.stringify(m))
+  } catch { /* abaikan */ }
   try { sessionStorage.clear() } catch { /* abaikan */ }
   window.location.reload()
 }
