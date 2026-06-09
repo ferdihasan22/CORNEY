@@ -13,7 +13,7 @@ import { MATERIALS, batasOf, setBatas, terpakaiOf, unitDipakaiOf } from '../../s
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
-const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id
+const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id || ''
 
 export default function OwnerAnalisaBahan() {
   const navigate = useNavigate()

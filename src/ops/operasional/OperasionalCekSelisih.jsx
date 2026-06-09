@@ -24,7 +24,7 @@ const GROUPS = [
   { key: 'aktual', label: 'Sisa Aktual', cls: 'bg-error-container text-on-error-container' },
   { key: 'selisih', label: 'Selisih (Hilang)', cls: 'bg-error text-on-error', computed: true, flag: true },
 ]
-const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id
+const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id || ''
 
 export default function OperasionalCekSelisih() {
   const navigate = useNavigate()

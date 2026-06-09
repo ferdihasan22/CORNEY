@@ -43,7 +43,7 @@ const GROUPS = [
 
 // Data contoh: tiap baris = 1 cabang × 1 tanggal. Per induk: input dasar
 // {datang,kemarin,terjual,patah,garansi,free,aktual}. Seharusnya & selisih dihitung.
-const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id
+const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id || ''
 
 // "Terjual" TIDAK diedit di sini — diturunkan dari tab Variant Terjual (sinkron).
 const EDIT_FIELDS = [['datang', 'Datang'], ['kemarin', 'Sisa Kemarin'], ['patah', 'Patah'], ['garansi', 'Garansi'], ['free', 'Free'], ['aktual', 'Sisa Aktual']]

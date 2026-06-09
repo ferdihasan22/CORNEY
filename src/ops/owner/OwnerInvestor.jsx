@@ -20,7 +20,7 @@ import { expenseAmount } from '../../store/expense.js'
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
-const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id
+const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id || ''
 const FIELDS = [['sewa', 'Sewa'], ['gaji', 'Gaji Bulanan'], ['value', 'Value (simpanan cabang)']]
 
 export default function OwnerInvestor() {

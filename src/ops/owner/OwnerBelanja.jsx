@@ -16,7 +16,7 @@ import { OPS_ITEMS } from '../../store/opsbelanja.js'
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
-const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id).replace('CORNEY ', '')
+const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id || '').replace('CORNEY ', '')
 const dnum = (t) => { const [d, m, y] = (t || '').split('/'); return Number(y) * 10000 + Number(m) * 100 + Number(d) }
 
 export default function OwnerBelanja() {

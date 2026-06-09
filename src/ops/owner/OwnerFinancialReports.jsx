@@ -18,7 +18,7 @@ import { fulfilledSpend } from '../../store/supplierFulfilled.js'
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
-const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id
+const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id || ''
 
 const CHANNELS = [
   { id: 'tunai', label: 'Tunai', icon: 'payments', color: 'bg-primary', text: 'text-primary' },

@@ -13,7 +13,7 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 const fmtTime = (iso) => { try { return new Date(iso).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) } catch { return '' } }
-const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id).replace('CORNEY ', '')
+const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id || '').replace('CORNEY ', '')
 const COLOR = {
   mozza: { bd: 'border-amber-300', tx: 'text-amber-800', bg: 'bg-amber-50' },
   sosis: { bd: 'border-orange-300', tx: 'text-orange-800', bg: 'bg-orange-50' },

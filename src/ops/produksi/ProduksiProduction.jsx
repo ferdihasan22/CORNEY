@@ -13,7 +13,9 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 const fmtTime = (iso) => { try { return new Date(iso).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) } catch { return '' } }
-const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id).replace('CORNEY ', '')
+// Aman-null: tanpa cabang terpilih (mis. sehabis Mulai Bersih, BRANCHES=[]) id bisa
+// undefined → JANGAN .replace pada undefined (dulu bikin crash "Cannot read 'replace'").
+const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id || '').replace('CORNEY ', '')
 // Warna khas per isian agar mudah dibedakan.
 const COLOR = {
   mozza: { bd: 'border-amber-300', tx: 'text-amber-800', bg: 'bg-amber-50' },
@@ -59,6 +61,19 @@ export default function ProduksiProduction() {
         <button onClick={() => setQty(id, k, val - 1)} className={`${sz} rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center active:scale-90 shrink-0`}><Icon name="remove" className="!text-[18px]" /></button>
         <input inputMode="numeric" value={val || ''} placeholder="0" onChange={(e) => setQty(id, k, Number(e.target.value.replace(/\D/g, '')) || 0)} className={`flex-1 min-w-0 ${f} text-center rounded-lg border-2 ${big ? 'border-primary' : 'border-outline-variant'} font-bold bg-surface px-1`} size={1} />
         <button onClick={() => setQty(id, k, val + 1)} className={`${sz} rounded-lg ${big ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface'} flex items-center justify-center active:scale-90 shrink-0`}><Icon name="add" className="!text-[18px]" /></button>
+      </div>
+    )
+  }
+
+  // Belum ada cabang (mis. sehabis Mulai Bersih / sebelum Owner menambah cabang) →
+  // tampilkan pesan ramah, JANGAN render form (yang butuh cabang terpilih).
+  if (BRANCHES.length === 0) {
+    return (
+      <div className="bg-background text-on-surface min-h-screen flex flex-col items-center justify-center p-8 text-center gap-3">
+        <Icon name="storefront" className="!text-[56px] text-on-surface-variant/50" />
+        <p className="font-headline-md text-headline-md">Belum ada cabang</p>
+        <p className="text-on-surface-variant max-w-sm">Produksi dicatat per cabang. Minta <b>Owner</b> menambahkan cabang dulu di Kelola Cabang, lalu buka layar ini lagi.</p>
+        <button onClick={() => navigate('/ops/produksi')} className="mt-2 h-11 px-6 rounded-xl bg-primary text-on-primary font-bold active:scale-95 flex items-center gap-2"><Icon name="arrow_back" /> Kembali</button>
       </div>
     )
   }

@@ -17,7 +17,7 @@ import { useSupplierFulfilled } from '../../store/useSupplierFulfilled.js'
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
-const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id).replace('CORNEY ', '')
+const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id || '').replace('CORNEY ', '')
 const dnum = (t) => { const [d, m, y] = (t || '').split('/'); return Number(y) * 10000 + Number(m) * 100 + Number(d) }
 const fmtTime = (iso) => { try { return new Date(iso).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) } catch { return '' } }
 const REQ_STATUS = { baru: { label: 'Terkirim', cls: 'bg-blue-100 text-blue-700' }, diproses: { label: 'Diproses supplier', cls: 'bg-amber-100 text-amber-700' }, selesai: { label: 'Selesai', cls: 'bg-green-100 text-green-700' } }

@@ -20,7 +20,7 @@ const SEV = {
   warn: { border: 'border-amber-400', badge: 'bg-amber-100 text-amber-700', label: 'Perhatian' },
   good: { border: 'border-green-500', badge: 'bg-green-100 text-green-700', label: 'Info' },
 }
-const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id
+const branchName = (id) => BRANCHES.find((b) => b.id === id)?.name || id || ''
 const parentName = (id) => PARENT_FILLINGS.find((p) => p.id === id)?.name || id
 const matName = (id) => INGREDIENTS.find((i) => i.id === id)?.name || id
 const fmtTime = (iso) => { try { return new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) } catch { return '' } }

@@ -13,7 +13,7 @@ import { onlineNo } from '../../lib/util.js'
 const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
-const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id).replace('CORNEY ', '')
+const nameOf = (id) => (BRANCHES.find((b) => b.id === id)?.name || id || '').replace('CORNEY ', '')
 const dnum = (t) => { const [d, m, y] = (t || '').split('/'); return Number(y) * 10000 + Number(m) * 100 + Number(d) }
 const STATUS = { baru: 'Baru', diproses: 'Proses', siap: 'Siap', selesai: 'Selesai' }
 const STATUS_CLS = { baru: 'bg-secondary-container text-on-secondary-container', diproses: 'bg-blue-100 text-blue-700', siap: 'bg-amber-100 text-amber-700', selesai: 'bg-green-100 text-green-700' }
