@@ -26,6 +26,22 @@ const REMOVE_KEYS = ['corney_day', 'corney_cart']
 
 export async function resetGoLive() {
   if (typeof window === 'undefined') return
+  // 1) Mode supabase: truncate SERVER DULU. supabase.rpc TIDAK melempar error — ia
+  //    mengembalikan { error } — jadi WAJIB diperiksa. Kalau gagal, JANGAN bersihkan
+  //    lokal / reload; beri tahu user (cegah "kelihatan berhasil padahal tidak").
+  if (isSupabase()) {
+    try {
+      const { supabase } = await import('../lib/supabase.js')
+      if (!supabase) throw new Error('Supabase belum siap')
+      const { error } = await supabase.rpc('owner_reset_transaksi')
+      if (error) throw error
+    } catch (e) {
+      alert('Gagal Mulai Bersih di server: ' + (e?.message || e) +
+        '\n\nData TIDAK dihapus. Pastikan kamu login sebagai Owner & koneksi stabil, lalu coba lagi.')
+      return
+    }
+  }
+  // 2) Server beres (atau mode lokal) → bersihkan cache lokal & reload.
   EMPTY_ARRAY_KEYS.forEach((k) => localStorage.setItem(k, '[]'))
   EMPTY_OBJECT_KEYS.forEach((k) => localStorage.setItem(k, '{}'))
   localStorage.setItem('corney_monthclose', JSON.stringify({ closed: {} }))
@@ -35,12 +51,5 @@ export async function resetGoLive() {
   localStorage.setItem('corney_materials', JSON.stringify(mat))
   REMOVE_KEYS.forEach((k) => localStorage.removeItem(k))
   try { sessionStorage.clear() } catch { /* abaikan */ }
-  // Mode supabase: truncate tabel transaksi di DB (owner-only RPC) sebelum reload.
-  if (isSupabase()) {
-    try {
-      const { supabase } = await import('../lib/supabase.js')
-      if (supabase) await supabase.rpc('owner_reset_transaksi')
-    } catch (e) { console.warn('[reset] owner_reset_transaksi gagal:', e?.message || e) }
-  }
   window.location.reload()
 }
