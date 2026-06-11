@@ -163,6 +163,17 @@ export default function CustomerCheckout() {
     // ensureBranchOpen re-cek SEGAR ke server bila cache bilang tutup (anti blok palsu).
     if (!(await ensureBranchOpen())) { setConfirm(false); return setErr('Cabang sedang tutup untuk pesanan online.') }
     if (unavailNames) { setConfirm(false); return setErr('Maaf, ada menu HABIS: ' + unavailNames + '. Hapus dari keranjang dulu.') }
+    // Re-cek stok SEGAR (anti-oversell): pakai status terbaru dari store, bukan snapshot
+    // saat render — stok bisa turun (walk-in / customer lain) sejak buka checkout.
+    if (supa) {
+      const freshStock = (getBranchStatus()[cart.branchId]?.availability || {}).stock || {}
+      const byParent = {}
+      cart.lines.forEach((l) => { const m = menuById(l.menuId); if (m) byParent[m.parent] = (byParent[m.parent] || 0) + l.qty })
+      for (const p of Object.keys(byParent)) {
+        const r = freshStock[p]
+        if (typeof r === 'number' && byParent[p] > r) { setConfirm(false); return setErr(`Maaf, stok berkurang — tinggal ${r}. Kurangi dulu di keranjang ya.`) }
+      }
+    }
     const cleanWa = wa.replace(/\D/g, '')
     if (remember) saveContact({ name: name.trim(), wa: cleanWa, address: address.trim() })
     else saveContact({})

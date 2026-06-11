@@ -289,6 +289,8 @@ export default function CustomerCatalog() {
                   <div className="px-4 pb-4 pt-3 mt-auto">
                     {st.habis ? (
                       <button disabled className="w-full h-[48px] bg-surface-container-highest text-on-surface-variant rounded-[14px] font-label-lg cursor-not-allowed">Stok Habis</button>
+                    ) : !canAddParent(m.parent) ? (
+                      <button disabled className="w-full h-[48px] bg-surface-container-highest text-on-surface-variant rounded-[14px] font-label-md cursor-not-allowed flex items-center justify-center gap-1.5"><Icon name="shopping_basket" className="!text-[18px]" /> Maks di keranjang</button>
                     ) : (
                       <button onClick={() => quickAdd(m)} className="w-full h-[48px] bg-primary text-white rounded-[14px] font-label-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary/20">
                         <Icon name="add" className="text-[22px]" /> Tambah
