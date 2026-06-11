@@ -69,12 +69,16 @@ function pushAvailabilityIfChanged() {
   if (!state || state.phase !== PHASE.SELLING) { _lastAvail = ''; return }
   const off = state.menuOff || []
   const sauceOff = state.sauceOff || []
-  const stock = state.stock || {}
-  const sold = Object.keys(stock).filter((p) => (stock[p] ?? 0) <= 0)
-  const k = JSON.stringify({ off: [...off].sort(), sold: [...sold].sort(), sauceOff: [...sauceOff].sort() })
+  const s = state.stock || {}
+  const sold = Object.keys(s).filter((p) => (s[p] ?? 0) <= 0)
+  // stock = SISA per induk (mozza/sosis/jumbo/mix) → customer batasi jumlah pesanan
+  // (anti-oversell di sumber). Ikut turun saat walk-in & online (commit memanggil ini).
+  const stock = {}
+  Object.keys(s).forEach((p) => { stock[p] = Math.max(0, Math.round(s[p] ?? 0)) })
+  const k = JSON.stringify({ off: [...off].sort(), sold: [...sold].sort(), sauceOff: [...sauceOff].sort(), stock })
   if (k === _lastAvail) return
   _lastAvail = k
-  setBranchAvailability({ off, sold, sauceOff })
+  setBranchAvailability({ off, sold, sauceOff, stock })
 }
 
 // Dorong OMZET BERJALAN (live, SEMENTARA) ke server → Owner dashboard. HANYA saat

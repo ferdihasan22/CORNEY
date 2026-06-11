@@ -136,7 +136,7 @@ export default function CustomerCatalog() {
 
   const stockState = (m) => {
     if (offList.includes(m.id)) return { habis: true, qty: 0 }
-    if (supa) return { habis: (soldList || []).includes(m.parent), qty: null } // server: tahu habis (qty pasti tak disinkron)
+    if (supa) return { habis: (soldList || []).includes(m.parent), qty: (typeof avail?.stock?.[m.parent] === 'number' ? avail.stock[m.parent] : null), low: typeof avail?.stock?.[m.parent] === 'number' && avail.stock[m.parent] <= thresholdOf(m.parent) } // server: sisa per induk bila ada
     const qty = stockMap[m.parent] ?? 0
     return { habis: qty <= 0, qty, low: qty > 0 && qty <= thresholdOf(m.parent) }
   }

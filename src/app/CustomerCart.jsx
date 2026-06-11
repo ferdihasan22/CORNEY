@@ -72,6 +72,13 @@ export default function CustomerCart() {
   }
   const anyUnavail = cart.lines.some(unavail)
 
+  // Batas per induk (anti-oversell): sisa server per induk; total di keranjang tak
+  // boleh melewatinya. null = sisa tak diketahui (kasir versi lama) → tak dibatasi.
+  const remainingOf = (parent) => (supa && typeof avail.stock?.[parent] === 'number') ? avail.stock[parent] : null
+  const cartQtyOfParent = (parent) => cart.lines.filter((l) => menuById(l.menuId)?.parent === parent).reduce((s, l) => s + (l.qty || 0), 0)
+  const lineAtCap = (l) => { const m = menuById(l.menuId); if (!m) return false; const r = remainingOf(m.parent); return r != null && cartQtyOfParent(m.parent) >= r }
+  const overParents = [...new Set(cart.lines.map((l) => menuById(l.menuId)?.parent).filter(Boolean))].filter((p) => { const r = remainingOf(p); return r != null && cartQtyOfParent(p) > r })
+
   const subtotal = cart.lines.reduce((s, l) => s + lineTotal(l), 0)
 
   // Promo: match an ACTIVE voucher by code (Owner-defined). percent capped at capMax.
@@ -139,9 +146,12 @@ export default function CustomerCart() {
                     <div className="flex items-center bg-surface-container rounded-full p-1">
                       <button onClick={() => decLine(l.sig)} className="w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm active:scale-90"><Icon name="remove" className="!text-[18px]" /></button>
                       <span className="px-4 font-bold">{l.qty}</span>
-                      <button onClick={() => incLine(l.sig)} className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-container text-white shadow-sm active:scale-90"><Icon name="add" className="!text-[18px]" /></button>
+                      <button onClick={() => { if (!lineAtCap(l)) incLine(l.sig) }} disabled={lineAtCap(l)} className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-container text-white shadow-sm active:scale-90 disabled:opacity-40"><Icon name="add" className="!text-[18px]" /></button>
                     </div>
                   </div>
+                  {!ub && m && lineAtCap(l) && remainingOf(m.parent) != null && (
+                    <p className="text-[11px] text-amber-700 font-bold text-right mt-1 flex items-center justify-end gap-1"><Icon name="info" className="!text-[13px]" /> Stok tinggal {remainingOf(m.parent)} — sudah maksimal</p>
+                  )}
                 </div>
               </div>
             )
@@ -175,7 +185,8 @@ export default function CustomerCart() {
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-surface-bright/90 backdrop-blur-md border-t border-outline-variant z-40">
         {anyUnavail && <p className="max-w-2xl mx-auto text-center text-[13px] text-error font-bold mb-2 flex items-center justify-center gap-1"><Icon name="error" className="!text-[16px]" /> Ada item HABIS di keranjang. Hapus dulu untuk lanjut.</p>}
-        <button onClick={() => !anyUnavail && navigate('/app/checkout')} disabled={anyUnavail} className="max-w-2xl mx-auto w-full bg-primary text-white py-4 px-6 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:active:scale-100">
+        {!anyUnavail && overParents.length > 0 && <p className="max-w-2xl mx-auto text-center text-[13px] text-amber-700 font-bold mb-2 flex items-center justify-center gap-1"><Icon name="info" className="!text-[16px]" /> Jumlah melebihi stok yang tersedia. Kurangi dulu untuk lanjut.</p>}
+        <button onClick={() => !anyUnavail && overParents.length === 0 && navigate('/app/checkout')} disabled={anyUnavail || overParents.length > 0} className="max-w-2xl mx-auto w-full bg-primary text-white py-4 px-6 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:active:scale-100">
           Lanjut ke Checkout <Icon name="chevron_right" />
         </button>
       </div>

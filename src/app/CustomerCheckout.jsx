@@ -115,6 +115,14 @@ export default function CustomerCheckout() {
   const avail = supa ? (status[cart.branchId]?.availability || {}) : {}
   const unavail = (l) => { const m = menuById(l.menuId); if (!m) return true; if (!supa) return false; return (avail.off || []).includes(m.id) || (avail.sold || []).includes(m.parent) }
   const unavailNames = cart.lines.filter(unavail).map((l) => menuById(l.menuId)?.name || 'item').join(', ')
+  // Anti-oversell (gerbang keras): total per induk tak boleh melebihi sisa server.
+  const overStock = (() => {
+    if (!supa) return null
+    const byParent = {}
+    cart.lines.forEach((l) => { const m = menuById(l.menuId); if (m) byParent[m.parent] = (byParent[m.parent] || 0) + l.qty })
+    for (const p of Object.keys(byParent)) { const r = avail.stock?.[p]; if (typeof r === 'number' && byParent[p] > r) return { sisa: r } }
+    return null
+  })()
   const stCab = supa ? status[cart.branchId] : null
   const todayISO2 = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` })()
   const branchClosed = supa ? !(stCab?.open && stCab.openDate === todayISO2) : false
@@ -139,6 +147,7 @@ export default function CustomerCheckout() {
   const pay = async () => {
     if (!(await ensureBranchOpen())) return setErr('Cabang sedang tutup untuk pesanan online. Coba lagi saat buka ya.')
     if (unavailNames) return setErr('Maaf, ada menu HABIS: ' + unavailNames + '. Hapus dari keranjang dulu.')
+    if (overStock) return setErr(`Maaf, jumlah pesanan melebihi stok yang tersisa (tinggal ${overStock.sisa}). Kurangi dulu di keranjang ya.`)
     if (!name.trim()) return setErr('Nama wajib diisi.')
     if (!/^[0-9]{8,15}$/.test(wa.replace(/\D/g, ''))) return setErr('Nomor WhatsApp tidak valid.')
     if (method === 'maxim' && !address.trim()) return setErr('Alamat antar wajib diisi untuk Maxim.')

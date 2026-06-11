@@ -4,6 +4,7 @@ import { BRANCHES, SAUCES, FREE_SAUCE_MAX, DUMMY_STOCK, LOW_STOCK_THRESHOLD, fmt
 import { useMaster } from '../store/useMaster.js'
 import { useDay } from '../store/useDay.js'
 import { addItem } from '../store/cart.js'
+import { useCart } from '../store/useCart.js'
 import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { isSupabase } from '../lib/backend.js'
@@ -37,6 +38,7 @@ export default function CustomerProductDetail() {
   const master = useMaster()
   const day = useDay()
   const status = useBranchStatus()
+  const cart = useCart()
   const [qty, setQty] = useState(1)
   const [picked, setPicked] = useState([]) // sauce ids (savory only)
 
@@ -56,9 +58,15 @@ export default function CustomerProductDetail() {
   const stockMap = isLive ? day.stock : (DUMMY_STOCK[branchId] || {})
   const off = supa ? (avail.off || []).includes(menu.id) : (isLive && (day.menuOff || []).includes(menu.id))
   const threshold = master?.parents?.find((p) => p.id === menu.parent)?.threshold ?? LOW_STOCK_THRESHOLD
-  const qtyStock = supa ? null : (off ? 0 : (stockMap[menu.parent] ?? 0))
+  // Sisa per induk: mode supabase dari server (avail.stock) bila ada → tampil "sisa N"
+  // & batasi jumlah; bila tak ada (kasir versi lama) → null = tak dibatasi.
+  const remaining = supa ? (typeof avail.stock?.[menu.parent] === 'number' ? avail.stock[menu.parent] : null) : null
+  const qtyStock = supa ? remaining : (off ? 0 : (stockMap[menu.parent] ?? 0))
   const habis = off || (supa ? (avail.sold || []).includes(menu.parent) : qtyStock <= 0)
-  const low = !habis && !supa && qtyStock <= threshold
+  const low = !habis && (supa ? (remaining != null && remaining <= threshold) : qtyStock <= threshold)
+  // Jumlah induk ini yg SUDAH di keranjang cabang ini → sisa yg bisa ditambah.
+  const inCartParent = (cart?.branchId === branchId ? (cart.lines || []) : []).filter((l) => (master?.menus || []).find((m) => m.id === l.menuId)?.parent === menu.parent).reduce((s, l) => s + (l.qty || 0), 0)
+  const maxAdd = remaining == null ? Infinity : Math.max(0, remaining - inCartParent)
 
   const isSweet = menu.category === 'sweet'
   // Saus efektif per cabang: harga override + sembunyikan owner-off + tandai habis
@@ -145,15 +153,21 @@ export default function CustomerProductDetail() {
 
       {/* Sticky footer — qty + add to cart, then back to catalog (keep browsing) */}
       <footer className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-outline-variant p-4 z-50 shadow-[0_-12px_32px_rgba(0,0,0,0.10)]">
+        {maxAdd !== Infinity && maxAdd <= 0 && !habis && (
+          <p className="max-w-lg mx-auto mb-2 text-center text-[12px] text-amber-700 font-bold flex items-center justify-center gap-1"><Icon name="info" className="!text-[14px]" /> Maksimal {remaining} {menu.name} sudah ada di keranjang</p>
+        )}
+        {maxAdd !== Infinity && maxAdd > 0 && qty >= maxAdd && (
+          <p className="max-w-lg mx-auto mb-2 text-center text-[12px] text-amber-700 font-bold flex items-center justify-center gap-1"><Icon name="info" className="!text-[14px]" /> Maksimal {maxAdd} lagi (sisa {remaining})</p>
+        )}
         <div className="flex items-center gap-3 max-w-lg mx-auto">
           <div className="flex items-center bg-surface-container rounded-xl h-[52px] p-1 shrink-0">
             <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-primary active:scale-90"><Icon name="remove" /></button>
             <span className="w-8 text-center font-headline-md text-headline-md">{qty}</span>
-            <button onClick={() => setQty((q) => q + 1)} disabled={habis} className="w-10 h-10 flex items-center justify-center text-primary active:scale-90 disabled:opacity-40"><Icon name="add" /></button>
+            <button onClick={() => setQty((q) => Math.min(q + 1, maxAdd))} disabled={habis || qty >= maxAdd} className="w-10 h-10 flex items-center justify-center text-primary active:scale-90 disabled:opacity-40"><Icon name="add" /></button>
           </div>
           <button
-            onClick={() => { addItem(branchId, menu.id, picked.map((id) => ({ id })), qty); navigate(`/app/katalog/${branchId}`, { state: { added: `${qty}x ${menu.name}` } }) }}
-            disabled={habis}
+            onClick={() => { const n = Math.min(qty, maxAdd); if (n < 1) return; addItem(branchId, menu.id, picked.map((id) => ({ id })), n); navigate(`/app/katalog/${branchId}`, { state: { added: `${n}x ${menu.name}` } }) }}
+            disabled={habis || maxAdd < 1}
             className="flex-1 h-[52px] bg-primary text-white rounded-xl px-4 flex items-center justify-between shadow-[0_4px_12px_rgba(181,3,3,0.3)] active:scale-[0.98] transition-all disabled:opacity-50"
           >
             <div className="flex flex-col items-start leading-none">
