@@ -333,20 +333,8 @@ export default function CustomerCheckout() {
           <div onClick={(e) => e.stopPropagation()} className="relative w-full max-w-md bg-surface rounded-3xl p-6 shadow-2xl" style={{ animation: 'pop-in 0.25s ease-out' }}>
             <button onClick={closeMaximAsk} aria-label="Tutup" className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center active:scale-90 hover:bg-surface-container-highest z-10"><Icon name="close" className="!text-[20px]" /></button>
             <div className="flex flex-col items-center text-center">
-              {/* Ilustrasi ojek/scooter (SVG custom) */}
-              <svg viewBox="0 0 140 100" className="w-40 h-auto" xmlns="http://www.w3.org/2000/svg" fill="none">
-                <ellipse cx="70" cy="90" rx="54" ry="6" fill="#1C1B1B" opacity="0.07" />
-                <circle cx="38" cy="76" r="15" fill="#1C1B1B" /><circle cx="38" cy="76" r="6.5" fill="#E5E2E1" />
-                <circle cx="106" cy="76" r="15" fill="#1C1B1B" /><circle cx="106" cy="76" r="6.5" fill="#E5E2E1" />
-                <path d="M38 76 H62 q6 0 9-6 l9-18 q3-6 10-6 h8" stroke="#B50303" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M80 46 q14 0 20 24" stroke="#B50303" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M80 46 l8-16 h14" stroke="#1C1B1B" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                <rect x="14" y="40" width="30" height="28" rx="5" fill="#B50303" />
-                <rect x="23" y="34" width="12" height="7" rx="2" fill="#B50303" />
-                <path d="M29 48 v12 M23 54 h12" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
-                <circle cx="74" cy="28" r="10" fill="#5C403B" />
-                <path d="M64 30 q-2 -14 12 -14" stroke="#1C1B1B" strokeWidth="5" strokeLinecap="round" />
-              </svg>
+              {/* Logo aplikasi Maxim (gaya ikon app) */}
+              <img src="/maxim-logo.jpg" alt="Maxim — Transportasi Online" width="96" height="96" className="w-24 h-24 rounded-3xl shadow-md object-cover" />
               {!maximNoApp ? (
                 <>
                   <h2 className="font-headline-md text-headline-md mt-2">Sudah ada aplikasi Maxim?</h2>
