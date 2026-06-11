@@ -323,7 +323,8 @@ export default function CustomerCheckout() {
       {maximAsk && (
         <div className="fixed inset-0 z-[85] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={closeMaximAsk}>
           <style>{`@keyframes pop-in { from { transform: translateY(24px) scale(.96); opacity: 0 } to { transform: translateY(0) scale(1); opacity: 1 } }`}</style>
-          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md bg-surface rounded-3xl p-6 shadow-2xl" style={{ animation: 'pop-in 0.25s ease-out' }}>
+          <div onClick={(e) => e.stopPropagation()} className="relative w-full max-w-md bg-surface rounded-3xl p-6 shadow-2xl" style={{ animation: 'pop-in 0.25s ease-out' }}>
+            <button onClick={closeMaximAsk} aria-label="Tutup" className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center active:scale-90 hover:bg-surface-container-highest z-10"><Icon name="close" className="!text-[20px]" /></button>
             <div className="flex flex-col items-center text-center">
               {/* Ilustrasi ojek/scooter (SVG custom) */}
               <svg viewBox="0 0 140 100" className="w-40 h-auto" xmlns="http://www.w3.org/2000/svg" fill="none">
