@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMaster } from '../../store/useMaster.js'
 import { addSauce, updateSauce, deleteSauce, setSauceOverride } from '../../store/master.js'
-import { FREE_SAUCE_MAX, fmtRp } from '../../data/menu.js'
+import { fmtRp } from '../../data/menu.js'
 
 // Kelola Saus — 2 tab:
 //  • GLOBAL: nama + harga + tambah/hapus (tabel `sauces`). Disinkron ke const
@@ -77,7 +77,7 @@ export default function OwnerSauces() {
             <div className="p-3 rounded-xl border border-dashed border-outline-variant flex gap-2">
               <Icon name="info" className="text-secondary shrink-0" />
               <p className="text-label-md text-on-surface-variant">
-                Harga <strong>Rp 0</strong> = saus <strong>gratis</strong> (maks {FREE_SAUCE_MAX} gratis/corndog). Berlaku menu <strong>savory</strong>. Override harga/tawar per cabang di tab <strong>Per Cabang</strong>.
+                Harga <strong>Rp 0</strong> = saus <strong>gratis</strong> (pelanggan bisa pilih sesukanya, tanpa batas). Berlaku menu <strong>savory</strong>. Override harga/tawar per cabang di tab <strong>Per Cabang</strong>.
               </p>
             </div>
             {sauces.length === 0 && <p className="text-center text-on-surface-variant py-10">Belum ada saus. Tekan "Tambah Saus".</p>}

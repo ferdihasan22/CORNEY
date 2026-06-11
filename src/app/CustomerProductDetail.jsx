@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
-import { BRANCHES, SAUCES, FREE_SAUCE_MAX, DUMMY_STOCK, LOW_STOCK_THRESHOLD, fmtRp } from '../data/menu.js'
+import { BRANCHES, SAUCES, DUMMY_STOCK, LOW_STOCK_THRESHOLD, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useDay } from '../store/useDay.js'
 import { addItem } from '../store/cart.js'
@@ -74,15 +74,10 @@ export default function CustomerProductDetail() {
   const sauceOffList = supa ? (status[branchId]?.availability?.sauceOff || []) : (isLive ? (day?.sauceOff || []) : [])
   const branchSauces = resolveSaucesForBranch(master, branchId, sauceOffList).filter((s) => !s.ownerOff)
   const priceOf = (id) => branchSauces.find((s) => s.id === id)?.price || 0
-  const freeUsed = picked.filter((id) => priceOf(id) === 0).length
   const toggleSauce = (s) => {
     if (s.habis) return // saus habis → tak bisa dipilih
-    setPicked((cur) => {
-      if (cur.includes(s.id)) return cur.filter((x) => x !== s.id)
-      // enforce free-max cap only for free (price 0) sauces
-      if (s.price === 0 && freeUsed >= FREE_SAUCE_MAX) return cur
-      return [...cur, s.id]
-    })
+    // Tanpa batas jumlah: semua saus bisa dipilih. Saus premium tetap menambah harga.
+    setPicked((cur) => (cur.includes(s.id) ? cur.filter((x) => x !== s.id) : [...cur, s.id]))
   }
   const saucePaid = picked.reduce((sum, id) => sum + priceOf(id), 0)
   const total = (menu.price + saucePaid) * qty
@@ -126,16 +121,15 @@ export default function CustomerProductDetail() {
             <div className="flex justify-between items-end mb-4">
               <div>
                 <h2 className="font-headline-md text-headline-md text-on-surface">Pilih Saus</h2>
-                <p className="font-label-md text-label-md text-on-surface-variant">Gratis maks {FREE_SAUCE_MAX}, saus premium +harga</p>
+                <p className="font-label-md text-label-md text-on-surface-variant">Pilih sesukamu · saus premium menambah harga</p>
               </div>
-              <span className="bg-surface-container-high px-3 py-1 rounded-lg font-label-md text-label-md text-primary">Gratis {freeUsed}/{FREE_SAUCE_MAX}</span>
+              {picked.length > 0 && <span className="bg-surface-container-high px-3 py-1 rounded-lg font-label-md text-label-md text-primary">{picked.length} dipilih</span>}
             </div>
             <div className="flex flex-col gap-3">
               {branchSauces.map((s) => {
                 const checked = picked.includes(s.id)
                 const isFree = s.price === 0
-                const capped = isFree && !checked && freeUsed >= FREE_SAUCE_MAX
-                const disabled = capped || s.habis
+                const disabled = s.habis
                 return (
                   <button key={s.id} onClick={() => toggleSauce(s)} disabled={disabled} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border transition-all text-left ${checked ? 'border-primary ring-2 ring-primary/40' : 'border-surface-container-high'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
                     <div className="flex items-center gap-4">

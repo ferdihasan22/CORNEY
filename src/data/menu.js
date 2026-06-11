@@ -38,14 +38,15 @@ export const MENUS = [
   { id: 'mix_kentang', name: 'Mix Kentang', parent: 'mix', category: 'savory', price: 22000, img: PHOTO.mix },
 ]
 
-// Sauces (savory only). free/paid per Owner setting; free capped.
+// Sauces (savory only). free/paid per Owner setting; tanpa batas jumlah pilih.
 export const SAUCES = [
   { id: 'tomat', name: 'Saus Tomat', price: 0 },
   { id: 'sambal', name: 'Saus Sambal', price: 0 },
   { id: 'keju', name: 'Saus Keju', price: 3000 },
   { id: 'mayo', name: 'Mayonaise', price: 3000 },
 ]
-export const FREE_SAUCE_MAX = 2 // Owner-set max free sauces per corndog
+// (Batas jumlah saus dihapus — pelanggan/kasir bisa pilih semua saus tanpa batas.
+//  Saus berbayar tetap menambah total.)
 
 // Dummy branches (account = branch, PRD §6.1).
 export const BRANCHES = [

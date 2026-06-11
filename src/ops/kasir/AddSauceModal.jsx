@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { FREE_SAUCE_MAX, fmtRp } from '../../data/menu.js'
+import { fmtRp } from '../../data/menu.js'
 import { useMaster } from '../../store/useMaster.js'
 import { useDay } from '../../store/useDay.js'
 import { resolveSaucesForBranch } from '../../store/master.js'
 
-// Step 1A.5 — WLK-02 Tambah Saus. Hanya SAVORY. Saus gratis (harga 0) dibatasi
-// FREE_SAUCE_MAX; berbayar menambah total. Daftar saus & harga mengikut CABANG
+// Step 1A.5 — WLK-02 Tambah Saus. Hanya SAVORY. Tanpa batas jumlah saus; saus
+// berbayar menambah total. Daftar saus & harga mengikut CABANG
 // (override Owner) — saus yang Owner-OFF disembunyikan, yang HABIS (kasir) tak
 // bisa dipilih.
 export default function AddSauceModal({ menu, onConfirm, onClose }) {
@@ -15,16 +15,12 @@ export default function AddSauceModal({ menu, onConfirm, onClose }) {
   const [picked, setPicked] = useState([]) // sauce ids
 
   const priceOf = (id) => sauces.find((s) => s.id === id)?.price ?? 0
-  const freePicked = picked.filter((id) => priceOf(id) === 0)
   const extra = picked.reduce((sum, id) => sum + priceOf(id), 0)
 
   function toggle(s) {
     if (s.habis) return // saus habis → tak bisa dipilih
-    setPicked((p) => {
-      if (p.includes(s.id)) return p.filter((x) => x !== s.id)
-      if (s.price === 0 && freePicked.length >= FREE_SAUCE_MAX) return p
-      return [...p, s.id]
-    })
+    // Tanpa batas jumlah: semua saus bisa dipilih. Saus berbayar tetap menambah total.
+    setPicked((p) => (p.includes(s.id) ? p.filter((x) => x !== s.id) : [...p, s.id]))
   }
 
   function confirm() {
@@ -50,14 +46,13 @@ export default function AddSauceModal({ menu, onConfirm, onClose }) {
         </div>
 
         <p className="mt-3 text-xs text-gray-500">
-          Gratis maks <b>{FREE_SAUCE_MAX}</b> · saus berbayar menambah total.
+          Pilih sesukamu · saus berbayar menambah total.
         </p>
 
         <div className="mt-3 space-y-2">
           {sauces.map((s) => {
             const on = picked.includes(s.id)
-            const freeFull = s.price === 0 && !on && freePicked.length >= FREE_SAUCE_MAX
-            const disabled = s.habis || freeFull
+            const disabled = s.habis
             return (
               <button
                 key={s.id}
