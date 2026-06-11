@@ -180,16 +180,14 @@ export default function CustomerChooseBranch() {
               >
                 {isNear && <span className="absolute top-0 right-0 z-20 bg-primary text-on-primary text-[10px] font-black px-3 py-1 rounded-bl-2xl shadow flex items-center gap-1 tracking-wide"><Icon name="star" fill className="!text-[12px]" /> TERDEKAT</span>}
                 <div className="flex items-stretch">
-                  <div className="w-[34%] min-h-[152px] relative bg-gradient-to-br from-primary-container to-primary-fixed flex items-center justify-center overflow-hidden">
-                    <div className="absolute -top-6 -left-6 w-24 h-24 bg-primary/25 rounded-full blur-2xl" />
-                    <div className="absolute -bottom-8 -right-5 w-20 h-20 bg-primary/15 rounded-full blur-2xl" />
-                    <Icon name="storefront" fill className={`text-on-primary-container !text-5xl relative z-10 ${open ? '' : 'grayscale opacity-70'}`} />
+                  <div className="w-[34%] min-h-[152px] relative bg-primary-container flex items-center justify-center overflow-hidden">
+                    <Icon name="storefront" fill className={`text-on-primary-container !text-5xl ${open ? '' : 'grayscale opacity-70'}`} />
                     <span className={`absolute top-2.5 left-2.5 w-3 h-3 rounded-full ring-2 ring-white ${open ? 'bg-green-500 animate-pulse' : 'bg-on-surface-variant/50'}`} />
                   </div>
                   <div className="flex-1 min-w-0 p-4 flex flex-col justify-between gap-2.5">
                     <div className="min-w-0">
                       <div className="flex justify-between items-start gap-2 mb-1">
-                        <h3 className="font-headline-md text-[19px] font-bold leading-tight truncate">{b.name.replace('CORNEY ', '')}</h3>
+                        <h3 className="font-headline-md text-[19px] font-bold leading-tight">{b.name}</h3>
                         {dist != null && <span className={`shrink-0 flex items-center gap-0.5 text-[12px] font-bold ${isNear ? 'text-primary' : 'text-on-surface-variant'}`}><Icon name="near_me" className="!text-[13px]" />{fmtKm(dist)}</span>}
                       </div>
                       <p className="text-[13px] text-on-surface-variant line-clamp-1 flex items-center gap-1 mb-2"><Icon name="location_on" className="!text-[14px] shrink-0" />{b.address}</p>
