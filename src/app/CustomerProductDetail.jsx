@@ -98,7 +98,7 @@ export default function CustomerProductDetail() {
             <div className="bg-error text-on-error px-3 py-1.5 rounded-full font-label-md text-label-md shadow-lg uppercase font-black">Habis</div>
           ) : (
             <div className={`px-3 py-1.5 rounded-full font-label-md text-label-md flex items-center gap-1.5 shadow-lg text-white ${low ? 'bg-amber-600' : 'bg-green-700'}`}>
-              <span className="w-2 h-2 bg-white rounded-full animate-pulse" /> {qtyStock == null ? 'Tersedia' : `sisa ${qtyStock}`}
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse" /> {low && qtyStock != null ? `sisa ${qtyStock} lagi` : 'Tersedia'}
             </div>
           )}
         </div>

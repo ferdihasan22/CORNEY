@@ -278,7 +278,7 @@ export default function CustomerCatalog() {
                           <span className="text-error font-label-md text-[12px] uppercase font-black">HABIS</span>
                         ) : (
                           <span className={`font-label-md text-[12px] flex items-center gap-1 ${st.low ? 'text-amber-600' : 'text-green-600'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${st.low ? 'bg-amber-600' : 'bg-green-600'}`} /> {st.qty == null ? 'Tersedia' : `sisa ${st.qty}`}
+                            <span className={`w-1.5 h-1.5 rounded-full ${st.low ? 'bg-amber-600' : 'bg-green-600'}`} /> {st.low && st.qty != null ? `sisa ${st.qty} lagi` : 'Tersedia'}
                           </span>
                         )}
                       </div>
