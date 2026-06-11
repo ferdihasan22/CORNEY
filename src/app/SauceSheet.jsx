@@ -42,7 +42,7 @@ export default function SauceSheet({ title, subtitle, initial = [], confirmLabel
             const isFree = s.price === 0
             const disabled = s.habis
             return (
-              <button key={s.id} onClick={() => toggle(s)} disabled={disabled} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border transition-all text-left ${checked ? 'border-primary ring-2 ring-primary/40' : 'border-surface-container-high'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
+              <button key={s.id} onClick={() => toggle(s)} disabled={disabled} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-[0_4px_16px_rgba(26,26,26,0.06)] border-2 transition-all text-left ${checked ? 'border-primary' : 'border-surface-container-high'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'active:scale-[.99]'}`}>
                 <div className="flex items-center gap-4">
                   <span className={`w-6 h-6 rounded-md border flex items-center justify-center ${checked ? 'bg-primary border-primary text-white' : 'border-outline'}`}>{checked && <Icon name="check" className="!text-[18px]" />}</span>
                   <span className="font-label-lg text-label-lg">{s.name}</span>
