@@ -46,18 +46,23 @@ export default function CustomerProductDetail() {
   const menu = rawMenu ? menuForBranch(branchId, rawMenu) : null
   if (!branch || !menu || menu.off) return <Navigate to={`/app/katalog/${branchId || ''}`} replace />
 
-  const isLive = day?.branchId === branchId && day?.stock
+  const supa = isSupabase()
+  // Ketersediaan: mode supabase → dari SERVER (branch_status.availability) LINTAS
+  // PERANGKAT (off = menu dimatikan kasir, sold = induk habis); qty pasti TIDAK
+  // disinkron → tampil "Tersedia"/"Habis". Mode lokal → sesi day.js (perangkat sama,
+  // bisa "sisa N"). Sebelumnya keliru jatuh ke DUMMY_STOCK → cabang baru selalu HABIS.
+  const avail = supa ? (status[branchId]?.availability || {}) : null
+  const isLive = !supa && day?.branchId === branchId && day?.stock
   const stockMap = isLive ? day.stock : (DUMMY_STOCK[branchId] || {})
-  const off = isLive && (day.menuOff || []).includes(menu.id)
-  const qtyStock = off ? 0 : (stockMap[menu.parent] ?? 0)
+  const off = supa ? (avail.off || []).includes(menu.id) : (isLive && (day.menuOff || []).includes(menu.id))
   const threshold = master?.parents?.find((p) => p.id === menu.parent)?.threshold ?? LOW_STOCK_THRESHOLD
-  const habis = qtyStock <= 0
-  const low = !habis && qtyStock <= threshold
+  const qtyStock = supa ? null : (off ? 0 : (stockMap[menu.parent] ?? 0))
+  const habis = off || (supa ? (avail.sold || []).includes(menu.parent) : qtyStock <= 0)
+  const low = !habis && !supa && qtyStock <= threshold
 
   const isSweet = menu.category === 'sweet'
   // Saus efektif per cabang: harga override + sembunyikan owner-off + tandai habis
   // (kasir, hari ini). sauceOff dari server (supabase) atau day lokal.
-  const supa = isSupabase()
   const sauceOffList = supa ? (status[branchId]?.availability?.sauceOff || []) : (isLive ? (day?.sauceOff || []) : [])
   const branchSauces = resolveSaucesForBranch(master, branchId, sauceOffList).filter((s) => !s.ownerOff)
   const priceOf = (id) => branchSauces.find((s) => s.id === id)?.price || 0
@@ -85,7 +90,7 @@ export default function CustomerProductDetail() {
             <div className="bg-error text-on-error px-3 py-1.5 rounded-full font-label-md text-label-md shadow-lg uppercase font-black">Habis</div>
           ) : (
             <div className={`px-3 py-1.5 rounded-full font-label-md text-label-md flex items-center gap-1.5 shadow-lg text-white ${low ? 'bg-amber-600' : 'bg-green-700'}`}>
-              <span className="w-2 h-2 bg-white rounded-full animate-pulse" /> sisa {qtyStock}
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse" /> {qtyStock == null ? 'Tersedia' : `sisa ${qtyStock}`}
             </div>
           )}
         </div>
