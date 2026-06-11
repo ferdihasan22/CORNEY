@@ -138,7 +138,7 @@ export default function CustomerChooseBranch() {
 
       <main className="flex-1 overflow-y-auto px-4 pt-6 pb-28 max-w-[480px] mx-auto w-full">
         <section className="text-center mb-5">
-          <h1 className="font-headline-md text-headline-md text-on-surface mb-1">Mau pesan di mana? 🌽</h1>
+          <h1 className="font-headline-md text-headline-md text-on-surface mb-1">Mau pesan di mana?</h1>
           <p className="font-body-md text-on-surface-variant text-[14px]">Pilih cabang terdekat · menu &amp; harga bisa beda tiap cabang</p>
         </section>
 
