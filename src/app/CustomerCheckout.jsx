@@ -69,6 +69,16 @@ export default function CustomerCheckout() {
   const [address, setAddress] = useState(() => loadContact().address || '')
   const [remember, setRemember] = useState(() => !!loadContact().name)
   const [confirm, setConfirm] = useState(false)
+  // Popup edukasi Maxim: muncul saat pilih Maxim, sampai user centang "jangan tampilkan
+  // lagi" (persisten di localStorage). maximNoApp = tampilan tombol instal (setelah "Belum").
+  const MAXIM_DISMISS_KEY = 'corney_maxim_ask_dismissed'
+  const [maximAsk, setMaximAsk] = useState(false)
+  const [maximNoApp, setMaximNoApp] = useState(false)
+  const [maximDontShow, setMaximDontShow] = useState(false)
+  const closeMaximAsk = () => {
+    if (maximDontShow) { try { localStorage.setItem(MAXIM_DISMISS_KEY, '1') } catch { /* ignore */ } }
+    setMaximAsk(false)
+  }
   const [submitting, setSubmitting] = useState(false)
   const [err, setErr] = useState('')
   const [cfToken, setCfToken] = useState('') // token Turnstile (kalau fitur aktif)
@@ -180,7 +190,7 @@ export default function CustomerCheckout() {
             return (
               <div className={`grid ${opts.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
                 {opts.map(([val, lbl, ic, hint]) => (
-                  <button key={val} onClick={() => setMethod(val)} className={`p-4 rounded-xl border-2 flex flex-col items-start gap-1 transition-all ${method === val ? 'border-primary bg-primary-fixed' : 'border-outline-variant'}`}>
+                  <button key={val} onClick={() => { setMethod(val); if (val === 'maxim' && !localStorage.getItem(MAXIM_DISMISS_KEY)) { setMaximNoApp(false); setMaximDontShow(false); setMaximAsk(true) } }} className={`p-4 rounded-xl border-2 flex flex-col items-start gap-1 transition-all ${method === val ? 'border-primary bg-primary-fixed' : 'border-outline-variant'}`}>
                     <Icon name={ic} className={method === val ? 'text-primary' : ''} />
                     <span className="font-label-lg">{lbl}</span>
                     <span className="text-[11px] text-on-surface-variant leading-snug text-left">{hint}</span>
@@ -305,6 +315,62 @@ export default function CustomerCheckout() {
               <button onClick={confirmPay} disabled={submitting} className="w-full h-[52px] bg-primary text-white rounded-xl font-headline-md shadow-lg active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2">{submitting ? 'Memproses…' : 'Ya, sudah benar · Bayar'}</button>
               <button onClick={() => setConfirm(false)} disabled={submitting} className="w-full h-[52px] text-on-surface-variant rounded-xl font-label-lg active:bg-surface-container disabled:opacity-40">Ubah nomor</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Popup edukasi Maxim — muncul saat memilih Maxim/Ojek (sampai "jangan tampilkan lagi") */}
+      {maximAsk && (
+        <div className="fixed inset-0 z-[85] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={closeMaximAsk}>
+          <style>{`@keyframes pop-in { from { transform: translateY(24px) scale(.96); opacity: 0 } to { transform: translateY(0) scale(1); opacity: 1 } }`}</style>
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md bg-surface rounded-3xl p-6 shadow-2xl" style={{ animation: 'pop-in 0.25s ease-out' }}>
+            <div className="flex flex-col items-center text-center">
+              {/* Ilustrasi ojek/scooter (SVG custom) */}
+              <svg viewBox="0 0 140 100" className="w-40 h-auto" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <ellipse cx="70" cy="90" rx="54" ry="6" fill="#1C1B1B" opacity="0.07" />
+                <circle cx="38" cy="76" r="15" fill="#1C1B1B" /><circle cx="38" cy="76" r="6.5" fill="#E5E2E1" />
+                <circle cx="106" cy="76" r="15" fill="#1C1B1B" /><circle cx="106" cy="76" r="6.5" fill="#E5E2E1" />
+                <path d="M38 76 H62 q6 0 9-6 l9-18 q3-6 10-6 h8" stroke="#B50303" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M80 46 q14 0 20 24" stroke="#B50303" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M80 46 l8-16 h14" stroke="#1C1B1B" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+                <rect x="14" y="40" width="30" height="28" rx="5" fill="#B50303" />
+                <rect x="23" y="34" width="12" height="7" rx="2" fill="#B50303" />
+                <path d="M29 48 v12 M23 54 h12" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+                <circle cx="74" cy="28" r="10" fill="#5C403B" />
+                <path d="M64 30 q-2 -14 12 -14" stroke="#1C1B1B" strokeWidth="5" strokeLinecap="round" />
+              </svg>
+              {!maximNoApp ? (
+                <>
+                  <h2 className="font-headline-md text-headline-md mt-2">Sudah ada aplikasi Maxim?</h2>
+                  <p className="text-sm text-on-surface-variant mt-1.5 leading-snug">Kamu atau temanmu butuh aplikasi <b className="text-primary">Maxim</b> untuk pesan ojek menjemput pesanan ke cabang.</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="font-headline-md text-headline-md mt-2">Instal Maxim dulu yuk</h2>
+                  <p className="text-sm text-on-surface-variant mt-1.5 leading-snug">Gratis — pasang aplikasinya, lalu pesan ojek untuk menjemput pesananmu.</p>
+                </>
+              )}
+            </div>
+
+            <div className="mt-5 flex flex-col gap-2.5">
+              {!maximNoApp ? (
+                <>
+                  <button onClick={closeMaximAsk} className="w-full h-[52px] bg-primary text-white rounded-xl font-headline-md shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="check_circle" fill className="!text-[20px]" /> Ya, sudah ada</button>
+                  <button onClick={() => setMaximNoApp(true)} className="w-full h-[52px] border-2 border-outline-variant text-on-surface rounded-xl font-label-lg active:bg-surface-container">Belum punya</button>
+                </>
+              ) : (
+                <>
+                  <a href="https://play.google.com/store/apps/details?id=com.taxsee.taxsee" target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-primary text-white rounded-xl font-label-lg shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="android" className="!text-[20px]" /> Play Store (Android)</a>
+                  <a href="https://apps.apple.com/id/search?term=maxim%20order%20a%20taxi" target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-on-surface text-surface rounded-xl font-label-lg shadow active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="phone_iphone" className="!text-[20px]" /> App Store (iPhone)</a>
+                  <button onClick={closeMaximAsk} className="w-full h-[48px] text-on-surface-variant rounded-xl font-label-lg active:bg-surface-container">Sudah, lanjut</button>
+                </>
+              )}
+            </div>
+
+            <label className="mt-4 flex items-center justify-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" checked={maximDontShow} onChange={(e) => setMaximDontShow(e.target.checked)} className="w-4 h-4 accent-primary" />
+              <span className="text-[13px] text-on-surface-variant">Jangan tampilkan lagi</span>
+            </label>
           </div>
         </div>
       )}
