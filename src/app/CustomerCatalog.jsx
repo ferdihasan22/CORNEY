@@ -143,7 +143,19 @@ export default function CustomerCatalog() {
 
   // Quick add ("+"): sweet has no sauce → add straight away; savory opens the
   // sauce sheet (starts empty, customer picks) so the sauce is never forgotten.
+  // Anti-oversell di katalog: sisa induk (server) − yang sudah di keranjang. Bila
+  // sudah mentok → tolak tambah + toast jelas (tak diam-diam over lalu disuruh kurangi).
+  const parentName = (id) => master?.parents?.find((p) => p.id === id)?.name || id
+  const canAddParent = (parent) => {
+    if (!supa) return true
+    const r = avail?.stock?.[parent]
+    if (typeof r !== 'number') return true
+    const inCart = (cart?.branchId === branchId ? (cart.lines || []) : []).filter((l) => (master?.menus || []).find((x) => x.id === l.menuId)?.parent === parent).reduce((s, l) => s + (l.qty || 0), 0)
+    return inCart < r
+  }
+  const capToast = (parent) => setToast(`Stok ${parentName(parent)} tinggal ${avail?.stock?.[parent]} — sudah maksimal di keranjang`)
   const quickAdd = (m) => {
+    if (!canAddParent(m.parent)) return capToast(m.parent)
     if (m.category === 'sweet') {
       addItem(branchId, m.id, [], 1)
       setToast(`${m.name} ditambahkan`)
@@ -153,6 +165,7 @@ export default function CustomerCatalog() {
   }
   const confirmSheet = (picked) => {
     if (!sheetMenu) return
+    if (!canAddParent(sheetMenu.parent)) { const p = sheetMenu.parent; setSheetMenu(null); return capToast(p) }
     addItem(branchId, sheetMenu.id, picked.map((id) => ({ id })), 1)
     setToast(`${sheetMenu.name} ditambahkan`)
     setSheetMenu(null)
