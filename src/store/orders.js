@@ -93,7 +93,7 @@ export async function createOrder(payload) {
   if (isSupabase()) {
     // Customer: id uuid + pin di klien; INSERT ke DB lalu baca-balik (dapat 'no'
     // dari trigger). Jika insert gagal → throw → checkout TIDAK lanjut ke bayar.
-    const base = { id: genUuid(), no: null, pin, status: 'baru', paid: false, payMethod: 'qris', createdAt, ...payload }
+    const base = { id: genUuid(), no: null, pin, status: 'baru', paid: false, payMethod: 'qris', serviceFee: 0, createdAt, ...payload }
     const { insertOrder } = await import('./orders.remote.js')
     const order = { ...(await insertOrder(base)), payDeadline: Date.now() + PAY_WINDOW_MS }
     applyOrder(order) // cache lokal utk layar QRIS/Sukses (perangkat yang sama)

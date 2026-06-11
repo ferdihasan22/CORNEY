@@ -5,7 +5,7 @@ import { useMaster } from '../store/useMaster.js'
 import { useDay } from '../store/useDay.js'
 import { addItem } from '../store/cart.js'
 import { useCart } from '../store/useCart.js'
-import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
+import { menuForBranchOnline, resolveSaucesForBranch } from '../store/master.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { isSupabase } from '../lib/backend.js'
 
@@ -45,7 +45,7 @@ export default function CustomerProductDetail() {
   const branch = BRANCHES.find((b) => b.id === branchId)
   const rawMenu = (master?.menus || []).find((m) => m.id === menuId)
   // Apply per-branch override (§2.3): effective price; redirect if hidden here.
-  const menu = rawMenu ? menuForBranch(branchId, rawMenu) : null
+  const menu = rawMenu ? menuForBranchOnline(branchId, rawMenu) : null
   if (!branch || !menu || menu.off) return <Navigate to={`/app/katalog/${branchId || ''}`} replace />
 
   const supa = isSupabase()

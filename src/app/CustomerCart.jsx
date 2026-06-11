@@ -4,7 +4,9 @@ import { BRANCHES, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
 import { incLine, decLine, removeLine, setPromoCode, updateLineSauces } from '../store/cart.js'
-import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
+import { menuForBranchOnline, resolveSaucesForBranch } from '../store/master.js'
+import { serviceFeeOnline } from '../store/appconfig.js'
+import { useAppConfig } from '../store/useAppConfig.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { refreshBranchStatus } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
@@ -25,6 +27,7 @@ export default function CustomerCart() {
   const [promoMsg, setPromoMsg] = useState('')
   const [editLine, setEditLine] = useState(null) // savory line whose sauce is being edited
   const status = useBranchStatus() // ketersediaan menu dari server (realtime)
+  useAppConfig() // re-render saat Owner ubah biaya layanan
   const supa = isSupabase()
   useEffect(() => { refreshBranchStatus() }, [])
 
@@ -47,7 +50,7 @@ export default function CustomerCart() {
   const branch = BRANCHES.find((b) => b.id === cart.branchId)
   if (!branch) return <Navigate to="/app/cabang" replace />
 
-  const menuById = (id) => { const b = (master?.menus || []).find((m) => m.id === id); return b ? menuForBranch(cart.branchId, b) : null }
+  const menuById = (id) => { const b = (master?.menus || []).find((m) => m.id === id); return b ? menuForBranchOnline(cart.branchId, b) : null }
   const sauceLabel = (sauces) => {
     if (!sauces?.length) return ''
     const names = sauces.map((s) => SAUCES.find((x) => x.id === s.id)?.name || s.id)
@@ -89,7 +92,9 @@ export default function CustomerCart() {
     if (promo.capMax > 0) discount = Math.min(discount, promo.capMax)
     discount = Math.min(discount, subtotal)
   }
-  const total = subtotal - discount
+  const svc = serviceFeeOnline()
+  const serviceFee = svc.on ? svc.amount : 0
+  const total = subtotal - discount + serviceFee
 
   const applyPromo = () => {
     const c = code.trim().toUpperCase()
@@ -175,7 +180,7 @@ export default function CustomerCart() {
           <h3 className="font-headline-md border-b border-surface-variant pb-2">Ringkasan Pesanan</h3>
           <div className="flex justify-between text-on-surface-variant"><span>Subtotal</span><span>{fmtRp(subtotal)}</span></div>
           {discount > 0 && <div className="flex justify-between text-green-600"><span>Diskon {promo ? `(${promo.code})` : ''}</span><span>− {fmtRp(discount)}</span></div>}
-          <div className="flex justify-between text-on-surface-variant"><span>Biaya Layanan</span><span>Rp 0</span></div>
+          {serviceFee > 0 && <div className="flex justify-between text-on-surface-variant"><span>Biaya Layanan</span><span>{fmtRp(serviceFee)}</span></div>}
           <div className="flex justify-between items-center pt-3 border-t border-surface-variant">
             <span className="font-headline-md font-bold">Total</span>
             <span className="font-display-md text-display-md text-primary tracking-tight">{fmtRp(total)}</span>

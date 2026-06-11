@@ -25,7 +25,7 @@ const CatBadge = ({ category }) => (
     : <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]"><Icon name="lunch_dining" className="!text-[13px]" /> Savory</span>
 )
 const P_EMPTY = { name: '', threshold: '' }
-const M_EMPTY = { name: '', parent: '', category: 'savory', price: '', label: '', img: '', desc: '' }
+const M_EMPTY = { name: '', parent: '', category: 'savory', price: '', onlinePrice: '', label: '', img: '', desc: '' }
 
 export default function OwnerCatalog() {
   const navigate = useNavigate()
@@ -43,7 +43,7 @@ export default function OwnerCatalog() {
   const savePar = (e) => { e.preventDefault(); if (!pForm.name.trim()) return; if (pEdit?.id) updateParent(pEdit.id, pForm); else addParent(pForm); setPEdit(null) }
 
   const openNewMenu = (parentId) => { setMForm({ ...M_EMPTY, parent: parentId || parents[0]?.id || '' }); setMEdit({}) }
-  const openEditMenu = (m) => { setMForm({ name: m.name, parent: m.parent, category: m.category, price: String(m.price), label: m.label || '', img: m.img || '', desc: m.desc || '' }); setMEdit(m) }
+  const openEditMenu = (m) => { setMForm({ name: m.name, parent: m.parent, category: m.category, price: String(m.price), onlinePrice: m.onlinePrice != null ? String(m.onlinePrice) : '', label: m.label || '', img: m.img || '', desc: m.desc || '' }); setMEdit(m) }
   const saveMenu = (e) => { e.preventDefault(); if (!mForm.name.trim() || !mForm.parent) return; if (mEdit?.id) updateMenu(mEdit.id, mForm); else addMenu(mForm); setMEdit(null) }
 
   return (
@@ -149,7 +149,10 @@ export default function OwnerCatalog() {
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Isian Induk (tertaut 1:1)</label><select value={mForm.parent} onChange={(e) => setMForm((f) => ({ ...f, parent: e.target.value }))} className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest">{parents.length === 0 && <option value="">(tidak ada isian)</option>}{parents.map((p) => <option key={p.id} value={p.id}>{p.name}{p.active ? '' : ' (nonaktif)'}</option>)}</select></div>
               <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Kategori</label><div className="grid grid-cols-2 gap-2">{[['savory', 'Savory', 'lunch_dining', 'boleh saus'], ['sweet', 'Sweet', 'icecream', 'glaze, tanpa saus']].map(([val, lbl, ic, hint]) => (<button key={val} type="button" onClick={() => setMForm((f) => ({ ...f, category: val }))} className={`flex flex-col items-start gap-0.5 p-3 rounded-xl border-2 ${mForm.category === val ? 'border-primary bg-primary-container/10' : 'border-outline-variant'}`}><span className="flex items-center gap-1.5 font-bold"><Icon name={ic} className="!text-[18px]" /> {lbl}</span><span className="text-[10px] text-on-surface-variant">{hint}</span></button>))}</div></div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Harga</label><div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">Rp</span><input value={mForm.price} onChange={(e) => setMForm((f) => ({ ...f, price: e.target.value }))} placeholder="17000" type="number" min="0" className="w-full h-[52px] border border-outline rounded-xl pl-10 pr-3 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest" /></div></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Harga Walk-in</label><div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">Rp</span><input value={mForm.price} onChange={(e) => setMForm((f) => ({ ...f, price: e.target.value }))} placeholder="17000" type="number" min="0" className="w-full h-[52px] border border-outline rounded-xl pl-10 pr-3 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest" /></div></div>
+                  <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Harga Online <span className="opacity-60">(opsional)</span></label><div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">Rp</span><input value={mForm.onlinePrice} onChange={(e) => setMForm((f) => ({ ...f, onlinePrice: e.target.value }))} placeholder="= walk-in" type="number" min="0" className="w-full h-[52px] border border-outline rounded-xl pl-10 pr-3 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest" /></div></div>
+                </div>
                 <div className="flex flex-col gap-1.5"><label className="font-label-md text-on-surface-variant">Label <span className="opacity-60">(opsional)</span></label><input value={mForm.label} onChange={(e) => setMForm((f) => ({ ...f, label: e.target.value }))} placeholder="Best Seller" className="w-full h-[52px] border border-outline rounded-xl px-4 focus:ring-2 focus:ring-primary outline-none bg-surface-container-lowest" /></div>
               </div>
               <div className="mt-auto flex gap-3 pt-4 border-t border-outline-variant"><button type="button" onClick={() => setMEdit(null)} className="flex-1 h-[52px] border border-outline rounded-xl font-bold text-on-surface-variant">Batal</button><button type="submit" className="flex-1 h-[52px] bg-primary text-on-primary rounded-xl font-bold shadow-md">Simpan Menu</button></div>

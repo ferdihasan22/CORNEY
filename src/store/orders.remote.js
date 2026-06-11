@@ -25,6 +25,7 @@ function toRow(o) {
     lines: o.lines,
     subtotal: o.subtotal ?? 0,
     discount: o.discount ?? 0,
+    service_fee: o.serviceFee ?? 0,
     total: o.total ?? 0,
     method: o.method || 'ambil',
     schedule: o.schedule || null,
@@ -43,7 +44,7 @@ export function fromRow(r) {
   if (!r) return null
   return {
     id: r.id, no: r.no, branchId: r.branch_id, lines: r.lines, subtotal: r.subtotal,
-    discount: r.discount, total: r.total, method: r.method, schedule: r.schedule,
+    discount: r.discount, serviceFee: r.service_fee ?? 0, total: r.total, method: r.method, schedule: r.schedule,
     name: r.name, wa: r.wa, pin: r.pin, status: r.status, paid: r.paid,
     payMethod: r.pay_method, contacted: r.contacted, cook: r.cooking || {},
     promoCode: r.promo_code, createdAt: r.created_at, orderDate: r.order_date,

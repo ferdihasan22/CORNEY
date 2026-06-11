@@ -5,7 +5,7 @@ import { useMaster } from '../store/useMaster.js'
 import { useDay } from '../store/useDay.js'
 import { useCart } from '../store/useCart.js'
 import { cartCount, addItem } from '../store/cart.js'
-import { menuForBranch, resolveSaucesForBranch } from '../store/master.js'
+import { menuForBranchOnline, resolveSaucesForBranch } from '../store/master.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { refreshBranchStatus } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
@@ -113,7 +113,7 @@ export default function CustomerCatalog() {
 
   const banners = (master?.banners || []).filter((b) => b.active)
   // Apply per-branch override (§2.3): effective price + hide menus turned off here.
-  const menus = (master?.menus || []).filter((m) => m.active).map((m) => menuForBranch(branchId, m)).filter((m) => !m.off)
+  const menus = (master?.menus || []).filter((m) => m.active).map((m) => menuForBranchOnline(branchId, m)).filter((m) => !m.off)
   // Saus efektif per cabang: harga override + sembunyikan owner-off + tandai habis
   // (kasir, hari ini). sauceOff dari server (supabase) atau day lokal.
   const sauceOffList = supa ? (avail?.sauceOff || []) : (isLive ? (day?.sauceOff || []) : [])
@@ -123,7 +123,7 @@ export default function CustomerCatalog() {
   const count = cartCount(branchId)
   const cartTotal = (cart && cart.branchId === branchId ? cart.lines : []).reduce((sum, l) => {
     const base = (master?.menus || []).find((x) => x.id === l.menuId)
-    const m = base ? menuForBranch(branchId, base) : null
+    const m = base ? menuForBranchOnline(branchId, base) : null
     const paid = (l.sauces || []).reduce((s, sc) => s + (SAUCES.find((x) => x.id === sc.id)?.price || 0), 0)
     return sum + ((m?.price || 0) + paid) * l.qty
   }, 0)

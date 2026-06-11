@@ -20,6 +20,7 @@ export async function pushMenu(m) {
     name: m.name,
     category: m.category === 'sweet' ? 'sweet' : 'savory',
     price: Math.max(0, Math.round(Number(m.price) || 0)),
+    online_price: m.onlinePrice == null ? null : Math.max(0, Math.round(Number(m.onlinePrice) || 0)),
     label: m.label || '',
     img: m.img || '',
     desc: m.desc || '',

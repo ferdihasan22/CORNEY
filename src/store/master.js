@@ -277,12 +277,14 @@ export function parentNameById(id) {
 // ── Menus / variants (OWN-02 2-4) ───────────────────────
 // Sweet enforces the topping rule downstream (WalkinSale hides the sauce modal
 // for sweet). category is stored here as the single source of that rule.
-function normMenu({ name, parent, category, price, label, img, desc, active = true }) {
+function normMenu({ name, parent, category, price, label, img, desc, onlinePrice, active = true }) {
   return {
     name: (name || '').trim(),
     parent,
     category: category === 'sweet' ? 'sweet' : 'savory',
     price: Math.max(0, Math.round(Number(price) || 0)),
+    // Harga ONLINE (customer) terpisah dari walk-in. null = pakai harga walk-in.
+    onlinePrice: onlinePrice === '' || onlinePrice == null ? null : Math.max(0, Math.round(Number(onlinePrice) || 0)),
     label: (label || '').trim(),
     img: (img || '').trim(),
     desc: (desc || '').trim(),
@@ -315,6 +317,7 @@ export function updateMenu(id, data) {
     if (data.parent != null) patch.parent = data.parent
     if (data.category != null) patch.category = data.category === 'sweet' ? 'sweet' : 'savory'
     if (data.price != null) patch.price = Math.max(0, Math.round(Number(data.price) || 0))
+    if ('onlinePrice' in data) patch.onlinePrice = data.onlinePrice === '' || data.onlinePrice == null ? null : Math.max(0, Math.round(Number(data.onlinePrice) || 0))
     if (data.label != null) patch.label = data.label.trim()
     if (data.img != null) patch.img = data.img.trim()
     if (data.desc != null) patch.desc = data.desc.trim()
@@ -477,8 +480,9 @@ export function setBranchOverride(branchId, menuId, patch) {
   const branch = { ...(all[branchId] || {}) }
   const cur = { ...(branch[menuId] || {}) }
   if ('price' in patch) cur.price = patch.price === '' || patch.price == null ? null : Math.max(0, Math.round(Number(patch.price) || 0))
+  if ('onlinePrice' in patch) cur.onlinePrice = patch.onlinePrice === '' || patch.onlinePrice == null ? null : Math.max(0, Math.round(Number(patch.onlinePrice) || 0))
   if ('off' in patch) cur.off = !!patch.off
-  if ((cur.price == null) && !cur.off) delete branch[menuId]
+  if ((cur.price == null) && (cur.onlinePrice == null) && !cur.off) delete branch[menuId]
   else branch[menuId] = cur
   commit({ ...state, branchOverrides: { ...all, [branchId]: branch } })
   remoteWrite((w) => w.pushOverride(branchId, menuId, branch[menuId]))
@@ -498,6 +502,22 @@ export function priceOf(branchId, menuId) {
   const menu = (state?.menus || []).find((m) => m.id === menuId)
   if (!menu) return 0
   return menuForBranch(branchId, menu).price ?? 0
+}
+
+// Harga ONLINE (Customer) — TERPISAH dari walk-in. Urutan: override online per-cabang
+// → harga online global (menu.onlinePrice) → fallback harga WALK-IN (override/global).
+// null = pakai walk-in, jadi kalau Owner tak set, online = walk-in (tak ada lonjakan).
+export function onlinePriceOf(branchId, menuId) {
+  const ov = ((state?.branchOverrides || {})[branchId] || {})[menuId]
+  if (ov && ov.onlinePrice != null) return ov.onlinePrice
+  const menu = (state?.menus || []).find((m) => m.id === menuId)
+  if (menu && menu.onlinePrice != null) return menu.onlinePrice
+  return priceOf(branchId, menuId)
+}
+// Menu efektif utk CUSTOMER (online): harga = onlinePriceOf, `off` ikut per-cabang.
+export function menuForBranchOnline(branchId, menu) {
+  const base = menuForBranch(branchId, menu)
+  return { ...base, price: onlinePriceOf(branchId, menu.id) }
 }
 
 // ── Promos (OWN-10) ─────────────────────────────────────

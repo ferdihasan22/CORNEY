@@ -6,7 +6,9 @@ import { BRANCHES, SAUCES, fmtRp } from '../data/menu.js'
 import { useMaster } from '../store/useMaster.js'
 import { useCart } from '../store/useCart.js'
 import { createOrder } from '../store/orders.js'
-import { menuForBranch } from '../store/master.js'
+import { menuForBranchOnline, onlinePriceOf } from '../store/master.js'
+import { serviceFeeOnline } from '../store/appconfig.js'
+import { useAppConfig } from '../store/useAppConfig.js'
 import { useBranchStatus } from '../store/useBranchStatus.js'
 import { getBranchStatus, refreshBranchStatusAsync } from '../store/branchStatus.js'
 import { isSupabase } from '../lib/backend.js'
@@ -62,6 +64,7 @@ export default function CustomerCheckout() {
   const master = useMaster()
   const cart = useCart()
   const status = useBranchStatus() // ketersediaan + status buka cabang (realtime)
+  useAppConfig() // re-render saat Owner ubah biaya layanan
   const [method, setMethod] = useState('ambil')
   const [schedule, setSchedule] = useState(() => timeSlots()[0] || defaultPickup())
   const [name, setName] = useState(() => loadContact().name || '')
@@ -95,7 +98,7 @@ export default function CustomerCheckout() {
   const branch = BRANCHES.find((b) => b.id === cart.branchId)
   if (!branch) return <Navigate to="/app/cabang" replace />
 
-  const menuById = (id) => { const b = (master?.menus || []).find((m) => m.id === id); return b ? menuForBranch(cart.branchId, b) : null }
+  const menuById = (id) => { const b = (master?.menus || []).find((m) => m.id === id); return b ? menuForBranchOnline(cart.branchId, b) : null }
   const lineTotal = (l) => {
     const paid = (l.sauces || []).reduce((s, sc) => s + (SAUCES.find((x) => x.id === sc.id)?.price || 0), 0)
     return ((menuById(l.menuId)?.price || 0) + paid) * l.qty
@@ -108,7 +111,10 @@ export default function CustomerCheckout() {
     if (promo.capMax > 0) discount = Math.min(discount, promo.capMax)
     discount = Math.min(discount, subtotal)
   }
-  const total = subtotal - discount
+  // Biaya layanan ONLINE (global, per order). Walk-in TIDAK kena (kasir terpisah).
+  const svc = serviceFeeOnline()
+  const serviceFee = svc.on ? svc.amount : 0
+  const total = subtotal - discount + serviceFee
 
   // Validasi ketersediaan (mode supabase): menu habis / cabang tutup → cegah buat order.
   const supa = isSupabase()
@@ -183,8 +189,10 @@ export default function CustomerCheckout() {
       // jangan lanjut ke pembayaran (cegah bayar tanpa order tercatat).
       const order = await createOrder({
         branchId: cart.branchId,
-        lines: cart.lines.map((l) => ({ ...l })),
-        subtotal, discount, total,
+        // Bekukan HARGA ONLINE per-baris (seperti walk-in) → struk online benar,
+        // tahan walau Owner ubah harga setelahnya.
+        lines: cart.lines.map((l) => ({ ...l, price: onlinePriceOf(cart.branchId, l.menuId) })),
+        subtotal, discount, total, serviceFee,
         method, schedule: method === 'maxim' ? '' : schedule, name: name.trim(), wa: cleanWa,
         address: method === 'maxim' ? address.trim() : '',
         promoCode: cart.promoCode || '',
@@ -306,6 +314,7 @@ export default function CustomerCheckout() {
           <div className="border-t border-surface-variant pt-3 space-y-2">
             <div className="flex justify-between text-on-surface-variant"><span>Subtotal</span><span>{fmtRp(subtotal)}</span></div>
             {discount > 0 && <div className="flex justify-between text-green-600"><span>Diskon ({promo.code})</span><span>− {fmtRp(discount)}</span></div>}
+            {serviceFee > 0 && <div className="flex justify-between text-on-surface-variant"><span>Biaya Layanan</span><span>{fmtRp(serviceFee)}</span></div>}
             <div className="flex justify-between items-center pt-2 border-t border-surface-variant"><span className="font-bold">Total</span><span className="font-display-md text-display-md text-primary">{fmtRp(total)}</span></div>
           </div>
         </section>

@@ -118,6 +118,7 @@ function mapMenu(m) {
     parent: m.parent_id,
     category: m.category === 'sweet' ? 'sweet' : 'savory',
     price: m.price ?? 0,
+    onlinePrice: m.online_price ?? null, // harga online (null = pakai walk-in)
     label: m.label || '',
     img: m.img || '',
     desc: m.desc || '',

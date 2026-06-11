@@ -43,6 +43,22 @@ export default function OwnerSettings() {
     setSavedLink(true); setTimeout(() => setSavedLink(false), 2500)
   }
 
+  // Biaya Layanan ONLINE (per order). on/off + nominal. Global semua cabang. Walk-in
+  // TIDAK kena. Disimpan sbg string di app_config.
+  const [feeOn, setFeeOn] = useState(false)
+  const [feeAmt, setFeeAmt] = useState('1000')
+  const [savedFee, setSavedFee] = useState(false)
+  useEffect(() => { setFeeOn((cfg.service_fee_on ?? '0') === '1') }, [cfg.service_fee_on])
+  useEffect(() => { setFeeAmt(String(cfg.service_fee_amount ?? '1000')) }, [cfg.service_fee_amount])
+  const feeNum = Math.max(0, Math.round(Number(feeAmt) || 0))
+  const feeDirty = (feeOn ? '1' : '0') !== (cfg.service_fee_on ?? '0') || String(feeNum) !== String(cfg.service_fee_amount ?? '1000')
+  const saveFee = () => {
+    if (!feeDirty) return
+    setAppConfigField('service_fee_on', feeOn ? '1' : '0')
+    setAppConfigField('service_fee_amount', String(feeNum))
+    setSavedFee(true); setTimeout(() => setSavedFee(false), 2500)
+  }
+
   // Tampilan nomor enak dibaca: 62 851-7420-0152
   const pretty = (d) => {
     if (!d) return '—'
@@ -114,6 +130,37 @@ export default function OwnerSettings() {
           <button onClick={saveLinks} disabled={!linkDirty}
             className="mt-4 w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-40">
             <Icon name={savedLink ? 'check_circle' : 'save'} className="!text-[20px]" /> {savedLink ? 'Tersimpan!' : linkDirty ? 'Simpan Link' : 'Tersimpan'}
+          </button>
+        </section>
+
+        {/* Biaya Layanan (online) */}
+        <section className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/40 shadow-sm">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0"><Icon name="receipt_long" /></div>
+            <div className="flex-1">
+              <h2 className="font-label-lg text-on-surface">Biaya Layanan (Pesanan Online)</h2>
+              <p className="text-[12px] text-on-surface-variant leading-snug">Biaya tetap <b>per pesanan online</b> di app Customer. <b>Kasir walk-in TIDAK kena.</b></p>
+            </div>
+          </div>
+
+          <label className="flex items-center justify-between gap-3 py-2 cursor-pointer">
+            <span className="font-label-md text-on-surface">Aktifkan biaya layanan</span>
+            <button type="button" onClick={() => setFeeOn((v) => !v)} className={`w-12 h-7 rounded-full p-1 transition-colors ${feeOn ? 'bg-primary' : 'bg-surface-container-high'}`}>
+              <span className={`block w-5 h-5 rounded-full bg-white shadow transition-transform ${feeOn ? 'translate-x-5' : ''}`} />
+            </button>
+          </label>
+
+          <label className="text-[11px] font-bold text-on-surface-variant uppercase mt-2 block">Nominal per order</label>
+          <div className="relative mt-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm font-bold">Rp</span>
+            <input inputMode="numeric" value={feeAmt ? Number(String(feeAmt).replace(/\D/g, '')).toLocaleString('id-ID') : ''} onChange={(e) => setFeeAmt(e.target.value.replace(/\D/g, ''))} placeholder="1.000" disabled={!feeOn}
+              className={`w-full h-12 pl-10 pr-3 rounded-xl border outline-none font-bold tracking-wide ${feeOn ? 'border-outline focus:border-primary bg-surface' : 'border-outline-variant bg-surface-container-high text-on-surface-variant'}`} />
+          </div>
+          <p className="text-[11px] text-on-surface-variant mt-1.5">{feeOn && feeNum > 0 ? <>Customer membayar <b className="text-on-surface">+{`Rp${feeNum.toLocaleString('id-ID')}`}</b> tiap pesanan online.</> : 'Nonaktif — tak ada biaya layanan.'}</p>
+
+          <button onClick={saveFee} disabled={!feeDirty}
+            className="mt-4 w-full h-12 rounded-xl bg-primary text-on-primary font-label-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-40">
+            <Icon name={savedFee ? 'check_circle' : 'save'} className="!text-[20px]" /> {savedFee ? 'Tersimpan!' : feeDirty ? 'Simpan Biaya Layanan' : 'Tersimpan'}
           </button>
         </section>
 

@@ -12,6 +12,10 @@ const DEFAULTS = {
   // Link tombol di landing Customer. Kosongkan ('') → tombol disembunyikan.
   gofood_url: 'https://gofood.co.id',
   grabfood_url: 'https://food.grab.com',
+  // Biaya layanan ONLINE (per order). Default OFF agar tak mengubah harga tiba-tiba.
+  // Walk-in TIDAK kena. Disimpan sbg string (app_config.value = text).
+  service_fee_on: '0',
+  service_fee_amount: '1000',
 }
 
 function load() {
@@ -33,6 +37,13 @@ if (isSupabase()) {
 export function getAppConfig() { return map }
 export function subscribeAppConfig(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 export function appConfigValue(key) { return map[key] ?? DEFAULTS[key] ?? '' }
+
+// Biaya layanan ONLINE efektif: { on, amount }. amount=0 atau on=false → tanpa biaya.
+export function serviceFeeOnline() {
+  const on = (map.service_fee_on ?? DEFAULTS.service_fee_on) === '1'
+  const amount = Math.max(0, Math.round(Number(map.service_fee_amount ?? DEFAULTS.service_fee_amount) || 0))
+  return { on: on && amount > 0, amount }
+}
 
 export function setAppConfigField(key, val) {
   const next = { ...map, [key]: val }
