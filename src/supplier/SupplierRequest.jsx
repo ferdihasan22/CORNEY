@@ -63,9 +63,14 @@ export default function SupplierRequest() {
     })
   }
 
+  // Susulan = ada request LAIN utk cabang+tgl sama yang dibuat lebih dulu (item lupa,
+  // sudah di-ACC Owner). Ditandai agar supplier tak bingung lihat 2 kartu cabang sama.
+  const isSusulan = (o) => orders.some((x) => x.id !== o.id && x.branchId === o.branchId && (x.tgl || '') === (o.tgl || '') && new Date(x.createdAt) < new Date(o.createdAt))
+
   const renderOrder = (o) => {
     const st = STATUS[o.status] || STATUS.baru
     const locked = o.status === 'selesai'
+    const susulan = isSusulan(o)
     const siap = o.items.filter((it) => it.ready)
     const kosong = o.items.length - siap.length
     const total = siap.reduce((s, it) => s + priceOf(it.id) * it.qty, 0)
@@ -73,8 +78,8 @@ export default function SupplierRequest() {
       <div key={o.id} className="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 shadow-[0_4px_16px_rgba(26,26,26,0.06)] overflow-hidden">
         <div className="bg-surface-container-low px-4 py-3 flex items-center justify-between gap-2 border-b border-outline-variant/30">
           <div className="min-w-0">
-            <p className="font-headline-md text-headline-md flex items-center gap-1.5"><Icon name="storefront" className="!text-[18px] text-primary" /> {o.branchName}</p>
-            <p className="text-label-md text-on-surface-variant">{o.tgl ? `closing ${o.tgl} · ` : ''}dikirim {fmtTime(o.createdAt)}</p>
+            <p className="font-headline-md text-headline-md flex items-center gap-1.5 flex-wrap"><Icon name="storefront" className="!text-[18px] text-primary" /> {o.branchName} {susulan && <span className="text-[10px] font-bold uppercase bg-amber-500 text-amber-950 px-2 py-0.5 rounded-full flex items-center gap-0.5"><Icon name="more_time" className="!text-[12px]" /> Susulan</span>}</p>
+            <p className="text-label-md text-on-surface-variant">{o.tgl ? `closing ${o.tgl} · ` : ''}dikirim {fmtTime(o.createdAt)}{susulan ? ' · item tambahan' : ''}</p>
           </div>
           <span className={`shrink-0 px-3 py-1 rounded-full text-[11px] font-bold uppercase ${st.cls}`}>{st.label}</span>
         </div>
