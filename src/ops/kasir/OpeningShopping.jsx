@@ -32,6 +32,9 @@ export default function OpeningShopping() {
   let sumber = 'pemenuhan supplier + beli di luar'
   if (fe) {
     fe.items.forEach((it) => {
+      // HANYA item yang dipesan KASIR (src='kasir'). Tambahan OPERASIONAL (src='ops',
+      // mis. keju mozza) bukan tanggung jawab kasir → jangan muncul di Belanjaan Datang.
+      if (it.src === 'ops') return
       if (it.ready) pesanan.push({ id: it.uid || it.id, name: it.name, qtyPesan: it.qty, tag: 'supplier' })
       else if (it.luar) pesanan.push({ id: it.uid || it.id, name: it.name, qtyPesan: it.luar.qty, tag: 'luar' })
     })
