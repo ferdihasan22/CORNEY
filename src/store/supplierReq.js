@@ -40,19 +40,36 @@ export function subscribeSupplierReq(fn) { subscribers.add(fn); return () => sub
 
 // Operasional kirim rekap → 1 order per cabang.
 // branches = [{ branchId, branchName, tgl, items:[{id,name,qty,src}] }]
-export function createSupplierRequest({ branches }) {
+// status: 'baru' (langsung ke supplier) | 'menunggu' (SUSULAN, perlu ACC Owner dulu —
+// disembunyikan dari supplier sampai Owner setujui).
+export function createSupplierRequest({ branches, status = 'baru' }) {
   const stamp = Date.now()
   const orders = []
   ;(branches || []).forEach((b, i) => {
     const items = (b.items || []).map((it) => ({ uid: `${it.src || 'k'}_${it.id}`, id: it.id, name: it.name, reqQty: it.qty, qty: it.qty, src: it.src || 'kasir', ready: true }))
     if (items.length === 0) return
-    orders.push({ id: isSupabase() ? genUuid() : `REQ-${stamp}-${i}`, createdAt: new Date().toISOString(), status: 'baru', branchId: b.branchId, branchName: b.branchName, tgl: b.tgl || '', items })
+    orders.push({ id: isSupabase() ? genUuid() : `REQ-${stamp}-${i}`, createdAt: new Date().toISOString(), status, branchId: b.branchId, branchName: b.branchName, tgl: b.tgl || '', items })
   })
   if (orders.length === 0) return null
   commit([...orders, ...list])
   if (isSupabase()) orders.forEach((o) => import('./supplierReq.remote.js').then((w) => w.pushSupplierReq(o)).catch(() => {}))
   return orders
 }
+
+// ── SUSULAN: persetujuan Owner ──────────────────────────────────────────────
+// Owner SETUJUI susulan: status 'menunggu' → 'baru' (baru kelihatan supplier).
+// Tulis lewat upsert biasa (RLS owner = ALL), BUKAN RPC supplier.
+export function approveSusulan(orderId) {
+  const o = list.find((x) => x.id === orderId)
+  if (!o || o.status !== 'menunggu') return
+  const next = { ...o, status: 'baru' }
+  commit(list.map((x) => (x.id === orderId ? next : x)))
+  if (isSupabase()) import('./supplierReq.remote.js').then((w) => w.pushSupplierReq(next)).catch(() => {})
+}
+// Owner TOLAK susulan: hapus request (item kembali bisa diajukan ulang oleh ops).
+export function rejectSusulan(orderId) { removeRequest(orderId) }
+// Susulan yang menunggu ACC Owner (untuk badge & layar Owner).
+export function pendingSusulan() { return list.filter((o) => o.status === 'menunggu') }
 
 // Supplier centang/un-centang item (siap kirim ↔ stok kosong).
 export function toggleReqItem(orderId, uid) {
@@ -85,5 +102,5 @@ export function removeRequest(orderId) {
 }
 export function clearSupplierReq() { commit([]) }
 
-// Jumlah request yang belum selesai (untuk badge nav).
-export function pendingReqCount() { return list.filter((o) => o.status !== 'selesai').length }
+// Jumlah request AKTIF utk badge supplier (susulan 'menunggu' belum tampil ke supplier).
+export function pendingReqCount() { return list.filter((o) => o.status !== 'selesai' && o.status !== 'menunggu').length }

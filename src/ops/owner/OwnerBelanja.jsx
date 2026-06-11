@@ -9,6 +9,8 @@ import { priceOfSup, prevOfSup, trendOfSup } from '../../store/supplierPrices.js
 import { useSupplierFulfilled } from '../../store/useSupplierFulfilled.js'
 import { setOutside } from '../../store/supplierFulfilled.js'
 import { OPS_ITEMS } from '../../store/opsbelanja.js'
+import { useSupplierReq } from '../../store/useSupplierReq.js'
+import { approveSusulan, rejectSusulan } from '../../store/supplierReq.js'
 
 // 3.4 — OWN Belanjaan. Daftar harga semua item (indikator naik/turun dari
 // update harga Supplier) + tabel per hari × cabang × item yang dipesan
@@ -24,6 +26,8 @@ export default function OwnerBelanja() {
   useSalesDaily(); useSupplierPrices()
   const shopItems = useShoppingItems() || []
   const fulfilled = useSupplierFulfilled() || []
+  const supReq = useSupplierReq() || []
+  const susulan = supReq.filter((o) => o.status === 'menunggu') // susulan menunggu ACC Owner
   const [period, setPeriod] = useState('Bulan')
   const [branchId, setBranchId] = useState('all')
   const [mode, setMode] = useState('diminta') // 'diminta' (kasir) | 'dipenuhi' (supplier)
@@ -135,6 +139,30 @@ export default function OwnerBelanja() {
           </div>
           </>)}
         </section>
+
+        {/* ── SUSULAN menunggu persetujuan Owner ── */}
+        {susulan.length > 0 && (
+          <section className="space-y-2">
+            <h2 className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="more_time" className="text-amber-600" /> Susulan Menunggu Persetujuan <span className="text-[11px] font-bold bg-amber-500 text-amber-950 min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full">{susulan.length}</span></h2>
+            <p className="text-label-md text-on-surface-variant -mt-1">Item yang terlewat dikirim operasional. Setujui agar masuk ke supplier, atau tolak.</p>
+            {susulan.map((o) => {
+              const total = o.items.reduce((s, it) => s + priceOfSup(it.id) * it.qty, 0)
+              return (
+                <div key={o.id} className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                  <h3 className="font-headline-md text-headline-md mb-2 flex items-center gap-2 flex-wrap"><Icon name="storefront" className="!text-[18px] text-amber-700" /> {nameOf(o.branchId)} {o.tgl && <span className="text-label-md text-on-surface-variant font-normal">· {o.tgl}</span>}</h3>
+                  <div className="space-y-1 mb-3">
+                    {o.items.map((it) => <div key={it.uid} className="flex justify-between text-label-lg"><span className="text-on-surface-variant">{it.name}</span><span className="font-bold">{it.qty}{priceOfSup(it.id) > 0 && <span className="text-on-surface-variant font-normal text-label-md"> · {fmtRp(priceOfSup(it.id) * it.qty)}</span>}</span></div>)}
+                  </div>
+                  {total > 0 && <p className="text-label-md text-on-surface-variant mb-3">Perkiraan total: <b className="text-on-surface">{fmtRp(total)}</b></p>}
+                  <div className="flex gap-2">
+                    <button onClick={() => approveSusulan(o.id)} className="flex-1 min-h-[44px] rounded-xl bg-green-600 text-white font-bold flex items-center justify-center gap-2 active:scale-[0.98]"><Icon name="check" /> Setujui → Supplier</button>
+                    <button onClick={() => { if (window.confirm('Tolak susulan ini? Item akan dihapus.')) rejectSusulan(o.id) }} className="px-4 min-h-[44px] rounded-xl border border-error text-error font-bold active:scale-95">Tolak</button>
+                  </div>
+                </div>
+              )
+            })}
+          </section>
+        )}
 
         {/* ── Tabel per hari × cabang × item dipesan ── */}
         <section className="space-y-2">

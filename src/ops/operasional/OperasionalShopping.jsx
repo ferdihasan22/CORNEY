@@ -73,6 +73,18 @@ export default function OperasionalShopping() {
   }
   const submitCustom = () => { addCustomOpsItem(opsBranch, custom); setCustom('') }
 
+  // SUSULAN (item lupa): cabang yang SUDAH dikirim tapi operasional menambah item lagi.
+  // Item susulan = tambahan operasional saat ini (r.ops). Tak bisa lewat "Kirim ke
+  // Supplier" biasa → diajukan sbg request status 'menunggu' (perlu ACC Owner dulu).
+  const susulanSiap = adaIsi.filter((r) => r.sudahKirim && r.ops.length > 0)
+  const susulanMenunggu = supReq.filter((o) => o.status === 'menunggu') // sudah diajukan, tunggu Owner
+  const ajukanSusulan = (r) => {
+    const branches = [{ branchId: r.branchId, branchName: r.branchName, tgl: r.tgl, items: r.ops.map((it) => ({ id: it.id, name: it.name, qty: it.qty, src: 'ops' })) }]
+    if (!createSupplierRequest({ branches, status: 'menunggu' })) return
+    clearOpsBelanja(r.branchId)
+    setJustSent(true); setTimeout(() => setJustSent(false), 2500)
+  }
+
   // Item kasir (shopping.js) yang belum ada di OPS_ITEMS — untuk "kasir lupa pesan".
   const kasirItems = shopItems.filter((i) => !OPS_ITEMS.some((o) => o.id === i.id))
 
@@ -140,6 +152,32 @@ export default function OperasionalShopping() {
               </div>
             ))}
           </div>
+        )}
+
+        {/* ── SUSULAN (item lupa, cabang sudah dikirim) → perlu ACC Owner ── */}
+        {(susulanSiap.length > 0 || susulanMenunggu.length > 0) && (
+          <section className="space-y-2">
+            <h2 className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="more_time" className="!text-[20px] text-amber-600" /> Susulan <span className="text-label-md text-on-surface-variant font-normal">(item lupa)</span></h2>
+            {susulanSiap.map((r) => (
+              <div key={r.branchId} className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4">
+                <h3 className="font-headline-md text-headline-md mb-1 flex items-center gap-2 flex-wrap"><Icon name="storefront" className="!text-[18px] text-amber-700" /> {r.branchName} <span className="text-[11px] font-bold uppercase bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full">sudah dikirim</span></h3>
+                <p className="text-[12px] text-amber-900/80 mb-2">Item ini terlewat. Ajukan sebagai susulan — <b>perlu disetujui Owner</b> sebelum sampai ke supplier.</p>
+                <div className="space-y-1 mb-3">
+                  {r.ops.map((it) => <div key={it.id} className="flex justify-between text-label-lg"><span className="text-on-surface-variant flex items-center gap-1"><span className="text-[10px] font-bold uppercase bg-primary-fixed text-primary px-1.5 py-0.5 rounded">+ops</span> {it.name}</span><span className="font-bold">{it.qty}</span></div>)}
+                </div>
+                <button onClick={() => ajukanSusulan(r)} className="w-full min-h-[44px] rounded-xl bg-amber-500 text-amber-950 font-bold flex items-center justify-center gap-2 active:scale-[0.98]"><Icon name="send" /> Ajukan Susulan ke Owner</button>
+              </div>
+            ))}
+            {susulanMenunggu.map((o) => (
+              <div key={o.id} className="bg-surface-container-low border border-amber-300/60 rounded-2xl p-3 flex items-center gap-3">
+                <Icon name="hourglass_top" className="!text-[22px] text-amber-600 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-label-lg">{nameOf(o.branchId)} <span className="text-on-surface-variant font-normal text-label-md">· {o.items.length} item</span></p>
+                  <p className="text-[12px] text-amber-700 font-bold">Menunggu persetujuan Owner…</p>
+                </div>
+              </div>
+            ))}
+          </section>
         )}
 
         {/* ── TAMBAHAN OPERASIONAL (Riski) — PER CABANG ─ */}

@@ -29,7 +29,8 @@ export default function SupplierRequest() {
   if (!getSupplierSession()) return <Navigate to="/supplier" replace />
 
   const priceOf = (id) => priceOfSup(id)
-  const aktif = orders.filter((o) => o.status !== 'selesai')
+  // Sembunyikan 'menunggu' (SUSULAN belum di-ACC Owner) & 'selesai'.
+  const aktif = orders.filter((o) => o.status !== 'selesai' && o.status !== 'menunggu')
 
   // WA Owner — pesan rekap otomatis dari semua request aktif (hanya item siap).
   const WA_OWNER = '62895341869458'
