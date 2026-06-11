@@ -12,7 +12,14 @@ const isChunkError = (e) => {
     /Loading chunk [\w-]+ failed/i.test(m) ||
     /Failed to fetch dynamically imported module/i.test(m) ||
     /error loading dynamically imported module/i.test(m) ||
-    /Importing a module script failed/i.test(m)
+    /Importing a module script failed/i.test(m) ||
+    // Chunk lama 404 → SPA-fallback balas index.html (text/html) → browser tolak jalankan
+    // sebagai modul JS. Pesan beda-beda antar browser (Chrome/Safari/WebView IG).
+    /Failed to load module script/i.test(m) ||
+    /Expected a JavaScript[- ]?(module)? ?script/i.test(m) ||
+    /not a valid JavaScript MIME type/i.test(m) ||
+    /MIME type of ["']?text\/html/i.test(m) ||
+    /disallowed MIME type/i.test(m)
   )
 }
 
@@ -35,7 +42,14 @@ export default class ErrorBoundary extends Component {
         // kalau error menetap, berhenti reload & tampilkan UI (cegah loop tak henti).
         if (Date.now() - last > 10000) {
           sessionStorage.setItem(KEY, String(Date.now()))
-          window.location.reload()
+          // Buang cache & service worker BASI (sumber chunk lama / balasan text/html),
+          // lalu reload bersih → ambil index.html & chunk TERBARU dari server.
+          const reload = () => window.location.reload()
+          const jobs = []
+          try { if (typeof caches !== 'undefined') jobs.push(caches.keys().then((ks) => Promise.all(ks.map((k) => caches.delete(k))))) } catch { /* abaikan */ }
+          try { if (navigator.serviceWorker) jobs.push(navigator.serviceWorker.getRegistrations().then((rs) => Promise.all(rs.map((r) => r.unregister())))) } catch { /* abaikan */ }
+          if (jobs.length) Promise.all(jobs).then(reload).catch(reload)
+          else reload()
         }
       } catch { /* sessionStorage diblok → biarkan UI tampil */ }
     }

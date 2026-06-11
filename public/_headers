@@ -1,0 +1,12 @@
+# Cloudflare Pages — aturan cache.
+# HTML/navigasi: JANGAN di-cache (selalu revalidate) → index.html selalu menunjuk
+# chunk JS TERBARU. Tanpa ini, webview Instagram/CDN bisa menyimpan index.html basi
+# yang menunjuk chunk lama → chunk 404 → SPA-fallback balas text/html →
+# "'text/html' is not a valid JavaScript MIME type" → layar error.
+/*
+  Cache-Control: no-cache
+
+# Aset ber-hash (nama berubah saat isi berubah) → aman di-cache permanen.
+# Ditaruh SETELAH /* agar menang utk path aset (header terakhir yang cocok berlaku).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
