@@ -72,6 +72,13 @@ export default function CustomerCheckout() {
   // Popup edukasi Maxim: muncul saat pilih Maxim, sampai user centang "jangan tampilkan
   // lagi" (persisten di localStorage). maximNoApp = tampilan tombol instal (setelah "Belum").
   const MAXIM_DISMISS_KEY = 'corney_maxim_ask_dismissed'
+  const MAXIM_PLAY = 'https://play.google.com/store/apps/details?id=com.taxsee.taxsee'
+  const MAXIM_APPSTORE = 'https://apps.apple.com/id/search?term=maxim%20order%20a%20taxi'
+  // Deteksi platform utk arahkan ke store yang tepat (jalan jg di webview IG: UA tetap
+  // memuat "iPhone"/"Android"). Tak dikenali (desktop/UA aneh) → tampilkan keduanya.
+  const _ua = typeof navigator !== 'undefined' ? (navigator.userAgent || '') : ''
+  const isIOS = /iphone|ipad|ipod/i.test(_ua)
+  const isAndroid = /android/i.test(_ua)
   const [maximAsk, setMaximAsk] = useState(false)
   const [maximNoApp, setMaximNoApp] = useState(false)
   const [maximDontShow, setMaximDontShow] = useState(false)
@@ -361,8 +368,24 @@ export default function CustomerCheckout() {
                 </>
               ) : (
                 <>
-                  <a href="https://play.google.com/store/apps/details?id=com.taxsee.taxsee" target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-primary text-white rounded-xl font-label-lg shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="android" className="!text-[20px]" /> Play Store (Android)</a>
-                  <a href="https://apps.apple.com/id/search?term=maxim%20order%20a%20taxi" target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-on-surface text-surface rounded-xl font-label-lg shadow active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="phone_iphone" className="!text-[20px]" /> App Store (iPhone)</a>
+                  {/* Auto-detect: tampilkan store sesuai HP. Yang cocok = tombol utama;
+                      platform lain = tautan kecil. Tak dikenali → keduanya setara. */}
+                  {isIOS ? (
+                    <>
+                      <a href={MAXIM_APPSTORE} target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-primary text-white rounded-xl font-label-lg shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="phone_iphone" className="!text-[20px]" /> Buka di App Store</a>
+                      <a href={MAXIM_PLAY} target="_blank" rel="noopener noreferrer" className="text-[12px] text-on-surface-variant underline underline-offset-2 text-center py-1">Pakai Android? Buka Play Store</a>
+                    </>
+                  ) : isAndroid ? (
+                    <>
+                      <a href={MAXIM_PLAY} target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-primary text-white rounded-xl font-label-lg shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="android" className="!text-[20px]" /> Buka di Play Store</a>
+                      <a href={MAXIM_APPSTORE} target="_blank" rel="noopener noreferrer" className="text-[12px] text-on-surface-variant underline underline-offset-2 text-center py-1">Pakai iPhone? Buka App Store</a>
+                    </>
+                  ) : (
+                    <>
+                      <a href={MAXIM_PLAY} target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-primary text-white rounded-xl font-label-lg shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="android" className="!text-[20px]" /> Play Store (Android)</a>
+                      <a href={MAXIM_APPSTORE} target="_blank" rel="noopener noreferrer" className="w-full h-[52px] bg-on-surface text-surface rounded-xl font-label-lg shadow active:scale-[0.98] flex items-center justify-center gap-2"><Icon name="phone_iphone" className="!text-[20px]" /> App Store (iPhone)</a>
+                    </>
+                  )}
                   <button onClick={closeMaximAsk} className="w-full h-[48px] text-on-surface-variant rounded-xl font-label-lg active:bg-surface-container">Sudah, lanjut</button>
                 </>
               )}
