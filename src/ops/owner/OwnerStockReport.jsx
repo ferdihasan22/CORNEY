@@ -8,7 +8,7 @@ import { computeParent as compute, updateStockRow, updateStockDate, effectiveV, 
 const ddmmToISO = (s) => { const [d, m, y] = (s || '').split('/'); return y ? `${y}-${m}-${d}` : '' }
 const isoToDDMM = (iso) => { const [y, m, d] = (iso || '').split('-'); return d ? `${d}/${m}/${y}` : '' }
 import { useSalesDaily } from '../../store/useSalesDaily.js'
-import { VARIANTS, CHANNELS, rowOmzet, rowTransfer, rowCashSistem, rowCashAktual, updateSalesRow, clearSalesDaily } from '../../store/salesdaily.js'
+import { VARIANTS, CHANNELS, rowTransfer, rowCashSistem, rowCashAktual, updateSalesRow, clearSalesDaily } from '../../store/salesdaily.js'
 import { clearDeposits } from '../../store/deposits.js'
 import { useUsage } from '../../store/useUsage.js'
 import { addUsage, removeUsage, usageTotal, usageList, clearUsage } from '../../store/usage.js'
@@ -308,7 +308,7 @@ export default function OwnerStockReport() {
                       <td className={`sticky left-[78px] z-10 ${ri % 2 ? 'bg-surface-container-low' : 'bg-surface-container-lowest'} px-3 py-2 font-bold whitespace-nowrap border-r border-outline-variant/40 text-primary`}>{branchName(row.branchId).replace('CORNEY ', '')}</td>
                       {VARIANTS.map((v) => <td key={v.id} className="px-2 py-2 text-center border-l border-outline-variant/20 tabular-nums">{row.variants[v.id] || 0}</td>)}
                       <td className="px-3 py-2 text-center border-l border-outline-variant/30 font-bold bg-secondary-container/30">{totQty}</td>
-                      <td className="px-3 py-2 text-center border-l border-outline-variant/30 font-bold text-primary whitespace-nowrap">{fmtRp(rowOmzet(row))}</td>
+                      <td className="px-3 py-2 text-center border-l border-outline-variant/30 font-bold text-primary whitespace-nowrap">{fmtRp(CHANNELS.reduce((s, [k]) => s + (row.channels?.[k] || 0), 0))}</td>
                     </tr>
                   )
                 })}
