@@ -84,7 +84,7 @@ export function salesInPeriod(period, branchId) {
 export function aggregatePeriod(period, branchId) {
   const rows = salesInPeriod(period, branchId)
   const channels = { tunai: 0, qris_midtrans: 0, qris_gopay: 0, gofood: 0, grabfood: 0 }
-  const acc = { omzet: 0, trx: 0, urgent: 0, refund: 0, gaji: 0, selisihKas: 0, laba: 0, channels, hari: rows.length }
+  const acc = { omzet: 0, trx: 0, urgent: 0, refund: 0, gaji: 0, selisihKas: 0, laba: 0, online: 0, walkin: 0, fee: 0, channels, hari: rows.length }
   rows.forEach((r) => {
     acc.omzet += rowChannelsTotal(r)
     acc.trx += r.trx || 0
@@ -93,6 +93,10 @@ export function aggregatePeriod(period, branchId) {
     acc.gaji += r.potongan?.gaji || 0
     acc.selisihKas += rowCashAktual(r) - rowCashSistem(r)
     acc.laba += rowLaba(r)
+    // Pisah sumber omzet + biaya layanan online (informatif; sudah termasuk di omzet).
+    acc.online += r.source?.online || 0
+    acc.walkin += r.source?.walkin || 0
+    acc.fee += r.source?.fee || 0
     CHANNELS.forEach(([k]) => { channels[k] += r.channels?.[k] || 0 })
   })
   return acc

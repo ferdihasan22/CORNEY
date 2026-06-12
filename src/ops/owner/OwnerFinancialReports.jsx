@@ -47,6 +47,7 @@ export default function OwnerFinancialReports() {
     omzet: agg.omzet, trx: agg.trx, channels: agg.channels,
     selisihKas: hasData ? agg.selisihKas : null,
     urgent: agg.urgent, gaji: agg.gaji, laba: agg.laba, belanja,
+    online: agg.online, walkin: agg.walkin, fee: agg.fee, // sumber omzet + biaya layanan
     payroll: day?.closing?.payroll || null, // bonus: detail potong gaji sesi berjalan
     trend: trendLabel,
   }
@@ -297,6 +298,30 @@ export default function OwnerFinancialReports() {
             </div>
           )}
         </Card>
+
+        {/* Sumber Omzet: Walk-in vs Online + rincian Biaya Layanan */}
+        {(data.online > 0 || data.walkin > 0) && (
+          <Card className="p-5">
+            <h3 className="text-label-lg font-label-lg mb-4">Sumber Omzet</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-2 text-body-md font-semibold"><Icon name="storefront" className="text-on-surface-variant" /> Walk-in (kasir)</span>
+                <span className="font-bold">{fmtRp(data.walkin)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-2 text-body-md font-semibold"><Icon name="smartphone" className="text-blue-600" /> Online (Customer)</span>
+                <span className="font-bold">{fmtRp(data.online)}</span>
+              </div>
+              {data.fee > 0 && (
+                <div className="flex items-center justify-between text-[13px] text-on-surface-variant pl-7 -mt-1">
+                  <span>↳ termasuk Biaya Layanan</span>
+                  <span className="font-bold text-on-surface">{fmtRp(data.fee)}</span>
+                </div>
+              )}
+            </div>
+            <p className="text-[11px] text-on-surface-variant mt-3 flex items-start gap-1"><Icon name="info" className="!text-[14px] mt-0.5 shrink-0" /> Online memakai <b>harga online</b>{data.fee > 0 ? ' + biaya layanan' : ''}; walk-in pakai harga kasir (tanpa biaya layanan). Keduanya sudah termasuk di <b>Total Omzet</b>.</p>
+          </Card>
+        )}
 
         {/* Laporan Tutup Hari */}
         <section className="space-y-3">

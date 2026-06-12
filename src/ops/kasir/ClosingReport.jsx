@@ -119,6 +119,7 @@ export default function ClosingReport() {
     const onlineOrders = getOrders().filter((o) => o.branchId === day.branchId && o.paid && new Date(o.createdAt).getTime() >= (day.startedAt || 0))
     onlineOrders.forEach((o) => (o.lines || []).forEach((l) => { if (l.menuId) variants[l.menuId] = (variants[l.menuId] || 0) + (l.qty || 0) }))
     const onlineAmt = onlineOrders.reduce((s, o) => s + (o.total || 0), 0)
+    const feeTotal = onlineOrders.reduce((s, o) => s + (o.serviceFee || 0), 0) // biaya layanan terkumpul (sudah termasuk di onlineAmt)
     // Pemakaian SAUS: hitung porsi corndog yg pakai tiap saus (walk-in + online) →
     // untuk Analisa Bahan vs Jual. Saus di tiap line: array {id} atau string id.
     const sauces = { tomat: 0, sambal: 0, keju: 0, mayo: 0 }
@@ -133,7 +134,7 @@ export default function ClosingReport() {
       if (!top) return null
       const h = Number(top[0]); return `${String(h).padStart(2, '0')}:00–${String((h + 1) % 24).padStart(2, '0')}:00`
     })()
-    upsertSalesDay({ tgl: tglDDMM, branchId: day.branchId, variants, channels: { ...total }, source: { online: onlineAmt, walkin: Math.max(0, omzet - onlineAmt) }, potongan: { urgent: urgentT, refund: refundT, gaji: gajiT }, kasAktual: day.closing.reconcile?.kasPenjualanTunai ?? null, trx: txnCount, peakHour, sauces, belanja: day.closing.belanja || [], cashReason: day.closing.reconcile?.reason || '' })
+    upsertSalesDay({ tgl: tglDDMM, branchId: day.branchId, variants, channels: { ...total }, source: { online: onlineAmt, walkin: Math.max(0, omzet - onlineAmt), fee: feeTotal }, potongan: { urgent: urgentT, refund: refundT, gaji: gajiT }, kasAktual: day.closing.reconcile?.kasPenjualanTunai ?? null, trx: txnCount, peakHour, sauces, belanja: day.closing.belanja || [], cashReason: day.closing.reconcile?.reason || '' })
 
     finalizeClosing({
       ts: day.startedAt, tgl: tglDDMM, omzet, txnCount, channels: total,
