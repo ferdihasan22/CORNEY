@@ -7,7 +7,11 @@ export function applyDynamicManifest() {
   try {
     const link = document.querySelector('link[rel="manifest"]')
     if (!link) return
-    const path = (window.location.pathname || '/') + (window.location.search || '')
+    const pathname = window.location.pathname || '/'
+    // App STAF (ops/supplier): start_url = BERANDA peran (bukan halaman dalam spt Go
+    // Live). Customer (/app, dll.): pakai halaman ini + query (mis. cabang terakhir).
+    const staf = pathname.match(/^\/(ops\/(?:owner|operasional|produksi|auditor|kasir)|supplier)(?:\/|$)/)
+    const path = staf ? '/' + staf[1] : pathname + (window.location.search || '')
     link.setAttribute('href', '/pwa-manifest?u=' + encodeURIComponent(path))
   } catch {
     /* gagal → biarkan manifest statis (start_url '/') */

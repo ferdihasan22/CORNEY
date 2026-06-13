@@ -9,6 +9,12 @@ export function onRequest(context) {
   let u = url.searchParams.get('u') || '/'
   // Validasi: hanya path internal (cegah open-redirect / origin lain).
   if (typeof u !== 'string' || !u.startsWith('/') || u.startsWith('//')) u = '/'
+  // App STAF (ops/supplier): SELALU buka di BERANDA peran, bukan halaman dalam (mis.
+  // Go Live) yang kebetulan jadi start_url terakhir. AuthGate arahkan ke login bila
+  // belum masuk. Customer (/app) tetap apa adanya. Menyembuhkan install lama otomatis
+  // (manifest no-store → selalu di-fetch ulang).
+  const staf = u.match(/^\/(ops\/(?:owner|operasional|produksi|auditor|kasir)|supplier)(?:\/|$)/)
+  if (staf) u = '/' + staf[1]
   const origin = url.origin
 
   // Ikon per host: KASIR (dapur.corney.id) pakai ikon "KASIR CORNEY"; selain itu
