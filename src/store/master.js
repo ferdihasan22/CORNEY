@@ -390,7 +390,7 @@ export function normWa(s) {
   else if (!d.startsWith('62')) d = '62' + d // 812… → 62812…
   return d
 }
-function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembalian, stopOnline, closeBooth, username, password, maximEnabled = true, active = true }) {
+function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembalian, openTime, stopOnline, closeBooth, username, password, maximEnabled = true, active = true }) {
   const nm = (name || '').trim()
   return {
     name: nm,
@@ -402,6 +402,7 @@ function normBranch({ name, address, wa, maps, coord, qrisImg, maximName, kembal
     // Default ke nama cabang bila kosong, supaya tutorial Maxim tetap terisi.
     maximName: (maximName || '').trim() || nm.replace('CORNEY', 'Corney'),
     kembalian: Math.max(0, Math.round(Number(kembalian) || 0)),
+    openTime: openTime || '10:00', // jam buka (KOSMETIK utk kartu customer; buka nyata = kasir)
     stopOnline: stopOnline || '21:30',
     closeBooth: closeBooth || '22:00',
     username: (username || '').trim().toLowerCase(), // login cabang (kasir)

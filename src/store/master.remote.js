@@ -101,6 +101,7 @@ function mapBranch(b) {
     maximEnabled: b.maxim_enabled !== false, // opsi Maxim di checkout (default aktif)
     kembalian: b.kembalian ?? 200000,
     active: b.active !== false,
+    openTime: b.open_time || '10:00',
     stopOnline: b.stop_online || '21:30',
     closeBooth: b.close_booth || '22:00',
     password: '', // login asli via Supabase Auth (FASE 2)

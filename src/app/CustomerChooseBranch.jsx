@@ -190,9 +190,10 @@ export default function CustomerChooseBranch() {
                         <h3 className="font-headline-md text-[19px] font-bold leading-tight">{b.name}</h3>
                         {dist != null && <span className={`shrink-0 flex items-center gap-0.5 text-[12px] font-bold ${isNear ? 'text-primary' : 'text-on-surface-variant'}`}><Icon name="near_me" className="!text-[13px]" />{fmtKm(dist)}</span>}
                       </div>
-                      <p className="text-[13px] text-on-surface-variant line-clamp-1 flex items-center gap-1 mb-2"><Icon name="location_on" className="!text-[14px] shrink-0" />{b.address}</p>
+                      <p className="text-[13px] text-on-surface-variant line-clamp-1 flex items-center gap-1 mb-1"><Icon name="location_on" className="!text-[14px] shrink-0" />{b.address}</p>
+                      <p className="text-[12px] text-on-surface-variant flex items-center gap-1 mb-2"><Icon name="schedule" className="!text-[14px] shrink-0" /> Buka {b.openTime || '10:00'} – {openUntil}</p>
                       {open ? (
-                        <span className="inline-flex items-center gap-1.5 bg-green-100 text-green-700 text-[11px] font-bold px-2.5 py-1 rounded-full"><span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Buka sekarang · tutup {openUntil}</span>
+                        <span className="inline-flex items-center gap-1.5 bg-green-100 text-green-700 text-[11px] font-bold px-2.5 py-1 rounded-full"><span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Buka sekarang</span>
                       ) : (
                         <span className="inline-flex items-center gap-1.5 bg-surface-dim text-on-surface-variant text-[11px] font-bold px-2.5 py-1 rounded-full"><Icon name="bedtime" className="!text-[13px]" /> Belum buka</span>
                       )}

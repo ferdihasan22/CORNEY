@@ -23,7 +23,7 @@ const Icon = ({ name, className = '', fill }) => (
   <span style={fill ? { fontVariationSettings: "'FILL' 1" } : undefined} className={`material-symbols-outlined ${className}`}>{name}</span>
 )
 
-const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', qrisImg: '', maximName: '', kembalian: 200000, stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', maximEnabled: true, par: {} }
+const EMPTY = { name: '', address: '', wa: '', maps: '', coord: '', qrisImg: '', maximName: '', kembalian: 200000, openTime: '10:00', stopOnline: '21:30', closeBooth: '22:00', username: '', password: '', maximEnabled: true, par: {} }
 
 export default function OwnerBranches() {
   const navigate = useNavigate()
@@ -78,7 +78,7 @@ export default function OwnerBranches() {
   }
 
   const openNew = () => { setForm({ ...EMPTY, par: {} }); setEditing({}) }
-  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', qrisImg: b.qrisImg || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', maximEnabled: b.maximEnabled !== false, par: { ...parOf(b.id) } }); setEditing(b) }
+  const openEdit = (b) => { setForm({ name: b.name, address: b.address, wa: b.wa, maps: b.maps || '', coord: b.coord || '', qrisImg: b.qrisImg || '', maximName: b.maximName || '', kembalian: b.kembalian ?? 200000, openTime: b.openTime || '10:00', stopOnline: b.stopOnline, closeBooth: b.closeBooth, username: b.username || '', password: b.password || '', maximEnabled: b.maximEnabled !== false, par: { ...parOf(b.id) } }); setEditing(b) }
   const close = () => { setEditing(null); setSaveErr(''); setBusy(false) }
   const setParField = (pid, v) => setForm((f) => ({ ...f, par: { ...f.par, [pid]: Math.max(0, Number(String(v).replace(/\D/g, '')) || 0) } }))
   const applyPar = (id) => PARENT_FILLINGS.forEach((p) => setPar(id, p.id, form.par?.[p.id] || 0))
@@ -160,6 +160,7 @@ export default function OwnerBranches() {
                 <div className="flex items-center gap-2 text-on-surface-variant"><Icon name="savings" className="text-[18px] shrink-0" /><p className="text-label-md">Kembalian: <strong>{fmtRp(b.kembalian ?? 0)}</strong></p></div>
               </div>
               <div className={`flex flex-wrap gap-2 mb-3 ${b.active ? '' : 'opacity-50 grayscale'}`}>
+                <div className="bg-green-50 text-green-700 border border-green-200 px-3 py-2 rounded-xl flex items-center gap-2"><Icon name="schedule" className="text-[18px]" /><span className="text-label-md">Buka <strong>{b.openTime || '10:00'}</strong></span></div>
                 <div className="bg-primary/5 text-primary border border-primary/20 px-3 py-2 rounded-xl flex items-center gap-2"><Icon name="timer" className="text-[18px]" /><span className="text-label-md">Stop Online <strong>{b.stopOnline}</strong></span></div>
                 <div className="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-2 rounded-xl flex items-center gap-2"><Icon name="store" className="text-[18px]" /><span className="text-label-md">Tutup Booth <strong>{b.closeBooth}</strong></span></div>
               </div>
@@ -307,6 +308,11 @@ export default function OwnerBranches() {
               {/* Jam operasional */}
               <div className="space-y-3">
                 <h3 className="font-label-lg text-primary flex items-center gap-2"><Icon name="schedule" /> Jam Operasional</h3>
+                <div className="space-y-1">
+                  <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1">Jam Buka <span className="text-on-surface-variant/60 normal-case">(info di kartu customer)</span></label>
+                  <input value={form.openTime} onChange={(e) => setForm((f) => ({ ...f, openTime: e.target.value }))} type="time" className="w-full h-[52px] border border-outline px-4 rounded-[14px] focus:border-primary focus:ring-1 focus:ring-primary outline-none text-label-md bg-surface-container-lowest" />
+                  <p className="text-[11px] text-on-surface-variant ml-1">Hanya tampilan jadwal (mis. "Buka 10:00 – 22:00"). Status BUKA yang sebenarnya tetap saat <b>kasir buka toko</b>.</p>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[12px] font-bold text-on-surface-variant uppercase ml-1">Stop Order Online</label>
