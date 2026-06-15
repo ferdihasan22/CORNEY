@@ -137,7 +137,7 @@ export async function removeLandingCard(id) {
 // ── Branch overrides (upsert bila ada patch; DELETE bila override dilepas) ──
 export async function pushOverride(branchId, menuId, patch) {
   if (!branchId || !menuId) return
-  if (patch && (patch.price != null || patch.off)) {
+  if (patch && (patch.price != null || patch.onlinePrice != null || patch.off)) {
     enqueue({ kind: 'upsert', table: 'branch_overrides', onConflict: 'branch_id,menu_id', key: `branch_overrides:${branchId}:${menuId}`, row: { branch_id: branchId, menu_id: menuId, patch } })
   } else {
     enqueue({ kind: 'delete', table: 'branch_overrides', match: { branch_id: branchId, menu_id: menuId }, key: `branch_overrides_del:${branchId}:${menuId}` })
