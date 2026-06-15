@@ -53,6 +53,19 @@ export default function OwnerFinancialReports() {
   }
   // Ringkasan closing per cabang untuk periode (dari MASTER LAPORAN).
   const closingCards = salesInPeriod(period, bid).map((r) => ({ id: r.id, branchId: r.branchId, tgl: r.tgl, omzet: rowChannelsTotal(r), selisihKas: rowCashAktual(r) - rowCashSistem(r), cashReason: r.cashReason || '' }))
+
+  // Grafik omzet: Bulan/Minggu = batang PER TANGGAL (jumlah semua cabang terpilih per
+  // hari). Hari = per jam belum ada (butuh data jam saat closing) → tampil ringkasan.
+  const dnumF = (t) => { const [d, m, y] = (t || '').split('/'); return Number(y) * 10000 + Number(m) * 100 + Number(d) }
+  const kFmt = (n) => (n >= 1000000 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'jt' : n >= 1000 ? Math.round(n / 1000) + 'k' : String(n || 0))
+  const chartByDate = (() => {
+    if (period === 'Hari') return []
+    const m = {}
+    salesInPeriod(period, bid).forEach((r) => { m[r.tgl] = (m[r.tgl] || 0) + rowChannelsTotal(r) })
+    return Object.entries(m).map(([tgl, omzet]) => ({ tgl, omzet })).sort((a, b) => dnumF(a.tgl) - dnumF(b.tgl))
+  })()
+  const chartMax = Math.max(1, ...chartByDate.map((d) => d.omzet))
+  const peakToday = period === 'Hari' ? (salesInPeriod('Hari', bid).map((r) => r.peakHour).filter(Boolean)[0] || null) : null
   const channelTotal = Object.values(data.channels || {}).reduce((s, v) => s + v, 0)
   const activeChannels = CHANNELS.filter((c) => (data.channels?.[c.id] || 0) > 0)
 
@@ -166,6 +179,39 @@ export default function OwnerFinancialReports() {
             </div>
             <Icon name="emergency" className="text-3xl" />
           </div>
+        </section>
+
+        {/* Grafik Omzet — batang per tanggal (Bulan/Minggu); Hari = ringkasan */}
+        <section className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-variant">
+          <h3 className="font-label-lg flex items-center gap-2 mb-3"><Icon name="bar_chart" className="text-primary" /> Grafik Omzet {period === 'Hari' ? 'Hari Ini' : 'per Tanggal'} <span className="ml-auto text-[11px] text-on-surface-variant font-normal">{trendLabel}</span></h3>
+          {period === 'Hari' ? (
+            <div className="text-center py-5 text-on-surface-variant">
+              <Icon name="schedule" className="!text-[40px] opacity-30" />
+              <p className="text-headline-md font-headline-md text-on-surface mt-1">{fmtRp(data.omzet)}</p>
+              <p className="text-[12px] mt-1">{peakToday ? <>Jam paling ramai: <b className="text-on-surface">{peakToday}</b></> : 'Belum ada transaksi hari ini.'}</p>
+              <p className="text-[11px] text-on-surface-variant/70 mt-2">Grafik per jam menyusul (butuh update kasir).</p>
+            </div>
+          ) : chartByDate.length === 0 ? (
+            <p className="text-center py-6 text-on-surface-variant text-label-md">Belum ada data omzet di periode ini.</p>
+          ) : (
+            <div className="overflow-x-auto -mx-1 px-1 pb-1">
+              <div className="flex items-end gap-1.5" style={{ minWidth: `${chartByDate.length * 34}px` }}>
+                {chartByDate.map((d) => {
+                  const pct = Math.max(3, Math.round((d.omzet / chartMax) * 100))
+                  const top = d.omzet === chartMax
+                  return (
+                    <div key={d.tgl} className="flex-1 flex flex-col items-center gap-1 min-w-[28px]">
+                      <span className="text-[9px] font-bold text-on-surface-variant tabular-nums leading-none">{kFmt(d.omzet)}</span>
+                      <div className="w-full flex items-end" style={{ height: '120px' }}>
+                        <div className={`w-full rounded-t-md ${top ? 'bg-primary' : 'bg-primary/55'}`} style={{ height: `${pct}%` }} title={`${d.tgl}: ${fmtRp(d.omzet)}`} />
+                      </div>
+                      <span className="text-[10px] text-on-surface-variant tabular-nums leading-none">{d.tgl.split('/')[0]}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Rincian Laba Bersih (drill-down) — per tanggal × cabang, belanja bisa diisi di sini */}
