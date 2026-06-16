@@ -41,3 +41,16 @@ export function resolveFreezerCorrection(id, approve) {
 }
 
 export function pendingFreezerCount() { return list.filter((c) => c.status === 'pending').length }
+
+// Hapus SATU riwayat koreksi (cleanup salah input). Tak meng-undo perubahan freezer
+// yang sudah diterapkan — hanya membersihkan catatan/riwayat.
+export function removeFreezerCorrection(id) {
+  commit(list.filter((c) => c.id !== id))
+  if (isSupabase()) import('./freezerCorrections.remote.js').then((w) => w.removeFreezerCorrectionRemote(id)).catch(() => {})
+}
+// Hapus SEMUA riwayat koreksi → fresh. (Stok freezer saat ini tak diubah.)
+export function clearAllFreezerCorrections() {
+  const ids = list.map((c) => c.id)
+  commit([])
+  if (isSupabase()) import('./freezerCorrections.remote.js').then((w) => ids.forEach((id) => w.removeFreezerCorrectionRemote(id))).catch(() => {})
+}

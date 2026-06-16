@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { BRANCHES, PARENT_FILLINGS } from '../../data/menu.js'
 import { useFreezer } from '../../store/useFreezer.js'
 import { useFreezerCorrections } from '../../store/useFreezerCorrections.js'
-import { resolveFreezerCorrection } from '../../store/freezerCorrections.js'
+import { resolveFreezerCorrection, removeFreezerCorrection, clearAllFreezerCorrections } from '../../store/freezerCorrections.js'
 
 // OWN — Persetujuan Koreksi Sisa Freezer (diajukan Produksi). Owner setuju →
 // sisa freezer diubah; tolak → tidak berubah. Pemisahan tugas: yang pegang
@@ -121,7 +121,16 @@ export default function OwnerFreezerApproval() {
 
         {/* Tabel detail semua koreksi (gaya Master Laporan) */}
         <section className="space-y-2 pt-2">
-          <h2 className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="table_chart" className="text-primary" /> Rincian Koreksi</h2>
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <h2 className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="table_chart" className="text-primary" /> Rincian Koreksi</h2>
+            {list.length > 0 && (
+              <button
+                onClick={() => { if (window.confirm(`Hapus SEMUA ${list.length} riwayat koreksi? Stok freezer saat ini TIDAK berubah — hanya catatan riwayat yang dibersihkan. Tindakan ini permanen.`)) clearAllFreezerCorrections() }}
+                className="text-error border border-error/40 bg-error-container/40 hover:bg-error-container rounded-xl px-3 h-9 font-label-md text-label-md flex items-center gap-1.5 active:scale-95">
+                <Icon name="delete_sweep" className="!text-[18px]" /> Hapus Semua Riwayat
+              </button>
+            )}
+          </div>
           <p className="text-label-md text-on-surface-variant -mt-1">Semua pengajuan. Kolom <b>Selisih</b> menyala bila stok fisik berbeda dari sistem.</p>
           <div className="overflow-x-auto rounded-2xl border border-outline-variant/40 bg-surface-container-lowest">
             <table className="w-full text-[12px] border-collapse min-w-max">
@@ -133,10 +142,11 @@ export default function OwnerFreezerApproval() {
                 <th className="px-3 py-2 text-right border-r border-white/20">Diajukan</th>
                 <th className="px-3 py-2 text-center border-r border-white/20">Selisih</th>
                 <th className="px-3 py-2 text-left border-r border-white/20">Alasan</th>
-                <th className="px-3 py-2 text-center">Status</th>
+                <th className="px-3 py-2 text-center border-r border-white/20">Status</th>
+                <th className="px-3 py-2 text-center">Aksi</th>
               </tr></thead>
               <tbody>
-                {list.length === 0 && <tr><td colSpan={8} className="px-3 py-5 text-center text-on-surface-variant">Belum ada koreksi.</td></tr>}
+                {list.length === 0 && <tr><td colSpan={9} className="px-3 py-5 text-center text-on-surface-variant">Belum ada koreksi.</td></tr>}
                 {list.map((c, i) => {
                   const sel = c.proposed - c.current
                   const selCls = sel < 0 ? 'text-error bg-error-container font-bold' : sel > 0 ? 'text-amber-700 bg-amber-50 font-bold' : 'text-on-surface-variant'
@@ -151,7 +161,14 @@ export default function OwnerFreezerApproval() {
                       <td className="px-3 py-2 text-right tabular-nums font-bold border-r border-outline-variant/30">{c.proposed}</td>
                       <td className={`px-3 py-2 text-center tabular-nums border-r border-outline-variant/30 ${selCls}`}>{sel === 0 ? '0' : `${sel > 0 ? '+' : ''}${sel}`}</td>
                       <td className="px-3 py-2 border-r border-outline-variant/30 max-w-[160px] truncate" title={c.reason}>{c.reason || '—'}</td>
-                      <td className="px-3 py-2 text-center"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${stBadge}`}>{stLbl}</span></td>
+                      <td className="px-3 py-2 text-center border-r border-outline-variant/30"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${stBadge}`}>{stLbl}</span></td>
+                      <td className="px-3 py-2 text-center">
+                        <button
+                          onClick={() => { if (window.confirm(`Hapus riwayat koreksi ${c.parentName} (${(c.branchName || '').replace('CORNEY ', '')})? Stok freezer tidak berubah.`)) removeFreezerCorrection(c.id) }}
+                          title="Hapus riwayat ini" className="w-8 h-8 rounded-lg text-error hover:bg-error-container/60 flex items-center justify-center mx-auto active:scale-90">
+                          <Icon name="delete" className="!text-[18px]" />
+                        </button>
+                      </td>
                     </tr>
                   )
                 })}

@@ -25,3 +25,7 @@ export async function pushFreezerCorrection(c) {
   if (!supabase || !c?.id) return
   enqueue({ kind: 'upsert', table: 'freezer_corrections', key: `freezer_corrections:${c.id}`, row: { id: c.id, branch_id: c.branchId, parent_id: c.parent, current: c.current, proposed: c.proposed, reason: c.reason, status: c.status, resolved_at: c.resolvedAt || null } })
 }
+export async function removeFreezerCorrectionRemote(id) {
+  if (!supabase || !id) return
+  enqueue({ kind: 'delete', table: 'freezer_corrections', matchId: id, key: `freezer_corrections_del:${id}` })
+}
