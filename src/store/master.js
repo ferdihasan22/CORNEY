@@ -445,7 +445,7 @@ export function updateBranch(id, data) {
   const branches = state.branches.map((x) => {
     if (x.id !== id) return x
     const patch = {}
-    for (const k of ['name', 'address', 'wa', 'maps', 'coord', 'qrisImg', 'maximName', 'kembalian', 'stopOnline', 'closeBooth', 'username', 'password', 'maximEnabled']) {
+    for (const k of ['name', 'address', 'wa', 'maps', 'coord', 'qrisImg', 'maximName', 'kembalian', 'openTime', 'stopOnline', 'closeBooth', 'username', 'password', 'maximEnabled']) {
       if (data[k] != null) patch[k] = typeof data[k] === 'string' ? data[k].trim() : data[k]
     }
     if (patch.username != null) patch.username = patch.username.toLowerCase() // username login selalu huruf kecil
