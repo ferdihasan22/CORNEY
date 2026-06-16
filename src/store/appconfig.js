@@ -16,6 +16,10 @@ const DEFAULTS = {
   // Walk-in TIDAK kena. Disimpan sbg string (app_config.value = text).
   service_fee_on: '0',
   service_fee_amount: '1000',
+  // Titik mulai "Pelacakan Stok" (ISO). Owner tekan "Bersihkan" → semua selisih
+  // SEBELUM tanggal ini disembunyikan (fresh). '' = tampilkan semua (tanpa batas).
+  // Tidak menghapus data sumber → laporan keuangan/stok tetap utuh.
+  stocktrace_cleared_at: '',
 }
 
 function load() {
@@ -43,6 +47,17 @@ export function serviceFeeOnline() {
   const on = (map.service_fee_on ?? DEFAULTS.service_fee_on) === '1'
   const amount = Math.max(0, Math.round(Number(map.service_fee_amount ?? DEFAULTS.service_fee_amount) || 0))
   return { on: on && amount > 0, amount }
+}
+
+// Baseline Pelacakan Stok → epoch ms AWAL HARI tanggal reset (0 = tanpa batas).
+// Awal-hari supaya data hari reset tetap terhitung & data harian (closing) tak
+// terpotong di tengah hari (hindari celah permanen).
+export function stocktraceBaselineMs() {
+  const iso = map.stocktrace_cleared_at ?? DEFAULTS.stocktrace_cleared_at
+  if (!iso) return 0
+  const d = new Date(iso)
+  if (isNaN(d.getTime())) return 0
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
 }
 
 export function setAppConfigField(key, val) {

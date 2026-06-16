@@ -7,6 +7,8 @@ import { useOpname } from '../../store/useOpname.js'
 import { useStockDaily } from '../../store/useStockDaily.js'
 import { useAudits } from '../../store/useAudits.js'
 import { useSupplierFulfilled } from '../../store/useSupplierFulfilled.js'
+import { useAppConfig } from '../../store/useAppConfig.js'
+import { stocktraceBaselineMs, setAppConfigField } from '../../store/appconfig.js'
 import { traceStock, biggestLeak, STAGES, purchaseCheck, KEJU_YIELD_LO, KEJU_YIELD_HI } from '../../store/stocktrace.js'
 
 // OWN — Pelacakan Stok versi AWAM. Tidak ada istilah teknis: cuma "berapa hilang,
@@ -32,14 +34,16 @@ export default function OwnerStockTrace() {
   const stockDaily = useStockDaily() || []
   const audits = useAudits() || []
   const fulfilled = useSupplierFulfilled() || []
+  useAppConfig() // subscribe → re-render saat baseline (Bersihkan) berubah
+  const baseline = stocktraceBaselineMs()
   const [period, setPeriod] = useState('all')
   const [branchSel, setBranchSel] = useState('all')
   const [showTable, setShowTable] = useState(false)
 
   const branches = branchSel === 'all' ? BRANCHES : BRANCHES.filter((b) => b.id === branchSel)
   const { branches: rows, grand } = useMemo(
-    () => traceStock({ production, shipments, opname, stockDaily, audits, branches, period }),
-    [production, shipments, opname, stockDaily, audits, branches, period]
+    () => traceStock({ production, shipments, opname, stockDaily, audits, branches, period, baseline }),
+    [production, shipments, opname, stockDaily, audits, branches, period, baseline]
   )
   const totalHilang = grand.hilangProduksi + grand.hilangTransit + grand.hilangKasir
   const culprit = biggestLeak(grand)
@@ -47,8 +51,8 @@ export default function OwnerStockTrace() {
   // Cek kewajaran belanja bahan baku vs terjual (informatif, bukan auto-potong).
   const terjual = rows.reduce((t, br) => { br.parents.forEach((p) => { if (p.adaClosing) t[p.parent] = (t[p.parent] || 0) + p.terjual }); return t }, {})
   const cek = useMemo(
-    () => purchaseCheck({ fulfilled, period, branchId: branchSel === 'all' ? null : branchSel, terjual }),
-    [fulfilled, period, branchSel, terjual.mozza, terjual.sosis, terjual.jumbo, terjual.mix]
+    () => purchaseCheck({ fulfilled, period, branchId: branchSel === 'all' ? null : branchSel, terjual, baseline }),
+    [fulfilled, period, branchSel, baseline, terjual.mozza, terjual.sosis, terjual.jumbo, terjual.mix]
   )
 
   // Daftar masalah dalam kalimat sederhana (terbesar dulu).
@@ -67,11 +71,19 @@ export default function OwnerStockTrace() {
     .filter((x) => x.pisah >= RUSAK_ALARM_MIN && x.prod > 0 && x.pisah / x.prod > RUSAK_ALARM_RATIO)
     .sort((a, b) => b.pisah - a.pisah)
 
+  // "Bersihkan" = set titik mulai = hari ini (awal hari). Tak menghapus data sumber.
+  const clearedDate = baseline ? new Date(baseline).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : ''
+  const doClear = () => { if (window.confirm('Bersihkan Pelacakan Stok agar mulai fresh?\n\nSemua selisih/“barang hilang” SEBELUM hari ini akan disembunyikan. Data laporan keuangan & stok TIDAK terhapus — hanya tampilan pelacakan yang di-reset. Bisa dikembalikan kapan saja lewat "Tampilkan semua".')) setAppConfigField('stocktrace_cleared_at', new Date().toISOString()) }
+  const undoClear = () => setAppConfigField('stocktrace_cleared_at', '')
+
   return (
     <div className="bg-background text-on-surface min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 bg-teal-700 text-white px-5 h-[64px] flex items-center gap-3 shadow-md">
         <button onClick={() => navigate('/ops/owner')} className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center active:scale-95"><Icon name="arrow_back" /></button>
         <h1 className="font-headline-md text-headline-md flex items-center gap-2"><Icon name="travel_explore" fill /> Pelacakan Stok</h1>
+        <button onClick={doClear} title="Bersihkan pelacakan (mulai fresh)" className="ml-auto flex items-center gap-1.5 bg-white/15 hover:bg-white/25 rounded-full px-3 h-9 font-label-md text-label-md active:scale-95">
+          <Icon name="mop" className="!text-[18px]" /> Bersihkan
+        </button>
       </header>
 
       <main className="flex-1 max-w-2xl mx-auto w-full p-5 space-y-5">
@@ -89,6 +101,15 @@ export default function OwnerStockTrace() {
             ))}
           </div>
         </div>
+
+        {/* Status "dibersihkan" — baseline aktif */}
+        {baseline > 0 && (
+          <div className="rounded-2xl bg-teal-50 border border-teal-200 p-3 flex items-center gap-2.5">
+            <Icon name="mop" className="text-teal-700 !text-[20px] shrink-0" />
+            <p className="flex-1 text-[13px] text-teal-900 leading-snug">Pelacakan dibersihkan — hanya menampilkan data <b>sejak {clearedDate}</b>. Data sebelumnya disembunyikan (tidak dihapus).</p>
+            <button onClick={undoClear} className="shrink-0 text-teal-800 font-bold text-label-md underline underline-offset-2 active:scale-95">Tampilkan semua</button>
+          </div>
+        )}
 
         {/* Jawaban besar */}
         {totalHilang === 0 ? (

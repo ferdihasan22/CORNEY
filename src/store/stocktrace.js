@@ -36,8 +36,9 @@ const inPeriodTgl = (tgl, cut) => !cut || parseTgl(tgl) >= cut
 // Tiap parent: { parent, name, produksi, susut, kirim, deltaOpname, diterima,
 //   deltaTransit, terjual, patah, garansi, free, seharusnya, aktual, deltaClosing,
 //   deltaAudit, hilangProduksi, hilangTransit, hilangKasir }
-export function traceStock({ production = [], shipments = [], opname = [], stockDaily = [], audits = [], branches = [], period = 'all' }) {
-  const cut = periodCutoff(period)
+export function traceStock({ production = [], shipments = [], opname = [], stockDaily = [], audits = [], branches = [], period = 'all', baseline = 0 }) {
+  // Cutoff efektif = yang TERBARU antara batas-periode & baseline "Bersihkan".
+  const cut = Math.max(periodCutoff(period), baseline || 0)
 
   const out = branches.map((b) => {
     const parents = PARENT_KEYS.map((pk) => {
@@ -139,8 +140,8 @@ export const KEJU_YIELD_HI = 85
 const RAW_IDS = { keju: ['keju_mozza', 'keju'], sosisReg: ['sosis_reguler', 'sosis_reg'], sosisJumbo: ['sosis_jumbo'] }
 
 // Total bahan baku DIBELI (supplier dipenuhi + beli di luar) dalam periode.
-export function boughtRaw({ fulfilled = [], period = 'all', branchId = null }) {
-  const cut = periodCutoff(period)
+export function boughtRaw({ fulfilled = [], period = 'all', branchId = null, baseline = 0 }) {
+  const cut = Math.max(periodCutoff(period), baseline || 0)
   const sum = { keju: 0, sosisReg: 0, sosisJumbo: 0 }
   fulfilled.forEach((e) => {
     if (branchId && e.branchId !== branchId) return
@@ -174,8 +175,8 @@ function wajarKeju(balok, mozzaTerpakai) {
 }
 
 // Rekap kewajaran lengkap. terjual = { mozza, sosis, jumbo, mix } (total periode).
-export function purchaseCheck({ fulfilled, period, branchId, terjual }) {
-  const beli = boughtRaw({ fulfilled, period, branchId })
+export function purchaseCheck({ fulfilled, period, branchId, terjual, baseline = 0 }) {
+  const beli = boughtRaw({ fulfilled, period, branchId, baseline })
   const mix = terjual.mix || 0
   const mozzaPakai = (terjual.mozza || 0) + mix * 0.5
   const sosisPakai = (terjual.sosis || 0) + mix * 0.5
