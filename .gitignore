@@ -9,3 +9,7 @@ dist
 # Supabase CLI temp/branch dirs
 supabase/.branches/
 supabase/.temp/
+
+# Agent tooling dirs (may contain API keys/config — never commit)
+.agents/
+.codex/

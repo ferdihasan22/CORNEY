@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BRANCHES, fmtRp } from '../../data/menu.js'
+import { isSupabase } from '../../lib/backend.js'
 import { logAudit } from '../../store/auditlog.js'
 import { useStockDaily } from '../../store/useStockDaily.js'
 import { computeParent as compute, updateStockRow, updateStockDate, effectiveV, STOCK_PARENTS, clearStockDaily } from '../../store/stockdaily.js'
@@ -119,9 +120,25 @@ export default function OwnerStockReport() {
   const [editAktual, setEditAktual] = useState(null) // { id, tgl, branchId, old, sistem, val, reason }
   const [resetOpen, setResetOpen] = useState(false) // modal konfirmasi reset bulan baru
 
-  // Reset SEMUA data Master Laporan (untuk mulai bulan baru). Config (cabang, menu,
-  // stok standar) TIDAK ikut. Ber-audit. Pakai SETELAH di-PDF arsip.
-  const doReset = () => {
+  // Reset data LAPORAN Master (penjualan, stok, pemakaian, belanja, setoran) untuk
+  // mulai bulan baru. Config (cabang, menu, stok standar) TIDAK ikut. Ber-audit.
+  // Pakai SETELAH di-PDF arsip.
+  // PENTING: di mode Supabase, kosongkan SERVER DULU lewat RPC — kalau hanya cache
+  // lokal yang dikosongkan (bug lama), data akan hidrasi ulang dari server & "balik
+  // lagi". supabase.rpc TIDAK melempar; ia kembalikan { error } → wajib diperiksa.
+  const doReset = async () => {
+    if (isSupabase()) {
+      try {
+        const { supabase } = await import('../../lib/supabase.js')
+        if (!supabase) throw new Error('Supabase belum siap')
+        const { error } = await supabase.rpc('owner_reset_laporan')
+        if (error) throw error
+      } catch (e) {
+        alert('Gagal Reset Bulan di server: ' + (e?.message || e) +
+          '\n\nData TIDAK dihapus. Pastikan kamu login sebagai Owner & koneksi stabil, lalu coba lagi.')
+        return
+      }
+    }
     clearSalesDaily(); clearStockDaily(); clearUsage(); clearExpense(); clearDeposits()
     logAudit({ type: 'Reset', who: 'Owner', branchId: 'all', oldVal: 'Data Master Laporan', newVal: 'DIKOSONGKAN untuk bulan baru', note: 'Reset bulanan oleh Owner (penjualan, stok, pemakaian, belanja, setoran).' })
     setResetOpen(false)
