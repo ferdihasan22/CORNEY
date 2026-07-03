@@ -3,7 +3,9 @@
 // Separate buy-path from branch shopping requests. Replace w/ Supabase TAHAP 4.
 //
 // Shape: { [ingredientId]: { sisa, threshold, reorderedAt } }
+// TAHAP 4: sinkron Supabase (tabel materials) — Produksi tulis, Owner baca.
 import { INGREDIENTS } from '../data/menu.js'
+import { isSupabase } from '../lib/backend.js'
 
 const KEY = 'corney_materials'
 const subscribers = new Set()
@@ -27,7 +29,9 @@ function seed() {
 }
 
 function load() {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); return s && typeof s === 'object' ? s : seed() } catch { return seed() }
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') return s } catch { /* rusak → fallback */ }
+  // Mode Supabase: mulai kosong (hydrate mengisi dari server) → jangan seed dummy.
+  return isSupabase() ? {} : seed()
 }
 let state = load()
 function commit(next) { state = next; localStorage.setItem(KEY, JSON.stringify(next)); subscribers.forEach((fn) => fn()) }
@@ -37,20 +41,30 @@ if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); subscribers.forEach((fn) => fn()) } })
 }
 
+// Hidrasi + realtime dari server (mode Supabase).
+if (isSupabase()) {
+  import('./materials.remote.js').then(({ initMaterialsSync }) => initMaterialsSync(commit)).catch(() => {})
+}
+// Push satu baris bahan ke server setelah commit lokal.
+const pushMat = (id, cell) => { if (isSupabase()) import('./materials.remote.js').then((w) => w.pushMaterial(id, cell)).catch(() => {}) }
+
 export function getMaterials() { return state }
 export function subscribeMaterials(fn) { subscribers.add(fn); return () => subscribers.delete(fn) }
 
 // Set stok bahan baku saat ini (dipakai untuk isi STOK AWAL go-live & koreksi).
 export function setMaterialSisa(id, sisa) {
   const cur = state[id] || { sisa: 0, threshold: 0, reorderedAt: null }
-  commit({ ...state, [id]: { ...cur, sisa: Math.max(0, Math.round(Number(sisa) || 0)) } })
+  const cell = { ...cur, sisa: Math.max(0, Math.round(Number(sisa) || 0)) }
+  commit({ ...state, [id]: cell }); pushMat(id, cell)
 }
 export function setThreshold(id, threshold) {
   const cur = state[id] || { sisa: 0, threshold: 0, reorderedAt: null }
-  commit({ ...state, [id]: { ...cur, threshold: Math.max(0, Math.round(Number(threshold) || 0)) } })
+  const cell = { ...cur, threshold: Math.max(0, Math.round(Number(threshold) || 0)) }
+  commit({ ...state, [id]: cell }); pushMat(id, cell)
 }
 export function markReordered(id) {
   const cur = state[id]
   if (!cur) return
-  commit({ ...state, [id]: { ...cur, reorderedAt: new Date().toISOString() } })
+  const cell = { ...cur, reorderedAt: new Date().toISOString() }
+  commit({ ...state, [id]: cell }); pushMat(id, cell)
 }
